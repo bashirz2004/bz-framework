@@ -79,4 +79,12 @@ export class AccountService {
                 return x;
             }));
     }
+
+  getAllUsersInConsole() {
+    this.http.get<User[]>(`http://localhost:9000/core/user/getAll`).subscribe(
+      (data: any[])=>{
+        console.log(data);
+      });
+
+  }
 }

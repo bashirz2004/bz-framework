@@ -26,6 +26,10 @@ export class LoginComponent implements OnInit {
         });
     }
 
+    getAll(){
+      return this.accountService.getAllUsersInConsole();
+    }
+
     // convenience getter for easy access to form fields
     get f() { return this.form.controls; }
 
