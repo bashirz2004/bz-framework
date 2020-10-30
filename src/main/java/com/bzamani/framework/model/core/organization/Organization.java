@@ -1,16 +1,13 @@
-package com.bzamani.framework.model;
+package com.bzamani.framework.model.core.organization;
 
-import com.bzamani.framework.mycustomannotation.MyLengthValidator;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Getter;
-import lombok.Setter;
+import com.bzamani.framework.config.mycustomannotation.MyLengthValidator;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "core_organization")
-@Setter
-@Getter
+@lombok.Setter
+@lombok.Getter
 public class Organization {
 
     @Id

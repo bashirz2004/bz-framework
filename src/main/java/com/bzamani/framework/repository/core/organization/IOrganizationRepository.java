@@ -1,13 +1,14 @@
-package com.bzamani.framework.repository;
+package com.bzamani.framework.repository.core.organization;
 
-import com.bzamani.framework.model.Organization;
+import com.bzamani.framework.model.core.organization.Organization;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface OrganizationRepository extends JpaRepository<Organization, Long>, OrganizationCustomRepository {
+
+public interface IOrganizationRepository extends JpaRepository<Organization, Long>{
 
     @Query( "SELECT e FROM Organization e where 1=1 " +
             " and e.title = COALESCE(cast(:title AS text), e.title) " +
