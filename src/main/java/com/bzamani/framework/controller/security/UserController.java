@@ -1,20 +1,19 @@
-package com.bzamani.framework.controller.core.user;
+package com.bzamani.framework.controller.security;
 
-import com.bzamani.framework.model.core.organization.Organization;
-import com.bzamani.framework.model.core.user.User;
-import com.bzamani.framework.service.core.organization.IOrganizationService;
-import com.bzamani.framework.service.core.user.IUserService;
+import com.bzamani.framework.controller.BaseController;
+import com.bzamani.framework.model.security.User;
+import com.bzamani.framework.service.security.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/core/user")
-public class UserController {
+public class UserController extends BaseController {
 
   @Autowired
   IUserService iUserService;
@@ -47,6 +46,7 @@ public class UserController {
     iUserService.delete(id);
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/getAll")
   public List<User> getAll(@RequestParam(defaultValue = "id,desc") String[] sort) {
     return iUserService.getAll(sort);

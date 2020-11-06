@@ -2,6 +2,7 @@ package com.bzamani.framework.controller.core.organization;
 
 import java.util.*;
 
+import com.bzamani.framework.controller.BaseController;
 import com.bzamani.framework.model.core.organization.Organization;
 import com.bzamani.framework.repository.core.organization.IOrganizationRepository;
 import com.bzamani.framework.service.core.organization.IOrganizationService;
@@ -22,10 +23,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/core/organization")
-public class OrganizationController {
+public class OrganizationController extends BaseController {
 
     @Autowired
     IOrganizationService iOrganizationService;

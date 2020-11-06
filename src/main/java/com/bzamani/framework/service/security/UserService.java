@@ -1,18 +1,20 @@
-package com.bzamani.framework.service.core.user;
+package com.bzamani.framework.service.security;
 
-import com.bzamani.framework.model.core.user.User;
-import com.bzamani.framework.repository.core.user.IUserRepository;
+import com.bzamani.framework.model.security.User;
+import com.bzamani.framework.repository.security.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
-public class UserService implements  IUserService {
+public class UserService implements IUserService {
 
   @Autowired
   IUserRepository iUserRepository;
@@ -26,7 +28,18 @@ public class UserService implements  IUserService {
   }
 
   @Override
+  public User findUserByUsernameEquals(String username) {
+    return iUserRepository.findUserByUsernameEquals(username);
+  }
+
+  @Override
   public User create(User user) {
+    PasswordEncoder encoder = new BCryptPasswordEncoder();
+    user.setPassword(encoder.encode(user.getPassword()));
+    user.setAccountNonExpired(true);
+    user.setAccountNonLocked(true);
+    user.setCredentialsNonExpired(true);
+    user.setEnabled(true);
     return iUserRepository.save(user);
   }
 
@@ -46,9 +59,9 @@ public class UserService implements  IUserService {
       User _user = entity.get();
       _user.setUsername(user.getUsername());
       _user.setPassword(user.getPassword());
-      _user.setFirstName(user.getFirstName());
-      _user.setLastName(user.getLastName());
-      _user.setActive(user.isActive());
+      //_user.setFirstName(user.getFirstName());
+      // _user.setLastName(user.getLastName());
+      //_user.setActive(user.isActive());
       return iUserRepository.save(_user);
     } else return null;
   }
@@ -108,5 +121,4 @@ public class UserService implements  IUserService {
 
     return response;
   }
-
 }

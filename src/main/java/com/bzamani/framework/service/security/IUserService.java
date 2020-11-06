@@ -1,11 +1,13 @@
-package com.bzamani.framework.service.core.user;
+package com.bzamani.framework.service.security;
 
-import com.bzamani.framework.model.core.user.User;
+import com.bzamani.framework.model.security.User;
 
 import java.util.List;
 import java.util.Map;
 
 public interface IUserService {
+  User  findUserByUsernameEquals(String username);
+
   User create(User user);
 
   User load(long id);

@@ -8,10 +8,10 @@ public class MyCustomAnnotaionHandler implements ConstraintValidator<MyLengthVal
     String message;
 
     @Override
-    public void initialize(MyLengthValidator constraintAnnotation) {
-        this.expectedMin = constraintAnnotation.minLenght();
-        this.expectedMax = constraintAnnotation.maxLength();
-        this.message = constraintAnnotation.message();
+    public void initialize(MyLengthValidator myLengthValidator) {
+        this.expectedMin = myLengthValidator.minLenght();
+        this.expectedMax = myLengthValidator.maxLength();
+        this.message = myLengthValidator.message();
     }
 
     @Override

@@ -1,0 +1,33 @@
+server:
+    port: 9000
+spring:
+    datasource:
+        url: jdbc:postgresql://localhost:5432/bz
+        username: postgres
+        password: postgres
+    jpa:
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.PostgreSQLDialect
+        hibernate:
+            ddl-auto: update
+    security:
+        jwt:
+            secret: bashir
+            expirationDateInMs: 18000000
+    #security:
+        #user:
+           # name: bzamani
+           # password: 0
+            #roles: "ADMIN"
+
+
+logging:
+    level:
+        org:
+            hibernate:
+                type:
+                    descriptor:
+                        sql:
+                            BasicBinder: TRACE
+                SQL: DEBUG
