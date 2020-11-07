@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
         });
     }
 
-    getAll(){
+    getAllGrid(){
       return this.accountService.getAllUsersInConsole();
     }
 
