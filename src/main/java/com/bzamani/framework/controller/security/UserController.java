@@ -4,7 +4,6 @@ import com.bzamani.framework.controller.BaseController;
 import com.bzamani.framework.model.security.User;
 import com.bzamani.framework.service.security.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,14 +17,6 @@ public class UserController extends BaseController {
   @Autowired
   IUserService iUserService;
 
-  private Sort.Direction getSortDirection(String direction) {
-    if (direction.equals("asc"))
-      return Sort.Direction.ASC;
-    else if (direction.equals("desc"))
-      return Sort.Direction.DESC;
-    return Sort.Direction.ASC;
-  }
-
   @PostMapping("/create")
   public User create(@RequestBody User user) {
     return iUserService.create(user);
@@ -36,9 +27,9 @@ public class UserController extends BaseController {
     return iUserService.load(id);
   }
 
-  @PutMapping("/update/{id}")
-  public User updateOrganization(@PathVariable("id") long id, @RequestBody User user) {
-    return iUserService.update(id, user);
+  @PutMapping("/update")
+  public User update(@RequestBody User user) {
+    return iUserService.update(user);
   }
 
   @DeleteMapping("/delete/{id}")
