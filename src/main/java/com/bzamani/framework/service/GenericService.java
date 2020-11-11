@@ -8,10 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -34,7 +31,8 @@ public abstract class GenericService<T, PK> implements IGenericService<T, PK> {
 
   @Override
   public T load(PK id) {
-    return getGenericRepo().getOne(id);
+    Optional<T> t = getGenericRepo().findById(id);
+    return t.get() ;
   }
 
   @Override
