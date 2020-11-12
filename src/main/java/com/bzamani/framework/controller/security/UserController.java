@@ -18,12 +18,17 @@ public class UserController extends BaseController {
   @Autowired
   IUserService iUserService;
 
-  @Value("#{bzFrmMessages['myTest']}")
-  String test;
+  @Value("#{bzFrmMessages['myTest']}") //read from my properties file
+  String testPropFile;
+
+  @Value("${server.port}") //read from application.yml file
+  String testYAMLFile;
+
 
   @PostMapping("/save")
   public User create(@RequestBody User user) {
-    System.out.println("-------------------- "+test);
+    System.out.println("-------------------- "+testPropFile);
+    System.out.println("-------------------- "+testYAMLFile);
     return iUserService.save(user);
   }
 
