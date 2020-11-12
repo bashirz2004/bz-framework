@@ -1,5 +1,6 @@
 package com.bzamani.framework.service;
 
+import com.bzamani.framework.model.BaseEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +13,7 @@ import java.util.*;
 
 @Service
 @Transactional
-public abstract class GenericService<T, PK> implements IGenericService<T, PK> {
+public abstract class GenericService<T extends BaseEntity, PK> implements IGenericService<T, PK> {
 
   protected abstract JpaRepository<T, PK> getGenericRepo();
 

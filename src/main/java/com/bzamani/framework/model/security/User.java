@@ -1,5 +1,6 @@
 package com.bzamani.framework.model.security;
 
+import com.bzamani.framework.model.BaseEntity;
 import com.bzamani.framework.model.core.organization.Organization;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,10 +14,10 @@ import java.util.Set;
 
 @Entity
 @Table(name = "CORE_USER", uniqueConstraints = {@UniqueConstraint(name = "unq_username", columnNames = "username")})
-@SequenceGenerator(name = "SEQG_CORE_USER", sequenceName = "SEQ_CORE_USER", allocationSize = 1)
+@SequenceGenerator(name = "sequence_db", sequenceName = "SEQ_CORE_USER", allocationSize = 1)
 @Setter
 @Getter
-public class User implements UserDetails {
+public class User extends BaseEntity implements UserDetails {
 
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQG_CORE_USER")
