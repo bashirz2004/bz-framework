@@ -8,9 +8,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class UserService extends GenericService<User,Long> implements IUserService {
+public class UserService extends GenericService<User, Long> implements IUserService {
 
   @Autowired
   IUserRepository iUserRepository;
@@ -27,7 +28,8 @@ public class UserService extends GenericService<User,Long> implements IUserServi
 
 
   @Override
-  public User create(User user) {
+  @Transactional
+  public User save(User user) {
     PasswordEncoder encoder = new BCryptPasswordEncoder();
     user.setPassword(encoder.encode(user.getPassword()));
     user.setAccountNonExpired(true);

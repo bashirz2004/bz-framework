@@ -17,27 +17,22 @@ public class UserController extends BaseController {
   @Autowired
   IUserService iUserService;
 
-  @PostMapping("/create")
+  @PostMapping("/save")
   public User create(@RequestBody User user) {
-    return iUserService.create(user);
+    return iUserService.save(user);
   }
 
   @GetMapping("/load/{id}")
   public User load(@PathVariable("id") long id) {
-    return iUserService.load(id);
-  }
-
-  @PutMapping("/update")
-  public User update(@RequestBody User user) {
-    return iUserService.update(user);
+    return iUserService.loadByEntityId(id);
   }
 
   @DeleteMapping("/delete/{id}")
-  public void delete(@PathVariable("id") long id) {
-    iUserService.delete(id);
+  public boolean delete(@PathVariable("id") long id) {
+    return iUserService.deleteByEntityId(id);
   }
 
-  @PreAuthorize("hasRole('ADMIN')")
+  //@PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/getAll")
   public List<User> getAll(@RequestParam(defaultValue = "id,desc") String[] sort) {
     return iUserService.getAll(sort);

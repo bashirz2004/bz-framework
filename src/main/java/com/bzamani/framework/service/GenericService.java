@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public abstract class GenericService<T, PK> implements IGenericService<T, PK> {
 
   protected abstract JpaRepository<T, PK> getGenericRepo();
@@ -25,12 +25,12 @@ public abstract class GenericService<T, PK> implements IGenericService<T, PK> {
   }
 
   @Override
-  public T create(T t) {
+  public T save(T t) {
     return getGenericRepo().save(t);
   }
 
   @Override
-  public T load(PK id) {
+  public T loadByEntityId(PK id) {
     Optional<T> t = getGenericRepo().findById(id);
     if (t.isPresent())
       return t.get();
@@ -39,13 +39,9 @@ public abstract class GenericService<T, PK> implements IGenericService<T, PK> {
   }
 
   @Override
-  public T update(T t) {
-    return getGenericRepo().save(t);
-  }
-
-  @Override
-  public void delete(PK id) {
+  public boolean deleteByEntityId(PK id) {
     getGenericRepo().deleteById(id);
+    return  true;
   }
 
   @Override

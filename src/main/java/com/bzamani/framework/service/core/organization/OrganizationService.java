@@ -23,7 +23,6 @@ public class OrganizationService extends GenericService<Organization, Long> impl
   @Autowired
   IOrganizationRepository iOrganizationRepository;
 
-
   @Override
   protected JpaRepository<Organization, Long> getGenericRepo() {
     return iOrganizationRepository;

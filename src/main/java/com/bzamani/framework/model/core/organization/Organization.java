@@ -7,13 +7,13 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "CORE_ORGANIZATION")
+@Table(name = "CORE_ORGANIZATION", uniqueConstraints = {@UniqueConstraint(name = "unq_parent_title", columnNames = {"parent_id", "title"})})
 @SequenceGenerator(name = "SEQG_CORE_ORGANIZATION", sequenceName = "SEQ_CORE_ORGANIZATION", allocationSize = 1)
 @Setter
 @Getter
 public class Organization {
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "SEQG_CORE_ORGANIZATION")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQG_CORE_ORGANIZATION")
   private Long id;
 
   @ManyToOne(fetch = FetchType.EAGER)

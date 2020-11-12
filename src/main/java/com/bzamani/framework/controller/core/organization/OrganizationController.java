@@ -25,24 +25,19 @@ public class OrganizationController extends BaseController {
     return Sort.Direction.ASC;
   }
 
-  @PostMapping("/create")
-  public Organization create(@RequestBody Organization organization) {
-    return iOrganizationService.create(organization);
+  @PostMapping("/save")
+  public Organization save(@RequestBody Organization organization) {
+    return iOrganizationService.save(organization);
   }
 
   @GetMapping("/load/{id}")
   public Organization load(@PathVariable("id") long id) {
-    return iOrganizationService.load(id);
-  }
-
-  @PutMapping("/update/{id}")
-  public Organization update(@PathVariable("id") long id, @RequestBody Organization organization) {
-    return iOrganizationService.update(organization);
+    return iOrganizationService.loadByEntityId(id);
   }
 
   @DeleteMapping("/delete/{id}")
-  public void delete(@PathVariable("id") long id) {
-    iOrganizationService.delete(id);
+  public boolean delete(@PathVariable("id") long id) {
+    return iOrganizationService.deleteByEntityId(id);
   }
 
   @GetMapping("/getAll")

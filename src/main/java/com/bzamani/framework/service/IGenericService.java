@@ -6,13 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 public interface IGenericService<T, PK> {
-  T create(T t);
+  T save(T t);
 
-  T load(PK id);
+  T loadByEntityId(PK id);
 
-  T update(T t);
-
-  void delete(PK id);
+  boolean deleteByEntityId(PK id);
 
   List<T> getAll(String[] sort);
 

@@ -12,14 +12,14 @@ import java.util.Collection;
 import java.util.Set;
 
 @Entity
-@Table(name = "CORE_USER")
+@Table(name = "CORE_USER", uniqueConstraints = {@UniqueConstraint(name = "unq_username", columnNames = "username")})
 @SequenceGenerator(name = "SEQG_CORE_USER", sequenceName = "SEQ_CORE_USER", allocationSize = 1)
 @Setter
 @Getter
 public class User implements UserDetails {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "SEQG_CORE_USER")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQG_CORE_USER")
   private Long id;
 
   @NotNull
@@ -93,39 +93,4 @@ public class User implements UserDetails {
   @Transient
   private String token;
 
-
-  @Override
-  public Collection<? extends GrantedAuthority> getAuthorities() {
-    return this.authorities;
-  }
-
-  @Override
-  public String getPassword() {
-    return this.password;
-  }
-
-  @Override
-  public String getUsername() {
-    return this.username;
-  }
-
-  @Override
-  public boolean isAccountNonExpired() {
-    return this.isAccountNonExpired();
-  }
-
-  @Override
-  public boolean isAccountNonLocked() {
-    return this.isAccountNonLocked();
-  }
-
-  @Override
-  public boolean isCredentialsNonExpired() {
-    return this.isCredentialsNonExpired();
-  }
-
-  @Override
-  public boolean isEnabled() {
-    return this.isEnabled();
-  }
 }
