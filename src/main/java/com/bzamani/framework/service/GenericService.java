@@ -14,7 +14,7 @@ import java.util.*;
 @Transactional(readOnly = true)
 public abstract class GenericService<T, PK> implements IGenericService<T, PK> {
 
-  protected abstract JpaRepository<T,PK> getGenericRepo();
+  protected abstract JpaRepository<T, PK> getGenericRepo();
 
   private Sort.Direction getSortDirection(String direction) {
     if (direction.equals("asc"))
@@ -32,7 +32,10 @@ public abstract class GenericService<T, PK> implements IGenericService<T, PK> {
   @Override
   public T load(PK id) {
     Optional<T> t = getGenericRepo().findById(id);
-    return t.get() ;
+    if (t.isPresent())
+      return t.get();
+    else
+      return null;
   }
 
   @Override

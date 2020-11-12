@@ -8,12 +8,12 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "CORE_ORGANIZATION")
-@SequenceGenerator(name = "sequence_db", sequenceName = "SEQ_CORE_ORGANIZATION", allocationSize = 1)
+@SequenceGenerator(name = "SEQG_CORE_ORGANIZATION", sequenceName = "SEQ_CORE_ORGANIZATION", allocationSize = 1)
 @Setter
 @Getter
 public class Organization {
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence_db")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "SEQG_CORE_ORGANIZATION")
   private Long id;
 
   @ManyToOne(fetch = FetchType.EAGER)

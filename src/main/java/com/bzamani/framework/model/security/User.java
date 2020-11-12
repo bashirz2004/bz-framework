@@ -8,17 +8,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Collection;
 import java.util.Set;
 
 @Entity
 @Table(name = "CORE_USER")
-@SequenceGenerator(name = "sequence_db", sequenceName = "SEQ_CORE_USER", allocationSize = 1)
+@SequenceGenerator(name = "SEQG_CORE_USER", sequenceName = "SEQ_CORE_USER", allocationSize = 1)
 @Setter
 @Getter
 public class User implements UserDetails {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence_db")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "SEQG_CORE_USER")
   private Long id;
 
   @NotNull
@@ -27,31 +28,31 @@ public class User implements UserDetails {
 
   @NotNull
   @Column(name = "PASSWORD", length = 69, nullable = false)
-  @Getter(onMethod = @__(@Override))
+  @Getter
   @Setter
   private String password;
 
   @NotNull
   @Column(name = "is_accountNonExpired", nullable = false)
-  @Getter(onMethod = @__(@Override))
+  @Getter
   @Setter
   private boolean accountNonExpired;
 
   @NotNull
   @Column(name = "is_accountNonLocked", nullable = false)
-  @Getter(onMethod = @__(@Override))
+  @Getter
   @Setter
   private boolean accountNonLocked;
 
   @NotNull
   @Column(name = "is_credentialsNonExpired", nullable = false)
-  @Getter(onMethod = @__(@Override))
+  @Getter
   @Setter
   private boolean credentialsNonExpired;
 
   @NotNull
   @Column(name = "IS_ENABLED", nullable = false)
-  @Getter(onMethod = @__(@Override))
+  @Getter
   @Setter
   private boolean enabled;
 
@@ -93,5 +94,38 @@ public class User implements UserDetails {
   private String token;
 
 
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return this.authorities;
+  }
 
+  @Override
+  public String getPassword() {
+    return this.password;
+  }
+
+  @Override
+  public String getUsername() {
+    return this.username;
+  }
+
+  @Override
+  public boolean isAccountNonExpired() {
+    return this.isAccountNonExpired();
+  }
+
+  @Override
+  public boolean isAccountNonLocked() {
+    return this.isAccountNonLocked();
+  }
+
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return this.isCredentialsNonExpired();
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return this.isEnabled();
+  }
 }
