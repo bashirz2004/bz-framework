@@ -4,6 +4,7 @@ import com.bzamani.framework.controller.BaseController;
 import com.bzamani.framework.model.security.User;
 import com.bzamani.framework.service.security.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,8 +18,12 @@ public class UserController extends BaseController {
   @Autowired
   IUserService iUserService;
 
+  @Value("#{bzFrmMessages['myTest']}")
+  String test;
+
   @PostMapping("/save")
   public User create(@RequestBody User user) {
+    System.out.println("-------------------- "+test);
     return iUserService.save(user);
   }
 
