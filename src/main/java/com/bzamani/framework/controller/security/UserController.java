@@ -27,9 +27,15 @@ public class UserController extends BaseController {
 
   @PostMapping("/save")
   public User create(@RequestBody User user) {
-    System.out.println("-------------------- "+testPropFile);
-    System.out.println("-------------------- "+testYAMLFile);
+    System.out.println("-------------------- " + testPropFile);
+    System.out.println("-------------------- " + testYAMLFile);
     return iUserService.save(user);
+  }
+
+  @PostMapping("/authenticate")
+  public User authenticate(@RequestBody User user) {
+    System.out.println(user.getUsername());
+    return iUserService.authenticate(user.getUsername(), user.getPassword());
   }
 
   @GetMapping("/load/{id}")
