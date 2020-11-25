@@ -4,10 +4,13 @@ import com.bzamani.framework.model.BaseEntity;
 import com.bzamani.framework.model.core.organization.Organization;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Set;
@@ -17,6 +20,8 @@ import java.util.Set;
 @SequenceGenerator(name = "sequence_db", sequenceName = "SEQ_CORE_USER", allocationSize = 1)
 @Setter
 @Getter
+@FilterDefs({@FilterDef(name = "testFilter", parameters = {@ParamDef(name = "userId",type = "long")})})
+@Filters({@Filter(name = "testFilter",condition = " id = :userId ")})
 public class User extends BaseEntity implements UserDetails {
 
   @Id
