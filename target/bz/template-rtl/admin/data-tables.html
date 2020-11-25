@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+        <title> داک‌کیور - جدول داده ای </title>
+		
+		<!-- Favicon -->
+        <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
+		
+		<!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="assets/plugins/bootstrap-rtl/css/bootstrap.min.css">
+		
+		<!-- Fontawesome CSS -->
+        <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+		
+		<!-- Feathericon CSS -->
+        <link rel="stylesheet" href="assets/css/feathericon.min.css">
+		
+		<!-- Datatables CSS -->
+		<link rel="stylesheet" href="assets/plugins/datatables/datatables.min.css">
+		
+		<!-- Main CSS -->
+        <link rel="stylesheet" href="assets/css/style.css">
+		
+		<!--[if lt IE 9]>
+			<script src="assets/js/html5shiv.min.js"></script>
+			<script src="assets/js/respond.min.js"></script>
+		<![endif]-->
+    </head>
+    <body>
+	
+		<!-- Main Wrapper -->
+        <div class="main-wrapper">
+		
+			<!-- Header -->
+            <div class="header">
+			
+				<!-- Logo -->
+                <div class="header-left">
+                    <a href="index.html" class="logo">
+						<img src="assets/img/logo.png" alt="Logo">
+					</a>
+					<a href="index.html" class="logo logo-small">
+						<img src="assets/img/logo-small.png" alt="Logo" width="30" height="30">
+					</a>
+                </div>
+				<!-- /Logo -->
+				
+				<a href="javascript:void(0);" id="toggle_btn">
+					<i class="fe fe-text-align-left"></i>
+				</a>
+				
+				<div class="top-nav-search">
+					<form>
+						<input type="text" class="form-control" placeholder="جستجو کنید">
+						<button class="btn" type="submit"><i class="fa fa-search"></i></button>
+					</form>
+				</div>
+				
+				<!-- Mobile Menu Toggle -->
+				<a class="mobile_btn" id="mobile_btn">
+					<i class="fa fa-bars"></i>
+				</a>
+				<!-- /Mobile Menu Toggle -->
+				
+				<!-- Header Right Menu -->
+				<ul class="nav user-menu">
+
+					<!-- Notifications -->
+					<li class="nav-item dropdown noti-dropdown">
+						<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+							<i class="fe fe-bell"></i> <span class="badge badge-pill">3</span>
+						</a>
+						<div class="dropdown-menu notifications">
+							<div class="topnav-dropdown-header">
+								<span class="notification-title">اطلاعیه‌ها</span>
+								<a href="javascript:void(0)" class="clear-noti">پاک کردن</a>
+							</div>
+							<div class="noti-content">
+								<ul class="notification-list">
+									<li class="notification-message">
+										<a href="#">
+											<div class="media">
+												<span class="avatar avatar-sm">
+													<img class="avatar-img rounded-circle" alt="User Image" src="assets/img/doctors/doctor-thumb-01.jpg">
+												</span>
+												<div class="media-body">
+													<p class="noti-details"><span class="noti-title">پرشک رابی پرین</span> برنامه <span class="noti-title"> نوبت داد </span></p>
+													<p class="noti-time"><span class="notification-time">4 دقیقه قبل </span></p>
+												</div>
+											</div>
+										</a>
+									</li>
+									<li class="notification-message">
+										<a href="#">
+											<div class="media">
+												<span class="avatar avatar-sm">
+													<img class="avatar-img rounded-circle" alt="User Image" src="assets/img/patients/patient1.jpg">
+												</span>
+												<div class="media-body">
+													<p class="noti-details"><span class="noti-title">چارلوت راد</span> قرار ملاقات خود را قطعی کرد با <span class="noti-title">پرشک رابی پرین</span></p>
+													<p class="noti-time"><span class="notification-time">6 دقیقه قبل </span></p>
+												</div>
+											</div>
+										</a>
+									</li>
+									<li class="notification-message">
+										<a href="#">
+											<div class="media">
+												<span class="avatar avatar-sm">
+													<img class="avatar-img rounded-circle" alt="User Image" src="assets/img/patients/patient2.jpg">
+												</span>
+												<div class="media-body">
+												<p class="noti-details"><span class="noti-title">تراویس تریمبل</span> مبلغ را پرداخت کرد برای <span class="noti-title">رزرو نوبت</span></p>
+												<p class="noti-time"><span class="notification-time">8 دقیقه قبل </span></p>
+												</div>
+											</div>
+										</a>
+									</li>
+									<li class="notification-message">
+										<a href="#">
+											<div class="media">
+												<span class="avatar avatar-sm">
+													<img class="avatar-img rounded-circle" alt="User Image" src="assets/img/patients/patient3.jpg">
+												</span>
+												<div class="media-body">
+													<p class="noti-details"><span class="noti-title">کارل کلی</span> پیام ارسال کرد <span class="noti-title"> به پزشکش </span></p>
+													<p class="noti-time"><span class="notification-time">12 دقیقه قبل </span></p>
+												</div>
+											</div>
+										</a>
+									</li>
+								</ul>
+							</div>
+							<div class="topnav-dropdown-footer">
+								<a href="#">مشاهده همه اطلاعیه‌ها</a>
+							</div>
+						</div>
+					</li>
+					<!-- /Notifications -->
+					
+					<!-- User Menu -->
+					<li class="nav-item dropdown has-arrow">
+						<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+							<span class="user-img"><img class="rounded-circle" src="assets/img/profiles/avatar-01.jpg" width="31" alt="Ryan Taylor"></span>
+						</a>
+						<div class="dropdown-menu">
+							<div class="user-header">
+								<div class="avatar avatar-sm">
+									<img src="assets/img/profiles/avatar-01.jpg" alt="User Image" class="avatar-img rounded-circle">
+								</div>
+								<div class="user-text">
+									<h6>رایان تیلور</h6>
+									<p class="text-muted mb-0">مدیریت</p>
+								</div>
+							</div>
+							<a class="dropdown-item" href="profile.html">پروفایل من</a>
+							<a class="dropdown-item" href="settings.html">تنظیمات</a>
+							<a class="dropdown-item" href="login.html">خروج</a>
+						</div>
+					</li>
+					<!-- /User Menu -->
+					
+				</ul>
+				<!-- /Header Right Menu -->
+				
+            </div>
+			<!-- /Header -->
+			<!-- Sidebar -->
+            <div class="sidebar" id="sidebar">
+                <div class="sidebar-inner slimscroll">
+					<div id="sidebar-menu" class="sidebar-menu">
+						<ul>
+							<li class="menu-title"> 
+								<span>صفحه اصلی</span>
+							</li>
+							<li> 
+								<a href="index.html"><i class="fe fe-home"></i> <span>دشبرد</span></a>
+							</li>
+							<li> 
+								<a href="appointment-list.html"><i class="fe fe-layout"></i> <span>نوبت‌دهی</span></a>
+							</li>
+							<li> 
+								<a href="specialities.html"><i class="fe fe-users"></i> <span>تخصص ها</span></a>
+							</li>
+							<li> 
+								<a href="doctor-list.html"><i class="fe fe-user-plus"></i> <span>پزشکان</span></a>
+							</li>
+							<li> 
+								<a href="patient-list.html"><i class="fe fe-user"></i> <span>مراجعان</span></a>
+							</li>
+							<li> 
+								<a href="reviews.html"><i class="fe fe-star-o"></i> <span>نظرات</span></a>
+							</li>
+							<li> 
+								<a href="transactions-list.html"><i class="fe fe-activity"></i> <span>تراکنش ها</span></a>
+							</li>
+							<li> 
+								<a href="settings.html"><i class="fe fe-vector"></i> <span>تنظیمات</span></a>
+							</li>
+							<li class="submenu">
+								<a href="#"><i class="fe fe-document"></i> <span>گزارش‌ها</span> <span class="menu-arrow"></span></a>
+								<ul style="display: none;">
+									<li><a href="invoice-report.html">گزارش فاکتورها </a></li>
+								</ul>
+							</li>
+							<li class="menu-title"> 
+								<span>صفحات</span>
+							</li>
+							<li class="submenu">
+								<a href="#"><i class="fe fe-document"></i> <span>بلاگ </span> <span class="menu-arrow"></span></a>
+								<ul style="display: none;">
+									<li><a href="blog.html">بلاگ </a></li>
+									<li><a href="blog-details.html">جزییات بلاگ </a></li>
+									<li><a href="add-blog.html"> افزودن بلاگ </a></li>
+									<li><a href="edit-blog.html"> ویرایش بلاگ </a></li>
+								</ul>
+							</li>
+							<li><a href="product-list.html"><i class="fe fe-layout"></i> <span>لیست محصول</span></a></li>
+							<li><a href="pharmacy-list.html"><i class="fe fe-vector"></i> <span>لیست داروخانه</span></a></li>
+							<li> 
+								<a href="profile.html"><i class="fe fe-user-plus"></i> <span>پروفایل</span></a>
+							</li>
+							<li class="submenu">
+								<a href="#"><i class="fe fe-document"></i> <span>اهراز هویت</span> <span class="menu-arrow"></span></a>
+								<ul style="display: none;">
+									<li><a href="login.html">ورود </a></li>
+									<li><a href="register.html">ثبت نام </a></li>
+									<li><a href="forgot-password.html"> فراموش رمزعبور</a></li>
+									<li><a href="lock-screen.html"> قفل صفحه</a></li>
+								</ul>
+							</li>
+							<li class="submenu">
+								<a href="#"><i class="fe fe-warning"></i> <span> صفحات خطا</span> <span class="menu-arrow"></span></a>
+								<ul style="display: none;">
+									<li><a href="error-404.html">404 خطا  </a></li>
+									<li><a href="error-500.html">500 خطا  </a></li>
+								</ul>
+							</li>
+							<li> 
+								<a href="blank-page.html"><i class="fe fe-file"></i> <span>صفحه خالی</span></a>
+							</li>
+							<li class="menu-title"> 
+								<span> رابط UI </span>
+							</li>
+							<li> 
+								<a href="components.html"><i class="fe fe-vector"></i> <span>‌کامپوننت‌ها</span></a>
+							</li>
+							<li class="submenu">
+								<a href="#"><i class="fe fe-layout"></i> <span> فرمها</span> <span class="menu-arrow"></span></a>
+								<ul style="display: none;">
+									<li><a href="form-basic-inputs.html"> ورودی های پایه</a></li>
+									<li><a href="form-input-groups.html"> ورودی های گروهی</a></li>
+									<li><a href="form-horizontal.html"> فرم افقی </a></li>
+									<li><a href="form-vertical.html"> فرم  عمودی</a></li>
+									<li><a href="form-mask.html"> فرم  ماسک</a></li>
+									<li><a href="form-validation.html"> اعتبارسنجی فرم </a></li>
+								</ul>
+							</li>
+							<li class="submenu">
+								<a href="#"><i class="fe fe-table"></i> <span> جداول </span> <span class="menu-arrow"></span></a>
+								<ul style="display: none;">
+									<li><a href="tables-basic.html"> جدول پایه </a></li>
+									<li><a class="active" href="data-tables.html"> جدول داده ای </a></li>
+								</ul>
+							</li>
+							<li class="submenu">
+								<a href="javascript:void(0);"><i class="fe fe-code"></i> <span> چند سطح </span> <span class="menu-arrow"></span></a>
+								<ul style="display: none;">
+									<li class="submenu">
+										<a href="javascript:void(0);"> <span> سطح  1</span> <span class="menu-arrow"></span></a>
+										<ul style="display: none;">
+											<li><a href="javascript:void(0);"><span> سطح  2</span></a></li>
+											<li class="submenu">
+												<a href="javascript:void(0);"> <span> سطح 2</span> <span class="menu-arrow"></span></a>
+												<ul style="display: none;">
+													<li><a href="javascript:void(0);"> سطح  3</a></li>
+													<li><a href="javascript:void(0);"> سطح  3</a></li>
+												</ul>
+											</li>
+											<li><a href="javascript:void(0);"> <span> سطح  2</span></a></li>
+										</ul>
+									</li>
+									<li>
+										<a href="javascript:void(0);"> <span> سطح  1</span></a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+                </div>
+            </div>
+			<!-- /Sidebar -->
+			
+			<!-- Page Wrapper -->
+            <div class="page-wrapper">
+                <div class="content container-fluid">
+
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row">
+							<div class="col">
+								<h3 class="page-title">جدول داده ای </h3>
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">دشبرد</a></li>
+									<li class="breadcrumb-item active">جدول داده ای </li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+					
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="card">
+								<div class="card-header">
+									<h4 class="card-title">جدول داده ای پیشفرض</h4>
+									<p class="card-text">
+									این ابتدایی ترین مثال از جدول داده های با پیکربندی صفر است. از کلاس <code> .datatable </code> برای مقداردهی اولیه داده های داده استفاده کنید.
+									</p>
+								</div>
+								<div class="card-body">
+
+									<div class="table-responsive">
+										<table class="datatable table table-stripped">
+											<thead>
+												<tr>
+														<th>نام</th>
+														<th>سمت</th>
+														<th>دفتر</th>
+														<th>سن</th>
+														<th>تاریخ شروع</th>
+														<th>حقوق</th>
+												</tr>
+												</thead>
+												<tbody>
+												<tr>
+														<td>تینا محمدی</td>
+														<td>معمار سیستم</td>
+														<td>تهران</td>
+														<td>61</td>
+														<td>1395/04/25</td>
+														<td>320,800</td>
+												</tr>
+												<tr>
+														<td>گلاره وحیدی</td>
+														<td>حسابدار</td>
+														<td>مشهد</td>
+														<td>63</td>
+														<td>1395/07/25</td>
+														<td>170,750</td>
+												</tr>
+												<tr>
+														<td>عاطفه نوری</td>
+														<td>مدیر اجرایی</td>
+														<td>گیلان</td>
+														<td>66</td>
+														<td>1396/01/12</td>
+														<td>86,000</td>
+												</tr>
+												<tr>
+														<td>کیمیا اعلا</td>
+														<td>برنامه نویس</td>
+														<td>تهران</td>
+														<td>22</td>
+														<td>1399/03/29</td>
+														<td>433,060</td>
+												</tr>
+												<tr>
+														<td>عاطفه محمدی</td>
+														<td>حسابدار</td>
+														<td>مشهد</td>
+														<td>33</td>
+														<td>1394/11/28</td>
+														<td>162,700</td>
+												</tr>
+												<tr>
+														<td>بیتا جم</td>
+														<td>مدیریت بودجه</td>
+														<td>تهران</td>
+														<td>61</td>
+														<td>1399/12/02</td>
+														<td>372,000</td>
+												</tr>
+												<tr>
+														<td>همایون مهرآیین</td>
+														<td>مسئول فروش</td>
+														<td>گیلان</td>
+														<td>59</td>
+														<td>1399/08/06</td>
+														<td>137,500</td>
+												</tr>
+												<tr>
+														<td>رها داوودی</td>
+														<td>مدیریت بودجه</td>
+														<td>مشهد</td>
+														<td>55</td>
+														<td>1397/10/14</td>
+														<td>327,900</td>
+												</tr>
+												<tr>
+														<td>کارن نیروانا</td>
+														<td>برنامه نویس</td>
+														<td>گیلان</td>
+														<td>39</td>
+														<td>1396/09/15</td>
+														<td>205,500</td>
+												</tr>
+												<tr>
+														<td>سونیا صمدی</td>
+														<td>مهندس نرم افزار</td>
+														<td>تهران</td>
+														<td>23</td>
+														<td>1394/12/13</td>
+														<td>103,600</td>
+												</tr>
+												<tr>
+														<td>جواد صمدی</td>
+														<td>مدیر دفتر</td>
+														<td>رشت</td>
+														<td>30</td>
+														<td>1394/12/19</td>
+														<td>90,560</td>
+												</tr>
+												<tr>
+														<td>کامران فروهر</td>
+														<td>مدیر تیم</td>
+														<td>تهران</td>
+														<td>22</td>
+														<td>1392/03/03</td>
+														<td>342,000</td>
+												</tr>
+												<tr>
+														<td>فرید سپهری</td>
+														<td>مدیر اجرایی</td>
+														<td>گیلان</td>
+														<td>36</td>
+														<td>1394/10/16</td>
+														<td>470,600</td>
+												</tr>
+												<tr>
+														<td>هاله شیخ</td>
+														<td>مدیر تولید محتوا</td>
+														<td>رشت</td>
+														<td>43</td>
+														<td>1399/12/18</td>
+														<td>313,500</td>
+												</tr>
+												<tr>
+														<td>تانیا جم</td>
+														<td>مدیر اجرایی</td>
+														<td>رشت</td>
+														<td>19</td>
+														<td>1397/03/17</td>
+														<td>385,750</td>
+												</tr>
+												<tr>
+														<td>مهران سپهری</td>
+														<td>طراح </td>
+														<td>رشت</td>
+														<td>66</td>
+														<td>1399/11/27</td>
+														<td>198,500</td>
+												</tr>
+												<tr>
+														<td>پندار نیک</td>
+														<td>مدیر اجرایی)</td>
+														<td>تهران</td>
+														<td>64</td>
+														<td>1397/06/09</td>
+														<td>725,000</td>
+												</tr>
+												<tr>
+														<td>گلنوش مالکی</td>
+														<td>مدیر سیستم</td>
+														<td>تهران</td>
+														<td>59</td>
+														<td>1396/04/10</td>
+														<td>237,500</td>
+												</tr>
+												<tr>
+														<td>بهنام محمدی</td>
+														<td>مهندس نرم افزار</td>
+														<td>رشت</td>
+														<td>41</td>
+														<td>1399/10/13</td>
+														<td>132,000</td>
+												</tr>
+												<tr>
+														<td>داوود امیری</td>
+														<td>مدیر دفتر</td>
+														<td>تهران</td>
+														<td>35</td>
+														<td>1399/09/26</td>
+														<td>217,500</td>
+												</tr>
+												<tr>
+														<td>صبا احمدی</td>
+														<td>مدیر تولید</td>
+														<td>تهران</td>
+														<td>30</td>
+														<td>1395/09/03</td>
+														<td>345,000</td>
+												</tr>
+												<tr>
+														<td>یگانه سیما</td>
+														<td>مدیر محصول</td>
+														<td>تهران</td>
+														<td>40</td>
+														<td>1396/06/25</td>
+														<td>675,000</td>
+												</tr>
+												<tr>
+														<td>سیما سالاری</td>
+														<td>مدیر فروش</td>
+														<td>تهران</td>
+														<td>21</td>
+														<td>1395/12/12</td>
+														<td>106,450</td>
+												</tr>
+												<tr>
+														<td>دارا جم</td>
+														<td>مسئول فروش</td>
+														<td>کرمان</td>
+														<td>23</td>
+														<td>1397/09/20</td>
+														<td>85,600</td>
+												</tr>
+												<tr>
+														<td>آناهیتا رومی</td>
+														<td>مدیر اجرایی</td>
+														<td>رشت</td>
+														<td>47</td>
+														<td>1396/10/09</td>
+														<td>1,200,000</td>
+												</tr>
+												<tr>
+														<td>گلاره احمدی</td>
+														<td>توسعه دهنده</td>
+														<td>تهران</td>
+														<td>42</td>
+														<td>1397/12/22</td>
+														<td>92,575</td>
+												</tr>
+												<tr>
+														<td>مینا کریمی</td>
+														<td>مدیر اجرایی</td>
+														<td>تبریز</td>
+														<td>28</td>
+														<td>1397/11/14</td>
+														<td>357,650</td>
+												</tr>
+												<tr>
+														<td>بهنام صمدی</td>
+														<td>مهندس نرم افزار</td>
+														<td>گیلان</td>
+														<td>28</td>
+														<td>1395/06/07</td>
+														<td>206,850</td>
+												</tr>
+												<tr>
+														<td>فرید احمدی</td>
+														<td>مدیریت شرکت)</td>
+														<td>گیلان</td>
+														<td>48</td>
+														<td>1397/03/11</td>
+														<td>850,000</td>
+												</tr>
+												<tr>
+														<td>شیما کریمی</td>
+														<td>بازاریابی</td>
+														<td>مشهد</td>
+														<td>20</td>
+														<td>1395/08/14</td>
+														<td>163,000</td>
+												</tr>
+												<tr>
+														<td>میلاد نور</td>
+														<td>مدیریت بودجه</td>
+														<td>کرمان</td>
+														<td>37</td>
+														<td>1395/06/02</td>
+														<td>95,400</td>
+												</tr>
+												<tr>
+														<td>سیما محمدی</td>
+														<td>توسعه دهنده</td>
+														<td>رشت</td>
+														<td>53</td>
+														<td>1396/10/22</td>
+														<td>114,500</td>
+												</tr>
+												<tr>
+														<td>پدرام محمدی</td>
+														<td>نویسنده</td>
+														<td>رشت</td>
+														<td>27</td>
+														<td>1395/05/07</td>
+														<td>145,000</td>
+												</tr>
+												<tr>
+														<td>گلاره کریمی</td>
+														<td>مدیر تیم</td>
+														<td>گیلان</td>
+														<td>22</td>
+														<td>1394/10/26</td>
+														<td>235,500</td>
+												</tr>
+												<tr>
+														<td>مانا کریمی</td>
+														<td>پشتیبانی سایت</td>
+														<td>تهران</td>
+														<td>46</td>
+														<td>1395/03/09</td>
+														<td>324,050</td>
+												</tr>
+												<tr>
+														<td>یارا شهیدی</td>
+														<td>طراح </td>
+														<td>گیلان</td>
+														<td>47</td>
+														<td>1396/12/09</td>
+														<td>85,675</td>
+												</tr>
+												<tr>
+														<td>سیما احمدی</td>
+														<td>مدیر دفتر</td>
+														<td>گیلان</td>
+														<td>51</td>
+														<td>1394/12/16</td>
+														<td>164,500</td>
+												</tr>
+												<tr>
+														<td>سیما محمدی</td>
+														<td>منشی</td>
+														<td>گیلان</td>
+														<td>41</td>
+														<td>1397/02/12</td>
+														<td>109,850</td>
+												</tr>
+												<tr>
+														<td>ویدا احدی</td>
+														<td>مدیر مالی</td>
+														<td>گیلان</td>
+														<td>62</td>
+														<td>1396/02/14</td>
+														<td>452,500</td>
+												</tr>
+												<tr>
+														<td>تینا منصوری</td>
+														<td>مدیر دفتر</td>
+														<td>رشت</td>
+														<td>37</td>
+														<td>1394/12/11</td>
+														<td>136,200</td>
+												</tr>
+												<tr>
+														<td>جواد خواجوی</td>
+														<td>مدیر</td>
+														<td>تهران</td>
+														<td>65</td>
+														<td>1394/09/26</td>
+														<td>645,750</td>
+												</tr>
+												<tr>
+														<td>الهه جم</td>
+														<td>مهندس ارشد</td>
+														<td>تبریز</td>
+														<td>64</td>
+														<td>1395/02/03</td>
+														<td>234,500</td>
+												</tr>
+												<tr>
+														<td>بیتا احدی</td>
+														<td>مهندس نرم افزار</td>
+														<td>رشت</td>
+														<td>38</td>
+														<td>1395/05/03</td>
+														<td>163,500</td>
+												</tr>
+												<tr>
+														<td>صنم امیری</td>
+														<td>مهندس ارشد</td>
+														<td>مشهد</td>
+														<td>37</td>
+														<td>1396/08/19</td>
+														<td>139,575</td>
+												</tr>
+												<tr>
+														<td>مایا امیری</td>
+														<td>توسعه دهنده</td>
+														<td>تهران</td>
+														<td>61</td>
+														<td>1392/08/11</td>
+														<td>98,540</td>
+												</tr>
+												<tr>
+														<td>فریده کالو</td>
+														<td>مهندس ارشد</td>
+														<td>گیلان</td>
+														<td>47</td>
+														<td>1396/07/07</td>
+														<td>87,500</td>
+												</tr>
+												<tr>
+														<td>صنم امیری</td>
+														<td>مهندس داده</td>
+														<td>تبریز</td>
+														<td>64</td>
+														<td>1399/04/09</td>
+														<td>138,575</td>
+												</tr>
+												<tr>
+														<td>فرهبد زیلاند</td>
+														<td>مهندس نرم افزار</td>
+														<td>تهران</td>
+														<td>63</td>
+														<td>1397/01/04</td>
+														<td>125,250</td>
+												</tr>
+												<tr>
+														<td>ژیلا صنم</td>
+														<td>مهندس نرم افزار</td>
+														<td>گیلان</td>
+														<td>56</td>
+														<td>1399/06/01</td>
+														<td>115,000</td>
+												</tr>
+												<tr>
+														<td>ژیلا محمدی</td>
+														<td> برنامه نویس</td>
+														<td>تهران</td>
+														<td>43</td>
+														<td>1392/02/01</td>
+														<td>75,650</td>
+												</tr>
+												<tr>
+														<td>سارا فروهر</td>
+														<td>مسئول فروش</td>
+														<td>تهران</td>
+														<td>46</td>
+														<td>1395/12/06</td>
+														<td>145,600</td>
+												</tr>
+												<tr>
+														<td>همایون محمدی</td>
+														<td>مدیر اجرایی</td>
+														<td>رشت</td>
+														<td>47</td>
+														<td>1395/03/21</td>
+														<td>356,250</td>
+												</tr>
+												<tr>
+														<td>لاله محمدی</td>
+														<td>مدیر سیستم</td>
+														<td>رشت</td>
+														<td>21</td>
+														<td>1396/02/27</td>
+														<td>103,500</td>
+												</tr>
+												<tr>
+														<td>هدا محمدی</td>
+														<td>توسعه دهنده</td>
+														<td>گیلان</td>
+														<td>30</td>
+														<td>1397/07/14</td>
+														<td>86,500</td>
+												</tr>
+												<tr>
+														<td> شادی محمدی</td>
+														<td>مدیر اجرایی</td>
+														<td>تهران</td>
+														<td>51</td>
+														<td>1394/11/13</td>
+														<td>183,000</td>
+												</tr>
+												<tr>
+														<td>  یگانه محمدی</td>
+														<td>برنامه نویس</td>
+														<td>تبریز</td>
+														<td>29</td>
+														<td>1395/06/27</td>
+														<td>183,000</td>
+												</tr>
+												<tr>
+														<td>دنیا محمدی</td>
+														<td>پشتیبانی مشتری</td>
+														<td>تهران</td>
+														<td>27</td>
+														<td>1395/01/25</td>
+														<td>112,000</td>
+												</tr>
+												</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				
+				</div>			
+			</div>
+			<!-- /Main Wrapper -->
+		
+        </div>
+		<!-- /Main Wrapper -->
+		
+		<!-- jQuery -->
+        <script src="assets/js/jquery-3.2.1.min.js"></script>
+		
+		<!-- Bootstrap Core JS -->
+        <script src="assets/js/popper.min.js"></script>
+        <script src="assets/plugins/bootstrap-rtl/js/bootstrap.min.js"></script>
+		
+		<!-- Slimscroll JS -->
+        <script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+		
+		<!-- Datatables JS -->
+		<script src="assets/plugins/datatables/jquery.dataTables.min.js"></script>
+		<script src="assets/plugins/datatables/datatables.min.js"></script>
+		
+		<!-- Custom JS -->
+		<script  src="assets/js/script.js"></script>
+		
+    </body>
+</html>

@@ -20,6 +20,9 @@ spring:
            # name: bzamani
            # password: 0
             #roles: "ADMIN"
+   # mvc:
+      #  servlet:
+        #    path: /rest
 
 
 logging:

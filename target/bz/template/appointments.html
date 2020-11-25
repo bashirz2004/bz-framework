@@ -1,0 +1,896 @@
+<!DOCTYPE html> 
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>داک‌کیور</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+		
+		<!-- Favicons -->
+		<link href="assets/img/favicon.png" rel="icon">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+		
+		<!-- Fontawesome CSS -->
+		<link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
+		<link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
+		
+		<!-- Main CSS -->
+		<link rel="stylesheet" href="assets/css/style.css">
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+			<script src="assets/js/html5shiv.min.js"></script>
+			<script src="assets/js/respond.min.js"></script>
+		<![endif]-->
+	
+	</head>
+	<body>
+
+		<!-- Main Wrapper -->
+		<div class="main-wrapper">
+		
+			<!-- Header -->
+			<header class="header">
+				<nav class="navbar navbar-expand-lg header-nav">
+					<div class="navbar-header">
+						<a id="mobile_btn" href="javascript:void(0);">
+							<span class="bar-icon">
+								<span></span>
+								<span></span>
+								<span></span>
+							</span>
+						</a>
+						<a href="index.html" class="navbar-brand logo">
+							<img src="assets/img/logo.png" class="img-fluid" alt="Logo">
+						</a>
+					</div>
+					<div class="main-menu-wrapper">
+						<div class="menu-header">
+							<a href="index.html" class="menu-logo">
+								<img src="assets/img/logo.png" class="img-fluid" alt="Logo">
+							</a>
+							<a id="menu_close" class="menu-close" href="javascript:void(0);">
+								<i class="fas fa-times"></i>
+							</a>
+						</div>
+						<ul class="main-nav">
+							<li>
+								<a href="index.html">خانه</a>
+							</li>
+							<li class="has-submenu active">
+								<a href="#">پزشک‌ها<i class="fas fa-chevron-down"></i></a>
+								<ul class="submenu">
+									<li><a href="doctor-dashboard.html">دشبرد پزشک</a></li>
+									<li class="active"><a href="appointments.html">نوبت‌دهی</a></li>
+									<li><a href="schedule-timings.html">زمان‌بندی</a></li>
+									<li><a href="my-patients.html">لیست بیماران</a></li>
+									<li><a href="patient-profile.html">پروفایل بیماران</a></li>
+									<li><a href="chat-doctor.html">چت</a></li>
+									<li><a href="invoices.html">صورت‌حساب</a></li>
+									<li><a href="doctor-profile-settings.html">تنظیمات پروفایل</a></li>
+									<li><a href="reviews.html">نظرات</a></li>
+									<li><a href="doctor-register.html">ثبت‌نام پزشک</a></li>
+									<li class="has-submenu">
+										<a href="doctor-blog.html">بلاگ</a>
+										<ul class="submenu">
+											<li><a href="doctor-blog.html">بلاگ</a></li>
+											<li><a href="blog-details.html">مشاهده بلاگ</a></li>
+											<li><a href="doctor-add-blog.html">افزودن بلاگ</a></li>
+										</ul>
+									</li>
+								</ul>
+							</li>	
+							<li class="has-submenu">
+								<a href="#">مراجعه‌کنندگان<i class="fas fa-chevron-down"></i></a>
+								<ul class="submenu">
+									<li class="has-submenu">
+										<a href="#">پزشکان</a>
+										<ul class="submenu">
+											<li><a href="map-grid.html">گرید نقشه</a></li>
+											<li><a href="map-list.html">لیست نقشه</a></li>
+										</ul>
+									</li>
+									<li><a href="search.html">جستجو پزشک</a></li>
+									<li><a href="doctor-profile.html">پروفایل پزشک</a></li>
+									<li><a href="booking.html">رزرو نوبت</a></li>
+									<li><a href="checkout.html">پرداخت</a></li>
+									<li><a href="booking-success.html">رزرو موفق</a></li>
+									<li><a href="patient-dashboard.html">دشبرد مراجعه‌کننده</a></li>
+									<li><a href="favourites.html">‌علاقه‌مندیها</a></li>
+									<li><a href="chat.html">چت</a></li>
+									<li><a href="profile-settings.html">تنظیمات پروفایل</a></li>
+									<li><a href="change-password.html">‌تغییر رمز عبور</a></li>
+								</ul>
+							</li>	
+							<li class="has-submenu">
+								<a href="#">‌داروخانه<i class="fas fa-chevron-down"></i></a>
+								<ul class="submenu">
+									<li><a href="pharmacy-index.html">‌داروخانه</a></li>
+									<li><a href="pharmacy-details.html">‌جزییات داروخانه</a></li>
+									<li><a href="pharmacy-search.html">‌جستجو داروخانه</a></li>
+									<li><a href="product-all.html">‌محصولات</a></li>
+									<li><a href="product-description.html">توضیحات محصول</a></li>
+									<li><a href="cart.html">‌سبد خرید</a></li>
+									<li><a href="product-checkout.html">‌خرید محصولات</a></li>
+									<li><a href="payment-success.html">‌پرداخت موفق</a></li>
+								</ul>
+							</li>
+							<li class="has-submenu">
+								<a href="#">‌صفحات<i class="fas fa-chevron-down"></i></a>
+								<ul class="submenu">
+									<li><a href="voice-call.html">‌تماس صوتی</a></li>
+									<li><a href="video-call.html">‌تماس تصویری</a></li>
+									<li><a href="search.html">‌جستجو پزشک</a></li>
+									<li><a href="calendar.html">‌تقویم</a></li>
+									<li><a href="components.html">‌کامپوننت‌ها</a></li>
+									<li class="has-submenu">
+										<a href="invoices.html">صورت‌حساب</a>
+										<ul class="submenu">
+											<li><a href="invoices.html">صورت‌حساب</a></li>
+											<li><a href="invoice-view.html">‌مشاهده صورت‌حساب</a></li>
+										</ul>
+									</li>
+									<li><a href="blank-page.html">‌صفحه شروع</a></li>
+									<li><a href="login.html">‌ورود</a></li>
+									<li><a href="register.html">‌ثبت‌نام</a></li>
+									<li><a href="forgot-password.html">‌فراموشی رمزعبور</a></li>
+								</ul>
+							</li>
+							<li class="has-submenu">
+								<a href="#">‌بلاگ<i class="fas fa-chevron-down"></i></a>
+								<ul class="submenu">
+									<li><a href="blog-list.html">‌لیست بلاگ</a></li>
+									<li><a href="blog-grid.html">‌گرید بلاگ</a></li>
+									<li><a href="blog-details.html">‌جزییات بلاگ</a></li>
+								</ul>
+							</li>
+							<li class="has-submenu">
+								<a href="#" target="_blank">ادمین<i class="fas fa-chevron-down"></i></a>
+								<ul class="submenu">
+									<li><a href="admin/index.html" target="_blank">‌ادمین</a></li>
+									<li><a href="pharmacy/index.html" target="_blank">ادمین داروخانه</a></li>
+								</ul>
+							</li>
+							<li class="login-link">
+								<a href="login.html">‌ورود / ثبت‌نام</a>
+							</li>
+						</ul>
+					</div>		 
+					<ul class="nav header-navbar-rht">
+						<li class="nav-item contact-item">
+							<div class="header-contact-img">
+								<i class="far fa-hospital"></i>							
+							</div>
+							<div class="header-contact-detail">
+								<p class="contact-header">‌تماس با ما</p>
+								<p class="contact-info-header"> +1 315 369 5943</p>
+							</div>
+						</li>
+						
+						<!-- User Menu -->
+						<li class="nav-item dropdown has-arrow logged-item">
+							<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+								<span class="user-img">
+									<img class="rounded-circle" src="assets/img/doctors/doctor-thumb-02.jpg" width="31" alt="دارن الدر">
+								</span>
+							</a>
+							<div class="dropdown-menu dropdown-menu-right">
+								<div class="user-header">
+									<div class="avatar avatar-sm">
+										<img src="assets/img/doctors/doctor-thumb-02.jpg" alt="User Image" class="avatar-img rounded-circle">
+									</div>
+									<div class="user-text">
+										<h6>دارا الدار</h6>
+										<p class="text-muted mb-0">پزشک</p>
+									</div>
+								</div>
+								<a class="dropdown-item" href="doctor-dashboard.html">دشبرد</a>
+								<a class="dropdown-item" href="doctor-profile-settings.html">تنظیمات پروفایل</a>
+								<a class="dropdown-item" href="login.html">خروج</a>
+							</div>
+						</li>
+						<!-- /User Menu -->
+						
+					</ul>
+				</nav>
+			</header>
+			<!-- /Header -->
+			
+			<!-- Breadcrumb -->
+			<div class="breadcrumb-bar">
+				<div class="container-fluid">
+					<div class="row align-items-center">
+						<div class="col-md-12 col-12">
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">خانه</a></li>
+									<li class="breadcrumb-item active" aria-current="page">نوبت‌دهی</li>
+								</ol>
+							</nav>
+							<h2 class="breadcrumb-title">نوبت‌دهی</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb -->
+			
+			<!-- Page Content -->
+			<div class="content">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
+						
+							<!-- Profile Sidebar -->
+							<div class="profile-sidebar">
+								<div class="widget-profile pro-widget-content">
+									<div class="profile-info-widget">
+										<a href="#" class="booking-doc-img">
+											<img src="assets/img/doctors/doctor-thumb-02.jpg" alt="User Image">
+										</a>
+										<div class="profile-det-info">
+											<h3>پزشک دارن الدر</h3>
+											
+											<div class="patient-details">
+												<h5 class="mb-0"> BDS ، MDS - جراحی دهان و فک و صورت </h5>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="dashboard-widget">
+									<nav class="dashboard-menu">
+										<ul>
+											<li>
+												<a href="doctor-dashboard.html">
+													<i class="fas fa-columns"></i>
+													<span>دشبرد</span>
+												</a>
+											</li>
+											<li class="active">
+												<a href="appointments.html">
+													<i class="fas fa-calendar-check"></i>
+													<span>نوبت‌دهی</span>
+												</a>
+											</li>
+											<li>
+												<a href="my-patients.html">
+													<i class="fas fa-user-injured"></i>
+													<span>مراجعه‌کنندگان من</span>
+												</a>
+											</li>
+											<li>
+												<a href="schedule-timings.html">
+													<i class="fas fa-hourglass-start"></i>
+													<span>زمان‌بندی</span>
+												</a>
+											</li>
+											<li>
+												<a href="invoices.html">
+													<i class="fas fa-file-invoice"></i>
+													<span>صورت‌حساب</span>
+												</a>
+											</li>
+											<li>
+												<a href="reviews.html">
+													<i class="fas fa-star"></i>
+													<span>نظرات</span>
+												</a>
+											</li>
+											<li>
+												<a href="chat-doctor.html">
+													<i class="fas fa-comments"></i>
+													<span>پیام‌ها</span>
+													<small class="unread-msg">23</small>
+												</a>
+											</li>
+											<li>
+												<a href="doctor-profile-settings.html">
+													<i class="fas fa-user-cog"></i>
+													<span>تنظیمات پروفایل</span>
+												</a>
+											</li>
+											<li>
+												<a href="social-media.html">
+													<i class="fas fa-share-alt"></i>
+													<span>شبکه‌های اجتماعی</span>
+												</a>
+											</li>
+											<li>
+												<a href="doctor-change-password.html">
+													<i class="fas fa-lock"></i>
+													<span>‌تغییر رمز عبور</span>
+												</a>
+											</li>
+											<li>
+												<a href="index.html">
+													<i class="fas fa-sign-out-alt"></i>
+													<span>خروج</span>
+												</a>
+											</li>
+										</ul>
+									</nav>
+								</div>
+							</div>
+							<!-- /Profile Sidebar -->
+							
+						</div>
+						
+						<div class="col-md-7 col-lg-8 col-xl-9">
+							<div class="appointments">
+							
+								<!-- Appointment List -->
+								<div class="appointment-list">
+									<div class="profile-info-widget">
+										<a href="patient-profile.html" class="booking-doc-img">
+											<img src="assets/img/patients/patient.jpg" alt="User Image">
+										</a>
+										<div class="profile-det-info">
+											<h3><a href="patient-profile.html">ریچارد ویلسون</a></h3>
+											<div class="patient-details">
+												<h5><i class="far fa-clock"></i> 14 مهر 1399 ، 10:00 بعد از ظهر</h5>
+												<h5><i class="fas fa-map-marker-alt"></i>نیویورک، آمریکا</h5>
+												<h5><i class="fas fa-envelope"></i> richard@example.com</h5>
+												<h5 class="mb-0"><i class="fas fa-phone"></i> +1 923 782 4575</h5>
+											</div>
+										</div>
+									</div>
+									<div class="appointment-action">
+										<a href="#" class="btn btn-sm bg-info-light" data-toggle="modal" data-target="#appt_details">
+											<i class="far fa-eye"></i> مشاهده
+										</a>
+										<a href="javascript:void(0);" class="btn btn-sm bg-success-light">
+											<i class="fas fa-check"></i> قبول
+										</a>
+										<a href="javascript:void(0);" class="btn btn-sm bg-danger-light">
+											<i class="fas fa-times"></i> حذف
+										</a>
+									</div>
+								</div>
+								<!-- /Appointment List -->
+							
+								<!-- Appointment List -->
+								<div class="appointment-list">
+									<div class="profile-info-widget">
+										<a href="patient-profile.html" class="booking-doc-img">
+											<img src="assets/img/patients/patient1.jpg" alt="User Image">
+										</a>
+										<div class="profile-det-info">
+											<h3><a href="patient-profile.html">چارلن رد </a></h3>
+											<div class="patient-details">
+												<h5><i class="far fa-clock"></i> 12 مهر 1399، 5:00 بعد از ظهر</h5>
+												<h5><i class="fas fa-map-marker-alt"></i> نیوکالیفرنیا، آمریکا</h5>
+												<h5><i class="fas fa-envelope"></i> charlenereed@example.com</h5>
+												<h5 class="mb-0"><i class="fas fa-phone"></i> +1 828 632 9170</h5>
+											</div>
+										</div>
+									</div>
+									<div class="appointment-action">
+										<a href="#" class="btn btn-sm bg-info-light" data-toggle="modal" data-target="#appt_details">
+											<i class="far fa-eye"></i> مشاهده
+										</a>
+										<a href="javascript:void(0);" class="btn btn-sm bg-success-light">
+											<i class="fas fa-check"></i> قبول
+										</a>
+										<a href="javascript:void(0);" class="btn btn-sm bg-danger-light">
+											<i class="fas fa-times"></i> حذف
+										</a>
+									</div>
+								</div>
+								<!-- /Appointment List -->
+								
+								<!-- Appointment List -->
+								<div class="appointment-list">
+									<div class="profile-info-widget">
+										<a href="patient-profile.html" class="booking-doc-img">
+											<img src="assets/img/patients/patient2.jpg" alt="User Image">
+										</a>
+										<div class="profile-det-info">
+											<h3><a href="patient-profile.html">تراویس تریمبل</a></h3>
+											
+											<div class="patient-details">
+												<h5><i class="far fa-clock"></i> 11 مهر 1399، 8:00 بعد از ظهر</h5>
+												<h5><i class="fas fa-map-marker-alt"></i> میان، آمریکا</h5>
+												<h5><i class="fas fa-envelope"></i> travistrimble@example.com</h5>
+												<h5 class="mb-0"><i class="fas fa-phone"></i> +1 207 729 9974</h5>
+											</div>
+										</div>
+									</div>
+									<div class="appointment-action">
+										<a href="#" class="btn btn-sm bg-info-light" data-toggle="modal" data-target="#appt_details">
+											<i class="far fa-eye"></i> مشاهده
+										</a>
+										
+										<a href="javascript:void(0);" class="btn btn-sm bg-success-light">
+											<i class="fas fa-check"></i> قبول
+										</a>
+										<a href="javascript:void(0);" class="btn btn-sm bg-danger-light">
+											<i class="fas fa-times"></i> حذف
+										</a>
+									</div>
+								</div>
+								<!-- /Appointment List -->
+								
+								<!-- Appointment List -->
+								<div class="appointment-list">
+									<div class="profile-info-widget">
+										<a href="patient-profile.html" class="booking-doc-img">
+											<img src="assets/img/patients/patient3.jpg" alt="User Image">
+										</a>
+										<div class="profile-det-info">
+											<h3><a href="patient-profile.html">کارل کلی</a></h3>
+											<div class="patient-details">
+												<h5><i class="far fa-clock"></i> 9 مهر 1399، 9:00 قبل از ظهر</h5>
+												<h5><i class="fas fa-map-marker-alt"></i>نیویورک، آمریکا</h5>
+												<h5><i class="fas fa-envelope"></i> carlkelly@example.com</h5>
+												<h5 class="mb-0"><i class="fas fa-phone"></i> +1 260 724 7769</h5>
+											</div>
+										</div>
+									</div>
+									<div class="appointment-action">
+										<a href="#" class="btn btn-sm bg-info-light" data-toggle="modal" data-target="#appt_details">
+											<i class="far fa-eye"></i> مشاهده
+										</a>
+										<a href="javascript:void(0);" class="btn btn-sm bg-success-light">
+											<i class="fas fa-check"></i> قبول
+										</a>
+										<a href="javascript:void(0);" class="btn btn-sm bg-danger-light">
+											<i class="fas fa-times"></i> حذف
+										</a>
+									</div>
+								</div>
+								<!-- /Appointment List -->
+								
+								<!-- Appointment List -->
+								<div class="appointment-list">
+									<div class="profile-info-widget">
+										<a href="patient-profile.html" class="booking-doc-img">
+											<img src="assets/img/patients/patient4.jpg" alt="User Image">
+										</a>
+										<div class="profile-det-info">
+											<h3><a href="patient-profile.html">میچل فایرفکس</a></h3>
+											<div class="patient-details">
+												<h5><i class="far fa-clock"></i>9 شهریور، 1:00 بعد از ظهر</h5>
+												<h5><i class="fas fa-map-marker-alt"></i> ایندیانا، آمریکا</h5>
+												<h5><i class="fas fa-envelope"></i> michellefairfax@example.com</h5>
+												<h5 class="mb-0"><i class="fas fa-phone"></i> +1 504 368 6874</h5>
+											</div>
+										</div>
+									</div>
+									<div class="appointment-action">
+										<a href="#" class="btn btn-sm bg-info-light" data-toggle="modal" data-target="#appt_details">
+											<i class="far fa-eye"></i> مشاهده
+										</a>
+										<a href="javascript:void(0);" class="btn btn-sm bg-success-light">
+											<i class="fas fa-check"></i> قبول
+										</a>
+										<a href="javascript:void(0);" class="btn btn-sm bg-danger-light">
+											<i class="fas fa-times"></i> حذف
+										</a>
+									</div>
+								</div>
+								<!-- /Appointment List -->
+								
+								<!-- Appointment List -->
+								<div class="appointment-list">
+									<div class="profile-info-widget">
+										<a href="patient-profile.html" class="booking-doc-img">
+											<img src="assets/img/patients/patient5.jpg" alt="User Image">
+										</a>
+										<div class="profile-det-info">
+											<h3><a href="patient-profile.html">جینا مور</a></h3>
+											<div class="patient-details">
+												<h5><i class="far fa-clock"></i> 8 شهریور 1399، 3:00 بعد از ظهر</h5>
+												<h5><i class="fas fa-map-marker-alt"></i> فلوریدا، آمریکا</h5>
+												<h5><i class="fas fa-envelope"></i> ginamoore@example.com</h5>
+												<h5 class="mb-0"><i class="fas fa-phone"></i> +1 954 820 7887</h5>
+											</div>
+										</div>
+									</div>
+									<div class="appointment-action">
+										<a href="#" class="btn btn-sm bg-info-light" data-toggle="modal" data-target="#appt_details">
+											<i class="far fa-eye"></i> مشاهده
+										</a>
+										<a href="javascript:void(0);" class="btn btn-sm bg-success-light">
+											<i class="fas fa-check"></i> قبول
+										</a>
+										<a href="javascript:void(0);" class="btn btn-sm bg-danger-light">
+											<i class="fas fa-times"></i> حذف
+										</a>
+									</div>
+								</div>
+								<!-- /Appointment List -->
+								
+								<!-- Appointment List -->
+								<div class="appointment-list">
+									<div class="profile-info-widget">
+										<a href="patient-profile.html" class="booking-doc-img">
+											<img src="assets/img/patients/patient6.jpg" alt="User Image">
+										</a>
+										<div class="profile-det-info">
+											<h3><a href="patient-profile.html">ایلس گیلی</a></h3>
+											<div class="patient-details">
+												<h5><i class="far fa-clock"></i> 6 شهریور 1399، 9:00 بعد از ظهر</h5>
+												<h5><i class="fas fa-map-marker-alt"></i> کنتاکی، آمریکا</h5>
+												<h5><i class="fas fa-envelope"></i> elsiegilley@example.com</h5>
+												<h5 class="mb-0"><i class="fas fa-phone"></i> +1 315 384 4562</h5>
+											</div>
+										</div>
+									</div>
+									<div class="appointment-action">
+										<a href="#" class="btn btn-sm bg-info-light" data-toggle="modal" data-target="#appt_details">
+											<i class="far fa-eye"></i> مشاهده
+										</a>
+										<a href="javascript:void(0);" class="btn btn-sm bg-success-light">
+											<i class="fas fa-check"></i> قبول
+										</a>
+										<a href="javascript:void(0);" class="btn btn-sm bg-danger-light">
+											<i class="fas fa-times"></i> حذف
+										</a>
+									</div>
+								</div>
+								<!-- /Appointment List -->
+								
+								<!-- Appointment List -->
+								<div class="appointment-list">
+									<div class="profile-info-widget">
+										<a href="patient-profile.html" class="booking-doc-img">
+											<img src="assets/img/patients/patient7.jpg" alt="User Image">
+										</a>
+										<div class="profile-det-info">
+											<h3><a href="patient-profile.html">جوان گاردنر</a></h3>
+											<div class="patient-details">
+												<h5><i class="far fa-clock"></i> 5 شهریور 1399، 12:00 بعد از ظهر</h5>
+												<h5><i class="fas fa-map-marker-alt"></i> کالیفرنیا، آمریکا</h5>
+												<h5><i class="fas fa-envelope"></i> joangardner@example.com</h5>
+												<h5 class="mb-0"><i class="fas fa-phone"></i> +1 707 2202 603</h5>
+											</div>
+										</div>
+									</div>
+									<div class="appointment-action">
+										<a href="#" class="btn btn-sm bg-info-light" data-toggle="modal" data-target="#appt_details">
+											<i class="far fa-eye"></i> مشاهده
+										</a>
+										<a href="javascript:void(0);" class="btn btn-sm bg-success-light">
+											<i class="fas fa-check"></i> قبول
+										</a>
+										<a href="javascript:void(0);" class="btn btn-sm bg-danger-light">
+											<i class="fas fa-times"></i> حذف
+										</a>
+									</div>
+								</div>
+								<!-- /Appointment List -->
+								
+								<!-- Appointment List -->
+								<div class="appointment-list">
+									<div class="profile-info-widget">
+										<a href="patient-profile.html" class="booking-doc-img">
+											<img src="assets/img/patients/patient8.jpg" alt="User Image">
+										</a>
+										<div class="profile-det-info">
+											<h3><a href="patient-profile.html">دنیل جیفرینگ</a></h3>
+											<div class="patient-details">
+												<h5><i class="far fa-clock"></i> 5 شهریور 1399، 7:00 بعد از ظهر</h5>
+												<h5><i class="fas fa-map-marker-alt"></i> نیوجرسی، آمریکا</h5>
+												<h5><i class="fas fa-envelope"></i> danielgriffing@example.com</h5>
+												<h5 class="mb-0"><i class="fas fa-phone"></i> +1 973 773 9497</h5>
+											</div>
+										</div>
+									</div>
+									<div class="appointment-action">
+										<a href="#" class="btn btn-sm bg-info-light" data-toggle="modal" data-target="#appt_details">
+											<i class="far fa-eye"></i> مشاهده
+										</a>
+										<a href="javascript:void(0);" class="btn btn-sm bg-success-light">
+											<i class="fas fa-check"></i> قبول
+										</a>
+										<a href="javascript:void(0);" class="btn btn-sm bg-danger-light">
+											<i class="fas fa-times"></i> حذف
+										</a>
+									</div>
+								</div>
+								<!-- /Appointment List -->
+								
+								<!-- Appointment List -->
+								<div class="appointment-list">
+									<div class="profile-info-widget">
+										<a href="patient-profile.html" class="booking-doc-img">
+											<img src="assets/img/patients/patient9.jpg" alt="User Image">
+										</a>
+										<div class="profile-det-info">
+											<h3><a href="patient-profile.html">والتر رابینسون</a></h3>
+											<div class="patient-details">
+												<h5><i class="far fa-clock"></i> 4 شهریور 1399، 10:00 بعد از ظهر</h5>
+												<h5><i class="fas fa-map-marker-alt"></i> فلوریدا، آمریکا</h5>
+												<h5><i class="fas fa-envelope"></i> walterroberson@example.com</h5>
+												<h5 class="mb-0"><i class="fas fa-phone"></i> +1 850 358 4445</h5>
+											</div>
+										</div>
+									</div>
+									<div class="appointment-action">
+										<a href="#" class="btn btn-sm bg-info-light" data-toggle="modal" data-target="#appt_details">
+											<i class="far fa-eye"></i> مشاهده
+										</a>
+										<a href="javascript:void(0);" class="btn btn-sm bg-success-light">
+											<i class="fas fa-check"></i> قبول
+										</a>
+										<a href="javascript:void(0);" class="btn btn-sm bg-danger-light">
+											<i class="fas fa-times"></i> حذف
+										</a>
+									</div>
+								</div>
+								<!-- /Appointment List -->
+								
+								<!-- Appointment List -->
+								<div class="appointment-list">
+									<div class="profile-info-widget">
+										<a href="patient-profile.html" class="booking-doc-img">
+											<img src="assets/img/patients/patient10.jpg" alt="User Image">
+										</a>
+										<div class="profile-det-info">
+											<h3><a href="patient-profile.html">روبرت رادیز</a></h3>
+											<div class="patient-details">
+												<h5><i class="far fa-clock"></i> 4 اردیبهشت 1399، 11:00 قبل از ظهر</h5>
+												<h5><i class="fas fa-map-marker-alt"></i> کالیفرنیا، آمریکا</h5>
+												<h5><i class="fas fa-envelope"></i> robertrhodes@example.com</h5>
+												<h5 class="mb-0"><i class="fas fa-phone"></i> +1 858 259 5285</h5>
+											</div>
+										</div>
+									</div>
+									<div class="appointment-action">
+										<a href="#" class="btn btn-sm bg-info-light" data-toggle="modal" data-target="#appt_details">
+											<i class="far fa-eye"></i> مشاهده
+										</a>
+										<a href="javascript:void(0);" class="btn btn-sm bg-success-light">
+											<i class="fas fa-check"></i> قبول
+										</a>
+										<a href="javascript:void(0);" class="btn btn-sm bg-danger-light">
+											<i class="fas fa-times"></i> حذف
+										</a>
+									</div>
+								</div>
+								<!-- /Appointment List -->
+								
+								<!-- Appointment List -->
+								<div class="appointment-list">
+									<div class="profile-info-widget">
+										<a href="patient-profile.html" class="booking-doc-img">
+											<img src="assets/img/patients/patient11.jpg" alt="User Image">
+										</a>
+										<div class="profile-det-info">
+											<h3><a href="patient-profile.html">هری ویلیامز</a></h3>
+											<div class="patient-details">
+												<h5><i class="far fa-clock"></i> 3 مهر 1399، 6:00 بعد از ظهر</h5>
+												<h5><i class="fas fa-map-marker-alt"></i> کلورادو، آمریکا</h5>
+												<h5><i class="fas fa-envelope"></i> harrywilliams@example.com</h5>
+												<h5 class="mb-0"><i class="fas fa-phone"></i> +1 303 607 7075</h5>
+											</div>
+										</div>
+									</div>
+									<div class="appointment-action">
+										<a href="#" class="btn btn-sm bg-info-light" data-toggle="modal" data-target="#appt_details">
+											<i class="far fa-eye"></i> مشاهده
+										</a>
+										<a href="javascript:void(0);" class="btn btn-sm bg-success-light">
+											<i class="fas fa-check"></i> قبول
+										</a>
+										<a href="javascript:void(0);" class="btn btn-sm bg-danger-light">
+											<i class="fas fa-times"></i> حذف
+										</a>
+									</div>
+								</div>
+								<!-- /Appointment List -->
+								
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			</div>		
+			<!-- /Page Content -->
+   
+			<!-- Footer -->
+			<footer class="footer">
+				
+				<!-- Footer Top -->
+				<div class="footer-top">
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-lg-3 col-md-6">
+							
+								<!-- Footer Widget -->
+								<div class="footer-widget footer-about">
+									<div class="footer-logo">
+										<img src="assets/img/footer-logo.png" alt="logo">
+									</div>
+									<div class="footer-about-content">
+										<p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است</p>
+										<div class="social-icon">
+											<ul>
+												<li>
+													<a href="#" target="_blank"><i class="fab fa-facebook-f"></i> </a>
+												</li>
+												<li>
+													<a href="#" target="_blank"><i class="fab fa-twitter"></i> </a>
+												</li>
+												<li>
+													<a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+												</li>
+												<li>
+													<a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+												</li>
+												<li>
+													<a href="#" target="_blank"><i class="fab fa-dribbble"></i> </a>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+								<!-- /Footer Widget -->
+								
+							</div>
+							
+							<div class="col-lg-3 col-md-6">
+							
+								<!-- Footer Widget -->
+								<div class="footer-widget footer-menu">
+									<h2 class="footer-title">برای مراجعه‌کنندگان</h2>
+									<ul>
+										<li><a href="search.html">جستجو پزشکان</a></li>
+										<li><a href="login.html">‌ورود</a></li>
+										<li><a href="register.html">‌ثبت‌نام</a></li>
+										<li><a href="booking.html">رزرو نوبت</a></li>
+										<li><a href="patient-dashboard.html">دشبرد مراجعه‌کننده</a></li>
+									</ul>
+								</div>
+								<!-- /Footer Widget -->
+								
+							</div>
+							
+							<div class="col-lg-3 col-md-6">
+							
+								<!-- Footer Widget -->
+								<div class="footer-widget footer-menu">
+									<h2 class="footer-title">برای پزشکان</h2>
+									<ul>
+										<li><a href="appointments.html">نوبت‌دهی</a></li>
+										<li><a href="chat.html">چت</a></li>
+										<li><a href="login.html">‌ورود</a></li>
+										<li><a href="doctor-register.html">‌ثبت‌نام</a></li>
+										<li><a href="doctor-dashboard.html">دشبرد پزشک</a></li>
+									</ul>
+								</div>
+								<!-- /Footer Widget -->
+								
+							</div>
+							
+							<div class="col-lg-3 col-md-6">
+							
+								<!-- Footer Widget -->
+								<div class="footer-widget footer-contact">
+									<h2 class="footer-title">ارتباط با ما</h2>
+									<div class="footer-contact-info">
+										<div class="footer-address">
+											<span><i class="fas fa-map-marker-alt"></i></span>
+											<p> خیابان ارم، سانفرانسیسکو<br> کالیفرنیا خیابان 94108 </p>
+										</div>
+										<p>
+											<i class="fas fa-phone-alt"></i>
+											+1 315 369 5943
+										</p>
+										<p class="mb-0">
+											<i class="fas fa-envelope"></i>
+											doccure@example.com
+										</p>
+									</div>
+								</div>
+								<!-- /Footer Widget -->
+								
+							</div>
+							
+						</div>
+					</div>
+				</div>
+				<!-- /Footer Top -->
+				
+				<!-- Footer Bottom -->
+                <div class="footer-bottom">
+					<div class="container-fluid">
+					
+						<!-- Copyright -->
+						<div class="copyright">
+							<div class="row">
+								<div class="col-md-6 col-lg-6">
+									<div class="copyright-text">
+										<p class="mb-0">&copy; 1399 داک‌کیور، تمامی حقوق محفوظ است.</p>
+									</div>
+								</div>
+								<div class="col-md-6 col-lg-6">
+								
+									<!-- Copyright Menu -->
+									<div class="copyright-menu">
+										<ul class="policy-menu">
+											<li><a href="term-condition.html">شرایط و مقررات</a></li>
+											<li><a href="privacy-policy.html">حریم شخصی</a></li>
+										</ul>
+									</div>
+									<!-- /Copyright Menu -->
+									
+								</div>
+							</div>
+						</div>
+						<!-- /Copyright -->
+						
+					</div>
+				</div>
+				<!-- /Footer Bottom -->
+				
+			</footer>
+			<!-- /Footer -->
+		   
+		</div>
+		<!-- /Main Wrapper -->
+		
+		<!-- Appointment Details Modal -->
+		<div class="modal fade custom-modal" id="appt_details">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">جزییات نوبت</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<ul class="info-details">
+							<li>
+								<div class="details-header">
+									<div class="row">
+										<div class="col-md-6">
+											<span class="title">#APT0001</span>
+											<span class="text">21 مهر 1399، 10:00 بعد از ظهر</span>
+										</div>
+										<div class="col-md-6">
+											<div class="text-right">
+												<button type="button" class="btn bg-success-light btn-sm" id="topup_status">تکمیل شده</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</li>
+							<li>
+								<span class="title">وضعیت:</span>
+								<span class="text">تکمیل شده</span>
+							</li>
+							<li>
+								<span class="title">تاریخ قبول:</span>
+								<span class="text">29 مهر 1399</span>
+							</li>
+							<li>
+								<span class="title">مقدار پرداختی</span>
+								<span class="text"> 450 تومان </span>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /Appointment Details Modal -->
+	  
+		<!-- jQuery -->
+		<script src="assets/js/jquery.min.js"></script>
+		
+		<!-- Bootstrap Core JS -->
+		<script src="assets/js/popper.min.js"></script>
+		<script src="assets/js/bootstrap.min.js"></script>
+		
+		<!-- Sticky Sidebar JS -->
+        <script src="assets/plugins/theia-sticky-sidebar/ResizeSensor.js"></script>
+        <script src="assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js"></script>
+		
+		<!-- Custom JS -->
+		<script src="assets/js/script.js"></script>
+		
+	</body>
+</html>

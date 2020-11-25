@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 public interface IOrganizationRepository extends JpaRepository<Organization, Long>{
 
     @Query( "SELECT e FROM Organization e where 1=1 " +
-            " and e.title = COALESCE(cast(:title AS text), e.title) " +
+            " and e.title like COALESCE(cast(:title AS text), e.title)||'%' " +
             " and e.description =  COALESCE(cast(:description AS text), e.description) " +
             " and e.active = CASE WHEN :active is null THEN e.active ELSE :active END ")
     Page<Organization> getAllGridByMyQuery(@Param("title") String title, @Param("description") String description, @Param("active") Boolean active, Pageable pageable);

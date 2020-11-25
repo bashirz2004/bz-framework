@@ -1,0 +1,2176 @@
+<!DOCTYPE html> 
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>داک‌کیور</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+		
+		<!-- Favicons -->
+		<link href="assets/img/favicon.png" rel="icon">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+		
+		<!-- Fontawesome CSS -->
+		<link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
+		<link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
+		
+		<!-- Main CSS -->
+		<link rel="stylesheet" href="assets/css/style.css">
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+			<script src="assets/js/html5shiv.min.js"></script>
+			<script src="assets/js/respond.min.js"></script>
+		<![endif]-->
+	
+	</head>
+	<body>
+
+		<!-- Main Wrapper -->
+		<div class="main-wrapper">
+		
+			<!-- Header -->
+			<header class="header">
+				<nav class="navbar navbar-expand-lg header-nav">
+					<div class="navbar-header">
+						<a id="mobile_btn" href="javascript:void(0);">
+							<span class="bar-icon">
+								<span></span>
+								<span></span>
+								<span></span>
+							</span>
+						</a>
+						<a href="index.html" class="navbar-brand logo">
+							<img src="assets/img/logo.png" class="img-fluid" alt="Logo">
+						</a>
+					</div>
+					<div class="main-menu-wrapper">
+						<div class="menu-header">
+							<a href="index.html" class="menu-logo">
+								<img src="assets/img/logo.png" class="img-fluid" alt="Logo">
+							</a>
+							<a id="menu_close" class="menu-close" href="javascript:void(0);">
+								<i class="fas fa-times"></i>
+							</a>
+						</div>
+						<ul class="main-nav">
+							<li>
+								<a href="index.html">خانه</a>
+							</li>
+							<li class="has-submenu">
+								<a href="#">پزشک‌ها<i class="fas fa-chevron-down"></i></a>
+								<ul class="submenu">
+									<li><a href="doctor-dashboard.html">دشبرد پزشک</a></li>
+									<li><a href="appointments.html">نوبت‌دهی</a></li>
+									<li><a href="schedule-timings.html">زمان‌بندی</a></li>
+									<li><a href="my-patients.html">لیست بیماران</a></li>
+									<li><a href="patient-profile.html">پروفایل بیماران</a></li>
+									<li><a href="chat-doctor.html">چت</a></li>
+									<li><a href="invoices.html">صورت‌حساب</a></li>
+									<li><a href="doctor-profile-settings.html">تنظیمات پروفایل</a></li>
+									<li><a href="reviews.html">نظرات</a></li>
+									<li><a href="doctor-register.html">ثبت‌نام پزشک</a></li>
+									<li class="has-submenu">
+										<a href="doctor-blog.html">بلاگ</a>
+										<ul class="submenu">
+											<li><a href="doctor-blog.html">بلاگ</a></li>
+											<li><a href="blog-details.html">مشاهده بلاگ</a></li>
+											<li><a href="doctor-add-blog.html">افزودن بلاگ</a></li>
+										</ul>
+									</li>
+								</ul>
+							</li>	
+							<li class="has-submenu">
+								<a href="#">مراجعه‌کنندگان<i class="fas fa-chevron-down"></i></a>
+								<ul class="submenu">
+									<li class="has-submenu">
+										<a href="#">پزشکان</a>
+										<ul class="submenu">
+											<li><a href="map-grid.html">گرید نقشه</a></li>
+											<li><a href="map-list.html">لیست نقشه</a></li>
+										</ul>
+									</li>
+									<li><a href="search.html">جستجو پزشک</a></li>
+									<li><a href="doctor-profile.html">پروفایل پزشک</a></li>
+									<li><a href="booking.html">رزرو نوبت</a></li>
+									<li><a href="checkout.html">پرداخت</a></li>
+									<li><a href="booking-success.html">رزرو موفق</a></li>
+									<li><a href="patient-dashboard.html">دشبرد مراجعه‌کننده</a></li>
+									<li><a href="favourites.html">‌علاقه‌مندیها</a></li>
+									<li><a href="chat.html">چت</a></li>
+									<li><a href="profile-settings.html">تنظیمات پروفایل</a></li>
+									<li><a href="change-password.html">‌تغییر رمز عبور</a></li>
+								</ul>
+							</li>	
+							<li class="has-submenu">
+								<a href="#">‌داروخانه<i class="fas fa-chevron-down"></i></a>
+								<ul class="submenu">
+									<li><a href="pharmacy-index.html">‌داروخانه</a></li>
+									<li><a href="pharmacy-details.html">‌جزییات داروخانه</a></li>
+									<li><a href="pharmacy-search.html">‌جستجو داروخانه</a></li>
+									<li><a href="product-all.html">‌محصولات</a></li>
+									<li><a href="product-description.html">توضیحات محصول</a></li>
+									<li><a href="cart.html">‌سبد خرید</a></li>
+									<li><a href="product-checkout.html">‌خرید محصولات</a></li>
+									<li><a href="payment-success.html">‌پرداخت موفق</a></li>
+								</ul>
+							</li>
+							<li class="has-submenu active">
+								<a href="#">‌صفحات<i class="fas fa-chevron-down"></i></a>
+								<ul class="submenu">
+									<li><a href="voice-call.html">‌تماس صوتی</a></li>
+									<li><a href="video-call.html">‌تماس تصویری</a></li>
+									<li><a href="search.html">‌جستجو پزشک</a></li>
+									<li><a href="calendar.html">‌تقویم</a></li>
+									
+									<li class="active"><a href="components.html">‌کامپوننت‌ها</a></li>
+									<li class="has-submenu">
+										<a href="invoices.html">صورت‌حساب</a>
+										<ul class="submenu">
+											<li><a href="invoices.html">صورت‌حساب</a></li>
+											<li><a href="invoice-view.html">‌مشاهده صورت‌حساب</a></li>
+										</ul>
+									</li>
+									<li><a href="blank-page.html">‌صفحه شروع</a></li>
+									<li><a href="login.html">‌ورود</a></li>
+									<li><a href="register.html">‌ثبت‌نام</a></li>
+									<li><a href="forgot-password.html">‌فراموشی رمزعبور</a></li>
+								</ul>
+							</li>
+							<li class="has-submenu">
+								<a href="#">‌بلاگ<i class="fas fa-chevron-down"></i></a>
+								<ul class="submenu">
+									<li><a href="blog-list.html">‌لیست بلاگ</a></li>
+									<li><a href="blog-grid.html">‌گرید بلاگ</a></li>
+									<li><a href="blog-details.html">‌جزییات بلاگ</a></li>
+								</ul>
+							</li>
+							<li class="has-submenu">
+								<a href="#" target="_blank">ادمین<i class="fas fa-chevron-down"></i></a>
+								<ul class="submenu">
+									<li><a href="admin/index.html" target="_blank">‌ادمین</a></li>
+									<li><a href="pharmacy/index.html" target="_blank">ادمین داروخانه</a></li>
+								</ul>
+							</li>
+							<li class="login-link">
+								<a href="login.html">‌ورود / ثبت‌نام</a>
+							</li>
+						</ul>	 
+					</div>		 
+					<ul class="nav header-navbar-rht">
+						<li class="nav-item contact-item">
+							<div class="header-contact-img">
+								<i class="far fa-hospital"></i>							
+							</div>
+							<div class="header-contact-detail">
+								<p class="contact-header">‌تماس با ما</p>
+								<p class="contact-info-header"> +1 315 369 5943</p>
+							</div>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link header-login" href="login.html">ورود / ثبت‌نام</a>
+						</li>
+					</ul>
+				</nav>
+			</header>
+			<!-- /Header -->
+			
+			<!-- Breadcrumb -->
+			<div class="breadcrumb-bar">
+				<div class="container-fluid">
+					<div class="row align-items-center">
+						<div class="col-md-12 col-12">
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">خانه</a></li>
+									<li class="breadcrumb-item active" aria-current="page">‌کامپوننت‌ها</li>
+								</ol>
+							</nav>
+							<h2 class="breadcrumb-title">‌کامپوننت‌ها</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb -->
+			
+			<!-- Page Content -->
+			<div class="content">
+				<div class="container">
+
+					
+					<div class="comp-sec-wrapper">
+					
+						<!-- Avatar -->
+						<section class="comp-section">
+							<div class="comp-header">
+                                <h3 class="comp-title">آواتور</h3>
+                                <div class="line"></div>
+                            </div>
+							<div class="row">
+								<div class="col-md-12">
+									<div class="card">
+										<div class="card-header">
+											<h4 class="card-title">اندازه</h4>
+										</div>
+										<div class="card-body">
+											<div class="avatar avatar-xxl">
+												<img class="avatar-img rounded-circle" alt="User Image" src="assets/img/patients/patient8.jpg">
+											</div>
+											<div class="avatar avatar-xl">
+												<img class="avatar-img rounded-circle" alt="User Image" src="assets/img/patients/patient8.jpg">
+											</div>
+											<div class="avatar avatar-lg">
+												<img class="avatar-img rounded-circle" alt="User Image" src="assets/img/patients/patient8.jpg">
+											</div>
+											<div class="avatar">
+												<img class="avatar-img rounded-circle" alt="User Image" src="assets/img/patients/patient8.jpg">
+											</div>
+											<div class="avatar avatar-sm">
+												<img class="avatar-img rounded-circle" alt="User Image" src="assets/img/patients/patient8.jpg">
+											</div>
+											<div class="avatar avatar-xs">
+												<img class="avatar-img rounded-circle" alt="User Image" src="assets/img/patients/patient8.jpg">
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="card">
+										<div class="card-header">
+											<h4 class="card-title">آواتور یا وضعیت</h4>
+										</div>
+										<div class="card-body">
+											<div class="avatar avatar-online">
+												<img class="avatar-img rounded-circle" alt="User Image" src="assets/img/patients/patient8.jpg">
+											</div>
+											<div class="avatar avatar-offline">
+												<img class="avatar-img rounded-circle" alt="User Image" src="assets/img/patients/patient8.jpg">
+											</div>
+											<div class="avatar avatar-away">
+												<img class="avatar-img rounded-circle" alt="User Image" src="assets/img/patients/patient8.jpg">
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="card">
+										<div class="card-header">
+											<h4 class="card-title">شکل</h4>
+										</div>
+										<div class="card-body">
+											<div class="avatar">
+												<img class="avatar-img rounded" alt="User Image" src="assets/img/patients/patient8.jpg">
+											</div>
+											<div class="avatar">
+												<img class="avatar-img rounded-circle" alt="User Image" src="assets/img/patients/patient8.jpg">
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="card">
+										<div class="card-header">
+											<h4 class="card-title">گروه</h4>
+										</div>
+										<div class="card-body">
+											<div class="avatar-group">
+												<div class="avatar">
+													<img class="avatar-img rounded-circle border border-white" alt="User Image" src="assets/img/patients/patient8.jpg">
+												</div>
+												<div class="avatar">
+													<img class="avatar-img rounded-circle border border-white" alt="User Image" src="assets/img/patients/patient2.jpg">
+												</div>
+												<div class="avatar">
+													<img class="avatar-img rounded-circle border border-white" alt="User Image" src="assets/img/patients/patient3.jpg">
+												</div>
+												<div class="avatar">
+													<span class="avatar-title rounded-circle border border-white">سارا</span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+						<!-- /Avatar -->
+						
+						<!-- Alerts -->
+						<section class="comp-section">
+							<div class="comp-header">
+                                <h3 class="comp-title">پیام</h3>
+                                <div class="line"></div>
+                            </div>
+							<div class="card">
+								<div class="card-body">
+									<div class="alert alert-primary alert-dismissible fade show" role="alert">
+										<strong>سلام دوست من</strong> باید چیزی که اینجا نوشته شده رو ببینی
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="alert alert-secondary alert-dismissible fade show" role="alert">
+										<strong>سلام دوست من</strong> باید چیزی که اینجا نوشته شده رو ببینی
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="alert alert-warning alert-dismissible fade show" role="alert">
+										<strong>اخطار!</strong>یه مشکلی وجود داره <a href="#" class="alert-link">در اتصال اینترنت</a>.
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="alert alert-danger alert-dismissible fade show" role="alert">
+										<strong>خطا!</strong> یک <a href="#" class="alert-link"> مشکل </a> در ارسال اطلاعات شما رخ داده هست
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="alert alert-success alert-dismissible fade show" role="alert">
+										<strong>موفق!</strong> <a href="#" class="alert-link">پیام‌ها</a> فرستاده شدند
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="alert alert-info alert-dismissible fade show" role="alert">
+										<strong>نکته!</strong> لطفا لینک رو به رو را بخوانید <a href="#" class="alert-link"> لینک</a> ممنونیم.
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="alert alert-light alert-dismissible fade show" role="alert">
+										<strong>سلام دوست من</strong> باید چیزی که اینجا نوشته شده رو ببینی
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="alert alert-dark alert-dismissible fade show mb-0" role="alert">
+										<strong>سلام دوست من</strong> باید چیزی که اینجا نوشته شده رو ببینی
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+								</div>
+							</div>
+						</section>
+						<!-- /Alerts -->
+						
+						<!-- Breadcrumbs -->
+						<section class="comp-section">
+							<div class="comp-header">
+                                <h3 class="comp-title">بردکرامبز</h3>
+                                <div class="line"></div>
+                            </div>
+							<div class="card">
+								<div class="card-body">
+									<nav aria-label="breadcrumb">
+										<ol class="breadcrumb">
+											<li class="breadcrumb-item active" aria-current="page">خانه</li>
+										</ol>
+									</nav>
+									<nav aria-label="breadcrumb">
+										<ol class="breadcrumb">
+											<li class="breadcrumb-item"><a href="#">خانه</a></li>
+											<li class="breadcrumb-item active" aria-current="page">محصولات</li>
+										</ol>
+									</nav>
+									<nav aria-label="breadcrumb">
+										<ol class="breadcrumb mb-0">
+											<li class="breadcrumb-item"><a href="#">خانه</a></li>
+											<li class="breadcrumb-item"><a href="#">محصولات</a></li>
+											<li class="breadcrumb-item active" aria-current="page">اکسسوری</li>
+										</ol>
+									</nav>
+								</div>
+							</div>
+						</section>
+						<!-- /Breadcrumbs -->
+						
+						<!-- Buttons -->
+						<section class="comp-section comp-buttons">
+							<div class="comp-header">
+                                <h3 class="comp-title">دکمه ها</h3>
+                                <div class="line"></div>
+                            </div>
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title"> دکمه پیشفرض </h4>
+									<button type="button" class="btn btn-primary">اصلی</button>
+									<button type="button" class="btn btn-secondary">فرعی</button>
+									<button type="button" class="btn btn-success">موفق</button>
+									<button type="button" class="btn btn-danger">خطر</button>
+									<button type="button" class="btn btn-warning">اخطار</button>
+									<button type="button" class="btn btn-info">اطلاعات</button>
+									<button type="button" class="btn btn-light">روشن</button>
+									<button type="button" class="btn btn-dark">تیره</button>
+									<button type="button" class="btn btn-link">لینک</button>
+									<hr>
+									<h4 class="card-title">اندازه دکمه ها</h4>
+									<p>
+										<button type="button" class="btn btn-primary btn-lg">اصلی</button>
+										<button type="button" class="btn btn-secondary btn-lg">فرعی</button>
+										<button type="button" class="btn btn-success btn-lg">موفق</button>
+										<button type="button" class="btn btn-danger btn-lg">خطر</button>
+										<button type="button" class="btn btn-warning btn-lg">اخطار</button>
+										<button type="button" class="btn btn-info btn-lg">اطلاعات</button>
+										<button type="button" class="btn btn-light btn-lg">روشن</button>
+										<button type="button" class="btn btn-dark btn-lg">تیره</button>
+									</p>
+									<p>
+										<button type="button" class="btn btn-primary">اصلی</button>
+										<button type="button" class="btn btn-secondary">فرعی</button>
+										<button type="button" class="btn btn-success">موفق</button>
+										<button type="button" class="btn btn-danger">خطر</button>
+										<button type="button" class="btn btn-warning">اخطار</button>
+										<button type="button" class="btn btn-info">اطلاعات</button>
+										<button type="button" class="btn btn-light">روشن</button>
+										<button type="button" class="btn btn-dark">تیره</button>
+									</p>
+									<p>
+										<button type="button" class="btn btn-primary btn-sm">اصلی</button>
+										<button type="button" class="btn btn-secondary btn-sm">فرعی</button>
+										<button type="button" class="btn btn-success btn-sm">موفق</button>
+										<button type="button" class="btn btn-danger btn-sm">خطر</button>
+										<button type="button" class="btn btn-warning btn-sm">اخطار</button>
+										<button type="button" class="btn btn-info btn-sm">اطلاعات</button>
+										<button type="button" class="btn btn-light btn-sm">روشن</button>
+										<button type="button" class="btn btn-dark btn-sm">تیره</button>
+									</p>
+									<hr>
+									<h4 class="card-title">دکمه گروهی</h4>
+									<div class="btn-toolbar">
+										<div class="btn-group btn-group-lg">
+											<button type="button" class="btn btn-primary">چپ</button>
+											<button type="button" class="btn btn-primary">وسط</button>
+											<button type="button" class="btn btn-primary">راست</button>
+										</div>
+									</div>
+									<br>
+									<div class="btn-toolbar">
+										<div class="btn-group">
+											<button type="button" class="btn btn-primary">چپ</button>
+											<button type="button" class="btn btn-primary">وسط</button>
+											<button type="button" class="btn btn-primary">راست</button>
+										</div>
+									</div>
+									<br>
+									<div class="btn-toolbar">
+										<div class="btn-group btn-group-sm">
+											<button type="button" class="btn btn-primary">چپ</button>
+											<button type="button" class="btn btn-primary">وسط</button>
+											<button type="button" class="btn btn-primary">راست</button>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<!-- Rounded Button -->
+							<div class="card">
+								<div class="card-header">
+									<h4 class="card-title">دکمه گرد</h4>
+									<p class="card-text">از <code>.btn-rounded</code>  به عنوان کلاس در  <code>.btn</code> استفاده کنید.  </p>
+								</div>
+								<div class="card-body">
+									<button type="button" class="btn btn-rounded btn-primary">اصلی</button>
+									<button type="button" class="btn btn-rounded btn-secondary">فرعی</button>
+									<button type="button" class="btn btn-rounded btn-success">موفق</button>
+									<button type="button" class="btn btn-rounded btn-danger">خطر</button>
+									<button type="button" class="btn btn-rounded btn-warning">اخطار</button>
+									<button type="button" class="btn btn-rounded btn-info">اطلاعات</button>
+									<button type="button" class="btn btn-rounded btn-light">روشن</button>
+									<button type="button" class="btn btn-rounded btn-dark">تیره</button>
+									<hr>
+									<p>از <code>.btn-rounded</code> به عنوان کلاس در  <code>.btn-outline-*</code> استفاده کنید </p>
+									<button type="button" class="btn btn-rounded btn-outline-primary">اصلی</button>
+									<button type="button" class="btn btn-rounded btn-outline-secondary">فرعی</button>
+									<button type="button" class="btn btn-rounded btn-outline-success">موفق</button>
+									<button type="button" class="btn btn-rounded btn-outline-danger">خطر</button>
+									<button type="button" class="btn btn-rounded btn-outline-warning">اخطار</button>
+									<button type="button" class="btn btn-rounded btn-outline-info">اطلاعات</button>
+									<button type="button" class="btn btn-rounded btn-outline-light">روشن</button>
+									<button type="button" class="btn btn-rounded btn-outline-dark">تیره</button>
+								</div>
+							</div>
+							<!-- /Rounded Button -->
+							
+							<!-- Outline Buttons -->
+							<div class="card">
+								<div class="card-header">
+									<h4 class="card-title">دکمه دورخط دار </h4>
+									<p class="card-text"> از <code>.btn-outline-*</code> برای دکمه ها استفاده کنید .</p>
+								</div>
+								<div class="card-body">
+									<div class="row row-sm align-items-center">
+										<div class="col-12 col-xl mb-3 mb-xl-0">نرمال</div>
+										<div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+											<button type="button" class="btn btn-block btn-outline-primary">اصلی</button>
+										</div>
+										<div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+											<button type="button" class="btn btn-block btn-outline-secondary">فرعی</button>
+										</div>
+										<div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+											<button type="button" class="btn btn-block btn-outline-success">موفق</button>
+										</div>
+										<div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+											<button type="button" class="btn btn-block btn-outline-warning">اخطار</button>
+										</div>
+										<div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+											<button type="button" class="btn btn-block btn-outline-danger">خطر</button>
+										</div>
+										<div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+											<button type="button" class="btn btn-block btn-outline-info">اطلاعات</button>
+										</div>
+										<div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+											<button type="button" class="btn btn-block btn-outline-light">روشن</button>
+										</div>
+										<div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+											<button type="button" class="btn btn-block btn-outline-dark">تیره</button>
+										</div>
+									</div>
+									<div class="row row-sm align-items-center mt-3">
+										<div class="col-12 col-xl mb-3 mb-xl-0">فعال</div>
+										<div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+											<button type="button" class="btn btn-block btn-outline-primary active">اصلی</button>
+										</div>
+										<div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+											<button type="button" class="btn btn-block btn-outline-secondary active">فرعی</button>
+										</div>
+										<div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+											<button type="button" class="btn btn-block btn-outline-success active">موفق</button>
+										</div>
+										<div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+											<button type="button" class="btn btn-block btn-outline-warning active">اخطار</button>
+										</div>
+										<div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+											<button type="button" class="btn btn-block btn-outline-danger active">خطر</button>
+										</div>
+										<div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+											<button type="button" class="btn btn-block btn-outline-info active">اطلاعات</button>
+										</div>
+										<div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+											<button type="button" class="btn btn-block btn-outline-light active">روشن</button>
+										</div>
+										<div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+											<button type="button" class="btn btn-block btn-outline-dark active">تیره</button>
+										</div>
+									</div>
+									<div class="row row-sm align-items-center mt-3">
+										<div class="col-12 col-xl mb-3 mb-xl-0">غیرفعال</div>
+										<div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+											<button disabled="" type="button" class="btn btn-block btn-outline-primary">اصلی</button>
+										</div>
+										<div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+											<button disabled="" type="button" class="btn btn-block btn-outline-secondary">فرعی</button>
+										</div>
+										<div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+											<button disabled="" type="button" class="btn btn-block btn-outline-success">موفق</button>
+										</div>
+										<div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+											<button disabled="" type="button" class="btn btn-block btn-outline-warning">اخطار</button>
+										</div>
+										<div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+											<button disabled="" type="button" class="btn btn-block btn-outline-danger">خطر</button>
+										</div>
+										<div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+											<button disabled="" type="button" class="btn btn-block btn-outline-info">اطلاعات</button>
+										</div>
+										<div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+											<button disabled="" type="button" class="btn btn-block btn-outline-light">روشن</button>
+										</div>
+										<div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+											<button disabled="" type="button" class="btn btn-block btn-outline-dark">تیره</button>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- /Outline Buttons -->
+
+						</section>
+						<!-- Buttons -->
+						
+						<!-- Cards -->
+						<section class="comp-section comp-cards">
+							<div class="comp-header">
+                                <h3 class="comp-title">کارتها</h3>
+                                <div class="line"></div>
+                            </div>
+						
+							<div class="row">
+								<div class="col-12 col-md-6 col-lg-4 d-flex">
+									<div class="card flex-fill">
+										<img alt="Card Image" src="assets/img/img-01.jpg" class="card-img-top">
+										<div class="card-header">
+											<h5 class="card-title mb-0">کارت یا تصویر و لینک</h5>
+										</div>
+										<div class="card-body">
+											<p class="card-text">چند متن سریع به عنوان عنوان کارت ایجاد شده و قسمت عمده محتوای کارت را تشکیل می دهد.</p>
+											<a class="card-link" href="#">لینک کارت</a>
+											<a class="card-link" href="#">لینک دیگر</a>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-12 col-md-6 col-lg-4 d-flex">
+									<div class="card flex-fill">
+										<img alt="Card Image" src="assets/img/img-01.jpg" class="card-img-top">
+										<div class="card-header">
+											<h5 class="card-title mb-0">کارت با تصویر و دکمه</h5>
+										</div>
+										<div class="card-body">
+											<p class="card-text">چند متن سریع به عنوان عنوان کارت ایجاد شده و قسمت عمده محتوای کارت را تشکیل می دهد.</p>
+											<a class="btn btn-primary" href="#"> رفتن به </a>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-12 col-md-6 col-lg-4 d-flex">
+									<div class="card flex-fill">
+										<img alt="Card Image" src="assets/img/img-01.jpg" class="card-img-top">
+										<div class="card-header">
+											<h5 class="card-title mb-0">کارت همراه با تصویر و لیست</h5>
+										</div>
+										<ul class="list-group list-group-flush">
+											<li class="list-group-item">لورم ایپسوم متن </li>
+											<li class="list-group-item">ساختگی با تولید سادگی</li>
+											<li class="list-group-item"> نامفهوم از صنعت</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-12 col-md-6 col-lg-4 d-flex">
+									<div class="card flex-fill">
+										<div class="card-header">
+											<h5 class="card-title mb-0">کارت با لینک</h5>
+										</div>
+										<div class="card-body">
+											<p class="card-text">چند متن سریع به عنوان عنوان کارت ایجاد شده و قسمت عمده محتوای کارت را تشکیل می دهد.</p>
+											<a class="card-link" href="#">لینک کارت</a>
+											<a class="card-link" href="#">لینک دیگر</a>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-12 col-md-6 col-lg-4 d-flex">
+									<div class="card flex-fill">
+										<div class="card-header">
+											<h5 class="card-title mb-0">کارت با دکمه</h5>
+										</div>
+										<div class="card-body">
+											<p class="card-text">چند متن سریع به عنوان عنوان کارت ایجاد شده و قسمت عمده محتوای کارت را تشکیل می دهد.</p>
+											<a class="btn btn-primary" href="#"> رفتن به </a>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-12 col-md-6 col-lg-4 d-flex">
+									<div class="card flex-fill">
+										<div class="card-header">
+											<h5 class="card-title mb-0">کارت با لیست</h5>
+										</div>
+										<ul class="list-group list-group-flush">
+											<li class="list-group-item">لورم ایپسوم متن </li>
+											<li class="list-group-item">ساختگی با تولید سادگی</li>
+											<li class="list-group-item"> نامفهوم از صنعت</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-12 col-md-6 col-lg-4 d-flex">
+									<div class="card flex-fill">
+										<div class="card-header">
+										این هدر است 
+										</div>
+										<div class="card-body">
+											<h5 class="card-title">عنوان خاص اینجا</h5>
+											<p class="card-text">چند متن سریع به عنوان عنوان کارت ایجاد شده و قسمت عمده محتوای کارت را تشکیل می دهد.</p>
+										</div>
+										<div class="card-footer text-muted">
+											این فوتر است
+										</div>
+									</div>
+								</div>
+
+								<div class="col-12 col-md-6 col-lg-4 d-flex">
+									<div class="card flex-fill">
+										<div class="card-header">
+											<ul role="tablist" class="nav nav-tabs card-header-tabs float-right">
+												<li class="nav-item">
+													<a href="#tab-1" data-toggle="tab" class="nav-link active">فعال</a>
+												</li>
+												<li class="nav-item">
+													<a href="#tab-2" data-toggle="tab" class="nav-link">لینک</a>
+												</li>
+												<li class="nav-item">
+													<a href="#tab-3" data-toggle="tab" class="nav-link disabled">غیرفعال</a>
+												</li>
+											</ul>
+										</div>
+										<div class="card-body">
+											<div class="tab-content pt-0">
+												<div role="tabpanel" id="tab-1" class="tab-pane fade show active">
+													<h5 class="card-title">کارت با تب</h5>
+													<p class="card-text">چند متن سریع به عنوان عنوان کارت ایجاد شده و قسمت عمده محتوای کارت را تشکیل می دهد.</p>
+													<a class="btn btn-primary" href="#"> رفتن به </a>
+												</div>
+												<div role="tabpanel" id="tab-2" class="tab-pane fade text-center">
+													<h5 class="card-title">کارت با تب</h5>
+													<p class="card-text">چند متن سریع به عنوان عنوان کارت ایجاد شده و قسمت عمده محتوای کارت را تشکیل می دهد.</p>
+													<a class="btn btn-primary" href="#"> رفتن به </a>
+												</div>
+												<div role="tabpanel" id="tab-3" class="tab-pane fade">
+													<h5 class="card-title">کارت با تب</h5>
+													<p class="card-text">چند متن سریع به عنوان عنوان کارت ایجاد شده و قسمت عمده محتوای کارت را تشکیل می دهد.</p>
+													<a class="btn btn-primary" href="#"> رفتن به </a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-12 col-md-6 col-lg-4 d-flex">
+									<div class="card flex-fill">
+										<div class="card-header">
+											<ul role="tablist" class="nav nav-pills card-header-pills float-right">
+												<li class="nav-item">
+													<a href="#tab-4" data-toggle="tab" class="nav-link active">فعال</a>
+												</li>
+												<li class="nav-item">
+													<a href="#tab-5" data-toggle="tab" class="nav-link">لینک</a>
+												</li>
+												<li class="nav-item">
+													<a href="#tab-6" data-toggle="tab" class="nav-link disabled">غیرفعال</a>
+												</li>
+											</ul>
+										</div>
+										<div class="card-body">
+											<div class="tab-content pt-0">
+												<div role="tabpanel" id="tab-4" class="tab-pane fade show active">
+													<h5 class="card-title">کارت با قرص</h5>
+													<p class="card-text">چند متن سریع به عنوان عنوان کارت ایجاد شده و قسمت عمده محتوای کارت را تشکیل می دهد.</p>
+													<a class="btn btn-primary" href="#"> رفتن به </a>
+												</div>
+												<div role="tabpanel" id="tab-5" class="tab-pane fade text-center">
+													<h5 class="card-title">کارت با قرص</h5>
+													<p class="card-text">چند متن سریع به عنوان عنوان کارت ایجاد شده و قسمت عمده محتوای کارت را تشکیل می دهد.</p>
+													<a class="btn btn-primary" href="#"> رفتن به </a>
+												</div>
+												<div role="tabpanel" id="tab-6" class="tab-pane fade">
+													<h5 class="card-title">کارت با قرص</h5>
+													<p class="card-text">چند متن سریع به عنوان عنوان کارت ایجاد شده و قسمت عمده محتوای کارت را تشکیل می دهد.</p>
+													<a class="btn btn-primary" href="#"> رفتن به </a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+						<!-- /Cards -->
+						
+						<!-- Dropdowns -->
+						<section class="comp-section comp-dropdowns">
+							<div class="comp-header">
+                                <h3 class="comp-title">دراپ دوان</h3>
+                                <div class="line"></div>
+                            </div>
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title">دراپ دوان با متن</h4>
+									<div class="dropdown">
+										<a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false"> دراپ دوان</a>
+										<div class="dropdown-menu">
+											<a class="dropdown-item" href="#"> فعالیت </a>
+											<a class="dropdown-item" href="#"> فعالیت دیگر </a>
+										</div>
+									</div>
+									<hr>
+									<h4 class="card-title"> دراپ دوان با دکمه </h4>
+									<div class="btn-group">
+										<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> فعالیت </button>
+										<div class="dropdown-menu">
+											<a class="dropdown-item" href="#"> فعالیت </a>
+											<a class="dropdown-item" href="#"> فعالیت دیگر </a>
+											<div class="dropdown-divider"></div>
+											<a class="dropdown-item" href="#"> لینک جدا </a>
+										</div>
+									</div>
+									<div class="btn-group">
+										<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> فعالیت </button>
+										<div class="dropdown-menu">
+											<a class="dropdown-item" href="#"> فعالیت </a>
+											<a class="dropdown-item" href="#"> فعالیت دیگر </a>
+											<div class="dropdown-divider"></div>
+											<a class="dropdown-item" href="#"> لینک جدا </a>
+										</div>
+									</div>
+									<div class="btn-group">
+										<button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> فعالیت </button>
+										<div class="dropdown-menu">
+											<a class="dropdown-item" href="#"> فعالیت </a>
+											<a class="dropdown-item" href="#"> فعالیت دیگر </a>
+											<div class="dropdown-divider"></div>
+											<a class="dropdown-item" href="#"> لینک جدا </a>
+										</div>
+									</div>
+									<div class="btn-group">
+										<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> فعالیت </button>
+										<div class="dropdown-menu">
+											<a class="dropdown-item" href="#"> فعالیت </a>
+											<a class="dropdown-item" href="#"> فعالیت دیگر </a>
+											<div class="dropdown-divider"></div>
+											<a class="dropdown-item" href="#"> لینک جدا </a>
+										</div>
+									</div>
+									<div class="btn-group">
+										<button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> فعالیت </button>
+										<div class="dropdown-menu">
+											<a class="dropdown-item" href="#"> فعالیت </a>
+											<a class="dropdown-item" href="#"> فعالیت دیگر </a>
+											<div class="dropdown-divider"></div>
+											<a class="dropdown-item" href="#"> لینک جدا </a>
+										</div>
+									</div>
+									<div class="btn-group">
+										<button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> فعالیت </button>
+										<div class="dropdown-menu">
+											<a class="dropdown-item" href="#"> فعالیت </a>
+											<a class="dropdown-item" href="#"> فعالیت دیگر </a>
+											<div class="dropdown-divider"></div>
+											<a class="dropdown-item" href="#"> لینک جدا </a>
+										</div>
+									</div>
+									<hr>
+									<h4 class="card-title">دراپ داون با دکمه جدا</h4>
+									<div class="btn-group">
+										<button type="button" class="btn btn-primary"> فعالیت </button>
+										<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											<span class="sr-only"> تاگل دراپ داون </span>
+										</button>
+										<div class="dropdown-menu">
+											<a class="dropdown-item" href="#"> فعالیت </a>
+											<a class="dropdown-item" href="#"> فعالیت دیگر </a>
+											<div class="dropdown-divider"></div>
+											<a class="dropdown-item" href="#"> لینک جدا </a>
+										</div>
+									</div>
+									<div class="btn-group">
+										<button type="button" class="btn btn-secondary"> فعالیت </button>
+										<button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											<span class="sr-only"> تاگل دراپ داون </span>
+										</button>
+										<div class="dropdown-menu">
+											<a class="dropdown-item" href="#"> فعالیت </a>
+											<a class="dropdown-item" href="#"> فعالیت دیگر </a>
+											<div class="dropdown-divider"></div>
+											<a class="dropdown-item" href="#"> لینک جدا </a>
+										</div>
+									</div>
+									<div class="btn-group">
+										<button type="button" class="btn btn-info"> فعالیت </button>
+										<button type="button" class="btn btn-info dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											<span class="sr-only"> تاگل دراپ داون </span>
+										</button>
+										<div class="dropdown-menu">
+											<a class="dropdown-item" href="#"> فعالیت </a>
+											<a class="dropdown-item" href="#"> فعالیت دیگر </a>
+											<div class="dropdown-divider"></div>
+											<a class="dropdown-item" href="#"> لینک جدا </a>
+										</div>
+									</div>
+									<div class="btn-group">
+										<button type="button" class="btn btn-success"> فعالیت </button>
+										<button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											<span class="sr-only"> تاگل دراپ داون </span>
+										</button>
+										<div class="dropdown-menu">
+											<a class="dropdown-item" href="#"> فعالیت </a>
+											<a class="dropdown-item" href="#"> فعالیت دیگر </a>
+											<div class="dropdown-divider"></div>
+											<a class="dropdown-item" href="#"> لینک جدا </a>
+										</div>
+									</div>
+									<div class="btn-group">
+										<button type="button" class="btn btn-warning"> فعالیت </button>
+										<button type="button" class="btn btn-warning dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											<span class="sr-only"> تاگل دراپ داون </span>
+										</button>
+										<div class="dropdown-menu">
+											<a class="dropdown-item" href="#"> فعالیت </a>
+											<a class="dropdown-item" href="#"> فعالیت دیگر </a>
+											<div class="dropdown-divider"></div>
+											<a class="dropdown-item" href="#"> لینک جدا </a>
+										</div>
+									</div>
+									<div class="btn-group">
+										<button type="button" class="btn btn-danger"> فعالیت </button>
+										<button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											<span class="sr-only"> تاگل دراپ داون </span>
+										</button>
+										<div class="dropdown-menu">
+											<a class="dropdown-item" href="#"> فعالیت </a>
+											<a class="dropdown-item" href="#"> فعالیت دیگر </a>
+											<div class="dropdown-divider"></div>
+											<a class="dropdown-item" href="#"> لینک جدا </a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+						<!-- /Dropdowns -->
+
+<!-- Modals -->
+						<section class="comp-section">
+							<div class="comp-header">
+                                <h3 class="comp-title"> مودال ها </h3>
+                                <div class="line"></div>
+                            </div>
+                            <div class="card">
+                            	<div class="card-header">
+									<h4 class="card-title"> کامپوننت مودال </h4>
+								</div>
+                            	<div class="card-body">
+                            		<p>در زیر یک مثال حالت ثابت وجود دارد (به این معنی که موقعیت و نمایش آن لغو شده است). شامل سربرگ معین ، بدنه معین (برای بالشتک لازم است) و پاورقی معین (اختیاری). ما از شما می خواهیم که هر زمان که ممکن باشد ، سرصفحه های معین را رد کنید.</p>
+                            		<div class="modal-1 static-modal" tabindex="-1" role="dialog">
+	                                    <div class="modal-dialog mb-2" role="document">
+	                                        <div class="modal-content">
+	                                            <div class="modal-header">
+	                                                <h5 class="modal-title mt-0">عنوان مودال</h5>
+	                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                                                    <span aria-hidden="true">×</span>
+	                                                </button>
+	                                            </div>
+	                                            <div class="modal-body">
+	                                                <p> متن معین به اینجا می رود. </p>
+	                                            </div>
+	                                            <div class="modal-footer">
+	                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">بستن</button>
+	                                                <button type="button" class="btn btn-primary">ذخیره تغییرات</button>
+	                                            </div>
+	                                        </div>
+	                                    </div>
+	                                </div>
+                            	</div>
+                            </div>
+
+                            <div class="card">
+                            	<div class="card-header">
+									<h4 class="card-title">مودال پایه</h4>
+								</div>
+                            	<div class="card-body">
+	              					<!-- Simple demo-->
+					                <button class="btn btn-primary" type="button" data-toggle="modal" data-original-title="test" data-target="#exampleModal">ساده</button>
+				                    <!-- Scrolling long content-->
+				                    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#exampleModalLong" data-original-title="" title="">اسکرول متن بزرگ</button>
+				                    <!-- Vertically centered modal-->
+				                    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#exampleModalCenter" data-original-title="" title="">وسط چین</button>
+				                    <!-- Tooltips and popovers modal-->
+				                    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#tooltipmodal" data-original-title="" title="">همراه تولتیپ</button>
+				                    <!-- Using the grid modal-->
+				                    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#grid-modal" data-original-title="" title="">همراه گرید</button>
+				                </div>
+                            </div>
+                 
+
+                            <div class="card">
+                            	<div class="card-header">
+									<h4 class="card-title">متنوع بودن محتوای مدال</h4>
+								</div>
+                            	<div class="card-body btn-showcase">
+			                    	<button class="btn btn-primary" type="button" data-toggle="modal" data-target="#exampleModalfat" data-whatever="@mdo" data-original-title="" title="">مودال با @mdo</button>
+			                    	<button class="btn btn-primary" type="button" data-toggle="modal" data-target="#exampleModalmdo" data-whatever="@fat" data-original-title="" title="">مودال با @fat</button>
+			                    	<button class="btn btn-primary" type="button" data-toggle="modal" data-target="#exampleModalgetbootstrap" data-whatever="@getbootstrap" data-original-title="" title="">مودال با @getbootstrap</button>
+			                  </div>
+                            </div>
+
+                            <div class="card">
+                            	<div class="card-header">
+									<h4 class="card-title">اندازه مودال</h4>
+								</div>
+								<div class="card-body">
+									<!-- Extra Large modal -->
+									<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-xl"> حالت فوق العاده بزرگ </button>
+
+				                    <!-- Large modal-->
+				                    <button class="btn btn-primary" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" data-original-title="" title=""> حالت بزرگ </button>
+				                    	
+				                    <!-- Small modal-->
+				                    <button class="btn btn-primary" type="button" data-toggle="modal" data-target=".bd-example-modal-sm" data-original-title="" title=""> حالت کوچک </button>
+			                  	</div>
+							</div>
+
+                        </section>
+						<!-- /Modals -->
+
+						<!-- Pagination -->
+						<section class="comp-section">
+							<div class="comp-header">
+                                <h3 class="comp-title"> صفحه بندی </h3>
+                                <div class="line"></div>
+                            </div>
+								<div class="card">
+								<div class="card-body">
+									<div>
+										<ul class="pagination">
+											<li class="page-item disabled">
+												<a class="page-link" href="#" tabindex="-1"> قبلی </a>
+											</li>
+											<li class="page-item"><a class="page-link" href="#">1</a></li>
+											<li class="page-item active">
+												<a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+											</li>
+											<li class="page-item"><a class="page-link" href="#">3</a></li>
+											<li class="page-item">
+												<a class="page-link" href="#">بعدی</a>
+											</li>
+										</ul>
+									</div>
+									<div>
+										<ul class="pagination">
+											<li class="page-item">
+												<a class="page-link" href="#" aria-label="Previous">
+													<span aria-hidden="true">&laquo;</span>
+													<span class="sr-only"> قبلی </span>
+												</a>
+											</li>
+											<li class="page-item"><a class="page-link" href="#">1</a></li>
+											<li class="page-item"><a class="page-link" href="#">2</a></li>
+											<li class="page-item"><a class="page-link" href="#">3</a></li>
+											<li class="page-item">
+												<a class="page-link" href="#" aria-label="Next">
+													<span aria-hidden="true">&raquo;</span>
+												<span class="sr-only">بعدی</span>
+												</a>
+											</li>
+										</ul>
+									</div>
+									<div>
+										<ul class="pagination pagination-lg">
+											<li class="page-item disabled">
+												<a class="page-link" href="#" tabindex="-1"> قبلی </a>
+											</li>
+											<li class="page-item"><a class="page-link" href="#">1</a></li>
+											<li class="page-item active">
+												<a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+											</li>
+											<li class="page-item"><a class="page-link" href="#">3</a></li>
+											<li class="page-item">
+												<a class="page-link" href="#">بعدی</a>
+											</li>
+										</ul>
+									</div>
+									
+									<div>
+										<ul class="pagination pagination-sm mb-0">
+											<li class="page-item disabled">
+												<a class="page-link" href="#" tabindex="-1"> قبلی </a>
+											</li>
+											<li class="page-item"><a class="page-link" href="#">1</a></li>
+											<li class="page-item active">
+												<a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+											</li>
+											<li class="page-item"><a class="page-link" href="#">3</a></li>
+											<li class="page-item">
+												<a class="page-link" href="#">بعدی</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+								</div>
+						</section>
+						<!-- /Pagination -->
+						
+						<!-- Progress -->
+						<section class="comp-section">
+							<div class="comp-header">
+                                <h3 class="comp-title">پیشرفت</h3>
+                                <div class="line"></div>
+                            </div>
+							<div class="progress-example card">
+								<div class="card-header">
+									<h4 class="card-title">نوار پیشرفت بزرگ</h4>
+								</div>
+								<div class="card-body pb-0">
+									<div class="row">
+										<div class="col-md-6">
+											<div>
+												<div class="progress progress-lg">
+													<div class="progress-bar" role="progressbar" style="width: 10%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+												</div>
+												<div class="progress progress-lg">
+													<div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+												</div>
+												<div class="progress progress-lg">
+													<div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+												</div>
+												<div class="progress progress-lg">
+													<div class="progress-bar bg-warning" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+												</div>
+												<div class="progress progress-lg">
+													<div class="progress-bar bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="progress progress-lg">
+												<div class="progress-bar progress-bar-striped" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+											<div class="progress progress-lg">
+												<div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+											<div class="progress progress-lg">
+												<div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+											<div class="progress progress-lg">
+												<div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+											<div class="progress progress-lg">
+												<div class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="progress-example card">
+								<div class="card-header">
+									<h4 class="card-title">نوار پیشرفت پیشفرض</h4>
+								</div>
+								<div class="card-body pb-0">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="progress">
+												<div class="progress-bar" role="progressbar" style="width: 10%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+											<div class="progress">
+												<div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+											<div class="progress">
+												<div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+											<div class="progress">
+												<div class="progress-bar bg-warning" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+											<div class="progress">
+												<div class="progress-bar bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="progress">
+												<div class="progress-bar progress-bar-striped" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+											<div class="progress">
+												<div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+											<div class="progress">
+												<div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+											<div class="progress">
+												<div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+											<div class="progress">
+												<div class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="progress-example card">
+								<div class="card-header">
+									<h4 class="card-title">نوار پیشرفت متوسط</h4>
+								</div>
+								<div class="card-body pb-0">
+									<div class="row">
+										<div class="col-md-6">
+											<div>
+												<div class="progress progress-md">
+													<div class="progress-bar" role="progressbar" style="width: 10%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+												</div>
+												<div class="progress progress-md">
+													<div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+												</div>
+												<div class="progress progress-md">
+													<div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+												</div>
+												<div class="progress progress-md">
+													<div class="progress-bar bg-warning" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+												</div>
+												<div class="progress progress-md">
+													<div class="progress-bar bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="progress progress-md">
+												<div class="progress-bar progress-bar-striped" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+											<div class="progress progress-md">
+												<div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+											<div class="progress progress-md">
+												<div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+											<div class="progress progress-md">
+												<div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+											<div class="progress progress-md">
+												<div class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="progress-example card">
+								<div class="card-header">
+									<h4 class="card-title">نوار پیشرفت کوچک</h4>
+								</div>
+								<div class="card-body pb-0">
+									<div class="row">
+										<div class="col-md-6">
+											<div>
+												<div class="progress progress-sm">
+													<div class="progress-bar" role="progressbar" style="width: 10%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+												</div>
+												<div class="progress progress-sm">
+													<div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+												</div>
+												<div class="progress progress-sm">
+													<div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+												</div>
+												<div class="progress progress-sm">
+													<div class="progress-bar bg-warning" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+												</div>
+												<div class="progress progress-sm">
+													<div class="progress-bar bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="progress progress-sm">
+												<div class="progress-bar progress-bar-striped" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+											<div class="progress progress-sm">
+												<div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+											<div class="progress progress-sm">
+												<div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+											<div class="progress progress-sm">
+												<div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+											<div class="progress progress-sm">
+												<div class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="progress-example card">
+								<div class="card-header">
+									<h4 class="card-title">نوار پیشرفت خیلی کوچک</h4>
+								</div>
+								<div class="card-body pb-0">
+									<div class="row">
+										<div class="col-md-6">
+											<div>
+												<div class="progress progress-xs">
+													<div class="progress-bar w-75" role="progressbar" style="width: 10%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+												</div>
+												<div class="progress progress-xs">
+													<div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+												</div>
+												<div class="progress progress-xs">
+													<div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+												</div>
+												<div class="progress progress-xs">
+													<div class="progress-bar bg-warning" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+												</div>
+												<div class="progress progress-xs">
+													<div class="progress-bar bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="progress progress-xs">
+												<div class="progress-bar progress-bar-striped" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+											<div class="progress progress-xs">
+												<div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+											<div class="progress progress-xs">
+												<div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+											<div class="progress progress-xs">
+												<div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+											<div class="progress progress-xs">
+												<div class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+						<!-- /Progress -->
+						
+						<!-- Tabs -->
+						<section class="comp-section">
+							<div class="comp-header">
+                                <h3 class="comp-title">تب ها</h3>
+                                <div class="line"></div>
+                            </div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="card">
+										<div class="card-header">
+											<h4 class="card-title">تب پایه</h4>
+										</div>
+										<div class="card-body">
+											<ul class="nav nav-tabs">
+												<li class="nav-item"><a class="nav-link active" href="#basictab1" data-toggle="tab">خانه</a></li>
+												<li class="nav-item"><a class="nav-link" href="#basictab2" data-toggle="tab">پروفایل</a></li>
+												<li class="nav-item"><a class="nav-link" href="#basictab3" data-toggle="tab">پیام ها</a></li>
+											</ul>
+											<div class="tab-content">
+												<div class="tab-pane show active" id="basictab1">
+													 محتوای تب 1
+												</div>
+												<div class="tab-pane" id="basictab2">
+													 محتوای تب 2
+												</div>
+												<div class="tab-pane" id="basictab3">
+													 محتوای تب 3
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="card">
+										<div class="card-header">
+											<h4 class="card-title">تب جاستفای</h4>
+										</div>
+										<div class="card-body">
+											<ul class="nav nav-tabs nav-justified">
+												<li class="nav-item"><a class="nav-link active" href="#basic-justified-tab1" data-toggle="tab">خانه</a></li>
+												<li class="nav-item"><a class="nav-link" href="#basic-justified-tab2" data-toggle="tab">پروفایل</a></li>
+												<li class="nav-item dropdown">
+													<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">دراپ دوان</a>
+													<div class="dropdown-menu dropdown-menu-right">
+														<a class="dropdown-item" href="#basic-justified-tab3" data-toggle="tab">دراپ دوان 1</a>
+														<a class="dropdown-item" href="#basic-justified-tab4" data-toggle="tab">دراپ دوان 2</a>
+													</div>
+												</li>
+											</ul>
+											<div class="tab-content">
+												<div class="tab-pane show active" id="basic-justified-tab1">
+													 محتوای تب 1
+												</div>
+												<div class="tab-pane" id="basic-justified-tab2">
+													 محتوای تب 2
+												</div>
+												<div class="tab-pane" id="basic-justified-tab3">
+													 محتوای تب 3
+												</div>
+												<div class="tab-pane" id="basic-justified-tab4">
+													 محتوای تب 4
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-6">
+									<div class="card">
+										<div class="card-header">
+											<h4 class="card-title">تب خط دار از بالا</h4>
+										</div>
+										<div class="card-body">
+											<ul class="nav nav-tabs nav-tabs-top">
+												<li class="nav-item"><a class="nav-link active" href="#top-tab1" data-toggle="tab">خانه</a></li>
+												<li class="nav-item"><a class="nav-link" href="#top-tab2" data-toggle="tab">پروفایل</a></li>
+												<li class="nav-item"><a class="nav-link" href="#top-tab3" data-toggle="tab">پیام ها</a></li>
+											</ul>
+											<div class="tab-content">
+												<div class="tab-pane show active" id="top-tab1">
+													 محتوای تب 1
+												</div>
+												<div class="tab-pane" id="top-tab2">
+													 محتوای تب 2
+												</div>
+												<div class="tab-pane" id="top-tab3">
+													 محتوای تب 3
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-md-6">
+									<div class="card">
+										<div class="card-header">
+											<h4 class="card-title">تب خط دار جاستیفای</h4>
+										</div>
+										<div class="card-body">
+											<ul class="nav nav-tabs nav-tabs-top nav-justified">
+												<li class="nav-item"><a class="nav-link active" href="#top-justified-tab1" data-toggle="tab">خانه</a></li>
+												<li class="nav-item"><a class="nav-link" href="#top-justified-tab2" data-toggle="tab">پروفایل</a></li>
+												<li class="nav-item"><a class="nav-link" href="#top-justified-tab3" data-toggle="tab">پیام ها</a></li>
+											</ul>
+											<div class="tab-content">
+												<div class="tab-pane show active" id="top-justified-tab1">
+													 محتوای تب 1
+												</div>
+												<div class="tab-pane" id="top-justified-tab2">
+													 محتوای تب 2
+												</div>
+
+												<div class="tab-pane" id="top-justified-tab3">
+													 محتوای تب 3
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-6">
+									<div class="card">
+										<div class="card-header">
+											<h4 class="card-title">تب خط دار از پایین</h4>
+										</div>
+										<div class="card-body">
+											<ul class="nav nav-tabs nav-tabs-bottom">
+												<li class="nav-item"><a class="nav-link active" href="#bottom-tab1" data-toggle="tab">خانه</a></li>
+												<li class="nav-item"><a class="nav-link" href="#bottom-tab2" data-toggle="tab">پروفایل</a></li>
+												<li class="nav-item"><a class="nav-link" href="#bottom-tab3" data-toggle="tab">پیام ها</a></li>
+											</ul>
+
+											<div class="tab-content">
+												<div class="tab-pane show active" id="bottom-tab1">
+													 محتوای تب 1
+												</div>
+												<div class="tab-pane" id="bottom-tab2">
+													 محتوای تب 2
+												</div>
+												<div class="tab-pane" id="bottom-tab3">
+													 محتوای تب 3
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="card">
+										<div class="card-header">
+											<h4 class="card-title">تب خط دار از پایین جاستیفای </h4>
+										</div>
+										<div class="card-body">
+											<ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+												<li class="nav-item"><a class="nav-link active" href="#bottom-justified-tab1" data-toggle="tab">خانه</a></li>
+												<li class="nav-item"><a class="nav-link" href="#bottom-justified-tab2" data-toggle="tab">پروفایل</a></li>
+												<li class="nav-item"><a class="nav-link" href="#bottom-justified-tab3" data-toggle="tab">پیام ها</a></li>
+											</ul>
+											<div class="tab-content">
+												<div class="tab-pane show active" id="bottom-justified-tab1">
+													 محتوای تب 1
+												</div>
+												<div class="tab-pane" id="bottom-justified-tab2">
+													 محتوای تب 2
+												</div>
+												<div class="tab-pane" id="bottom-justified-tab3">
+													 محتوای تب 3
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="card">
+										<div class="card-header">
+											<h4 class="card-title">تب تک رنگ</h4>
+										</div>
+										<div class="card-body">
+											<ul class="nav nav-tabs nav-tabs-solid">
+												<li class="nav-item"><a class="nav-link active" href="#solid-tab1" data-toggle="tab">خانه</a></li>
+												<li class="nav-item"><a class="nav-link" href="#solid-tab2" data-toggle="tab">پروفایل</a></li>
+												<li class="nav-item"><a class="nav-link" href="#solid-tab3" data-toggle="tab">پیام ها</a></li>
+											</ul>
+											<div class="tab-content">
+												<div class="tab-pane show active" id="solid-tab1">
+													 محتوای تب 1
+												</div>
+												<div class="tab-pane" id="solid-tab2">
+													 محتوای تب 2
+												</div>
+												<div class="tab-pane" id="solid-tab3">
+													 محتوای تب 3
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-md-6">
+									<div class="card">
+										<div class="card-header">
+											<h4 class="card-title">تب تک رنگ جاستیفای</h4>
+										</div>
+										<div class="card-body">
+											<ul class="nav nav-tabs nav-tabs-solid nav-justified">
+												<li class="nav-item"><a class="nav-link active" href="#solid-justified-tab1" data-toggle="tab">خانه</a></li>
+												<li class="nav-item"><a class="nav-link" href="#solid-justified-tab2" data-toggle="tab">پروفایل</a></li>
+												<li class="nav-item"><a class="nav-link" href="#solid-justified-tab3" data-toggle="tab">پیام ها</a></li>
+											</ul>
+											<div class="tab-content">
+												<div class="tab-pane show active" id="solid-justified-tab1">
+													 محتوای تب 1
+												</div>
+												<div class="tab-pane" id="solid-justified-tab2">
+													 محتوای تب 2
+												</div>
+												<div class="tab-pane" id="solid-justified-tab3">
+													 محتوای تب 3
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="card">
+										<div class="card-header">
+											<h4 class="card-title">تب تک رنگ گرد</h4>
+										</div>
+										<div class="card-body">
+											<ul class="nav nav-tabs nav-tabs-solid nav-tabs-rounded">
+												<li class="nav-item"><a class="nav-link active" href="#solid-rounded-tab1" data-toggle="tab">خانه</a></li>
+												<li class="nav-item"><a class="nav-link" href="#solid-rounded-tab2" data-toggle="tab">پروفایل</a></li>
+												<li class="nav-item"><a class="nav-link" href="#solid-rounded-tab3" data-toggle="tab">پیام ها</a></li>
+											</ul>
+											<div class="tab-content">
+												<div class="tab-pane show active" id="solid-rounded-tab1">
+													 محتوای تب 1
+												</div>
+												<div class="tab-pane" id="solid-rounded-tab2">
+													 محتوای تب 2
+												</div>
+												<div class="tab-pane" id="solid-rounded-tab3">
+													 محتوای تب 3
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="card">
+										<div class="card-header">
+											<h4 class="card-title"> تب گرد جاستیفای</h4>
+										</div>
+										<div class="card-body">
+											<ul class="nav nav-tabs nav-tabs-solid nav-tabs-rounded nav-justified">
+												<li class="nav-item"><a class="nav-link active" href="#solid-rounded-justified-tab1" data-toggle="tab">خانه</a></li>
+												<li class="nav-item"><a class="nav-link" href="#solid-rounded-justified-tab2" data-toggle="tab">پروفایل</a></li>
+												<li class="nav-item"><a class="nav-link" href="#solid-rounded-justified-tab3" data-toggle="tab">پیام ها</a></li>
+											</ul>
+											<div class="tab-content">
+												<div class="tab-pane show active" id="solid-rounded-justified-tab1">
+													 محتوای تب 1
+												</div>
+												<div class="tab-pane" id="solid-rounded-justified-tab2">
+													 محتوای تب 2
+												</div>
+												<div class="tab-pane" id="solid-rounded-justified-tab3">
+													 محتوای تب 3
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+						<!-- /Tabs -->
+
+						<!-- Typography -->
+						<section class="comp-section">
+							<div class="comp-header">
+                                <h3 class="comp-title"> تایپوگرافی </h3>
+                                <div class="line"></div>
+                            </div>
+
+							<div class="row">
+								<div class="col-md-12">
+									<div class="card">
+										<div class="card-header">
+											<h4 class="card-title">سرتیتر</h4>
+										</div>
+										<div class="card-body">
+											<h1>h1. تیتر بوتسرپ </h1>
+											<h2>h2. تیتر بوتسرپ </h2>
+											<h3>h3. تیتر بوتسرپ </h3>
+											<h4>h4. تیتر بوتسرپ </h4>
+											<h5>h5. تیتر بوتسرپ </h5>
+											<h6>h6. تیتر بوتسرپ </h6>
+										</div>
+									</div>
+									<div class="card">
+										<div class="card-header">
+											<h4 class="card-title">نقل قول</h4>
+										</div>
+										<div class="card-body">
+											<blockquote>
+												<p class="mb-0">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است</p>
+											</blockquote>
+											<blockquote class="blockquote mb-0">
+												<p class="mb-0">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است</p>
+											</blockquote>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-4 d-flex">
+									<div class="card flex-fill">
+										<div class="card-header">
+											<h4 class="card-title">عنصر متنی</h4>
+										</div>
+										<div class="card-body">
+											<p>شما میتونین با استفاده از تگ<mark> هایلایت </mark> یک کلمه را برجسته کنید.</p>
+											<p><del> این خط متن به عنوان متن حذف شده در نظر گرفته شده است</del></p>
+											<p><s> این خط متن قرار است دیگر دقیق نباشد. </s></p>
+											<p><ins> این خط متن به عنوان یک افزودنی به سند مورد بررسی قرار می گیرد. </ins></p>
+											<p><u> این خط از متن به صورت زیر خط نشان داده می شود </u></p>
+											<p><small> این خط متن به معنای چاپ خوب است. </small></p>
+											<p><strong> این خط به صورت متن پررنگ ارائه شده است. </strong></p>
+											<p><em> این خط به صورت متن کج شده ارائه شده است. </em></p>
+											<p class="text-monospace mb-0"> این خط تک فضا است </p>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4 d-flex">
+									<div class="card flex-fill">
+										<div class="card-header">
+											<h4 class="card-title"> لینک رنگی </h4>
+										</div>
+										<div class="card-body">
+											<p class="text-primary">.متن-اصلی</p>
+											<p class="text-secondary">.متن-فرعی</p>
+											<p class="text-success">.متن-موفقیت</p>
+											<p class="text-danger">.متن-خطر</p>
+											<p class="text-warning">.متن-اخطار</p>
+											<p class="text-info">.متن-اطلاعات</p>
+											<p class="text-light bg-dark">.متن-روشن</p>
+											<p class="text-dark">.متن-تیره</p>
+											<p class="text-muted">.متن-میوت</p>
+											<p class="text-white bg-dark mb-0">.متن-سفید</p>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4 d-flex">
+									<div class="card flex-fill">
+										<div class="card-header">
+											<h4 class="card-title">متن رنگی</h4>
+										</div>
+										<div class="card-body">
+											<p><a href="#" class="text-primary">لینک اصلی</a></p>
+											<p><a href="#" class="text-secondary">لینک فرعی</a></p>
+											<p><a href="#" class="text-success">لینک موفق</a></p>
+											<p><a href="#" class="text-danger">لینک خطر</a></p>
+											<p><a href="#" class="text-warning">لینک اخطار</a></p>
+											<p><a href="#" class="text-info">لینک اطلاعات</a></p>
+											<p><a href="#" class="text-light bg-dark">لینک روشن</a></p>
+											<p><a href="#" class="text-dark">لینک تیره</a></p>
+											<p><a href="#" class="text-muted">لینک میوت</a></p>
+											<p><a href="#" class="text-white bg-dark mb-0">لینک سفید</a></p>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-4 d-flex">
+									<div class="card flex-fill">
+										<div class="card-header">
+											<h4 class="card-title">لیست نقطه ای</h4>
+										</div>
+										<div class="card-body">
+											<ul class="mb-0">
+												<li>لورم ایپسوم متن ساختگی </li>
+												<li>با تولید سادگی نامفهوم از  </li>
+												<li>صنعت چاپ و با استفاده از طراحان </li>
+												<li> چاپگرها و متون بلکه روزنامه </li>
+												<li> در ستون و سطرآنچنان که 
+													<ul>
+														<li>شرایط فعلی تکنولوژی مورد نیاز </li>
+														<li>کاربردهای متنوع با هدف بهبود </li>
+														<li>ابزارهای کاربردی می باشد</li>
+														<li>کتابهای زیادی در شصت و سه درصد </li>
+													</ul>
+												</li>
+												<li> حال و آینده شناخت فراوان جامعه </li>
+												<li>  با نرم افزارها شناخت بیشتری را </li>
+												<li> طراحان رایانه ای الخصوص </li>
+											</ul>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4 d-flex">
+									<div class="card flex-fill">
+										<div class="card-header">
+											<h4 class="card-title">لیست نقطه ای</h4>
+										</div>
+										<div class="card-body">
+											<ol class="mb-0">
+												<li>لورم ایپسوم متن ساختگی </li>
+												<li>با تولید سادگی نامفهوم از  </li>
+												<li>صنعت چاپ و با استفاده از طراحان </li>
+												<li> چاپگرها و متون بلکه روزنامه </li>
+												<li> در ستون و سطرآنچنان که 
+													<ul>
+														<li>شرایط فعلی تکنولوژی مورد نیاز </li>
+														<li>کاربردهای متنوع با هدف بهبود </li>
+														<li>ابزارهای کاربردی می باشد</li>
+														<li>کتابهای زیادی در شصت و سه درصد </li>
+													</ul>
+												</li>
+												<li> حال و آینده شناخت فراوان جامعه </li>
+												<li>  با نرم افزارها شناخت بیشتری را </li>
+												<li> طراحان رایانه ای الخصوص </li>
+											</ol>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4 d-flex">
+									<div class="card flex-fill">
+										<div class="card-header">
+											<h4 class="card-title"> لیست بدون استایل </h4>
+										</div>
+										<div class="card-body">
+											<ul class="list-unstyled mb-0">
+												<li>لورم ایپسوم متن ساختگی </li>
+												<li>با تولید سادگی نامفهوم از  </li>
+												<li>صنعت چاپ و با استفاده از طراحان </li>
+												<li> چاپگرها و متون بلکه روزنامه </li>
+												<li> در ستون و سطرآنچنان که 
+													<ul>
+														<li>شرایط فعلی تکنولوژی مورد نیاز </li>
+														<li>کاربردهای متنوع با هدف بهبود </li>
+														<li>ابزارهای کاربردی می باشد</li>
+														<li>کتابهای زیادی در شصت و سه درصد </li>
+													</ul>
+												</li>
+												<li> حال و آینده شناخت فراوان جامعه </li>
+												<li>  با نرم افزارها شناخت بیشتری را </li>
+												<li> طراحان رایانه ای الخصوص </li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+						<!-- /Typography -->
+					</div>	
+
+				</div>
+
+			</div>		
+			<!-- /Page Content -->
+   
+			<!-- Footer -->
+			<footer class="footer">
+				
+				<!-- Footer Top -->
+				<div class="footer-top">
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-lg-3 col-md-6">
+							
+								<!-- Footer Widget -->
+								<div class="footer-widget footer-about">
+									<div class="footer-logo">
+										<img src="assets/img/footer-logo.png" alt="logo">
+									</div>
+									<div class="footer-about-content">
+										<p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است</p>
+										<div class="social-icon">
+											<ul>
+												<li>
+													<a href="#" target="_blank"><i class="fab fa-facebook-f"></i> </a>
+												</li>
+												<li>
+													<a href="#" target="_blank"><i class="fab fa-twitter"></i> </a>
+												</li>
+												<li>
+													<a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+												</li>
+												<li>
+													<a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+												</li>
+												<li>
+													<a href="#" target="_blank"><i class="fab fa-dribbble"></i> </a>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+								<!-- /Footer Widget -->
+								
+							</div>
+							
+							<div class="col-lg-3 col-md-6">
+							
+								<!-- Footer Widget -->
+								<div class="footer-widget footer-menu">
+									<h2 class="footer-title">برای مراجعه‌کنندگان</h2>
+									<ul>
+										<li><a href="search.html">جستجو پزشکان</a></li>
+										<li><a href="login.html">‌ورود</a></li>
+										<li><a href="register.html">‌ثبت‌نام</a></li>
+										<li><a href="booking.html">رزرو نوبت</a></li>
+										<li><a href="patient-dashboard.html">دشبرد مراجعه‌کننده</a></li>
+									</ul>
+								</div>
+								<!-- /Footer Widget -->
+								
+							</div>
+							
+							<div class="col-lg-3 col-md-6">
+							
+								<!-- Footer Widget -->
+								<div class="footer-widget footer-menu">
+									<h2 class="footer-title">برای پزشکان</h2>
+									<ul>
+										<li><a href="appointments.html">نوبت‌دهی</a></li>
+										<li><a href="chat.html">چت</a></li>
+										<li><a href="login.html">‌ورود</a></li>
+										<li><a href="doctor-register.html">‌ثبت‌نام</a></li>
+										<li><a href="doctor-dashboard.html">دشبرد پزشک</a></li>
+									</ul>
+								</div>
+								<!-- /Footer Widget -->
+								
+							</div>
+							
+							<div class="col-lg-3 col-md-6">
+							
+								<!-- Footer Widget -->
+								<div class="footer-widget footer-contact">
+									<h2 class="footer-title">ارتباط با ما</h2>
+									<div class="footer-contact-info">
+										<div class="footer-address">
+											<span><i class="fas fa-map-marker-alt"></i></span>
+											<p> خیابان ارم، سانفرانسیسکو<br> کالیفرنیا خیابان 94108 </p>
+										</div>
+										<p>
+											<i class="fas fa-phone-alt"></i>
+											+1 315 369 5943
+										</p>
+										<p class="mb-0">
+											<i class="fas fa-envelope"></i>
+											doccure@example.com
+										</p>
+									</div>
+								</div>
+								<!-- /Footer Widget -->
+								
+							</div>
+							
+						</div>
+					</div>
+				</div>
+				<!-- /Footer Top -->
+				
+				<!-- Footer Bottom -->
+                <div class="footer-bottom">
+					<div class="container-fluid">
+					
+						<!-- Copyright -->
+						<div class="copyright">
+							<div class="row">
+								<div class="col-md-6 col-lg-6">
+									<div class="copyright-text">
+										<p class="mb-0">&copy; 1399 داک‌کیور، تمامی حقوق محفوظ است.</p>
+									</div>
+								</div>
+								<div class="col-md-6 col-lg-6">
+								
+									<!-- Copyright Menu -->
+									<div class="copyright-menu">
+										<ul class="policy-menu">
+											<li><a href="term-condition.html">شرایط و مقررات</a></li>
+											<li><a href="privacy-policy.html">حریم شخصی</a></li>
+										</ul>
+									</div>
+									<!-- /Copyright Menu -->
+									
+								</div>
+							</div>
+						</div>
+						<!-- /Copyright -->
+						
+					</div>
+				</div>
+				<!-- /Footer Bottom -->
+				
+			</footer>
+			<!-- /Footer -->
+		   
+		</div>
+		<!-- /Main Wrapper -->
+
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">عنوان مودال</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close" data-original-title="" title=""><span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">...</div>
+                    <div class="modal-footer">
+                       	<button class="btn btn-primary" type="button" data-dismiss="modal" data-original-title="" title="">بستن</button>
+                        <button class="btn btn-secondary" type="button" data-original-title="" title="">ذخیره تغییرات</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            	<div class="modal-content">
+              	<div class="modal-header">
+                	<h5 class="modal-title" id="exampleModalLongTitle">عنوان مودال</h5>
+                	<button class="close" type="button" data-dismiss="modal" aria-label="Close" data-original-title="" title=""><span aria-hidden="true">×</span></button>
+              	</div>
+              	<div class="modal-body">
+                	<p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد. در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد </p>
+                	<p>برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد. کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد</p>
+                    <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد. در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد </p>
+                	<p>برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد. کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد</p>
+                    <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد. در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد </p>
+                	<p>برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد. کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد</p>
+                    <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد. در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد </p>
+                	<p>برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد. کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد</p>
+                    <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد. در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد </p>
+                	<p>برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد. کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد</p>
+                    <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد. در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد </p>
+                	<p>برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد. کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد</p>
+              	</div>
+              	<div class="modal-footer">
+                	<button class="btn btn-secondary" type="button" data-dismiss="modal" data-original-title="" title="">بستن</button>
+                	<button class="btn btn-primary" type="button" data-original-title="" title="">ذخیره تغییرات</button>
+              	</div>
+            </div>
+        </div>
+        </div>
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenter" aria-hidden="true">
+          	<div class="modal-dialog modal-dialog-centered" role="document">
+            	<div class="modal-content">
+                  	<div class="modal-header">
+                    	<h5 class="modal-title">عنوان مودال</h5>
+                    	<button class="close" type="button" data-dismiss="modal" aria-label="Close" data-original-title="" title=""><span aria-hidden="true">×</span></button>
+                  	</div>
+                  	<div class="modal-body">
+                    	<p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است</p>
+                  	</div>
+                  	<div class="modal-footer">
+                    	<button class="btn btn-secondary" type="button" data-dismiss="modal" data-original-title="" title="">بستن</button>
+                    	<button class="btn btn-primary" type="button" data-original-title="" title="">ذخیره تغییرات</button>
+                  	</div>
+            	</div>
+          	</div>
+        </div>
+        <div class="modal fade" id="tooltipmodal" tabindex="-1" role="dialog" aria-labelledby="tooltipmodal" aria-hidden="true">
+          	<div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    	<h5 class="modal-title">عنوان مودال</h5>
+                    	<button class="close" type="button" data-dismiss="modal" aria-label="Close" data-original-title="" title=""><span aria-hidden="true">×</span></button>
+                  </div>
+                  <div class="modal-body">
+                    	<h5>پاپ اور در مودال</h5>
+                    	<p>این<a class="btn btn-primary popover-test" href="#" role="button" title="" data-content="Popover body content is set in this attribute." data-container="#exampleModalPopovers" data-original-title="Popover title">دکمه</a> برای پاپ اور طراحی شده</p>
+                    	<hr>
+                    	<h5>تولتیپ در مودال</h5>
+                    	<p><a class="tooltip-test" href="#" title="" data-container="#exampleModalPopovers" data-original-title="Tooltip"> این لینک </a>و <a class="tooltip-test" href="#" title="" data-container="#exampleModalPopovers" data-original-title="Tooltip">آن لینک</a> برای تولتیپ طراحی شده</p>
+                  	</div>
+                  	<div class="modal-footer">
+                    	<button class="btn btn-secondary" type="button" data-dismiss="modal" data-original-title="" title="">بستن</button>
+                    	<button class="btn btn-primary" type="button" data-original-title="" title="">ذخیره تغییرات</button>
+                  	</div>
+                </div>
+          	</div>
+        </div>
+        <div class="modal fade" id="grid-modal" tabindex="-1" role="dialog" aria-labelledby="grid-modal" aria-hidden="true">
+          	<div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  	<div class="modal-header">
+                    	<h5 class="modal-title">عنوان مودال</h5>
+                    	<button class="close" type="button" data-dismiss="modal" aria-label="Close" data-original-title="" title=""><span aria-hidden="true">×</span></button>
+                  	</div>
+                  <div class="modal-body grid-showcase">
+                    	<div class="container-fluid bd-example-row">
+                      		<div class="row">
+                        		<div class="col-md-4"><span>.col-md-4</span></div>
+                        		<div class="col-md-4 ml-auto"><span>.col-md-4 .ml-auto</span></div>
+                      		</div>
+                        <div class="row">
+                            	<div class="col-md-3 ml-auto"><span>.col-md-3 .ml-auto</span></div>
+                            	<div class="col-md-2 ml-auto"><span>.col-md-2 .ml-auto</span></div>
+                        </div>
+                        <div class="row">
+                            	<div class="col-md-6 ml-auto"><span>.col-md-6 .ml-auto</span></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-9"><span> سطح  1: .col-sm-9</span>
+                              <div class="row">
+                                <div class="col-8 col-sm-6"><span> سطح  2: .col-8 .col-sm-6</span></div>
+                                <div class="col-4 col-sm-6"><span> سطح  2: .col-4 .col-sm-6</span></div>
+                              </div>
+                            </div>
+                      	</div>
+                        </div>
+                  	</div>
+                  <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal" data-original-title="" title="">بستن</button>
+                    <button class="btn btn-primary" type="button" data-original-title="" title="">ذخیره تغییرات</button>
+                  </div>
+                </div>
+          	</div>
+        </div>
+
+        <div class="modal fade" id="exampleModalfat" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      		<div class="modal-dialog" role="document">
+        		<div class="modal-content">
+          			<div class="modal-header">
+            		<h5 class="modal-title" id="exampleModalLabel2">پیام جدید</h5>
+            		<button class="close" type="button" data-dismiss="modal" aria-label="Close" data-original-title="" title=""><span aria-hidden="true">×</span></button>
+          		</div>
+          		<div class="modal-body">
+                    <form>
+                      	<div class="form-group">
+                        	<label class="col-form-label" for="recipient-name">دریافت کننده:</label>
+                        	<input class="form-control" type="text" value="@fat" data-original-title="" title="">
+                      	</div>
+                      	<div class="form-group">
+                        	<label class="col-form-label" for="message-text">پیام :</label>
+                        	<textarea class="form-control" id="message-text"></textarea>
+                      	</div>
+                    </form>
+          		</div>
+          		<div class="modal-footer">
+            		<button class="btn btn-secondary" type="button" data-dismiss="modal" data-original-title="" title="">بستن</button>
+            		<button class="btn btn-primary" type="button" data-original-title="" title="">ارسال پیام</button>
+          		</div>
+        		</div>
+      		</div>
+    	</div>
+    	
+	    <div class="modal fade" id="exampleModalmdo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	      <div class="modal-dialog" role="document">
+	            <div class="modal-content">
+	              	<div class="modal-header">
+	                	<h5 class="modal-title">پیام جدید</h5>
+	                	<button class="close" type="button" data-dismiss="modal" aria-label="Close" data-original-title="" title=""><span aria-hidden="true">×</span></button>
+	              	</div>
+	             	<div class="modal-body">
+	                    <form>
+	                  	<div class="form-group">
+	                    	<label class="col-form-label" for="recipient-name">دریافت کننده:</label>
+	                    	<input class="form-control" id="recipient-name" type="text" value="@Mat" data-original-title="" title="">
+	                  	</div>
+	                  	<div class="form-group">
+	                    	<label class="col-form-label" for="message-text">پیام :</label>
+	                    	<textarea class="form-control"></textarea>
+	                  	</div>
+	                	</form>
+	              	</div>
+	              	<div class="modal-footer">
+	                	<button class="btn btn-secondary" type="button" data-dismiss="modal" data-original-title="" title="">بستن</button>
+	                	<button class="btn btn-primary" type="button" data-original-title="" title="">ارسال پیام</button>
+	              	</div>
+	            </div>
+	      	</div>
+	    </div>
+	    <div class="modal fade" id="exampleModalgetbootstrap" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	      	<div class="modal-dialog" role="document">
+	            <div class="modal-content">
+	              	<div class="modal-header">
+	                	<h5 class="modal-title">پیام جدید</h5>
+	                	<button class="close" type="button" data-dismiss="modal" aria-label="Close" data-original-title="" title=""><span aria-hidden="true">×</span></button>
+	              	</div>
+	              	<div class="modal-body">
+	                	<form>
+	                  		<div class="form-group">
+	                    	<label class="col-form-label" for="recipient-name">دریافت کننده:</label>
+	                    	<input class="form-control" type="text" value="@getbootstrap" data-original-title="" title="">
+	                  	</div>
+	                  	<div class="form-group">
+	                    	<label class="col-form-label" for="message-text">پیام :</label>
+	                    	<textarea class="form-control"></textarea>
+	                  		</div>
+	                	</form>
+	              	</div>
+	              	<div class="modal-footer">
+	                	<button class="btn btn-secondary" type="button" data-dismiss="modal" data-original-title="" title="">بستن</button>
+	                	<button class="btn btn-primary" type="button" data-original-title="" title="">ارسال پیام</button>
+	              	</div>
+	            </div>
+	      	</div>
+	    </div>
+
+	    <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	      	<div class="modal-dialog modal-xl">
+	        	<div class="modal-content">
+	              	<div class="modal-header">
+	                	<h4 class="modal-title" id="myLargeModalLabel"> حالت بزرگ </h4>
+	                	<button class="close" type="button" data-dismiss="modal" aria-label="Close" data-original-title="" title=""><span aria-hidden="true">×</span></button>
+	              	</div>
+	              	<div class="modal-body">...</div>
+	        	</div>
+	      	</div>
+	    </div>
+	    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	     	<div class="modal-dialog modal-lg">
+	            <div class="modal-content">
+	              	<div class="modal-header">
+	                	<h4 class="modal-title" id="myLargeModalLabel"> حالت بزرگ </h4>
+	                	<button class="close" type="button" data-dismiss="modal" aria-label="Close" data-original-title="" title=""><span aria-hidden="true">×</span></button>
+	              	</div>
+	              	<div class="modal-body">...</div>
+	            </div>
+	      	</div>
+	    </div>
+	    <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+	      	<div class="modal-dialog modal-sm">
+	            <div class="modal-content">
+	              	<div class="modal-header">
+	                	<h4 class="modal-title" id="mySmallModalLabel"> حالت کوچک </h4>
+	                	<button class="close" type="button" data-dismiss="modal" aria-label="Close" data-original-title="" title=""><span aria-hidden="true">×</span></button>
+	              	</div>
+	              	<div class="modal-body">...</div>
+	            </div>
+	      	</div>
+	    </div>
+	  
+		<!-- jQuery -->
+		<script src="assets/js/jquery.min.js"></script>
+		
+		<!-- Bootstrap Core JS -->
+		<script src="assets/js/popper.min.js"></script>
+		<script src="assets/js/bootstrap.min.js"></script>
+		
+		<!-- Custom JS -->
+		<script src="assets/js/script.js"></script>
+		
+	</body>
+</html>
