@@ -4,8 +4,6 @@ import com.bzamani.framework.controller.BaseController;
 import com.bzamani.framework.model.core.organization.Organization;
 import com.bzamani.framework.service.core.organization.IOrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,14 +15,6 @@ public class OrganizationController extends BaseController {
 
     @Autowired
     IOrganizationService iOrganizationService;
-
-    private Sort.Direction getSortDirection(String direction) {
-        if (direction.equals("asc"))
-            return Sort.Direction.ASC;
-        else if (direction.equals("desc"))
-            return Sort.Direction.DESC;
-        return Sort.Direction.ASC;
-    }
 
     @PostMapping("/save")
     public Organization save(@RequestBody Organization organization) {
