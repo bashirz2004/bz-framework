@@ -42,11 +42,10 @@
             if ($('#txtTitle').val() != null && $('#txtTitle').val() != '') {
                 $.ajax({
                     type: "GET",
-                    url: "http://localhost/bz/rest/core/organization/getAllGridByMyQuery?title=" + $('#txtTitle').val(),
+                    url: "/bz/rest/core/organization/getAllGridByMyQuery?title=" + $('#txtTitle').val(),
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
                     success: function (res) {
-                        //console.log(res);
                         $("#resultCount").html("تعداد نتایج: " + res.totalRecords);
                         $("#resultContainer").html("<span class=\"form-text\" id=\"resultContainer\"></span>");
                         $.each(res.entityList, function (index, value) {

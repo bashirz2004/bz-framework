@@ -56,7 +56,7 @@
         function fillComboState() {
             $.ajax({
                 type: "GET",
-                url: "http://localhost/bz/rest/core/baseinfo/getAllByHeaderId/1",
+                url: "/bz/rest/core/baseinfo/getAllByHeaderId/1",
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 success: function (res) {
@@ -74,7 +74,7 @@
         function fillComboCity(stateId) {
             $.ajax({
                 type: "GET",
-                url: "http://localhost/bz/rest/core/baseinfo/getAllByParentId/" + stateId,
+                url: "/bz/rest/core/baseinfo/getAllByParentId/" + stateId,
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 success: function (res) {
@@ -93,7 +93,7 @@
         function fillComboRegion(cityId) {
             $.ajax({
                 type: "GET",
-                url: "http://localhost/bz/rest/core/baseinfo/getAllByParentId/" + cityId,
+                url: "/bz/rest/core/baseinfo/getAllByParentId/" + cityId,
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 success: function (res) {
