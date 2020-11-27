@@ -34,4 +34,9 @@ public class BaseInfoController extends BaseController {
     public List<BaseInfo> getAllByHeaderId(@PathVariable long headerId) {
         return iBaseInfoService.getAllByHeaderId(headerId);
     }
+
+    @GetMapping("/getAllByParentId/{parentId}")
+    public List<BaseInfo> getAllByParentId(@PathVariable long parentId) {
+        return iBaseInfoService.getAllByParentId(parentId);
+    }
 }

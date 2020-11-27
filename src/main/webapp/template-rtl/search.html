@@ -41,18 +41,66 @@
     <script>
         $(function () {
             fillComboState();
+
+            $("#cmbState").change(function () {
+                fillComboCity($(this).val());
+                $("#cmbRegion").html("<select class='select' id='cmbRegion'></select>");
+            });
+
+            $("#cmbCity").change(function () {
+                fillComboRegion($(this).val());
+            });
+
         });
 
         function fillComboState() {
             $.ajax({
                 type: "GET",
-                url: "http://localhost:7070/bz/rest/core/baseinfo/getAllByHeaderId/1",
+                url: "http://localhost/bz/rest/core/baseinfo/getAllByHeaderId/1",
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 success: function (res) {
                     $("#cmbState").append("<option value=-1>...</option>");
                     $.each(res, function (index, value) {
-                        $("#cmbState").append("<option value='+value.id+'>" + value.title + "</option>");
+                        $("#cmbState").append("<option value=" + value.id + ">" + value.title + "</option>");
+                    });
+                },
+                error: function (err) {
+                    console.log("error ---- " + err);
+                }
+            });
+        }
+
+        function fillComboCity(stateId) {
+            $.ajax({
+                type: "GET",
+                url: "http://localhost/bz/rest/core/baseinfo/getAllByParentId/" + stateId,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    $("#cmbCity").html("<select class='select' id='cmbCity'></select>");
+                    $("#cmbCity").append("<option value=-1>...</option>");
+                    $.each(res, function (index, value) {
+                        $("#cmbCity").append("<option value=" + value.id + ">" + value.title + "</option>");
+                    });
+                },
+                error: function (err) {
+                    console.log("error ---- " + err);
+                }
+            });
+        }
+
+        function fillComboRegion(cityId) {
+            $.ajax({
+                type: "GET",
+                url: "http://localhost/bz/rest/core/baseinfo/getAllByParentId/" + cityId,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    $("#cmbRegion").html("<select class='select' id='cmbRegion'></select>");
+                    $("#cmbRegion").append("<option value=-1>...</option>");
+                    $.each(res, function (index, value) {
+                        $("#cmbRegion").append("<option value=" + value.id + ">" + value.title + "</option>");
                     });
                 },
                 error: function (err) {
@@ -226,7 +274,10 @@
                             <li class="breadcrumb-item active" aria-current="page">جستجو</li>
                         </ol>
                     </nav>
-                    <h2 class="breadcrumb-title">2245مسابقات یافت شده برای: دندانپزشک در بنگلور</h2>
+                    <div class="row" style="padding-right:1em">
+                        <h5 style="color: #fff;">تعداد پزشک یافت شده بر اساس فیلترهای جستجو: </h5>&nbsp;&nbsp;
+                        <h5 style="color: #fff;">24</h5>
+                    </div>
                 </div>
                 <div class="col-md-4 col-12 d-md-block d-none">
                     <div class="sort-by">
@@ -261,8 +312,18 @@
                         </div>
                         <div class="card-body">
                             <div class="filter-widget">
-                                استان
+                                <h4>استان</h4>
                                 <select class="select" id="cmbState">
+                                </select>
+                            </div>
+                            <div class="filter-widget">
+                                <h4>شهر</h4>
+                                <select class="select" id="cmbCity">
+                                </select>
+                            </div>
+                            <div class="filter-widget">
+                                 <h4>منطقه شهرداری / نام محله</h4>
+                                <select class="select" id="cmbRegion">
                                 </select>
                             </div>
                             <div class="filter-widget">
@@ -281,41 +342,23 @@
                                 </div>
                             </div>
                             <div class="filter-widget">
-                                <h4> متخصص را انتخاب کنید </h4>
+                                <h4> تخصص پزشک </h4>
                                 <div>
                                     <label class="custom_check">
                                         <input type="checkbox" name="select_specialist" checked>
-                                        <span class="checkmark"></span> اورولوژی
-                                    </label>
-                                </div>
-                                <div>
-                                    <label class="custom_check">
-                                        <input type="checkbox" name="select_specialist" checked>
-                                        <span class="checkmark"></span> مغز و اعصاب
-                                    </label>
-                                </div>
-                                <div>
-                                    <label class="custom_check">
-                                        <input type="checkbox" name="select_specialist">
-                                        <span class="checkmark"></span> دندانپزشک
-                                    </label>
-                                </div>
-                                <div>
-                                    <label class="custom_check">
-                                        <input type="checkbox" name="select_specialist">
                                         <span class="checkmark"></span> ارتوپدی
                                     </label>
                                 </div>
                                 <div>
                                     <label class="custom_check">
                                         <input type="checkbox" name="select_specialist">
-                                        <span class="checkmark"></span> متخصص قلب
+                                        <span class="checkmark"></span> مغز و اعصاب
                                     </label>
                                 </div>
                                 <div>
                                     <label class="custom_check">
-                                        <input type="checkbox" name="select_specialist">
-                                        <span class="checkmark"></span> متخصص قلب
+                                        <input type="checkbox" name="select_specialist" checked>
+                                        <span class="checkmark"></span>فیزیوتراپی
                                     </label>
                                 </div>
                             </div>
@@ -840,7 +883,7 @@
                                 </div>
                                 <p>
                                     <i class="fas fa-phone-alt"></i>
-                                    +1 315 369 5943
+                                    09122851473
                                 </p>
                                 <p class="mb-0">
                                     <i class="fas fa-envelope"></i>

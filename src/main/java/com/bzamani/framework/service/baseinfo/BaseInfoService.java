@@ -23,4 +23,9 @@ public class BaseInfoService extends GenericService<BaseInfo, Long> implements I
     public List<BaseInfo> getAllByHeaderId(long headerId) {
         return iBaseInfoRepository.getAllByHeaderId(headerId);
     }
+
+    @Override
+    public List<BaseInfo> getAllByParentId(long parentId) {
+        return iBaseInfoRepository.getAllByParentId(parentId);
+    }
 }

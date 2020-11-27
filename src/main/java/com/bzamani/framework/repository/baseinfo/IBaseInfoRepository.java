@@ -10,4 +10,8 @@ import java.util.List;
 public interface IBaseInfoRepository extends JpaRepository<BaseInfo, Long> {
     @Query("SELECT e FROM BaseInfo e where e.parent is null and e.header.id = :headerId ")
     List<BaseInfo> getAllByHeaderId(@Param("headerId") long headerId);
+
+    @Query("SELECT e FROM BaseInfo e where e.parent.id = :parentId ")
+    List<BaseInfo> getAllByParentId(@Param("parentId") long parentId);
+
 }

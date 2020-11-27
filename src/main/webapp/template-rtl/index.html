@@ -42,7 +42,7 @@
             if ($('#txtTitle').val() != null && $('#txtTitle').val() != '') {
                 $.ajax({
                     type: "GET",
-                    url: "http://localhost:7070/bz/rest/core/organization/getAllGridByMyQuery?title=" + $('#txtTitle').val(),
+                    url: "http://localhost/bz/rest/core/organization/getAllGridByMyQuery?title=" + $('#txtTitle').val(),
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
                     success: function (res) {

@@ -8,4 +8,5 @@ import java.util.List;
 public interface IBaseInfoService extends IGenericService<BaseInfo, Long> {
     List<BaseInfo> getAllByHeaderId(long headerId);
 
+    List<BaseInfo> getAllByParentId(long parentId);
 }
