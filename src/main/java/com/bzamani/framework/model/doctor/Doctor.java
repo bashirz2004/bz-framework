@@ -24,7 +24,7 @@ public class Doctor extends BaseEntity {
     private String lastname;
 
     @Column(name = "medical_national_number")
-    private String medical_national_number;
+    private String medicalNationalNumber;
 
     @NotNull
     @Column(name = "male")
@@ -44,6 +44,11 @@ public class Doctor extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "region_id", nullable = false)
     private BaseInfo region;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "speciality_id", nullable = false)
+    private BaseInfo speciality;
 
     @Column(name = "address")
     private String address;

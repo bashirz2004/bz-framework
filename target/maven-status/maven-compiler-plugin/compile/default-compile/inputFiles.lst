@@ -10,7 +10,10 @@ D:\projects\bz\src\main\java\com\bzamani\framework\config\security\MethodSecurit
 D:\projects\bz\src\main\java\com\bzamani\framework\config\security\JwtAuthenticationEntryPoint.java
 D:\projects\bz\src\main\java\com\bzamani\framework\config\security\CustomJwtAuthenticationFilter.java
 D:\projects\bz\src\main\java\com\bzamani\framework\service\GenericService.java
+D:\projects\bz\src\main\java\com\bzamani\framework\repository\doctor\IDoctorRepository.java
+D:\projects\bz\src\main\java\com\bzamani\framework\controller\doctor\DoctorController.java
 D:\projects\bz\src\main\java\com\bzamani\framework\repository\security\IUserRepository.java
+D:\projects\bz\src\main\java\com\bzamani\framework\service\doctor\DoctorService.java
 D:\projects\bz\src\main\java\com\bzamani\framework\config\ResourceBundleConfiguration.java
 D:\projects\bz\src\main\java\com\bzamani\framework\model\security\User.java
 D:\projects\bz\src\main\java\com\bzamani\framework\config\security\JwtUtil.java
@@ -26,6 +29,7 @@ D:\projects\bz\src\main\java\com\bzamani\framework\controller\baseinfo\BaseInfoC
 D:\projects\bz\src\main\java\com\bzamani\framework\service\core\organization\IOrganizationService.java
 D:\projects\bz\src\main\java\com\bzamani\framework\model\security\UserViewModel.java
 D:\projects\bz\src\main\java\com\bzamani\framework\service\baseinfo\BaseInfoHeaderService.java
+D:\projects\bz\src\main\java\com\bzamani\framework\service\doctor\IDoctorService.java
 D:\projects\bz\src\main\java\com\bzamani\framework\model\baseinfo\BaseInfoHeader.java
 D:\projects\bz\src\main\java\com\bzamani\framework\config\mycustomannotation\MyLengthValidator.java
 D:\projects\bz\src\main\java\com\bzamani\framework\config\security\SecurityUtility.java

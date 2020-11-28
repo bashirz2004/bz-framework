@@ -15,11 +15,11 @@ import javax.validation.constraints.NotNull;
 public class BaseInfo extends BaseEntity {
 
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "header_id",nullable = false)
     private BaseInfoHeader header;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private BaseInfo parent;
 
