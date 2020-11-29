@@ -134,9 +134,16 @@
         function searchDoctors() {
             $.ajax({
                 type: "GET",
-                url: "/bz/rest/doctor/searchDoctors?stateId=" + $("#cmbState").val(),
+                url: "/bz/rest/doctor/searchDoctors",
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
+                data: {
+                    "stateId": $("#cmbState").val(),
+                    "cityId": $("#cmbCity").val(),
+                    "regionId": $("#cmbRegion").val(),
+
+
+                },
                 success: function (res) {
                     /*$("#cmbState").append("<option value=-1>...</option>");
                     $.each(res, function (index, value) {
@@ -410,11 +417,11 @@
                                         </a>
                                     </div>
                                     <div class="doc-info-cont">
-                                        <h4 class="doc-name"><a href="doctor-profile.html">پرشک رابی پرین</a></h4>
-                                        <p class="doc-speciality"> MDS - پریودنتولوژی و ایمپلنت دهانی ، BDS </p>
+                                        <h4 class="doc-name"><a href="doctor-profile.html">دکتر سهیلا محمودی</a></h4>
+                                        <p class="doc-speciality"> متخصص پوست موست و ریبایی </p>
                                         <h5 class="doc-department"><img
                                                 src="assets/img/specialities/specialities-05.png"
-                                                class="img-fluid" alt="Speciality">دندان‌پزشک</h5>
+                                                class="img-fluid" alt="Speciality">ارتوپدی</h5>
                                         <div class="rating">
                                             <i class="fas fa-star filled"></i>
                                             <i class="fas fa-star filled"></i>
@@ -424,38 +431,9 @@
                                             <span class="d-inline-block average-rating">(17)</span>
                                         </div>
                                         <div class="clinic-details">
-                                            <p class="doc-location"><i class="fas fa-map-marker-alt"></i> فلوریدا،
-                                                آمریکا</p>
-                                            <ul class="clinic-gallery">
-                                                <li>
-                                                    <a href="assets/img/features/feature-01.jpg"
-                                                       data-fancybox="gallery">
-                                                        <img src="assets/img/features/feature-01.jpg" alt="Feature">
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="assets/img/features/feature-02.jpg"
-                                                       data-fancybox="gallery">
-                                                        <img src="assets/img/features/feature-02.jpg" alt="Feature">
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="assets/img/features/feature-03.jpg"
-                                                       data-fancybox="gallery">
-                                                        <img src="assets/img/features/feature-03.jpg" alt="Feature">
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="assets/img/features/feature-04.jpg"
-                                                       data-fancybox="gallery">
-                                                        <img src="assets/img/features/feature-04.jpg" alt="Feature">
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="clinic-services">
-                                            <span>پرکردن دندان</span>
-                                            <span>سفید کردن</span>
+                                            <p class="doc-location">
+                                                <i class="fas fa-map-marker-alt"></i> تهران
+                                            </p>
                                         </div>
                                     </div>
                                 </div>

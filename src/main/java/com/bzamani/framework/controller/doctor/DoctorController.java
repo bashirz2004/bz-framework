@@ -45,6 +45,7 @@ public class DoctorController extends BaseController {
             @RequestParam(required = false) Long cityId,
             @RequestParam(required = false) Long regionId,
             @RequestParam(required = false) Long specialityId,
+            @RequestParam(required = false) String specialityTitle,
             @RequestParam(required = false) String address,
             @RequestParam(required = false) String telephone,
             @RequestParam(defaultValue = "0") int page,
@@ -53,6 +54,6 @@ public class DoctorController extends BaseController {
 
         return iDoctorService.searchDoctors(firstname, lastname,
                 medicalNationalNumber, male, stateId, cityId,
-                regionId,specialityId, address, telephone, page, size, sort);
+                regionId, specialityId, specialityTitle, address, telephone, page, size, sort);
     }
 }
