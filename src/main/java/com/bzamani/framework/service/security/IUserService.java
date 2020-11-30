@@ -6,5 +6,5 @@ import com.bzamani.framework.service.IGenericService;
 public interface IUserService extends IGenericService<User, Long> {
   User findUserByUsernameEquals(String username);
 
-  User authenticate(String username, String password);
+ // User authenticate(String username, String password);
 }

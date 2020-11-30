@@ -40,9 +40,11 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                //.antMatchers("/authenticate").permitAll()
+                .antMatchers("/authenticate").permitAll()
+                .antMatchers("/template-rtl/**").permitAll()
+                .antMatchers("/assets/**").permitAll()
                 //.antMatchers("/core/**").permitAll()
-                .antMatchers("/**").permitAll()
+                //.antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

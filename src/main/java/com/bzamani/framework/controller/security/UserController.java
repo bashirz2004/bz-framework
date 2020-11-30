@@ -31,11 +31,11 @@ public class UserController extends BaseController {
         return iUserService.save(user);
     }
 
-    @PostMapping("/authenticate")
+    /*@PostMapping("/authenticate")
     public User authenticate(@RequestBody User user) {
         System.out.println(user.getUsername());
         return iUserService.authenticate(user.getUsername(), user.getPassword());
-    }
+    }*/
 
     @GetMapping("/load/{id}")
     public User load(@PathVariable("id") long id) {

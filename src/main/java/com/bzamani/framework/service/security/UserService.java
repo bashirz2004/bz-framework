@@ -39,7 +39,7 @@ public class UserService extends GenericService<User, Long> implements IUserServ
     return iUserRepository.save(user);
   }
 
-  @Override
+/*  @Override
   public User authenticate(String username, String password) {
     User user = findUserByUsernameEquals(username);
     if (user != null) {
@@ -49,6 +49,6 @@ public class UserService extends GenericService<User, Long> implements IUserServ
       else return null;
     } else
       return null;
-  }
+  }*/
 
 }
