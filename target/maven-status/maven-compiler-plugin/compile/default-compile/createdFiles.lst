@@ -4,6 +4,7 @@ com\bzamani\framework\model\security\UserViewModel.class
 com\bzamani\framework\config\ResourceBundleConfiguration.class
 com\bzamani\framework\model\doctor\Doctor.class
 com\bzamani\framework\repository\core\organization\IOrganizationRepository.class
+com\bzamani\framework\controller\apipublic\PublicAPIController.class
 com\bzamani\framework\service\core\organization\IOrganizationService.class
 com\bzamani\framework\config\security\SpringSecurityConfiguration.class
 com\bzamani\framework\controller\BaseController.class

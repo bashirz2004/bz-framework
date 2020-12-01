@@ -1,6 +1,7 @@
 package com.bzamani.framework.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +16,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
 
     @Autowired
     private CustomUserDetailsService userDetailsService;
@@ -40,12 +43,16 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/authenticate").permitAll()
-                .antMatchers("/template-rtl/**").permitAll()
-                .antMatchers("/assets/**").permitAll()
-                //.antMatchers("/core/**").permitAll()
+                // .antMatchers("/authenticate").permitAll()
+                //.antMatchers("/api/public").permitAll()
+                .antMatchers("/template-rtl/admin/**").hasAnyRole("ROLE_ADMIN")
+                .antMatchers("/template-rtl/patient-dashboard").hasAnyRole("ROLE_ADMIN", "ROLE_PATIENT")
+                .antMatchers("/template-rtl/doctor-dashboard").hasAnyRole("ROLE_ADMIN", "ROLE_DOCTOR")
+                // .antMatchers("/template-rtl/**").permitAll()
+                //.antMatchers("/assets/**").permitAll()
                 //.antMatchers("/**").permitAll()
-                .anyRequest().authenticated()
+                //.anyRequest().authenticated()
+                .anyRequest().permitAll()
                 .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilterBefore(customJwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

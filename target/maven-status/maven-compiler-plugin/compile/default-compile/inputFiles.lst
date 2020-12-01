@@ -3,6 +3,7 @@ D:\projects\bz\src\main\java\com\bzamani\framework\controller\security\UserContr
 D:\projects\bz\src\main\java\com\bzamani\framework\service\baseinfo\IBaseInfoService.java
 D:\projects\bz\src\main\java\com\bzamani\framework\service\IGenericService.java
 D:\projects\bz\src\main\java\com\bzamani\framework\service\security\UserService.java
+D:\projects\bz\src\main\java\com\bzamani\framework\controller\apipublic\PublicAPIController.java
 D:\projects\bz\src\main\java\com\bzamani\framework\config\mycustomannotation\MyCustomAnnotaionHandler.java
 D:\projects\bz\src\main\java\com\bzamani\framework\model\core\organization\Organization.java
 D:\projects\bz\src\main\java\com\bzamani\framework\config\security\AuthenticationController.java

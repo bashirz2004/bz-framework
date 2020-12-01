@@ -1,6 +1,7 @@
 package com.bzamani.framework.model.security;
 
 import com.bzamani.framework.model.BaseEntity;
+import com.bzamani.framework.model.baseinfo.BaseInfo;
 import com.bzamani.framework.model.core.organization.Organization;
 import lombok.Getter;
 import lombok.Setter;
@@ -85,13 +86,13 @@ public class User extends BaseEntity implements UserDetails {
   private Set<Organization> organizations;
 
   @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(name = "CORE_USER_EXCLUDED_ORGANIZATION",
+  @JoinTable(name = "CORE_USER_BASEINFO",
     joinColumns =
     @JoinColumn(name = "USER_ID", referencedColumnName = "ID", nullable = false),
     inverseJoinColumns =
-    @JoinColumn(name = "ORGANIZATION_ID", referencedColumnName = "ID", nullable = false)
+    @JoinColumn(name = "BASEINFO_ID", referencedColumnName = "ID", nullable = false)
   )
-  private Set<Organization> excludedOrganizations;
+  private Set<BaseInfo> baseInfoes;
 
   @Transient
   private Set<GrantedAuthority> authorities;

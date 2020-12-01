@@ -26,30 +26,52 @@
     <![endif]-->
     <script src="assets/js/jquery.min.js"></script>
     <script>
+        var context_path = "/bz";
         $(function () {
-            $('#txtTitle').keydown(function (e) {
+
+            $('#txtSpecialityTitle').keydown(function (e) {
                 if (e.which == 13)  // the enter key code
                 {
-                    searchUser();
-                }else{
-                    $("#resultCount").html("بر اساس منطقه ... ");
+                    quickSearchDoctor();
+                } /*else {
+                    $("#resultCount").html("");
                     $("#resultContainer").html("<span class=\"form-text\" id=\"resultContainer\"></span>");
-                }
+                }*/
+            });
+
+            $('#txtAddress').keydown(function (e) {
+                if (e.which == 13)  // the enter key code
+                {
+                    quickSearchDoctor();
+                } /*else {
+                    $("#resultCount").html("");
+                    $("#resultContainer").html("<span class=\"form-text\" id=\"resultContainer\"></span>");
+                }*/
             });
         });
 
-        function searchUser() {
-            if ($('#txtTitle').val() != null && $('#txtTitle').val() != '') {
+        /* function clearSearchFilter() {
+             $('#txtSpecialityTitle').val('');
+             $('#txtAddress').val('');
+         }*/
+
+        function quickSearchDoctor() {
+            if (($('#txtSpecialityTitle').val() != null && $('#txtSpecialityTitle').val() != '') || ($('#txtAddress').val() != null && $('txtAddress').val() != '')) {
                 $.ajax({
                     type: "GET",
-                    url: "/bz/rest/core/organization/getAllGridByMyQuery?title=" + $('#txtTitle').val(),
+                    url: context_path + "/api/public/doctor/searchDoctors",
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
+                    data: {
+                        "specialityTitle": $('#txtSpecialityTitle').val(),
+                        "address": $('#txtAddress').val(),
+                        "size": 1000
+                    },
                     success: function (res) {
                         $("#resultCount").html("تعداد نتایج: " + res.totalRecords);
                         $("#resultContainer").html("<span class=\"form-text\" id=\"resultContainer\"></span>");
                         $.each(res.entityList, function (index, value) {
-                            $("#resultContainer").append("<li>" + parseInt(parseInt(index) + 1) + ": " + value.title + "</li>");
+                            $("#resultContainer").append("<li class=result id=res_" + index + " onmouseover=highlightRow(" + index + ")>" + parseInt(parseInt(index) + 1) + "- " + value.firstname + " - " + value.lastname + " - " + value.region.title + " - " + value.speciality.title + " - " + value.address + " - " + value.telephone + "</li>");
                         });
                     },
                     error: function (err) {
@@ -57,6 +79,15 @@
                     }
                 });
             }
+        }
+
+        function highlightRow(index) {
+            $(".result").css("background-color", "#f9f9f9");
+            $(".result").css("font-weight", "normal");
+            $("#res_" + index).css("cursor", "pointer");
+            $("#res_" + index).css("font-weight", "bold");
+            $("#res_" + index).css("background-color", "#09e5ab");
+            $("#res_" + index).css("border-radius", "5px");
         }
     </script>
 </head>
@@ -216,31 +247,33 @@
         <div class="container-fluid">
             <div class="banner-wrapper">
                 <div class="banner-header text-center">
-                    <h1>جستجوی پزشک و رزرو نوبت</h1>
+                    <h1>جستجوی پزشک </h1>
                     <p>جستجو و کشف بهترین پزشکان، کلینیک‌ها، بیمارستان‌ها و داروخانه‌های نزدیک شما</p>
                 </div>
 
                 <!-- Search -->
                 <div class="search-box row">
 
-                    <div class="form-group search-location" style="width: 30%">
-                        <input type="text" class="form-control" placeholder="جستجو لوکیشن">
-                        <span class="form-text" id="resultCount">بر اساس منطقه ...</span>
+                    <div class="form-group search-location">
+                        <input type="text" class="form-control" id="txtAddress" placeholder="آدرس ...">
+                        <span class="form-text" id="resultCount"></span>
                     </div>
-                    <div class="form-group search-info" style="width: 50%">
-                        <input type="text" class="form-control" id="txtTitle"
-                               placeholder="جستجو پزشکان و کلینیک‌ها و بیمارستان‌ها و ...">
-                        <ul>
-                            <span class="form-text"
-                                  id="resultContainer">مثال: ارتوپدی یا محمد علوی یا...</span>
-                        </ul>
-
+                    <div class="form-group search-info">
+                        <input type="text" class="form-control" id="txtSpecialityTitle"
+                               placeholder="جستجو پزشکان، کلینیک‌ها و بیمارستان‌ها بر اساس تخصص">
                     </div>
-                    <button onclick="searchUser()" class="btn btn-primary search-btn" style="width: 20%"><i
+                    <button onclick="quickSearchDoctor()" class="btn btn-primary search-btn"><i
                             class="fas fa-search"></i>
-                        <span>جستجو</span>
                     </button>
-
+                    <!--<button onclick="clearSearchFilter()" class="btn btn-dark search-btn" ><i
+                            class="fas fa-eraser"></i>
+                    </button>-->
+                </div>
+                <div>
+                    <ul>
+                            <span class="form-text"
+                                  id="resultContainer">مثال: ارتوپدی یا روانشناس یا...</span>
+                    </ul>
                 </div>
                 <!-- /Search -->
 
