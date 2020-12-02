@@ -13,6 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -20,48 +21,55 @@ import java.io.IOException;
 @Component
 public class CustomJwtAuthenticationFilter extends OncePerRequestFilter {
 
-	@Autowired
-	private JwtUtil jwtTokenUtil;
+    @Autowired
+    private JwtUtil jwtTokenUtil;
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-			throws ServletException, IOException {
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws ServletException, IOException {
 
-		 try{
-			// JWT Token is in the form "Bearer token". Remove Bearer word and
-			// get  only the Token
-			String jwtToken = extractJwtFromRequest(request);
+        try {
+            // JWT Token is in the form "Bearer token". Remove Bearer word and
+            // get  only the Token
+            String jwtToken = extractJwtFromRequest(request);
 
-			if (StringUtils.hasText(jwtToken) && jwtTokenUtil.validateToken(jwtToken)) {
-				UserDetails userDetails = new User(jwtTokenUtil.getUsernameFromToken(jwtToken), "",
-						jwtTokenUtil.getRolesFromToken(jwtToken));
+            if (StringUtils.hasText(jwtToken) && jwtTokenUtil.validateToken(jwtToken)) {
+                UserDetails userDetails = new User(jwtTokenUtil.getUsernameFromToken(jwtToken), "",
+                        jwtTokenUtil.getRolesFromToken(jwtToken));
 
-				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-						userDetails, null, userDetails.getAuthorities());
-				// After setting the Authentication in the context, we specify
-				// that the current user is authenticated. So it passes the
-				// Spring Security Configurations successfully.
-				SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-			} else {
-				System.out.println("Cannot set the Security Context");
-			}
-		 }catch(ExpiredJwtException ex)
-		 {
-			 request.setAttribute("exception", ex);
-		 }
-		 catch(BadCredentialsException ex)
-		 {
-			 request.setAttribute("exception", ex);
-		 }
-		chain.doFilter(request, response);
-	}
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                // After setting the Authentication in the context, we specify
+                // that the current user is authenticated. So it passes the
+                // Spring Security Configurations successfully.
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+            } else {
+                //inja nabayad logout beshe az SecurityContextHolder???????????????
+                SecurityContextHolder.clearContext();
+                System.out.println("Cannot set the Security Context");
+            }
+        } catch (ExpiredJwtException ex) {
+            request.setAttribute("exception", ex);
+        } catch (BadCredentialsException ex) {
+            request.setAttribute("exception", ex);
+        }
+        chain.doFilter(request, response);
+    }
 
-	private String extractJwtFromRequest(HttpServletRequest request) {
-		String bearerToken = request.getHeader("Authorization");
-		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-			return bearerToken.substring(7, bearerToken.length());
-		}
-		return null;
-	}
+    private String extractJwtFromRequest(HttpServletRequest request) {
+        String bearerToken = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (int i = 0; i < cookies.length; i++) {
+                Cookie cookie = cookies[i];
+                if ("Authorization".equals(cookie.getName()))
+                    bearerToken = cookie.getValue();
+            }
+            if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer-")) {
+                return bearerToken.substring(7, bearerToken.length());
+            }
+        }
+        return null;
+    }
 
 }
