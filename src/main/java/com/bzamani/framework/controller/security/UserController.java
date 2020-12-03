@@ -2,7 +2,7 @@ package com.bzamani.framework.controller.security;
 
 import com.bzamani.framework.controller.BaseController;
 import com.bzamani.framework.model.security.User;
-import com.bzamani.framework.service.security.IUserService;
+import com.bzamani.framework.service.security.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;

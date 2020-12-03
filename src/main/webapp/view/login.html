@@ -46,14 +46,14 @@
                     type: 'POST',
                     success: function (res) {
                         localStorage.setItem("username", res.username);
-                        //localStorage.setItem("token", res.token);
                         $.cookie('Authorization', "Bearer-" + res.token, {expires: 1, path: '/'});
-                        if (res.authorities[0].authority == "ROLE_ADMIN")
+                        document.location.href = contextPath + "/view/index.html";
+                        /*if (res.authorities[0].authority == "ROLE_ADMIN")
                             document.location.href = contextPath + "/view/admin/index.html";
                         else if (res.authorities[0].authority == "ROLE_DOCTOR")
                             document.location.href = contextPath + "/view/doctor-dashboard.html";
                         else if (res.authorities[0].authority == "ROLE_PATIENT")
-                            document.location.href = contextPath + "/view/patient-dashboard.html";
+                            document.location.href = contextPath + "/view/patient-dashboard.html";*/
                     },
                     error: function (err) {
                         if (err.responseText.includes("Bad credentials")) {

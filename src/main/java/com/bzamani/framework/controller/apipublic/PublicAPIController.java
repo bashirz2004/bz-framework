@@ -6,7 +6,7 @@ import com.bzamani.framework.model.doctor.Doctor;
 import com.bzamani.framework.model.security.User;
 import com.bzamani.framework.service.baseinfo.IBaseInfoService;
 import com.bzamani.framework.service.doctor.IDoctorService;
-import com.bzamani.framework.service.security.IUserService;
+import com.bzamani.framework.service.security.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

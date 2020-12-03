@@ -1,4 +1,4 @@
-package com.bzamani.framework.service.security;
+package com.bzamani.framework.service.security.user;
 
 import com.bzamani.framework.model.security.User;
 import com.bzamani.framework.repository.security.IUserRepository;
