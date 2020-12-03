@@ -33,6 +33,9 @@
         var contextPath = "/app";
         $(function () {
 
+            if (localStorage.getItem("authenticatedUserFullName"))
+                $('#lblUserFullName').html(localStorage.getItem("authenticatedUserFullName") + "&nbsp;");
+
             getUsers();
 
         });
@@ -188,7 +191,7 @@
                                  class="avatar-img rounded-circle">
                         </div>
                         <div class="user-text">
-                            <h6>رایان تیلور</h6>
+                            <h6 id="lblUserFullName"></h6>
                             <p class="text-muted mb-0">مدیریت</p>
                         </div>
                     </div>
@@ -226,7 +229,7 @@
                         <a href="doctor-list.html"><i class="fe fe-user-plus"></i> <span>پزشکان</span></a>
                     </li>
                     <li>
-                        <a href="patient-list.html"><i class="fe fe-user"></i> <span>مراجعان</span></a>
+                        <a href="patient-list.html"><i class="fe fe-user"></i> <span>ارجاعات</span></a>
                     </li>
                     <li>
                         <a href="reviews.html"><i class="fe fe-star-o"></i> <span>نظرات</span></a>
@@ -344,19 +347,6 @@
 
         <div class="content container-fluid">
 
-            <!-- Page Header -->
-            <div class="page-header">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <h3 class="page-title">خوش آمدی ادمین</h3>
-                        <ul class="breadcrumb">
-                            <li class="breadcrumb-item active">داشبورد</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <!-- /Page Header -->
-
             <div class="row">
                 <div class="col-xl-3 col-sm-6 col-12">
                     <div class="card">
@@ -382,6 +372,27 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="dash-widget-header">
+										<span class="dash-widget-icon text-warning border-warning">
+											<i class="fe fe-folder"></i>
+										</span>
+                                <div class="dash-count">
+                                    <h3>523</h3>
+                                </div>
+                            </div>
+                            <div class="dash-widget-info">
+
+                                <h6 class="text-muted"> بیماران </h6>
+                                <div class="progress progress-sm">
+                                    <div class="progress-bar bg-warning w-50"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="dash-widget-header">
 										<span class="dash-widget-icon text-success">
 											<i class="fe fe-credit-card"></i>
 										</span>
@@ -391,7 +402,7 @@
                             </div>
                             <div class="dash-widget-info">
 
-                                <h6 class="text-muted">مراجعان</h6>
+                                <h6 class="text-muted">ارجاعات</h6>
                                 <div class="progress progress-sm">
                                     <div class="progress-bar bg-success w-50"></div>
                                 </div>
@@ -411,31 +422,9 @@
                                 </div>
                             </div>
                             <div class="dash-widget-info">
-
-                                <h6 class="text-muted">رزرو نوبت</h6>
+                                <h6 class="text-muted">تایید مراجعه</h6>
                                 <div class="progress progress-sm">
                                     <div class="progress-bar bg-danger w-50"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-sm-6 col-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="dash-widget-header">
-										<span class="dash-widget-icon text-warning border-warning">
-											<i class="fe fe-folder"></i>
-										</span>
-                                <div class="dash-count">
-                                    <h3>523</h3>
-                                </div>
-                            </div>
-                            <div class="dash-widget-info">
-
-                                <h6 class="text-muted"> درآمد </h6>
-                                <div class="progress progress-sm">
-                                    <div class="progress-bar bg-warning w-50"></div>
                                 </div>
                             </div>
                         </div>
@@ -462,7 +451,7 @@
                     <!-- Invoice Chart -->
                     <div class="card card-chart">
                         <div class="card-header">
-                            <h4 class="card-title"> وضعیت </h4>
+                            <h4 class="card-title"> مقایسه تعداد ارجاعات و تایید ارجاعات </h4>
                         </div>
                         <div class="card-body">
                             <div id="morrisLine"></div>
@@ -473,8 +462,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-6 d-flex">
-
+                <div class="col-md-12 d-flex">
                     <!-- Recent Orders -->
                     <div class="card card-table flex-fill">
                         <div class="card-header">
@@ -600,7 +588,24 @@
                     <!-- /Recent Orders -->
 
                 </div>
-                <div class="col-md-6 d-flex">
+                <div class="col-md-12 card-body">
+                    <div>
+                        <ul class="pagination">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1"> قبلی </a>
+                            </li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item active">
+                                <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">بعدی</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-12 d-flex">
 
                     <!-- Feed Activity -->
                     <div class="card  card-table flex-fill">
@@ -690,7 +695,23 @@
                         </div>
                     </div>
                     <!-- /Feed Activity -->
-
+                </div>
+                <div class="col-md-12 card-body">
+                    <div>
+                        <ul class="pagination">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1"> قبلی </a>
+                            </li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item active">
+                                <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">بعدی</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -699,19 +720,19 @@
                     <!-- Recent Orders -->
                     <div class="card card-table">
                         <div class="card-header">
-                            <h4 class="card-title">لیست رزروها</h4>
+                            <h4 class="card-title">لیست ارجاعات</h4>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-hover table-center mb-0">
                                     <thead>
                                     <tr>
-                                        <th>نام پزشک</th>
-                                        <th>تخصص</th>
-                                        <th>نام مراجعه کننده</th>
-                                        <th>وقت ویزیت</th>
-                                        <th> وضعیت</th>
-                                        <th class="text-right">مقدار</th>
+                                        <th class="text-left">از پزشک</th>
+                                        <th class="text-left">تخصص</th>
+                                        <th class="text-left">بیمار</th>
+                                        <th class="text-left">تاریخ ارجاع</th>
+                                        <th class="text-left">به کلینیک</th>
+                                        <th class="text-left"> وضعیت</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -736,14 +757,14 @@
                                         </td>
                                         <td>9 مهر 1399 <span class="text-primary d-block">11.00 بعدازظهر - 11.15 قبل از ظهر</span>
                                         </td>
+                                        <td class="text-right">
+                                            کلینیک جردن
+                                        </td>
                                         <td>
                                             <div class="status-toggle">
                                                 <input type="checkbox" id="status_1" class="check" checked>
                                                 <label for="status_1" class="checktoggle">checkbox</label>
                                             </div>
-                                        </td>
-                                        <td class="text-right">
-                                            200 تومان
                                         </td>
                                     </tr>
                                     <tr>
@@ -768,108 +789,14 @@
 
                                         <td>5 مهر 1399 <span class="text-primary d-block">11.00 بعدازظهر - 11.35 قبل از ظهر</span>
                                         </td>
+                                        <td class="text-right">
+                                            کلینیک جردن
+                                        </td>
                                         <td>
                                             <div class="status-toggle">
                                                 <input type="checkbox" id="status_2" class="check" checked>
                                                 <label for="status_2" class="checktoggle">checkbox</label>
                                             </div>
-                                        </td>
-                                        <td class="text-right">
-                                            300 تومان
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <h2 class="table-avatar">
-                                                <a href="profile.html" class="avatar avatar-sm mr-2"><img
-                                                        class="avatar-img rounded-circle"
-                                                        src="assets/img/doctors/doctor-thumb-03.jpg"
-                                                        alt="User Image"></a>
-                                                <a href="profile.html">پزشک دبرا انجل</a>
-                                            </h2>
-                                        </td>
-                                        <td>قلب و عروق</td>
-                                        <td>
-                                            <h2 class="table-avatar">
-                                                <a href="profile.html" class="avatar avatar-sm mr-2"><img
-                                                        class="avatar-img rounded-circle"
-                                                        src="assets/img/patients/patient3.jpg" alt="User Image"></a>
-                                                <a href="profile.html">کارل کلی</a>
-                                            </h2>
-                                        </td>
-                                        <td>11 مهر 1399 <span class="text-primary d-block">12.00 بعد از ظهر  - 12.15 بعد از ظهر</span>
-                                        </td>
-                                        <td>
-                                            <div class="status-toggle">
-                                                <input type="checkbox" id="status_3" class="check" checked>
-                                                <label for="status_3" class="checktoggle">checkbox</label>
-                                            </div>
-                                        </td>
-                                        <td class="text-right">
-                                            150 تومان
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <h2 class="table-avatar">
-                                                <a href="profile.html" class="avatar avatar-sm mr-2"><img
-                                                        class="avatar-img rounded-circle"
-                                                        src="assets/img/doctors/doctor-thumb-04.jpg"
-                                                        alt="User Image"></a>
-                                                <a href="profile.html">پزشک صوفیا برینت</a>
-                                            </h2>
-                                        </td>
-                                        <td>اورولوژی</td>
-                                        <td>
-                                            <h2 class="table-avatar">
-                                                <a href="profile.html" class="avatar avatar-sm mr-2"><img
-                                                        class="avatar-img rounded-circle"
-                                                        src="assets/img/patients/patient4.jpg" alt="User Image"></a>
-                                                <a href="profile.html"> میچل فایرفکس</a>
-                                            </h2>
-                                        </td>
-                                        <td>7 مهر 1399<span class="text-primary d-block">1.00 بعد از ظهر  - 1.20 بعد از ظهر</span>
-                                        </td>
-                                        <td>
-                                            <div class="status-toggle">
-                                                <input type="checkbox" id="status_4" class="check" checked>
-                                                <label for="status_4" class="checktoggle">checkbox</label>
-                                            </div>
-                                        </td>
-                                        <td class="text-right">
-                                            150 تومان
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <h2 class="table-avatar">
-                                                <a href="profile.html" class="avatar avatar-sm mr-2"><img
-                                                        class="avatar-img rounded-circle"
-                                                        src="assets/img/doctors/doctor-thumb-05.jpg"
-                                                        alt="User Image"></a>
-                                                <a href="profile.html">پزشک ماروین کمپل</a>
-                                            </h2>
-                                        </td>
-                                        <td>ارتوپدی</td>
-                                        <td>
-                                            <h2 class="table-avatar">
-                                                <a href="profile.html" class="avatar avatar-sm mr-2"><img
-                                                        class="avatar-img rounded-circle"
-                                                        src="assets/img/patients/patient5.jpg" alt="User Image"></a>
-                                                <a href="profile.html">جینا مور</a>
-                                            </h2>
-                                        </td>
-
-                                        <td>15 مهر 1399 <span class="text-primary d-block">1.00 بعد از ظهر  - 1.15 بعد از ظهر</span>
-                                        </td>
-                                        <td>
-                                            <div class="status-toggle">
-                                                <input type="checkbox" id="status_5" class="check" checked>
-                                                <label for="status_5" class="checktoggle">checkbox</label>
-                                            </div>
-                                        </td>
-                                        <td class="text-right">
-                                            200 تومان
                                         </td>
                                     </tr>
                                     </tbody>
@@ -880,28 +807,43 @@
                     <!-- /Recent Orders -->
 
                 </div>
+                <div class="col-md-12 card-body">
+                    <div>
+                        <ul class="pagination">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1"> قبلی </a>
+                            </li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item active">
+                                <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">بعدی</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-
         </div>
+        <!-- /Page Wrapper -->
+
     </div>
-    <!-- /Page Wrapper -->
+    <!-- /Main Wrapper -->
 
-</div>
-<!-- /Main Wrapper -->
+    <!-- Bootstrap Core JS -->
+    <script src="assets/js/popper.min.js"></script>
+    <script src="assets/plugins/bootstrap-rtl/js/bootstrap.min.js"></script>
 
-<!-- Bootstrap Core JS -->
-<script src="assets/js/popper.min.js"></script>
-<script src="assets/plugins/bootstrap-rtl/js/bootstrap.min.js"></script>
+    <!-- Slimscroll JS -->
+    <script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 
-<!-- Slimscroll JS -->
-<script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="assets/plugins/raphael/raphael.min.js"></script>
+    <script src="assets/plugins/morris/morris.min.js"></script>
+    <script src="assets/js/chart.morris.js"></script>
 
-<script src="assets/plugins/raphael/raphael.min.js"></script>
-<script src="assets/plugins/morris/morris.min.js"></script>
-<script src="assets/js/chart.morris.js"></script>
-
-<!-- Custom JS -->
-<script src="assets/js/script.js"></script>
+    <!-- Custom JS -->
+    <script src="assets/js/script.js"></script>
 
 </body>
 </html>

@@ -76,7 +76,7 @@
                         $("#resultCount").html("تعداد نتایج: " + res.totalRecords);
                         $("#resultContainer").html("<span class=\"form-text\" id=\"resultContainer\"></span>");
                         $.each(res.entityList, function (index, value) {
-                            $("#resultContainer").append("<li class=result id=res_" + index + " onmouseover=highlightRow(" + index + ")>" + parseInt(parseInt(index) + 1) + "- " + value.firstname + " - " + value.lastname + " - " + value.region.title + " - " + value.speciality.title + " - " + value.address + " - " + value.telephone + "</li>");
+                            $("#resultContainer").append("<li class=result id=res_" + index + " onmouseover=highlightRow(" + index + ")>" + parseInt(parseInt(index) + 1) + "- دکتر " + value.firstname + "  " + value.lastname + " - " + value.region.title + " - " + value.speciality.title + " - " + value.address + " - " + value.telephone + "</li>");
                         });
                     },
                     error: function (err) {
@@ -157,13 +157,16 @@
                         <a href="components.html">کامپوننت‌ها</a>
                     </li>
                     <li>
-                        <a href="admin/index.html">مدیریت سایت</a>
+                        <a href="admin/index.html">پنل مدیریت</a>
                     </li>
                    <!-- <li>
                         <a href="pharmacy/index.html">مدیریت فروشگاه</a>
                     </li>-->
                     <li>
                         <a href="doctor-dashboard.html">پنل پزشک</a>
+                    </li>
+                    <li>
+                        <a href="clinic-dashboard.html">پنل کلینیک</a>
                     </li>
                     <li>
                         <a href="patient-dashboard.html">پنل بیمار</a>

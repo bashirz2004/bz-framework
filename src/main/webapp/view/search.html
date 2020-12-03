@@ -36,21 +36,51 @@
     <script src="assets/js/html5shiv.min.js"></script>
     <script src="assets/js/respond.min.js"></script>
     <![endif]-->
+    <style>
+        .card:hover {
+            background-color: lavender;
+        }
+    </style>
     <!-- jQuery -->
     <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.template.js"></script>
     <script>
         var contextPath = "/app";
+        searchFilters = {
+            "stateId": -1,
+            "cityId": -1,
+            "regionId": -1,
+            "address": '',
+            "sort": "id,desc",
+            "size": 10
+        };
+
         $(function () {
             fillSpecialityCheckboxes();
             fillComboState();
+            searchDoctors();
+
+            $("#cmbSerachOrder").change(function () {
+                searchFilters.sort = $(this).val();
+                searchDoctors();
+            });
 
             $("#cmbState").change(function () {
+                searchFilters.stateId = $(this).val();
+                searchDoctors();
                 fillComboCity($(this).val());
                 $("#cmbRegion").html("<select class='select' id='cmbRegion'></select>");
             });
 
             $("#cmbCity").change(function () {
+                searchFilters.cityId = $(this).val();
+                searchDoctors();
                 fillComboRegion($(this).val());
+            });
+
+            $("#cmbRegion").change(function () {
+                searchFilters.regionId = $(this).val();
+                searchDoctors();
             });
 
         });
@@ -132,25 +162,19 @@
         }
 
         function searchDoctors() {
+            console.log(searchFilters);
+            searchFilters.address = $("#txtSearchAddress").val();
             $.ajax({
                 type: "GET",
                 url: contextPath + "/api/public/doctor/searchDoctors",
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
-                data: {
-                    "stateId": $("#cmbState").val(),
-                    "cityId": $("#cmbCity").val(),
-                    "regionId": $("#cmbRegion").val(),
-
-
-                },
+                data: searchFilters,
                 success: function (res) {
-                    /*$("#cmbState").append("<option value=-1>...</option>");
-                    $.each(res, function (index, value) {
-                        $("#cmbState").append("<option value=" + value.id + ">" + value.title + "</option>");
-                    });*/
+                    $("#doctorList > div").remove();
+                    $("#doctorTemplate").tmpl(res.entityList).appendTo("#doctorList");
                     $("#lblTotalRecords").html(res.totalRecords);
-                    console.log(res);
+                    $("#lblTotalRecords").html(res.totalRecords);
                 },
                 error: function (err) {
                     console.log("error ---- " + err);
@@ -167,7 +191,7 @@
 <div class="main-wrapper">
 
     <!-- Header -->
-    <header class="header">
+    <header class="header" style="display: none">
         <nav class="navbar navbar-expand-lg header-nav">
             <div class="navbar-header">
                 <a id="mobile_btn" href="javascript:void(0);">
@@ -197,14 +221,14 @@
     <!-- /Header -->
 
     <!-- Breadcrumb -->
-    <div class="breadcrumb-bar">
+    <div class="breadcrumb-bar" style="position: fixed;width: 100%;z-index: 50">
         <div class="container-fluid">
             <div class="row align-items-center">
                 <div class="col-md-8 col-12">
                     <nav aria-label="breadcrumb" class="page-breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="index.html">خانه</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">جستجو</li>
+                            <li class="breadcrumb-item active" aria-current="page">جستجوی پزشک</li>
                         </ol>
                     </nav>
                     <div class="row" style="padding-right:1em">
@@ -216,12 +240,10 @@
                     <div class="sort-by">
                         <span class="sort-title">مرتب سازی</span>
                         <span class="sortby-fliter">
-								<select class="select">
-									<option>انتخاب</option>
-									<option class="sorting">رتبه</option>
-									<option class="sorting">محبوبیت</option>
-									<option class="sorting">آخرین</option>
-									<option class="sorting">رایگان</option>
+								<select class="select" id="cmbSerachOrder">
+									<option value="id,desc" class="sorting">امتیاز</option>
+									<option value="speciality.title,asc" class="sorting">تخصص</option>
+									<option value="address,asc" class="sorting">آدرس</option>
 								</select>
 							</span>
                     </div>
@@ -232,14 +254,14 @@
     <!-- /Breadcrumb -->
 
     <!-- Page Content -->
-    <div class="content">
+    <div class="content" style="padding-top: 6em">
         <div class="container-fluid">
 
             <div class="row">
                 <div class="col-md-12 col-lg-4 col-xl-3 theiaStickySidebar">
 
                     <!-- Search Filter -->
-                    <div class="card search-filter">
+                    <div class="search-filter">
                         <div class="card-header">
                             <h4 class="card-title mb-0">فیلتر جستجو</h4>
                         </div>
@@ -258,6 +280,10 @@
                                 <h4>منطقه شهرداری / نام محله</h4>
                                 <select class="select" id="cmbRegion">
                                 </select>
+                            </div>
+                            <div class="filter-widget">
+                                <h4>آدرس</h4>
+                                <input type="text" class="form-control" id="txtSearchAddress"/>
                             </div>
                             <div class="filter-widget">
                                 <h4>جنسیت</h4>
@@ -286,37 +312,42 @@
                     <!-- /Search Filter -->
 
                 </div>
-
-                <div class="col-md-12 col-lg-8 col-xl-9">
-
-                    <!-- Doctor Widget -->
+                <!-- Doctor Widget -->
+                <div class="col-md-12 col-lg-8 col-xl-9" id="doctorList">
+                    <script id="doctorTemplate" type="text/x-jquery-tmpl">
                     <div class="card">
                         <div class="card-body">
                             <div class="doctor-widget">
                                 <div class="doc-info-left">
                                     <div class="doctor-img">
-                                        <a href="doctor-profile.html">
-                                            <img src="assets/img/doctors/doctor-thumb-01.jpg" class="img-fluid"
+                                        <a href="doctor-profile.html" >
+                                            <img src={{if !male}}"assets/img/doctors/doctor-thumb-01.jpg"{{else}}"assets/img/doctors/doctor-thumb-02.jpg"{{/if}} class="img-fluid"
                                                  alt="User Image">
                                         </a>
                                     </div>
                                     <div class="doc-info-cont">
-                                        <h4 class="doc-name"><a href="doctor-profile.html">دکتر سهیلا محمودی</a></h4>
-                                        <p class="doc-speciality"> متخصص پوست موست و ریبایی </p>
-                                        <h5 class="doc-department"><img
-                                                src="assets/img/specialities/specialities-05.png"
-                                                class="img-fluid" alt="Speciality">ارتوپدی</h5>
+                                        <h4 class="doc-name"><a href="doctor-profile.html">دکتر ${firstname} ${lastname}</a></h4>
+                                        <p class="doc-speciality">
+                                            <i class="fa fa-stethoscope" aria-hidden="true"></i>
+                                            ${speciality.title}
+                                        </p>
+                                        <h5 class="doc-department">نظام پزشکی: ${medicalNationalNumber}</h5>
                                         <div class="rating">
                                             <i class="fas fa-star filled"></i>
                                             <i class="fas fa-star filled"></i>
                                             <i class="fas fa-star filled"></i>
                                             <i class="fas fa-star filled"></i>
                                             <i class="fas fa-star"></i>
-                                            <span class="d-inline-block average-rating">(17)</span>
+                                            <span class="d-inline-block average-rating">(${id})</span>
                                         </div>
                                         <div class="clinic-details">
                                             <p class="doc-location">
-                                                <i class="fas fa-map-marker-alt"></i> تهران
+                                                <i class="fas fa-map-marker-alt"></i> ${address}
+                                            </p>
+                                        </div>
+                                        <div class="clinic-details">
+                                            <p class="doc-location">
+                                                <i class="fas fa-phone"></i> ${telephone}
                                             </p>
                                         </div>
                                     </div>
@@ -324,12 +355,12 @@
                                 <div class="doc-info-right">
                                     <div class="clini-infos">
                                         <ul>
-                                            <li><i class="far fa-thumbs-up"></i> 98%</li>
-                                            <li><i class="far fa-comment"></i> 17 فید بک</li>
-                                            <li><i class="fas fa-map-marker-alt"></i> فلوریدا، آمریکا</li>
-                                            <li><i class="far fa-money-bill-alt"></i>300 تومان - 1000 تومان<i
+                                            <li><i class="far fa-thumbs-up"></i> 98% رضایتمندی بیماران</li>
+                                            <li><i class="far fa-comment"></i> 17 نظر ثبت شده</li>
+                                            <li><i class="fas fa-map-marker-alt"></i>${state.title} - ${city.title} </li>
+                                            <!--<li><i class="far fa-money-bill-alt"></i>300 تومان - 1000 تومان<i
                                                     class="fas fa-info-circle"
-                                                    data-toggle="tooltip" title="Lorem Ipsum"></i></li>
+                                                    data-toggle="tooltip" title="Lorem Ipsum"></i></li>-->
                                         </ul>
                                     </div>
                                     <div class="clinic-booking">
@@ -340,11 +371,19 @@
                             </div>
                         </div>
                     </div>
-                    <!-- /Doctor Widget -->
 
-                    <div class="load-more text-center">
-                        <a class="btn btn-primary btn-sm" href="javascript:void(0);">بارگذاری بیشتر</a>
-                    </div>
+
+
+
+
+
+
+
+                    </script>
+                </div>
+                <!-- /Doctor Widget -->
+                <div class="load-more text-center">
+                    <a class="btn btn-primary btn-sm" href="javascript:void(0);">بارگذاری بیشتر</a>
                 </div>
             </div>
 
@@ -521,46 +560,7 @@
 
 <!-- Custom JS -->
 <script src="assets/js/script.js"></script>
-<script type="text/javascript">
 
-    $(".datetimepicker").persianDatepicker({
-        months: ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"],
-        dowTitle: ["شنبه", "یکشنبه", "دوشنبه", "سه شنبه", "چهارشنبه", "پنج شنبه", "جمعه"],
-        shortDowTitle: ["ش", "ی", "د", "س", "چ", "پ", "ج"],
-        showGregorianDate: !1,
-        persianNumbers: !0,
-        formatDate: "YYYY/MM/DD",
-        selectedBefore: !1,
-        selectedDate: null,
-        startDate: null,
-        endDate: null,
-        prevArrow: '\u25c4',
-        nextArrow: '\u25ba',
-        theme: 'default',
-        alwaysShow: !1,
-        selectableYears: null,
-        selectableMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-        cellWidth: 25, // by px
-        cellHeight: 20, // by px
-        fontSize: 13, // by px
-        isRTL: !1,
-        format: 'YYYY/MM/DD',
-
-
-        calendarPosition: {
-            x: 0,
-            y: 0,
-        },
-        onShow: function () {
-        },
-        onHide: function () {
-        },
-        onSelect: function () {
-        },
-        onRender: function () {
-        }
-    });
-</script>
 
 </body>
 
