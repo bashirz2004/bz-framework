@@ -28,9 +28,9 @@
     <script>
         var contextPath = "/app";
         $(function () {
-            if (localStorage.getItem("username")) {
+            if (localStorage.getItem("authenticatedUserFullName")) {
                 $('#btnLogin').hide();
-                $('#userInfo').html(localStorage.getItem("username"));
+                $('#userInfo').html(localStorage.getItem("authenticatedUserFullName") + "&nbsp;");
                 $('#btnLogout').show();
             }
 
@@ -171,15 +171,6 @@
                 </ul>
             </div>
             <ul class="nav header-navbar-rht">
-                <li class="nav-item contact-item">
-                    <div class="header-contact-img">
-                        <i class="far fa-hospital"></i>
-                    </div>
-                    <div class="header-contact-detail">
-                        <p class="contact-header">‌تماس با ما</p>
-                        <p class="contact-info-header">09122851473</p>
-                    </div>
-                </li>
                 <li class="nav-item">
                     <button type="button" class="btn btn-primary btn-sm" id="btnLogin" onclick="navigateToLoginPage()">
                         ورود

@@ -38,6 +38,18 @@ public class User extends BaseEntity implements UserDetails {
     private String password;
 
     @NotNull
+    @Column(name = "firstname", length = 30, nullable = false)
+    @Getter
+    @Setter
+    private String firstname;
+
+    @NotNull
+    @Column(name = "lastname", length = 30, nullable = false)
+    @Getter
+    @Setter
+    private String lastname;
+
+    @NotNull
     @Column(name = "is_accountNonExpired", nullable = false)
     @Getter
     @Setter

@@ -2,6 +2,7 @@ package com.bzamani.framework.config.security;
 
 import com.bzamani.framework.controller.BaseController;
 import com.bzamani.framework.model.security.User;
+import com.bzamani.framework.service.security.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -27,6 +28,9 @@ public class AuthenticationController extends BaseController {
   private CustomUserDetailsService userDetailsService;
 
   @Autowired
+  private IUserService iUserService;
+
+  @Autowired
   private JwtUtil jwtUtil;
 
   @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
@@ -40,11 +44,8 @@ public class AuthenticationController extends BaseController {
     }
 
     UserDetails userdetails = userDetailsService.loadUserByUsername(loginInfo.get("username"));
-    String token = jwtUtil.generateToken(userdetails);
-    User user = new User();
-    user.setToken(token);
-    user.setUsername(userdetails.getUsername());
-    user.setAuthorities((Set<GrantedAuthority>) userdetails.getAuthorities());
+    User user = iUserService.findUserByUsernameEquals(loginInfo.get("username"));
+    user.setToken(jwtUtil.generateToken(userdetails));
     return user;
   }
 }

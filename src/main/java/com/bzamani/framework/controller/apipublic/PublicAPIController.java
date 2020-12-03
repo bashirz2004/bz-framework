@@ -1,5 +1,6 @@
 package com.bzamani.framework.controller.apipublic;
 
+import com.bzamani.framework.config.security.SecurityUtility;
 import com.bzamani.framework.controller.BaseController;
 import com.bzamani.framework.model.baseinfo.BaseInfo;
 import com.bzamani.framework.model.doctor.Doctor;
@@ -8,10 +9,12 @@ import com.bzamani.framework.service.baseinfo.IBaseInfoService;
 import com.bzamani.framework.service.doctor.IDoctorService;
 import com.bzamani.framework.service.security.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/api/public", produces = "application/json;charset=UTF-8")
@@ -65,5 +68,10 @@ public class PublicAPIController extends BaseController {
     @GetMapping("/baseinfo/getAllByParentId/{parentId}")
     public List<BaseInfo> getAllByParentId(@PathVariable long parentId) {
         return iBaseInfoService.getAllByParentId(parentId);
+    }
+
+    @GetMapping("/user/getAuthenticatedUser")
+    public User getAuthenticatedUser() {
+        return iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername());
     }
 }

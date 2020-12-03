@@ -45,7 +45,7 @@
                     }),
                     type: 'POST',
                     success: function (res) {
-                        localStorage.setItem("username", res.username);
+                        localStorage.setItem("authenticatedUserFullName", res.firstname + " " + res.lastname);
                         $.cookie('Authorization', "Bearer-" + res.token, {expires: 1, path: '/'});
                         document.location.href = contextPath + "/view/index.html";
                         /*if (res.authorities[0].authority == "ROLE_ADMIN")
