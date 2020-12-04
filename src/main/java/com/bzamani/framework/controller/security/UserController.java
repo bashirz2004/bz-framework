@@ -5,6 +5,7 @@ import com.bzamani.framework.model.security.User;
 import com.bzamani.framework.service.security.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,17 +32,12 @@ public class UserController extends BaseController {
         return iUserService.save(user);
     }
 
-    /*@PostMapping("/authenticate")
-    public User authenticate(@RequestBody User user) {
-        System.out.println(user.getUsername());
-        return iUserService.authenticate(user.getUsername(), user.getPassword());
-    }*/
-
     @GetMapping("/load/{id}")
     public User load(@PathVariable("id") long id) {
         return iUserService.loadByEntityId(id);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
     public boolean delete(@PathVariable("id") long id) {
         return iUserService.deleteByEntityId(id);

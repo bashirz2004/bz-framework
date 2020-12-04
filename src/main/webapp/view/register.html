@@ -33,7 +33,7 @@
         });
 
         function register() {
-            if ($('#txtUsername').val() != '' && $('#txtPassword').val() != '' && $('#txtRepeatPassword').val() != '' && $('#txtPassword').val() == $('#txtRepeatPassword').val()) {
+            if (validateForm() == 'ok') {
                 $.ajax({
                     url: contextPath + "/api/public/user/registerUserByHimself",
                     contentType: "application/json;charset=utf-8",
@@ -51,12 +51,22 @@
                     },
                     error: function (err) {
                         if (err.responseText.includes("unq_username")) {
-                            alert("خطا در ثبت کاربر. نام کاربری تکراری است!");
+                            alert("خطا در ثبت کاربر. با این نام کاربری قبلا ثبت نام انجام شده است!");
                         }
                     }
                 });
-            }
+            } else alert(validateForm());
         }
+
+        function validateForm() {
+            if ($('#txtFirstname').val() == '' || $('#txtLastname').val() == '' || $('#txtUsername').val() == '' || $('#txtPassword').val() == '' || $('#txtRepeatPassword').val() == '')
+                return 'پرکردن همه فیلدها اجباری است.'
+
+            else if ($('#txtPassword').val() != $('#txtRepeatPassword').val())
+                return 'رمز عبور و تکرار آن یکسان نیستند.';
+            else return 'ok';
+        }
+
     </script>
 
 </head>
@@ -102,7 +112,7 @@
                                 </div>
                                 <div class="form-group form-focus">
                                     <input type="password" class="form-control floating" id="txtRepeatPassword">
-                                    <label class="focus-label"> رمزعبور </label>
+                                    <label class="focus-label"> تکرار رمزعبور </label>
                                 </div>
                                 <div class="text-right">
                                     <a class="forgot-link" href="login.html">اکانت دارم</a>

@@ -1,5 +1,6 @@
 package com.bzamani.framework.model.security;
 
+import com.bzamani.framework.config.mycustomannotation.MyLengthValidator;
 import com.bzamani.framework.model.BaseEntity;
 import com.bzamani.framework.model.core.organization.Organization;
 import lombok.Getter;
@@ -28,23 +29,27 @@ public class User extends BaseEntity implements UserDetails {
   private Long id;*/
 
     @NotNull
-    @Column(name = "USERNAME", length = 30, nullable = false)
+    @MyLengthValidator(minLenght = 1, maxLength = 30, message = "Error. length of field USERNAME is not valid ! ")
+    @Column(name = "USERNAME", nullable = false)
     private String username;
 
     @NotNull
-    @Column(name = "PASSWORD", length = 69, nullable = false)
+    @MyLengthValidator(minLenght = 1, maxLength = 69, message = "Error. length of field PASSWORD is not valid ! ")
+    @Column(name = "PASSWORD", nullable = false)
     @Getter
     @Setter
     private String password;
 
     @NotNull
-    @Column(name = "firstname", length = 30, nullable = false)
+    @MyLengthValidator(minLenght = 1, maxLength = 30, message = "Error. length of field firstname is not valid ! ")
+    @Column(name = "firstname", nullable = false)
     @Getter
     @Setter
     private String firstname;
 
     @NotNull
-    @Column(name = "lastname", length = 30, nullable = false)
+    @MyLengthValidator(minLenght = 1, maxLength = 30, message = "Error. length of field lastname is not valid ! ")
+    @Column(name = "lastname", nullable = false)
     @Getter
     @Setter
     private String lastname;

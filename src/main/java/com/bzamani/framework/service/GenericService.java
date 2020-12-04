@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public abstract class GenericService<T extends BaseEntity, PK> implements IGenericService<T, PK> {
 
   protected abstract JpaRepository<T, PK> getGenericRepo();
@@ -26,6 +26,7 @@ public abstract class GenericService<T extends BaseEntity, PK> implements IGener
   }
 
   @Override
+  @Transactional
   public T save(T t) {
     return getGenericRepo().save(t);
   }
@@ -40,6 +41,7 @@ public abstract class GenericService<T extends BaseEntity, PK> implements IGener
   }
 
   @Override
+  @Transactional
   public boolean deleteByEntityId(PK id) {
     getGenericRepo().deleteById(id);
     return  true;

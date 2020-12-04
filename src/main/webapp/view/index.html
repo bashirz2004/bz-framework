@@ -61,7 +61,7 @@
          }*/
 
         function quickSearchDoctor() {
-            if (($('#txtSpecialityTitle').val() != null && $('#txtSpecialityTitle').val() != '') || ($('#txtAddress').val() != null && $('txtAddress').val() != '')) {
+            if ($('#txtSpecialityTitle').val().length > 0 || $('#txtAddress').val().length > 0) {
                 $.ajax({
                     type: "GET",
                     url: contextPath + "/api/public/doctor/searchDoctors",
@@ -76,7 +76,7 @@
                         $("#resultCount").html("تعداد نتایج: " + res.totalRecords);
                         $("#resultContainer").html("<span class=\"form-text\" id=\"resultContainer\"></span>");
                         $.each(res.entityList, function (index, value) {
-                            $("#resultContainer").append("<li class=result id=res_" + index + " onmouseover=highlightRow(" + index + ")>" + parseInt(parseInt(index) + 1) + "- دکتر " + value.firstname + "  " + value.lastname + " - " + value.region.title + " - " + value.speciality.title + " - " + value.address + " - " + value.telephone + "</li>");
+                            $("#resultContainer").append("<li onclick=showProfile(" + value.id + ") class=result id=res_" + index + " onmouseover=highlightRow(" + index + ")>" + parseInt(parseInt(index) + 1) + "- دکتر " + value.firstname + "  " + value.lastname + " - " + value.region.title + " - " + value.speciality.title + " - " + value.address + " - " + value.telephone + "</li>");
                         });
                     },
                     error: function (err) {
@@ -84,6 +84,10 @@
                     }
                 });
             }
+        }
+
+        function showProfile(id) {
+            document.location.href = "doctor-profile.html?id=" + id;
         }
 
         function highlightRow(index) {
@@ -138,7 +142,6 @@
                         <ul class="submenu">
                             <li><a href="search.html">جستجوی پزشک</a></li>
                             <li><a href="pharmacy-search.html">جستجوی کلینیک</a></li>
-                            <li><a href="pharmacy-search.html">جستجوی بیمارستان</a></li>
                             <li><a href="product-all.html">جستجوی محصولات</a></li>
                         </ul>
                     </li>
@@ -154,14 +157,8 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="components.html">کامپوننت‌ها</a>
-                    </li>
-                    <li>
                         <a href="admin/index.html">پنل مدیریت</a>
                     </li>
-                   <!-- <li>
-                        <a href="pharmacy/index.html">مدیریت فروشگاه</a>
-                    </li>-->
                     <li>
                         <a href="doctor-dashboard.html">پنل پزشک</a>
                     </li>
@@ -243,9 +240,9 @@
                                 <img src="assets/img/doctors/doctor-07.jpg" alt="" class="img-fluid">
                                 <div class="doctor-book-card-content tile-card-content-1">
                                     <div>
-                                        <h3 class="card-title mb-0">ویزیت پزشک</h3>
-                                        <a href="search.html" class="btn book-btn1 px-3 py-2 mt-3" tabindex="0">رزرو
-                                            کنید</a>
+                                        <h3 class="card-title mb-0">مشاوره تلفنی</h3>
+                                        <a href="javascript:void(0);" class="btn book-btn1 px-3 py-2 mt-3" tabindex="0">به
+                                            زودی</a>
                                     </div>
                                 </div>
                             </div>
@@ -255,9 +252,9 @@
                                 <img src="assets/img/img-pharmacy1.jpg" alt="" class="img-fluid">
                                 <div class="doctor-book-card-content tile-card-content-1">
                                     <div>
-                                        <h3 class="card-title mb-0">جستجوی داروخانه</h3>
-                                        <a href="pharmacy-search.html" class="btn book-btn1 px-3 py-2 mt-3"
-                                           tabindex="0">پیدا کن</a>
+                                        <h3 class="card-title mb-0">تجهیزات سبک و سنگین</h3>
+                                        <a href="javascript:void(0);" class="btn book-btn1 px-3 py-2 mt-3"
+                                           tabindex="0">به زودی</a>
                                     </div>
                                 </div>
                             </div>
@@ -702,7 +699,7 @@
                         <!-- Slider Item -->
                         <div class="feature-item text-center">
                             <img src="assets/img/features/feature-02.jpg" class="img-fluid" alt="Feature">
-                            <p>سوزن کاری</p>
+                            <p>طب سوزنی</p>
                         </div>
                         <!-- /Slider Item -->
 
@@ -747,8 +744,7 @@
             <!-- Section Header -->
             <div class="section-header text-center" id="blogFragment">
                 <h2>بلاگ و اخبار</h2>
-                <p class="sub-title">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان
-                    گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است</p>
+                <p class="sub-title">جدیدترین مقالات، اخبار و اطلاعات مفید فیزیوتراپی و ارتوپدی </p>
             </div>
             <!-- /Section Header -->
 
@@ -767,16 +763,15 @@
                                     <div class="post-author">
                                         <a href="doctor-profile.html"><img src="assets/img/doctors/doctor-thumb-01.jpg"
                                                                            alt="Post Author">
-                                            <span>پرشک رابی پرین</span></a>
+                                            <span>دکتر مهناز احمدی</span></a>
                                     </div>
                                 </li>
                                 <li><i class="far fa-clock"></i> 4 مهر 1399</li>
                             </ul>
-                            <h3 class="blog-title"><a href="blog-details.html"> سؤال - بازدید از کلینیک به راحتی </a>
+                            <h3 class="blog-title"><a href="blog-details.html"> دلایل کمردرد کودکان</a>
                             </h3>
-                            <p class="mb-0">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از
-                                طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم
-                                است</p>
+                            <p class="mb-0">محققین سومالیایی اخیرا پس از سال ها تلاش کشف کرده اند که کمردرد در کودکان
+                                زیاد شایع نیست. بزرگ شدن شاید مبتلا بشن! ادامه مطلب ...</p>
                         </div>
                     </div>
                     <!-- /Blog Post -->
@@ -796,15 +791,13 @@
                                     <div class="post-author">
                                         <a href="doctor-profile.html"><img src="assets/img/doctors/doctor-thumb-02.jpg"
                                                                            alt="Post Author">
-                                            <span>پزشک دارن الدر</span></a>
+                                            <span>دکتر حسن رضایی</span></a>
                                     </div>
                                 </li>
                                 <li><i class="far fa-clock"></i> 3 مهر 1399</li>
                             </ul>
                             <h3 class="blog-title"><a href="blog-details.html"> فواید رزرو آنلاین پزشک چیست؟ </a></h3>
-                            <p class="mb-0">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از
-                                طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم
-                                است</p>
+                            <p class="mb-0">به نظرم زیاد فایده نداره. حضوری بری ساعت هابشینی تو مطب بهتره</p>
                         </div>
                     </div>
                     <!-- /Blog Post -->
@@ -824,15 +817,13 @@
                                     <div class="post-author">
                                         <a href="doctor-profile.html"><img src="assets/img/doctors/doctor-thumb-03.jpg"
                                                                            alt="Post Author">
-                                            <span>پزشک دبرا انجل</span></a>
+                                            <span>دکتر مریم منفرد</span></a>
                                     </div>
                                 </li>
                                 <li><i class="far fa-clock"></i> 3 مهر 1399</li>
                             </ul>
                             <h3 class="blog-title"><a href="blog-details.html"> مزایای مشاوره با پزشک آنلاین </a></h3>
-                            <p class="mb-0">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از
-                                طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم
-                                است</p>
+                            <p class="mb-0">فکر نکنم مزیتی داشته باشه ولی این مطلب رو بخونید به دردتون میخوره.</p>
                         </div>
                     </div>
                     <!-- /Blog Post -->
@@ -852,16 +843,15 @@
                                     <div class="post-author">
                                         <a href="doctor-profile.html"><img src="assets/img/doctors/doctor-thumb-04.jpg"
                                                                            alt="Post Author">
-                                            <span>پزشک صوفیا برینت</span></a>
+                                            <span>دکتر لادن منافی</span></a>
                                     </div>
                                 </li>
                                 <li><i class="far fa-clock"></i> 2 مهر 1399</li>
                             </ul>
                             <h3 class="blog-title"><a href="blog-details.html"> 5 دلیل عالی برای استفاده از یک دکتر
                                 آنلاین </a></h3>
-                            <p class="mb-0">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از
-                                طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم
-                                است</p>
+                            <p class="mb-0">فعلا که یک دلیل هم به ذهنم نمی رسه ولی شما این پست رو بخونید تا ته ضرر
+                                نداره</p>
                         </div>
                     </div>
                     <!-- /Blog Post -->
@@ -869,7 +859,7 @@
                 </div>
             </div>
             <div class="view-all text-center">
-                <a href="blog-list.html" class="btn btn-primary">مشاهده همه</a>
+                <a href="blog-list.html" class="btn btn-primary">مشاهده همه پست ها</a>
             </div>
         </div>
     </section>
@@ -882,7 +872,7 @@
         <div class="footer-top">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-lg-3 col-md-6">
+                    <div class="col-lg-4 col-md-6">
 
                         <!-- Footer Widget -->
                         <div class="footer-widget footer-about">
@@ -890,8 +880,8 @@
                                 <img src="assets/img/footer-logo.png" alt="logo">
                             </div>
                             <div class="footer-about-content">
-                                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان
-                                    گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است</p>
+                                <p>مدیک یک وب سایت اطلاع رسانی در حوزه سلامت است که قصد دارد خدمات نوین پزشکی را در سریع
+                                    ترین زمان ممکن و با حداکثر کیفیت به بیماران گرامی ارائه نماید. </p>
                                 <div class="social-icon">
                                     <ul>
                                         <li>
@@ -917,13 +907,14 @@
 
                     </div>
 
-                    <div class="col-lg-3 col-md-6">
+                    <div class="col-lg-2 col-md-6">
 
                         <!-- Footer Widget -->
                         <div class="footer-widget footer-menu">
                             <h2 class="footer-title">برای مراجعه‌کنندگان</h2>
                             <ul>
-                                <li><a href="search.html">جستجوی پیشرفته</a></li>
+                                <li><a href="search.html">جستجوی پزشکان</a></li>
+                                <li><a href="search.html">جستجوی کلینیک ها</a></li>
                                 <li><a href="login.html">‌ورود</a></li>
                                 <li><a href="register.html">‌ثبت‌نام</a></li>
                             </ul>
@@ -932,22 +923,33 @@
 
                     </div>
 
-                    <div class="col-lg-3 col-md-6">
+                    <div class="col-lg-2 col-md-6">
 
                         <!-- Footer Widget -->
                         <div class="footer-widget footer-menu">
                             <h2 class="footer-title">برای پزشکان</h2>
                             <ul>
-                                <li><a href="chat.html">چت</a></li>
-                                <li><a href="login.html">‌ورود</a></li>
-                                <li><a href="doctor-register.html">‌ثبت‌نام</a></li>
+                               <!-- <li><a href="login.html">‌ورود</a></li>-->
                             </ul>
                         </div>
                         <!-- /Footer Widget -->
 
                     </div>
 
-                    <div class="col-lg-3 col-md-6">
+                    <div class="col-lg-2 col-md-6">
+
+                        <!-- Footer Widget -->
+                        <div class="footer-widget footer-menu">
+                            <h2 class="footer-title">برای کلینیک ها</h2>
+                            <ul>
+                               <!-- <li><a href="login.html">‌ورود</a></li>-->
+                            </ul>
+                        </div>
+                        <!-- /Footer Widget -->
+
+                    </div>
+
+                    <div class="col-lg-2 col-md-6">
 
                         <!-- Footer Widget -->
                         <div class="footer-widget footer-contact">
@@ -955,7 +957,7 @@
                             <div class="footer-contact-info">
                                 <div class="footer-address">
                                     <span><i class="fas fa-map-marker-alt"></i></span>
-                                    <p> تهران - ایران<br> جنت آباد شمالی کوچه شهید هشت متری </p>
+                                    <p> تهران<br> جنت آباد شمالی کوچه شهید هشت متری </p>
                                 </div>
                                 <p>
                                     <i class="fas fa-phone-alt"></i>
