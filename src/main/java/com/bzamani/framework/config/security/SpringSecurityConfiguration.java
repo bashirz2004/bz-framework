@@ -41,6 +41,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
+        http.headers().frameOptions().sameOrigin();
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/view/admin/**").hasRole("ADMIN")
