@@ -1,102 +1,142 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>مدیک</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-		
-		<!-- Favicons -->
-		<link href="assets/img/favicon.png" rel="icon">
-		
-		<!-- Bootstrap CSS -->
-		<link rel="stylesheet" href="assets/plugins/bootstrap-rtl/css/bootstrap.min.css">
-		
-		<!-- Fontawesome CSS -->
-		<link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
-		<link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
-		
-		<!-- Main CSS -->
-		<link rel="stylesheet" href="assets/css/style.css">
-		
-		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-		<!--[if lt IE 9]>
-			<script src="assets/js/html5shiv.min.js"></script>
-			<script src="assets/js/respond.min.js"></script>
-		<![endif]-->
-	
-	</head>
-	<body class="account-page">
+<head>
+    <meta charset="utf-8">
+    <title>مدیک</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
 
-		<!-- Main Wrapper -->
-		<div class="main-wrapper">
-		
-			<!-- Page Content -->
-			<div class="content">
-				<div class="container-fluid">
-					
-					<div class="row">
-						<div class="col-md-8 offset-md-2">
-								
-							<!-- Register Content -->
-							<div class="account-content">
-								<div class="row align-items-center justify-content-center">
-									<div class="col-md-7 col-lg-6 login-left">
-										<img src="assets/img/login-banner.png" class="img-fluid" alt="Doccure Register">	
-									</div>
-									<div class="col-md-12 col-lg-6 login-right">
-										<div class="login-header">
-											<h3>ثبت نام بیمار <a href="doctor-register.html">پزشک هستم</a></h3>
-										</div>
-										
-										<!-- Register Form -->
-										<form action="/view/doctor-dashboard.html">
-											<div class="form-group form-focus">
-												<input type="text" class="form-control floating">
-												<label class="focus-label">نام</label>
-											</div>
-											<div class="form-group form-focus">
-												<input type="text" class="form-control floating">
-												<label class="focus-label">شماره موبایل </label>
-											</div>
-											<div class="form-group form-focus">
-												<input type="password" class="form-control floating">
-												<label class="focus-label">ساخت رمزعبور </label>
-											</div>
-											<div class="text-right">
-												<a class="forgot-link" href="login.html">اکانت دارم</a>
-											</div>
-											<button class="btn btn-primary btn-block btn-lg login-btn" type="submit">ثبت‌نام</button>
-											<div class="text-center dont-have">
-												<a href="index.html">بازگشت به صفحه اصلی</a>
-											</div>
-										</form>
-										<!-- /Register Form -->
-										
-									</div>
-								</div>
-							</div>
-							<!-- /Register Content -->
-								
-						</div>
-					</div>
+    <!-- Favicons -->
+    <link href="assets/img/favicon.png" rel="icon">
 
-				</div>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="assets/plugins/bootstrap-rtl/css/bootstrap.min.css">
 
-			</div>		
-			<!-- /Page Content -->
-   
-		</div>
-		<!-- /Main Wrapper -->
-	  
-		<!-- jQuery -->
-		<script src="assets/js/jquery.min.js"></script>
-		
-		<!-- Bootstrap Core JS -->
-		<script src="assets/js/popper.min.js"></script>
-		<script src="assets/plugins/bootstrap-rtl/js/bootstrap.min.js"></script>
-		
-		<!-- Custom JS -->
-		<script src="assets/js/script.js"></script>
-		
-	</body>
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="assets/js/html5shiv.min.js"></script>
+    <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script>
+        var contextPath = "/app";
+        $(function () {
+
+        });
+
+        function register() {
+            if ($('#txtUsername').val() != '' && $('#txtPassword').val() != '' && $('#txtRepeatPassword').val() != '' && $('#txtPassword').val() == $('#txtRepeatPassword').val()) {
+                $.ajax({
+                    url: contextPath + "/api/public/user/registerUserByHimself",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        "username": $('#txtUsername').val(),
+                        "password": $('#txtPassword').val(),
+                        "firstname": $('#txtFirstname').val(),
+                        "lastname": $('#txtLastname').val(),
+                    }),
+                    type: 'POST',
+                    success: function (res) {
+                        alert("کاربر " + res.username + " با موقثیت ایجاد شد.");
+                        document.location.href = contextPath + "/view/login.html";
+                    },
+                    error: function (err) {
+                        if (err.responseText.includes("unq_username")) {
+                            alert("خطا در ثبت کاربر. نام کاربری تکراری است!");
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+
+</head>
+<body class="account-page">
+
+<!-- Main Wrapper -->
+<div class="main-wrapper">
+
+    <!-- Page Content -->
+    <div class="content">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+
+                    <!-- Register Content -->
+                    <div class="account-content">
+                        <div class="row align-items-center justify-content-center">
+                            <div class="col-md-7 col-lg-6 login-left">
+                                <img src="assets/img/login-banner.png" class="img-fluid" alt="Doccure Register">
+                            </div>
+                            <div class="col-md-12 col-lg-6 login-right">
+                                <div class="login-header">
+                                    <h3>ثبت نام کاربر جدید </h3>
+                                </div>
+
+                                <!-- Register Form -->
+                                <div class="form-group form-focus">
+                                    <input type="text" class="form-control floating" id="txtFirstname">
+                                    <label class="focus-label">نام</label>
+                                </div>
+                                <div class="form-group form-focus">
+                                    <input type="text" class="form-control floating" id="txtLastname">
+                                    <label class="focus-label"> نام خانوادگی</label>
+                                </div>
+                                <div class="form-group form-focus">
+                                    <input type="text" class="form-control floating" id="txtUsername">
+                                    <label class="focus-label">نام کاربری / شماره موبایل </label>
+                                </div>
+                                <div class="form-group form-focus">
+                                    <input type="password" class="form-control floating" id="txtPassword">
+                                    <label class="focus-label"> رمزعبور </label>
+                                </div>
+                                <div class="form-group form-focus">
+                                    <input type="password" class="form-control floating" id="txtRepeatPassword">
+                                    <label class="focus-label"> رمزعبور </label>
+                                </div>
+                                <div class="text-right">
+                                    <a class="forgot-link" href="login.html">اکانت دارم</a>
+                                </div>
+                                <button class="btn btn-primary btn-block btn-lg login-btn" onclick="register()">
+                                    ثبت‌نام
+                                </button>
+                                <div class="text-center dont-have">
+                                    <a href="index.html">بازگشت به صفحه اصلی</a>
+                                </div>
+                                <!-- /Register Form -->
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Register Content -->
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <!-- /Page Content -->
+
+</div>
+<!-- /Main Wrapper -->
+
+<!-- Bootstrap Core JS -->
+<script src="assets/js/popper.min.js"></script>
+<script src="assets/plugins/bootstrap-rtl/js/bootstrap.min.js"></script>
+
+<!-- Custom JS -->
+<script src="assets/js/script.js"></script>
+
+</body>
 </html>

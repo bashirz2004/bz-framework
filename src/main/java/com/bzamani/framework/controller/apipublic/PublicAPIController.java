@@ -74,4 +74,9 @@ public class PublicAPIController extends BaseController {
     public User getAuthenticatedUser() {
         return iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername());
     }
+
+    @PostMapping("/user/registerUserByHimself")
+    public User registerUserByHimself(@RequestBody User user) {
+        return iUserService.registerUserByHimself(user);
+    }
 }
