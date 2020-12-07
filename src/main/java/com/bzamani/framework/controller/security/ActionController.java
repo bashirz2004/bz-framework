@@ -42,4 +42,9 @@ public class ActionController {
         return iActionService.getAllGrid(page, size, sort);
     }
 
+    @GetMapping("/loadMenuForCurrentUser")
+    public List<Action> loadMenuForCurrentUser() {
+        return iActionService.loadMenuForCurrentUser();
+    }
+
 }

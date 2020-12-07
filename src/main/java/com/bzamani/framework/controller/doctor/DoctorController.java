@@ -4,10 +4,12 @@ import com.bzamani.framework.controller.BaseController;
 import com.bzamani.framework.model.doctor.Doctor;
 import com.bzamani.framework.service.doctor.IDoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+
 
 @RestController
 @RequestMapping(value = "/rest/doctor", produces = "application/json;charset=UTF-8")
@@ -15,19 +17,21 @@ public class DoctorController extends BaseController {
     @Autowired
     IDoctorService iDoctorService;
 
+    @PreAuthorize("hasRole('4')")
     @PostMapping("/save")
     public Doctor save(@RequestBody Doctor doctor) {
         return iDoctorService.save(doctor);
     }
 
-    @GetMapping("/load/{id}")
-    public Doctor load(@PathVariable("id") long id) {
-        return iDoctorService.loadByEntityId(id);
-    }
-
+    @PreAuthorize("hasRole('4')")
     @DeleteMapping("/delete/{id}")
     public boolean delete(@PathVariable("id") long id) {
         return iDoctorService.deleteByEntityId(id);
+    }
+
+    @GetMapping("/load/{id}")
+    public Doctor load(@PathVariable("id") long id) {
+        return iDoctorService.loadByEntityId(id);
     }
 
     @GetMapping("/getAll")

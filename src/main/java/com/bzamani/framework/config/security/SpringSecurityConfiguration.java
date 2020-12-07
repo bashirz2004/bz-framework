@@ -44,15 +44,16 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().sameOrigin();
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/view/admin/**").hasRole("ADMIN")
-                .antMatchers("/rest/**").hasRole("ADMIN")
-                .antMatchers("/view/doctor-dashboard.html").hasAnyRole("ADMIN", "DOCTOR")
-                .antMatchers("/view/patient-dashboard.html").hasAnyRole("ADMIN", "PATIENT")
-                .antMatchers("/view/clinic-dashboard.html").hasAnyRole("ADMIN", "CLINIC")
-                .antMatchers("/view/**").permitAll()
+                .antMatchers("/view/**").permitAll()//private pages are here, view of pages are public but in first ajax request @preauthorize controls access
+                .antMatchers("/public/**").permitAll()//icludes all public pages like blogs, posts,comments,products,search,...
                 .antMatchers("/assets/**").permitAll()
-                .antMatchers("/authenticate").permitAll()
                 .antMatchers("/api/public/**").permitAll()
+                .antMatchers("/authenticate").permitAll()
+                .antMatchers("/login.html").permitAll()
+                .antMatchers("/register.html").permitAll()
+                .antMatchers("/index.html").permitAll()
+                .antMatchers("/forgot-password.html").permitAll()
+                .antMatchers("/change-password.html").permitAll()
                 .anyRequest().fullyAuthenticated()
                 .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

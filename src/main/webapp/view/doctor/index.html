@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title> مدیک - داشبورد</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/app/assets/img/favicon.png">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/app/assets/admin/plugins/bootstrap-rtl/css/bootstrap.min.css">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="/app/assets/admin/css/font-awesome.min.css">
+
+    <!-- Feathericon CSS -->
+    <link rel="stylesheet" href="/app/assets/admin/css/feathericon.min.css">
+
+    <link rel="stylesheet" href="/app/assets/admin/plugins/morris/morris.css">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/app/assets/admin/css/style.css">
+
+    <!--[if lt IE 9]>
+    <script src="/app/assets/js/html5shiv.min.js"></script>
+    <script src="/app/assets/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery -->
+    <script src="/app/assets/admin/js/jquery-3.2.1.min.js"></script>
+    <script src="/app/assets/js/jquery.template.js"></script>
+    <script src="/app/assets/js/grid-utility.js"></script>
+    <script>
+        var contextPath = "/app";
+        var searchFilters = {
+            "stateId": -1,
+            "cityId": -1,
+            "regionId": -1,
+            "address": '',
+            "sort": "id,desc",
+            "page": 0,
+            "size": 5
+        };
+
+        $(function () {
+            fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+
+            $('#cmbPageSize').change(function () {
+                searchFilters.size = $(this).val();
+                fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+            });
+        });
+
+        function tmplRowIndex(tmplId, pageNumber, pageSize) {
+            i = 0;
+            $('#' + tmplId).find('.tmplRowIndex').each(function () {
+                i++;
+                var rIndex;
+                if (pageNumber != null && pageSize != null)
+                    rIndex = (pageNumber * pageSize) + i;
+                else
+                    rIndex = i;
+                $(this).append(rIndex);
+            });
+        }
+
+        function fillGrid(templateId, destinationId, url, jsonData, callBackFunction) {
+            if (jsonData.size < 5) {
+                jsonData.size = 5;
+                $('#cmbPageSize').val(5);
+            }
+            if (jsonData.size > 50) {
+                jsonData.size = 50;
+                $('#cmbPageSize').val(50);
+            }
+            $.getJSON(url, jsonData, function (entities) {
+                console.log(entities);
+                $('#' + destinationId + ' :not(script)').remove();
+                if (entities.entityList) {
+                    $('#' + templateId).tmpl(entities.entityList).prependTo('#' + destinationId);
+                    tmplRowIndex(destinationId, entities.pageNumber, jsonData.size);
+                } else {
+                    $('#' + templateId).tmpl(entities).prependTo('#' + destinationId);
+                    tmplRowIndex(destinationId, 0, jsonData.size);
+                }
+                if (entities.totalRecords == 0) {
+                    alert('موردی یافت نشد');
+                }
+                $('table.table tbody tr:not([th]):odd').css('backgroundColor', '#c4f0f5');
+                $('#totalRecords').html(entities.totalRecords);
+                $('#pagingList > li').remove();
+
+                if (entities.currentPage == 0)
+                    $('#pagingList').append('<li class="page-item"><a class="page-link disabled" > قبلی </a></li>');
+                else
+                    $('#pagingList').append('<li class="page-item"><a class="page-link" onclick="previous()"> قبلی </a></li>');
+
+                for (let i = 0; i < entities.totalPages; i++) {
+                    if (entities.currentPage == i)
+                        $('#pagingList').append('<li class="page-item active"><a class="page-link" href="#">' + ++i + '<span class="sr-only">(current)</span></a></li>');
+                    else
+                        $('#pagingList').append('<li class="page-item"><a class="page-link" onclick="goTo(' + i + ')">' + ++i + '</a></li>');
+                    --i;
+                }
+
+                if (entities.currentPage == entities.totalPages - 1)
+                    $('#pagingList').append('<li class="page-item"><a class="page-link disabled" > بعدی </a></li>');
+                else
+                    $('#pagingList').append('<li class="page-item"><a class="page-link" onclick="next()"> بعدی </a></li>');
+
+
+                if (callBackFunction != null && typeof callBackFunction == 'function')
+                    callBackFunction();
+            });
+        }
+
+        function next() {
+            searchFilters.page = searchFilters.page + 1;
+            fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+        }
+
+        function previous() {
+            searchFilters.page = searchFilters.page - 1;
+            fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+        }
+
+        function goTo(pageNumber) {
+            searchFilters.page = pageNumber;
+            fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+        }
+
+    </script>
+
+<body>
+
+<div class="page-wrapper">
+    <div class="content container-fluid">
+        <div class="row">
+            <div class="col-md-12 d-flex">
+                <!-- Recent Orders -->
+                <div class="card card-table flex-fill">
+                    <div class="row">
+                        <div class="col-sm-7 col-auto mt-1">
+                            <h4 class="card-title">لیست پزشکان</h4>
+                        </div>
+                        <div class="col-sm-5 col">
+                            <a href="#Add_Specialities_details" data-toggle="modal"
+                               class="btn btn-primary float-right mt-1">افزودن</a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-center mb-0">
+                                <thead>
+                                <tr>
+                                    <th>ردیف</th>
+                                    <th>نام پزشک</th>
+                                    <th>تلفن</th>
+                                    <th>تخصص</th>
+                                    <th>آدرس</th>
+                                    <th>عملیات</th>
+                                </tr>
+                                </thead>
+                                <tbody id="doctorList">
+                                <script id="doctorTemplate" type="text/x-jquery-tmpl">
+                                    <tr>
+                                        <td><span class="tmplRowIndex"></span></td>
+                                        <td>
+                                            <h2 class="table-avatar">
+                                                <a href="profile.html" class="avatar avatar-sm mr-2"><img
+                                                        class="avatar-img rounded-circle"
+                                                        src={{if male}}"/app/assets/img/man.png"{{else}}"/app/assets/img/woman.png"{{/if}}
+                                                        alt="User Image"></a>
+                                                <a href="profile.html">{{if male}}آقای{{else}}خانم{{/if}} ${firstname} ${lastname}</a>
+                                            </h2>
+                                        </td>
+                                        <td>${telephone}</td>
+                                        <td>${speciality.title}</td>
+                                        <td title="${address}">${region.title} - ${address.substring(0,25)}</td>
+                                        <td class="text-right">
+                                            <div class="actions">
+                                                <a class="btn btn-sm bg-success-light" data-toggle="modal" href="#edit_specialities_details">
+                                                    <i class="fe fe-pencil"></i> ویرایش
+                                                </a>
+                                                <a  data-toggle="modal" href="#delete_modal" class="btn btn-sm bg-danger-light">
+                                                    <i class="fe fe-trash"></i> حذف
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                </script>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Recent Orders -->
+
+            </div>
+            <!-- paging -->
+            <div class="row col-md-12 card-body">
+                <div class="col-md-9">
+                    <ul class="pagination" id="pagingList">
+
+                    </ul>
+                </div>
+                <div class="col-md-3 dataTables_length" id="DataTables_Table_0_length">
+                    <span class="col-sm-4">تعداد</span>
+                    <select id="cmbPageSize" name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+                            class="custom-select custom-select-sm form-control form-control-sm col-sm-3">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                    <span class="col-xs-2 col-md-2 col-sm-6">از</span>
+                    <span class="col-xs-2 col-md-2 col-sm-6" id="totalRecords"></span>
+                </div>
+            </div>
+            <!-- paging -->
+
+            <!-- Add Modal -->
+            <div class="modal fade" id="Add_Specialities_details" aria-hidden="true" role="dialog">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">افزودن </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="row form-row">
+                                    <div class="col-12 col-sm-6">
+                                        <div class="form-group">
+                                            <label>تخصص ها</label>
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6">
+                                        <div class="form-group">
+                                            <label>تصویر</label>
+                                            <input type="file" class="form-control">
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">ذخیره تغییرات</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /ADD Modal -->
+
+            <!-- Edit Details Modal -->
+            <div class="modal fade" id="edit_specialities_details" aria-hidden="true" role="dialog">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">ویرایش </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="row form-row">
+                                    <div class="col-12 col-sm-6">
+                                        <div class="form-group">
+                                            <label>تخصص ها</label>
+                                            <input type="text" class="form-control" value="قلب و عروق">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6">
+                                        <div class="form-group">
+                                            <label>تصویر</label>
+                                            <input type="file" class="form-control">
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">ذخیره تغییرات</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Edit Details Modal -->
+
+            <!-- Delete Modal -->
+            <div class="modal fade" id="delete_modal" aria-hidden="true" role="dialog">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="form-content p-2">
+                                <h4 class="modal-title">تایید حذف</h4>
+                                <p class="mb-4">آیا مطمئن هستید که می خواهید حذف کنید؟</p>
+                                <button type="button" class="btn btn-primary">حذف</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">انصراف</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Delete Modal -->
+
+        </div>
+    </div>
+    <!-- /Page Wrapper -->
+
+</div>
+<!-- Bootstrap Core JS -->
+<script src="/app/assets/admin/js/popper.min.js"></script>
+<script src="/app/assets/admin/plugins/bootstrap-rtl/js/bootstrap.min.js"></script>
+
+<!-- Slimscroll JS -->
+<script src="/app/assets/admin/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<script src="/app/assets/admin/plugins/raphael/raphael.min.js"></script>
+<script src="/app/assets/admin/plugins/morris/morris.min.js"></script>
+<script src="/app/assets/admin/js/chart.morris.js"></script>
+
+<!-- Custom JS -->
+<script src="/app/assets/admin/js/script.js"></script>
+
+</body>
+</html>

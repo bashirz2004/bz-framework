@@ -24,7 +24,7 @@ public class UserController extends BaseController {
     @Value("${server.port}") //read from application.yml file
     String testYAMLFile;
 
-
+    @PreAuthorize("hasRole('2')")
     @PostMapping("/save")
     public User create(@RequestBody User user) {
         System.out.println("-------------------- " + testPropFile);
@@ -32,18 +32,17 @@ public class UserController extends BaseController {
         return iUserService.save(user);
     }
 
-    @GetMapping("/load/{id}")
-    public User load(@PathVariable("id") long id) {
-        return iUserService.loadByEntityId(id);
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('2')")
     @DeleteMapping("/delete/{id}")
     public boolean delete(@PathVariable("id") long id) {
         return iUserService.deleteByEntityId(id);
     }
 
-    //@PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/load/{id}")
+    public User load(@PathVariable("id") long id) {
+        return iUserService.loadByEntityId(id);
+    }
+
     @GetMapping("/getAll")
     public List<User> getAll(@RequestParam(defaultValue = "id,desc") String[] sort) {
         return iUserService.getAll(sort);
