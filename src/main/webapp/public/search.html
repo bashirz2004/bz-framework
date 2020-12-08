@@ -16,12 +16,6 @@
     <link rel="stylesheet" href="../assets/plugins/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" href="../assets/plugins/fontawesome/css/all.min.css">
 
-    <!-- Datetimepicker CSS -->
-    <link rel="stylesheet" href="../assets/css/bootstrap-datetimepicker.min.css">
-    <!--persian Datepicker -->
-    <link rel="stylesheet" href="Jcal/daterangepicker.css" type="text/css">
-    <link rel="stylesheet" href="Jcal/persian-datepicker.css">
-
     <!-- Select2 CSS -->
     <link rel="stylesheet" href="../assets/plugins/select2/css/select2.min.css">
 
@@ -45,7 +39,7 @@
     <script src="../assets/js/jquery.min.js"></script>
     <script src="../assets/js/jquery.template.js"></script>
     <script>
-        var contextPath = "/app";
+        contextPath = "/app";
         searchFilters = {
             "stateId": -1,
             "cityId": -1,
@@ -56,6 +50,14 @@
         };
 
         $(function () {
+            /* $('.chk-speciality').click(function(){
+                 alert('sssssssss');
+                 $('#specialitiesFilter input:checked').each(function () {
+                     selected_specialities.push($(this).attr('name'));
+                 });
+             });*/
+
+
             fillSpecialityCheckboxes();
             fillComboState();
             searchDoctors();
@@ -148,10 +150,9 @@
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 success: function (res) {
-                    //  $("#cmbState").append("<option value=-1>...</option>");
                     $.each(res, function (index, value) {
-                        $("#xxx").append(
-                            "<div><label class=custom_check><input type=checkbox name=select_specialist value=" + value.id + "><span class=checkmark></span>" + value.title + "</div>"
+                        $("#specialitiesFilter").append(
+                            "<div style='cursor: pointer;'><input type=checkbox class=chk-speciality value=" + value.id + ">" + "&nbsp;" + value.title + "</div>"
                         );
                     });
                 },
@@ -162,8 +163,20 @@
         }
 
         function searchDoctors() {
-            console.log(searchFilters);
+            let selected_specialities = [];
+            let selected_genders = [];
+            $('.chk-speciality').each(function () {
+                if ($(this).is(':checked'))
+                    selected_specialities.push($(this).val());
+            });
+            $('.chk-male').each(function () {
+                if ($(this).is(':checked'))
+                    selected_genders.push($(this).val());
+            });
+            searchFilters.specialities = selected_specialities.join();
+            searchFilters.genders = selected_genders.join();
             searchFilters.address = $("#txtSearchAddress").val();
+            console.log(searchFilters);
             $.ajax({
                 type: "GET",
                 url: contextPath + "/api/public/doctor/searchDoctors",
@@ -286,22 +299,16 @@
                             </div>
                             <div class="filter-widget">
                                 <h4>جنسیت</h4>
-                                <div>
-                                    <label class="custom_check">
-                                        <input type="checkbox" name="gender_type" checked>
-                                        <span class="checkmark"></span> پزشک مرد
-                                    </label>
+                                <div style='cursor: pointer;'>
+                                    <input type=checkbox class=chk-male value="true">پزشک مرد
                                 </div>
-                                <div>
-                                    <label class="custom_check">
-                                        <input type="checkbox" name="gender_type">
-                                        <span class="checkmark"></span> پزشک زن
-                                    </label>
+                                <div style='cursor: pointer;'>
+                                    <input type=checkbox class=chk-male value="false">پزشک زن
                                 </div>
                             </div>
                             <div class="filter-widget">
                                 <h4> تخصص پزشک </h4>
-                                <span id="xxx"></span>
+                                <span id="specialitiesFilter"></span>
                             </div>
                             <div class="btn-search">
                                 <button type="button" class="btn btn-block" onclick="searchDoctors()">جستجو</button>
@@ -370,6 +377,15 @@
                             </div>
                         </div>
                     </div>
+
+
+
+
+
+
+
+
+
 
 
 
@@ -542,13 +558,6 @@
 
 <!-- Select2 JS -->
 <script src="../assets/plugins/select2/js/select2.min.js"></script>
-
-<!-- Datetimepicker JS -->
-<script src="../assets/js/moment.min.js"></script>
-<!-- <script src="assets/js/bootstrap-datetimepicker.min.js"></script> -->
-<!-- persian-date -->
-<script src="./Jcal/persian-date.js"></script>
-<script src="./Jcal/persian-datepicker.js"></script>
 
 <!-- Fancybox JS -->
 <script src="../assets/plugins/fancybox/jquery.fancybox.min.js"></script>

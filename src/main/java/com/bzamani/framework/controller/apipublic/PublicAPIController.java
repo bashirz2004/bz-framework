@@ -51,13 +51,15 @@ public class PublicAPIController extends BaseController {
             @RequestParam(required = false) String specialityTitle,
             @RequestParam(required = false) String address,
             @RequestParam(required = false) String telephone,
+            @RequestParam(required = false) String specialities,
+            @RequestParam(required = false) String genders,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "id,desc") String[] sort) {
 
         return iDoctorService.searchDoctors(firstname, lastname,
                 medicalNationalNumber, male, stateId, cityId,
-                regionId, specialityId, specialityTitle, address, telephone, page, size, sort);
+                regionId, specialityId, specialityTitle, address, telephone, specialities, genders, page, size, sort);
     }
 
     @GetMapping("/baseinfo/getAllByHeaderId/{headerId}")

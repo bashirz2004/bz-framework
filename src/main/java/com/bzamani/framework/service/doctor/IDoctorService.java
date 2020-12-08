@@ -7,6 +7,7 @@ import java.util.Map;
 
 public interface IDoctorService extends IGenericService<Doctor, Long> {
     Map<String, Object> searchDoctors(String firstname, String lastname, String medicalNationalNumber, Boolean male,
-                                      Long stateId, Long cityId, Long regionId,Long specialityId,String specialityTitle, String address, String telephone, int page, int size, String[] sort);
+                                      Long stateId, Long cityId, Long regionId,Long specialityId,String specialityTitle,
+                                      String address, String telephone,String specialities,String genders, int page, int size, String[] sort);
 
 }

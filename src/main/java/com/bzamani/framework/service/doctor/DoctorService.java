@@ -28,7 +28,8 @@ public class DoctorService extends GenericService<Doctor, Long> implements IDoct
 
     @Override
     public Map<String, Object> searchDoctors(String firstname, String lastname, String medicalNationalNumber, Boolean male,
-                                             Long stateId, Long cityId, Long regionId, Long specialityId, String specialityTitle, String address, String telephone, int page, int size, String[] sort) {
+                                             Long stateId, Long cityId, Long regionId, Long specialityId, String specialityTitle, String address,
+                                             String telephone, String specialities, String genders, int page, int size, String[] sort) {
         List<Sort.Order> orders = new ArrayList<Sort.Order>();
         if (sort[0].contains(",")) {
             for (String sortOrder : sort) {
@@ -41,7 +42,7 @@ public class DoctorService extends GenericService<Doctor, Long> implements IDoct
         List<Doctor> doctors = new ArrayList<Doctor>();
         Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
         Page<Doctor> pageTuts = iDoctorRepository.searchDoctors(firstname, lastname, medicalNationalNumber, male,
-                stateId, cityId, regionId, specialityId, specialityTitle, address, telephone, pagingSort);
+                stateId, cityId, regionId, specialityId, specialityTitle, address, telephone, specialities, genders, pagingSort);
         doctors = pageTuts.getContent();
         Map<String, Object> response = new HashMap<>();
         response.put("entityList", doctors);

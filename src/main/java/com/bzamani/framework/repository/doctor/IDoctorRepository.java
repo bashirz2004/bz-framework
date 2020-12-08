@@ -19,7 +19,9 @@ public interface IDoctorRepository extends JpaRepository<Doctor, Long> {
             " and e.speciality.id = CASE WHEN :specialityId > 0L THEN :specialityId ELSE e.speciality.id END " +
             " and e.speciality.title like COALESCE(cast('%'||:specialityTitle||'%' AS text), '%'||e.speciality.title)||'%'  " +
             " and e.address like COALESCE(cast('%'||:address||'%' AS text), '%'||e.address)||'%' " +
-            " and e.telephone like COALESCE(cast('%'||:telephone||'%' AS text), '%'||e.telephone)||'%' "
+            " and e.telephone like COALESCE(cast('%'||:telephone||'%' AS text), '%'||e.telephone)||'%' " +
+            " and instr(CASE WHEN :genders!='' THEN :genders ELSE cast(e.male as text) END, cast(e.male as text),  1,  1) > 0 " +
+            " and instr(CASE WHEN :specialities!='' THEN :specialities ELSE cast(e.speciality.id as text) END, cast(e.speciality.id as text),  1,  1) > 0 "
     )
     Page<Doctor> searchDoctors(@Param("firstname") String firstname,
                                @Param("lastname") String lastname,
@@ -31,7 +33,10 @@ public interface IDoctorRepository extends JpaRepository<Doctor, Long> {
                                @Param("specialityId") Long specialityId,
                                @Param("specialityTitle") String specialityTitle,
                                @Param("address") String address,
-                               @Param("telephone") String telephone, Pageable pageable);
+                               @Param("telephone") String telephone,
+                               @Param("specialities") String specialities,
+                               @Param("genders") String genders,
+                               Pageable pageable);
 
 
 }
