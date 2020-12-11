@@ -20,8 +20,8 @@ import java.util.Set;
 @SequenceGenerator(name = "sequence_db", sequenceName = "SEQ_CORE_USER", allocationSize = 1)
 @Setter
 @Getter
-@FilterDefs({@FilterDef(name = "testFilter", parameters = {@ParamDef(name = "userId", type = "long")})})
-@Filters({@Filter(name = "testFilter", condition = " id = :userId ")})
+@FilterDefs({@FilterDef(name = "testFilter", parameters = {@ParamDef(name = "username", type = "string")})})
+@Filters({@Filter(name = "testFilter", condition = " username = :username ")})
 public class User extends BaseEntity implements UserDetails {
 
   /*@Id

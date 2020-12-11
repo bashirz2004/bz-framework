@@ -48,6 +48,11 @@ public class UserController extends BaseController {
         return iUserService.getAll(sort);
     }
 
+    @GetMapping("/getAllAuthorized")
+    public List<User> getAllAuthorized() {
+        return iUserService.getAllAuthorized();
+    }
+
     @GetMapping("/getAllGrid")
     public Map<String, Object> getAllGrid(@RequestParam(defaultValue = "0") int page,
                                           @RequestParam(defaultValue = "3") int size,

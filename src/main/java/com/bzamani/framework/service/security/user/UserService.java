@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -44,6 +45,11 @@ public class UserService extends GenericService<User, Long> implements IUserServ
         actions.add(iActionService.loadByEntityId(3L));//patient
         user.setActions(actions);
         return iUserRepository.save(user);
+    }
+
+    @Override
+    public List<User> getAllAuthorized(){
+        return iUserRepository.getAllAuthorized();
     }
 
 }

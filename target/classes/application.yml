@@ -1,7 +1,7 @@
 server:
     port: 80
     servlet:
-        context-path: /bz
+        context-path: /app
 spring:
     datasource:
         url: jdbc:postgresql://localhost:5432/bz
