@@ -2,7 +2,7 @@ package com.bzamani.framework.service.doctor;
 
 import com.bzamani.framework.model.doctor.Doctor;
 import com.bzamani.framework.repository.doctor.IDoctorRepository;
-import com.bzamani.framework.service.GenericService;
+import com.bzamani.framework.service.impl.core.GenericService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

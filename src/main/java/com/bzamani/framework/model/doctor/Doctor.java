@@ -1,7 +1,7 @@
 package com.bzamani.framework.model.doctor;
 
-import com.bzamani.framework.model.BaseEntity;
-import com.bzamani.framework.model.baseinfo.BaseInfo;
+import com.bzamani.framework.model.core.BaseEntity;
+import com.bzamani.framework.model.core.baseinfo.BaseInfo;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "med_doctor", uniqueConstraints = {@UniqueConstraint(name = "unq_medical_national_number", columnNames = {"medical_national_number"})})
+@Table(name = "med_doctor")
 @SequenceGenerator(name = "sequence_db", sequenceName = "seq_med_dpctor", allocationSize = 1)
 @Setter
 @Getter

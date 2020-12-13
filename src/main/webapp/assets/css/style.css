@@ -505,13 +505,13 @@ a.bg-danger:focus, a.bg-danger:hover, button.bg-danger:focus, button.bg-danger:h
 	border: 1px solid #09dca4;
 }
 
-.btn-primary.active:not(:disabled):not(.disabled), .btn-primary:active:not(:disabled):not(.disabled), .show>.btn-primary.dropdown-toggle {
+.btn-primary.active/app/assets/:disabled)/app/assets/.disabled), .btn-primary:active/app/assets/:disabled)/app/assets/.disabled), .show>.btn-primary.dropdown-toggle {
 	background-color: #09dca4;
 	border-color: #09dca4;
 	color: #fff;
 }
 
-.btn-primary.active:focus:not(:disabled):not(.disabled), .btn-primary:active:focus:not(:disabled):not(.disabled), .show>.btn-primary.dropdown-toggle:focus {
+.btn-primary.active:focus/app/assets/:disabled)/app/assets/.disabled), .btn-primary:active:focus/app/assets/:disabled)/app/assets/.disabled), .show>.btn-primary.dropdown-toggle:focus {
 	box-shadow: unset;
 }
 

@@ -1,7 +1,7 @@
 package com.bzamani.framework.service.doctor;
 
 import com.bzamani.framework.model.doctor.Doctor;
-import com.bzamani.framework.service.IGenericService;
+import com.bzamani.framework.service.core.IGenericService;
 
 import java.util.Map;
 

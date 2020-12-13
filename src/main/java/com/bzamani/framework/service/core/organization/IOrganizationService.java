@@ -1,7 +1,7 @@
 package com.bzamani.framework.service.core.organization;
 
 import com.bzamani.framework.model.core.organization.Organization;
-import com.bzamani.framework.service.IGenericService;
+import com.bzamani.framework.service.core.IGenericService;
 
 import java.util.Map;
 

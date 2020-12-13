@@ -33,11 +33,22 @@
     <script src="/app/assets/js/grid-utility.js"></script>
     <script>
         var contextPath = "/app";
-        var searchFilters = {
-            "stateId": -1,
-            "cityId": -1,
-            "regionId": -1,
+        var entityData = {
+            "id": '',
+            "male": '',
+            "firstname": '',
+            "lastname": '',
+            "medicalNationalNumber": '',
+            "speciality": {"id": ''},
+            "state": {"id": ''},
+            "city": {"id": ''},
+            "region": {"id": ''},
             "address": '',
+            "telephone": ''
+        };
+
+        var searchFilters = {
+            "specialityTitle": '',
             "sort": "id,desc",
             "page": 0,
             "size": 5
@@ -50,7 +61,40 @@
                 searchFilters.size = $(this).val();
                 fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
             });
+
+            $('#txtSearchDoctor').keydown(function (e) {
+                if (e.which == 13)  // the enter key code
+                    searchDoctor();
+            });
+
+            fillComboSpeciality();
+            fillComboState();
+
+            $("#cmbState").change(function () {
+                fillComboCity($(this).val());
+                $("#cmbRegion").html("<select class='select' id='cmbRegion'></select>");
+            });
+
+            $("#cmbCity").change(function () {
+                fillComboRegion($(this).val());
+            });
         });
+
+        function searchDoctor() {
+            searchFilters.specialityTitle = $("#txtSearchDoctor").val();
+            fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+        }
+
+        function clearSearch() {
+            searchFilters = {
+                "specialityTitle": '',
+                "sort": "id,desc",
+                "page": 0,
+                "size": 5
+            };
+            $('.searchFilter').val('');
+            fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+        }
 
         function tmplRowIndex(tmplId, pageNumber, pageSize) {
             i = 0;
@@ -75,8 +119,7 @@
                 $('#cmbPageSize').val(50);
             }
             $.getJSON(url, jsonData, function (entities) {
-                console.log(entities);
-                $('#' + destinationId + ' :not(script)').remove();
+                $('#' + destinationId + ' /app/assets/script)').remove();
                 if (entities.entityList) {
                     $('#' + templateId).tmpl(entities.entityList).prependTo('#' + destinationId);
                     tmplRowIndex(destinationId, entities.pageNumber, jsonData.size);
@@ -87,7 +130,7 @@
                 if (entities.totalRecords == 0) {
                     alert('موردی یافت نشد');
                 }
-                $('table.table tbody tr:not([th]):odd').css('backgroundColor', '#c4f0f5');
+                $('table.table tbody tr/app/assets/[th]):odd').css('backgroundColor', '#c4f0f5');
                 $('#totalRecords').html(entities.totalRecords);
                 $('#pagingList > li').remove();
 
@@ -130,6 +173,209 @@
             fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
         }
 
+        function deleteEntity() {
+            if ($('#hiddenFieldId').val() > 0)
+                $.ajax({
+                    url: contextPath + "/rest/doctor/delete/" + $('#hiddenFieldId').val(),
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    type: 'DELETE',
+                    success: function (res) {
+                        fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+                        alert(" حذف با موقثیت انجام شد.");
+                    },
+                    error: function (err) {
+                    }
+                });
+            else
+                alert('هیچ رکوردی انتخاب نشده است.');
+        }
+
+        function rowSelected(id) {
+            $('#hiddenFieldId').val(id);
+        }
+
+        function rowDeselected() {
+            $('#hiddenFieldId').val();
+        }
+
+        function loadEntity(id) {
+            $.ajax({
+                url: contextPath + "/rest/doctor/load/" + id,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                type: 'GET',
+                success: function (res) {
+                    setInputsByEntity(res);
+                },
+                error: function (err) {
+                }
+            });
+        }
+
+        function saveEntity() {
+            if (validateForm() == 'ok') {
+                setEntityFromInputs();
+                $.ajax({
+                    url: contextPath + "/rest/doctor/save",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify(entityData),
+                    type: 'POST',
+                    success: function (res) {
+                        $('#hiddenFieldId').val(res.id);
+                        alert(" ثبت با موقثیت انجام شد.");
+                    },
+                    error: function (err) {
+                    }
+                });
+            } else alert(validateForm());
+        }
+
+        function validateForm() {
+            if ($('#txtFirstname').val() == '' || $('#txtLastname').val() == '' || $('#txtAddress').val() == '' || $('#txtPhone').val() == ''
+                || !$('#cmbSpeciality').val() > 0 || !$('#cmbState').val() > 0 || !$('#cmbCity').val() > 0 || !$('#cmbRegion').val() > 0)
+                return 'پرکردن فیلدهای ستاره دار اجباری است.'
+            else return 'ok';
+        }
+
+        function fillComboState() {
+            $.ajax({
+                type: "GET",
+                url: contextPath + "/api/public/baseinfo/getAllByHeaderId/1",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    $("#cmbState").append("<option value=-1>...</option>");
+                    $.each(res, function (index, value) {
+                        $("#cmbState").append("<option value=" + value.id + ">" + value.title + "</option>");
+                    });
+                },
+                error: function (err) {
+                    console.log("error ---- " + err);
+                }
+            });
+        }
+
+        function fillComboCity(stateId, callBackFunction) {
+            $.ajax({
+                type: "GET",
+                url: contextPath + "/api/public/baseinfo/getAllByParentId/" + stateId,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    $("#cmbCity").html("<select class='select' id='cmbCity'></select>");
+                    $("#cmbCity").append("<option value=-1>...</option>");
+                    $.each(res, function (index, value) {
+                        $("#cmbCity").append("<option value=" + value.id + ">" + value.title + "</option>");
+                    });
+                    if (callBackFunction != null && typeof callBackFunction == 'function')
+                        callBackFunction();
+                },
+                error: function (err) {
+                    console.log("error ---- " + err);
+                }
+            });
+        }
+
+        function fillComboRegion(cityId, callBackFunction) {
+            $.ajax({
+                type: "GET",
+                url: contextPath + "/api/public/baseinfo/getAllByParentId/" + cityId,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    $("#cmbRegion").html("<select class='select' id='cmbRegion'></select>");
+                    $("#cmbRegion").append("<option value=-1>...</option>");
+                    $.each(res, function (index, value) {
+                        $("#cmbRegion").append("<option value=" + value.id + ">" + value.title + "</option>");
+                    });
+                    if (callBackFunction != null && typeof callBackFunction == 'function')
+                        callBackFunction();
+                },
+                error: function (err) {
+                    console.log("error ---- " + err);
+                }
+            });
+        }
+
+        function fillComboSpeciality() {
+            $.ajax({
+                type: "GET",
+                url: contextPath + "/api/public/baseinfo/getAllByHeaderId/1000",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    $("#cmbSpeciality").append("<option value=-1>...</option>");
+                    $.each(res, function (index, value) {
+                        $("#cmbSpeciality").append("<option value=" + value.id + ">" + value.title + "</option>");
+                    });
+                },
+                error: function (err) {
+                    console.log("error ---- " + err);
+                }
+            });
+        }
+
+        function clearInputs() {
+            $('input:hidden').val('');
+            $('input:text').val('');
+            $('select').val('');
+            $('textarea').val('');
+        }
+
+        function clearEntity() {
+            entityData = {
+                "id": '',
+                "male": '',
+                "firstname": '',
+                "lastname": '',
+                "medicalNationalNumber": '',
+                "speciality": {"id": ''},
+                "state": {"id": ''},
+                "city": {"id": ''},
+                "region": {"id": ''},
+                "address": '',
+                "telephone": ''
+            };
+        }
+
+        function setInputsByEntity(entity) {
+            $("#hiddenFieldId").val(entity.id);
+            $("#txtFirstname").val(entity.firstname);
+            $("#txtLastname").val(entity.lastname);
+            $("#txtMedicalNationalNumber").val(entity.medicalNationalNumberl);
+            $("#cmbGender").val(entity.male.toString());
+            $("#cmbState").val(entity.state.id);
+            fillComboCity(entity.state.id, function () {
+                fillComboRegion(entity.city.id, function () {
+                    $("#cmbCity").val(entity.city.id);
+                    $("#cmbRegion").val(entity.region.id);
+                });
+            });
+
+            $("#cmbSpeciality").val(entity.speciality.id);
+            $("#txtAddress").val(entity.id);
+            $("#txtPhone").val(entity.id);
+        }
+
+        function setEntityFromInputs() {
+            clearEntity();
+            entityData = {
+                "id": $('#hiddenFieldId').val(),
+                "male": $('#cmbGender').val(),
+                "firstname": $('#txtFirstname').val(),
+                "lastname": $('#txtLastname').val(),
+                "medicalNationalNumber": $('#txtMedicalNationalNumber').val(),
+                "speciality": {"id": $('#cmbSpeciality').val()},
+                "state": {"id": $('#cmbState').val()},
+                "city": {"id": $('#cmbCity').val()},
+                "region": {"id": $('#cmbRegion').val()},
+                "address": $('#txtAddress').val(),
+                "telephone": $('#txtPhone').val()
+            }
+        }
+
     </script>
 
 <body>
@@ -138,14 +384,21 @@
     <div class="content container-fluid">
         <div class="row">
             <div class="col-md-12 d-flex">
-                <!-- Recent Orders -->
+                <!-- Grid -->
                 <div class="card card-table flex-fill">
                     <div class="row">
-                        <div class="col-sm-7 col-auto mt-1">
+                        <div class="col-sm-2 col-auto mt-2">
                             <h4 class="card-title">لیست پزشکان</h4>
                         </div>
+                        <div class="top-nav-search col-sm-3">
+                            <input type="text" id="txtSearchDoctor" class="form-control searchFilter"
+                                   placeholder="جستجو براساس تخصص ...">
+                        </div>
+                        <button class="btn" onclick="searchDoctor()"><i class="fa fa-search"></i></button>
+                        <button class="btn" onclick="clearSearch()"><i class="fa fa-eraser"></i></button>
                         <div class="col-sm-5 col">
-                            <a href="#Add_Specialities_details" data-toggle="modal"
+                            <a href="#add_edit_modal" data-toggle="modal"
+                               onclick="clearEntity();clearInputs();"
                                class="btn btn-primary float-right mt-1">افزودن</a>
                         </div>
                     </div>
@@ -168,27 +421,34 @@
                                         <td><span class="tmplRowIndex"></span></td>
                                         <td>
                                             <h2 class="table-avatar">
-                                                <a href="profile.html" class="avatar avatar-sm mr-2"><img
+                                                <a href="javascript:void(0)" class="avatar avatar-sm mr-2"><img
                                                         class="avatar-img rounded-circle"
                                                         src={{if male}}"/app/assets/img/man.png"{{else}}"/app/assets/img/woman.png"{{/if}}
                                                         alt="User Image"></a>
-                                                <a href="profile.html">{{if male}}آقای{{else}}خانم{{/if}} ${firstname} ${lastname}</a>
+                                                <a href="javascript:void(0)">{{if male}}آقای{{else}}خانم{{/if}} ${firstname} ${lastname}</a>
                                             </h2>
                                         </td>
                                         <td>${telephone}</td>
                                         <td>${speciality.title}</td>
                                         <td title="${address}">${region.title} - ${address.substring(0,25)}</td>
                                         <td class="text-right">
-                                            <div class="actions">
-                                                <a class="btn btn-sm bg-success-light" data-toggle="modal" href="#edit_specialities_details">
-                                                    <i class="fe fe-pencil"></i> ویرایش
-                                                </a>
-                                                <a  data-toggle="modal" href="#delete_modal" class="btn btn-sm bg-danger-light">
-                                                    <i class="fe fe-trash"></i> حذف
-                                                </a>
-                                            </div>
+                                            <a class="btn btn-sm bg-success-light" data-toggle="modal" href="#add_edit_modal" onclick="loadEntity(${id})" >
+												<i class="fe fe-pencil"></i> ویرایش
+											</a>
+											<a  data-toggle="modal" href="#delete_doctor_modal" class="btn btn-sm bg-danger-light" onclick="rowSelected(${id})" >
+												<i class="fe fe-trash"></i> حذف
+											</a>
                                         </td>
                                     </tr>
+
+
+
+
+
+
+
+
+
 
                                 </script>
                                 </tbody>
@@ -196,9 +456,9 @@
                         </div>
                     </div>
                 </div>
-                <!-- /Recent Orders -->
-
+                <!-- /Grid -->
             </div>
+
             <!-- paging -->
             <div class="row col-md-12 card-body">
                 <div class="col-md-9">
@@ -221,86 +481,140 @@
             </div>
             <!-- paging -->
 
-            <!-- Add Modal -->
-            <div class="modal fade" id="Add_Specialities_details" aria-hidden="true" role="dialog">
-                <div class="modal-dialog modal-dialog-centered" role="document">
+
+            <!-- Add/Edit Modal -->
+            <div class="modal fade custom-modal" id="add_edit_modal" aria-hidden="true" role="dialog">
+                <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">افزودن </h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <h5 class="modal-title">افزودن / ویرایش پزشک </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                    onclick="fillGrid('doctorTemplate', 'doctorList', contextPath + '/rest/doctor/searchDoctors', searchFilters)">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form>
-                                <div class="row form-row">
-                                    <div class="col-12 col-sm-6">
+                            <!-- Add Doctor -->
+                            <input type="hidden" id="hiddenFieldId"/>
+                            <div class="service-fields mb-3">
+                                <div class="row">
+                                    <div class="col-lg-3">
                                         <div class="form-group">
-                                            <label>تخصص ها</label>
-                                            <input type="text" class="form-control">
+                                            <label>نام <span class="text-danger">*</span></label>
+                                            <input class="form-control" type="text" id="txtFirstname" required="">
                                         </div>
                                     </div>
-                                    <div class="col-12 col-sm-6">
+                                    <div class="col-lg-3">
                                         <div class="form-group">
-                                            <label>تصویر</label>
-                                            <input type="file" class="form-control">
+                                            <label>نام خانوادگی <span class="text-danger">*</span></label>
+                                            <input class="form-control" type="text" id="txtLastname" required="">
                                         </div>
                                     </div>
-
+                                    <div class="col-lg-3">
+                                        <div class="form-group">
+                                            <label>نظام پزشکی </label>
+                                            <input class="form-control" type="text" id="txtMedicalNationalNumber">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="form-group">
+                                            <label>جنسیت<span class="text-danger">*</span></label>
+                                            <select id="cmbGender" class="form-control">
+                                                <option value="..."></option>
+                                                <option value="true">مرد</option>
+                                                <option value="false">زن</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
-                                <button type="submit" class="btn btn-primary btn-block">ذخیره تغییرات</button>
-                            </form>
+                                <div class="service-fields mb-3">
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label>استان<span class="text-danger">*</span></label>
+                                                <select class="form-control" id="cmbState" required=""></select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label>شهر<span class="text-danger">*</span></label>
+                                                <select class="form-control" id="cmbCity" required=""></select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label>منطقه<span class="text-danger">*</span></label>
+                                                <select class="form-control" id="cmbRegion" required=""></select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label>تخصص<span class="text-danger">*</span></label>
+                                                <select class="form-control" id="cmbSpeciality"
+                                                        required=""></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="service-fields mb-3">
+                                    <div class="row">
+                                        <div class="col-lg-8">
+                                            <div class="form-group">
+                                                <label>آدرس<span class="text-danger">*</span></label>
+                                                <textarea id="txtAddress"
+                                                          class="form-control service-desc"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label>تلفن<span class="text-danger">*</span></label>
+                                                <textarea id="txtPhone"
+                                                          class="form-control service-desc"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="service-fields mb-3">
+                                    <div class="row">
+                                        <div class="col-lg-8">
+                                            <div class="service-upload">
+                                                <i class="fas fa-cloud-upload-alt"></i>
+                                                <span>آپلود تصویر</span>
+                                                <input type="file" accept="image/jpeg, image/png, image/gif,">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="submit-section">
+                                                <button class="btn btn-primary submit-btn" onclick="saveEntity()"> ثبت
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Add Doctor -->
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- /ADD Modal -->
-
-            <!-- Edit Details Modal -->
-            <div class="modal fade" id="edit_specialities_details" aria-hidden="true" role="dialog">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">ویرایش </h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form>
-                                <div class="row form-row">
-                                    <div class="col-12 col-sm-6">
-                                        <div class="form-group">
-                                            <label>تخصص ها</label>
-                                            <input type="text" class="form-control" value="قلب و عروق">
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-6">
-                                        <div class="form-group">
-                                            <label>تصویر</label>
-                                            <input type="file" class="form-control">
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <button type="submit" class="btn btn-primary btn-block">ذخیره تغییرات</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- /Edit Details Modal -->
+            <!-- /Add/Edit Modal -->
 
             <!-- Delete Modal -->
-            <div class="modal fade" id="delete_modal" aria-hidden="true" role="dialog">
+            <div class="modal fade" id="delete_doctor_modal" aria-hidden="true" role="dialog">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-body">
                             <div class="form-content p-2">
-                                <h4 class="modal-title">تایید حذف</h4>
-                                <p class="mb-4">آیا مطمئن هستید که می خواهید حذف کنید؟</p>
-                                <button type="button" class="btn btn-primary">حذف</button>
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">انصراف</button>
+                                <h4 class="modal-title">تاییدیه حذف</h4>
+                                <p class="mb-4">آیا از حدف اطمینان کافی دارید؟</p>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                        onclick="deleteEntity()">بله
+                                </button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal"
+                                        onclick="rowDeselected()">خیر
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -309,9 +623,8 @@
             <!-- /Delete Modal -->
 
         </div>
+        <!-- /Page Wrapper -->
     </div>
-    <!-- /Page Wrapper -->
-
 </div>
 <!-- Bootstrap Core JS -->
 <script src="/app/assets/admin/js/popper.min.js"></script>

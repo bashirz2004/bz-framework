@@ -1,6 +1,6 @@
 package com.bzamani.framework.controller.doctor;
 
-import com.bzamani.framework.controller.BaseController;
+import com.bzamani.framework.controller.core.BaseController;
 import com.bzamani.framework.model.doctor.Doctor;
 import com.bzamani.framework.service.doctor.IDoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +17,13 @@ public class DoctorController extends BaseController {
     @Autowired
     IDoctorService iDoctorService;
 
-    @PreAuthorize("hasRole('4')")
+    @PreAuthorize("hasRole('1001')")
     @PostMapping("/save")
     public Doctor save(@RequestBody Doctor doctor) {
         return iDoctorService.save(doctor);
     }
 
-    @PreAuthorize("hasRole('4')")
+    @PreAuthorize("hasRole('1001')")
     @DeleteMapping("/delete/{id}")
     public boolean delete(@PathVariable("id") long id) {
         return iDoctorService.deleteByEntityId(id);

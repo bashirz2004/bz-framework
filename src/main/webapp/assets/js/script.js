@@ -191,22 +191,12 @@ Version      : 1.3
 			variableWidth: true,
 			rtl: true,
 			centerMode: true,
-
 			prevArrow: false,
 			nextArrow: false
 		});
 	}
 
-	if ($('.doctor-slider').length > 0) {
-		$('.doctor-slider').slick({
-			dots: false,
-			autoplay: false,
-			infinite: true,
-			rtl: true,
-			centerMode: true,
-			variableWidth: true,
-		});
-	}
+
 	if ($('.features-slider').length > 0) {
 		$('.features-slider').slick({
 			dots: true,

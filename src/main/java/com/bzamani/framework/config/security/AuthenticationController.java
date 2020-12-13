@@ -1,14 +1,13 @@
 package com.bzamani.framework.config.security;
 
-import com.bzamani.framework.controller.BaseController;
-import com.bzamani.framework.model.security.User;
-import com.bzamani.framework.service.security.user.IUserService;
+import com.bzamani.framework.controller.core.BaseController;
+import com.bzamani.framework.model.core.user.User;
+import com.bzamani.framework.service.core.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
-import java.util.Set;
 
 @RestController
 public class AuthenticationController extends BaseController {

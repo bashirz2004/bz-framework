@@ -25,9 +25,11 @@
     <script src="assets/js/respond.min.js"></script>
     <![endif]-->
     <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.template.js"></script>
     <script>
         var contextPath = "/app";
         $(function () {
+            loadDoctorsOrderByScore();
             if (localStorage.getItem("authenticatedUserFullName")) {
                 $('#btnLogin').hide();
                 $('#userInfo').html(localStorage.getItem("authenticatedUserFullName") + "&nbsp;");
@@ -76,7 +78,7 @@
                         $("#resultCount").html("تعداد نتایج: " + res.totalRecords);
                         $("#resultContainer").html("<span class=\"form-text\" id=\"resultContainer\"></span>");
                         $.each(res.entityList, function (index, value) {
-                            $("#resultContainer").append("<li onclick=showProfile(" + value.id + ") class=result id=res_" + index + " onmouseover=highlightRow(" + index + ")>" + parseInt(parseInt(index) + 1) + "- دکتر " + value.firstname + "  " + value.lastname + " - " + value.region.title + " - " + value.speciality.title + " - " + value.address + " - " + value.telephone + "</li>");
+                            $("#resultContainer").append("<li class=result id=res_" + index + " onmouseover=highlightRow(" + index + ")>" + parseInt(parseInt(index) + 1) + "- دکتر " + value.firstname + "  " + value.lastname + " - " + value.region.title + " - " + value.speciality.title + " - " + value.address + " - " + value.telephone + "</li>");
                         });
                     },
                     error: function (err) {
@@ -84,10 +86,6 @@
                     }
                 });
             }
-        }
-
-        function showProfile(id) {
-            document.location.href = "doctor-profile.html?id=" + id;
         }
 
         function highlightRow(index) {
@@ -101,6 +99,25 @@
 
         function navigateToLoginPage() {
             document.location = "login.html";
+        }
+
+        function loadDoctorsOrderByScore() {
+            let searchFilter = {
+                "sort": "id,desc",
+                "page": 0,
+                "size": 10
+            };
+            $.getJSON(contextPath + "/api/public/doctor/searchDoctors", searchFilter, function (entities) {
+                $('#doctors-template').tmpl(entities.entityList).prependTo('#doctors-list');
+                $('.doctor-slider').slick({
+                    dots: true,
+                    autoplay: true,
+                    infinite: true,
+                    rtl: true,
+                    centerMode: true,
+                    variableWidth: true
+                });
+            });
         }
     </script>
 </head>
@@ -177,7 +194,7 @@
     </header>
     <!-- /Header -->
 
-    <!-- Home Banner -->
+    <!-- Home quick search doctor -->
     <section class="section section-search">
         <div class="container-fluid">
             <div class="banner-wrapper">
@@ -215,8 +232,7 @@
             </div>
         </div>
     </section>
-    <!-- /Home Banner -->
-
+    <!-- /Home quick search doctor -->
 
     <section class="section home-tile-section">
         <div class="container-fluid">
@@ -274,16 +290,16 @@
             <div class="row">
                 <div class="col-md-9 m-auto">
                     <div class="section-header text-center">
-                        <h2>برترین پزشکان بر اساس امتیاز کاربران</h2>
+                        <h2>10 پزشک برتر بر اساس امتیاز کاربران</h2>
                     </div>
                     <div class="col-lg-12">
-                        <div class="doctor-slider slider" dir="rtl">
-
+                        <div class="doctor-slider slider" dir="rtl" id="doctors-list">
                             <!-- Doctor Widget -->
+                            <script id="doctors-template" type="text/x-jquery-tmpl">
                             <div class="profile-widget">
                                 <div class="doc-img">
                                     <a href="doctor-profile.html">
-                                        <img class="img-fluid" alt="User Image" src="assets/img/doctors/doctor-01.jpg">
+                                        <img class="img-fluid" alt="User Image" style="width:4em" src={{if male}}"/app/assets/img/man.png"{{else}}"/app/assets/img/woman.png"{{/if}}>
                                     </a>
                                     <a href="javascript:void(0)" class="fav-btn">
                                         <i class="far fa-bookmark"></i>
@@ -291,377 +307,35 @@
                                 </div>
                                 <div class="pro-content">
                                     <h3 class="title">
-                                        <a href="doctor-profile.html">رامین پرین</a>
+                                        <a>${firstname} ${lastname}</a>
                                         <i class="fas fa-check-circle verified"></i>
                                     </h3>
-                                    <p class="speciality"> MDS - پریودنتولوژی و ایمپلنت دهانی ، BDS </p>
+                                    <p class="speciality"> ${speciality.title} </p>
                                     <div class="rating">
                                         <i class="fas fa-star filled"></i>
                                         <i class="fas fa-star filled"></i>
                                         <i class="fas fa-star filled"></i>
                                         <i class="fas fa-star filled"></i>
                                         <i class="fas fa-star filled"></i>
-                                        <span class="d-inline-block average-rating">(17)</span>
+                                        <span class="d-inline-block average-rating">${id}</span>
                                     </div>
                                     <ul class="available-info">
                                         <li>
-                                            <i class="fas fa-map-marker-alt"></i> فلوریدا، آمریکا
+                                            <i class="fas fa-map-marker-alt"></i>${region.title}
                                         </li>
                                         <li>
-                                            <i class="far fa-clock"></i> در دسترس در جمعه ، 22 مهر
+                                            <i class="far fa-clock"></i>${address.substring(0,25)}
                                         </li>
                                         <li>
-                                            <i class="far fa-money-bill-alt"></i>300 تومان - 1000 تومان
-                                            <i class="fas fa-info-circle" data-toggle="tooltip" title="Lorem Ipsum"></i>
+                                            <i class="fas fa-phone"></i>${telephone}
+                                            <i class="fas fa-info-circle" data-toggle="tooltip" title="${address}"></i>
                                         </li>
                                     </ul>
-                                    <div class="row row-sm">
-                                        <div class="col-6">
-                                            <a href="doctor-profile.html" class="btn view-btn">مشاهده پروفایل</a>
-                                        </div>
-                                        <div class="col-6">
-                                            <a href="booking.html" class="btn book-btn">رزرو کنید</a>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
+
+                            </script>
                             <!-- /Doctor Widget -->
-
-                            <!-- Doctor Widget -->
-                            <div class="profile-widget">
-                                <div class="doc-img">
-                                    <a href="doctor-profile.html">
-                                        <img class="img-fluid" alt="User Image" src="assets/img/doctors/doctor-02.jpg">
-                                    </a>
-                                    <a href="javascript:void(0)" class="fav-btn">
-                                        <i class="far fa-bookmark"></i>
-                                    </a>
-                                </div>
-                                <div class="pro-content">
-                                    <h3 class="title">
-                                        <a href="doctor-profile.html">دارا الدار</a>
-                                        <i class="fas fa-check-circle verified"></i>
-                                    </h3>
-                                    <p class="speciality"> BDS ، MDS - جراحی دهان و فک و صورت </p>
-                                    <div class="rating">
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star"></i>
-                                        <span class="d-inline-block average-rating">(35)</span>
-                                    </div>
-                                    <ul class="available-info">
-                                        <li>
-                                            <i class="fas fa-map-marker-alt"></i>نیویورک، آمریکا
-                                        </li>
-                                        <li>
-                                            <i class="far fa-clock"></i> در دسترس در جمعه ، 22 مهر
-                                        </li>
-                                        <li>
-                                            <i class="far fa-money-bill-alt"></i>50 تومان - 300 تومان
-                                            <i class="fas fa-info-circle" data-toggle="tooltip" title="Lorem Ipsum"></i>
-                                        </li>
-                                    </ul>
-                                    <div class="row row-sm">
-                                        <div class="col-6">
-                                            <a href="doctor-profile.html" class="btn view-btn">مشاهده پروفایل</a>
-                                        </div>
-                                        <div class="col-6">
-                                            <a href="booking.html" class="btn book-btn">رزرو کنید</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /Doctor Widget -->
-
-                            <!-- Doctor Widget -->
-                            <div class="profile-widget">
-                                <div class="doc-img">
-                                    <a href="doctor-profile.html">
-                                        <img class="img-fluid" alt="User Image" src="assets/img/doctors/doctor-03.jpg">
-                                    </a>
-                                    <a href="javascript:void(0)" class="fav-btn">
-                                        <i class="far fa-bookmark"></i>
-                                    </a>
-                                </div>
-                                <div class="pro-content">
-                                    <h3 class="title">
-                                        <a href="doctor-profile.html">دبرا انجل</a>
-                                        <i class="fas fa-check-circle verified"></i>
-                                    </h3>
-                                    <p class="speciality"> MBBS ، MD - پزشکی عمومی ، DNB - قلب و عروق </p>
-                                    <div class="rating">
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star"></i>
-                                        <span class="d-inline-block average-rating">(27)</span>
-                                    </div>
-                                    <ul class="available-info">
-                                        <li>
-                                            <i class="fas fa-map-marker-alt"></i> جورجیا ، آمریکا
-                                        </li>
-                                        <li>
-                                            <i class="far fa-clock"></i> در دسترس در جمعه ، 22 مهر
-                                        </li>
-                                        <li>
-                                            <i class="far fa-money-bill-alt"></i> 100 تومان - 400 تومان
-                                            <i class="fas fa-info-circle" data-toggle="tooltip" title="Lorem Ipsum"></i>
-                                        </li>
-                                    </ul>
-                                    <div class="row row-sm">
-                                        <div class="col-6">
-                                            <a href="doctor-profile.html" class="btn view-btn">مشاهده پروفایل</a>
-                                        </div>
-                                        <div class="col-6">
-                                            <a href="booking.html" class="btn book-btn">رزرو کنید</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /Doctor Widget -->
-
-                            <!-- Doctor Widget -->
-                            <div class="profile-widget">
-                                <div class="doc-img">
-                                    <a href="doctor-profile.html">
-                                        <img class="img-fluid" alt="User Image" src="assets/img/doctors/doctor-04.jpg">
-                                    </a>
-                                    <a href="javascript:void(0)" class="fav-btn">
-                                        <i class="far fa-bookmark"></i>
-                                    </a>
-                                </div>
-                                <div class="pro-content">
-                                    <h3 class="title">
-                                        <a href="doctor-profile.html">صوفیا برینت</a>
-                                        <i class="fas fa-check-circle verified"></i>
-                                    </h3>
-                                    <p class="speciality"> MBBS ، MS - جراحی عمومی ، MCh - ارولوژی </p>
-                                    <div class="rating">
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star"></i>
-                                        <span class="d-inline-block average-rating">(4)</span>
-                                    </div>
-                                    <ul class="available-info">
-                                        <li>
-                                            <i class="fas fa-map-marker-alt"></i> لویزینا، آمریکا
-                                        </li>
-                                        <li>
-                                            <i class="far fa-clock"></i> در دسترس در جمعه ، 22 مهر
-                                        </li>
-                                        <li>
-                                            <i class="far fa-money-bill-alt"></i> 150 تومان - 250 تومان
-                                            <i class="fas fa-info-circle" data-toggle="tooltip" title="Lorem Ipsum"></i>
-                                        </li>
-                                    </ul>
-                                    <div class="row row-sm">
-                                        <div class="col-6">
-                                            <a href="doctor-profile.html" class="btn view-btn">مشاهده پروفایل</a>
-                                        </div>
-                                        <div class="col-6">
-                                            <a href="booking.html" class="btn book-btn">رزرو کنید</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /Doctor Widget -->
-
-                            <!-- Doctor Widget -->
-                            <div class="profile-widget">
-                                <div class="doc-img">
-                                    <a href="doctor-profile.html">
-                                        <img class="img-fluid" alt="User Image" src="assets/img/doctors/doctor-05.jpg">
-                                    </a>
-                                    <a href="javascript:void(0)" class="fav-btn">
-                                        <i class="far fa-bookmark"></i>
-                                    </a>
-                                </div>
-                                <div class="pro-content">
-                                    <h3 class="title">
-                                        <a href="doctor-profile.html">ماروین کمپل</a>
-                                        <i class="fas fa-check-circle verified"></i>
-                                    </h3>
-                                    <p class="speciality"> MBBS ، MD - چشم پزشکی ، DNB - چشم پزشکی </p>
-                                    <div class="rating">
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star"></i>
-                                        <span class="d-inline-block average-rating">(66)</span>
-                                    </div>
-                                    <ul class="available-info">
-                                        <li>
-                                            <i class="fas fa-map-marker-alt"></i> میشیگان، آمریکا
-                                        </li>
-                                        <li>
-                                            <i class="far fa-clock"></i> در دسترس در جمعه ، 22 مهر
-                                        </li>
-                                        <li>
-                                            <i class="far fa-money-bill-alt"></i> تومان 50 - تومان 700
-                                            <i class="fas fa-info-circle" data-toggle="tooltip" title="Lorem Ipsum"></i>
-                                        </li>
-                                    </ul>
-                                    <div class="row row-sm">
-                                        <div class="col-6">
-                                            <a href="doctor-profile.html" class="btn view-btn">مشاهده پروفایل</a>
-                                        </div>
-                                        <div class="col-6">
-                                            <a href="booking.html" class="btn book-btn">رزرو کنید</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /Doctor Widget -->
-
-                            <!-- Doctor Widget -->
-                            <div class="profile-widget">
-                                <div class="doc-img">
-                                    <a href="doctor-profile.html">
-                                        <img class="img-fluid" alt="User Image" src="assets/img/doctors/doctor-06.jpg">
-                                    </a>
-                                    <a href="javascript:void(0)" class="fav-btn">
-                                        <i class="far fa-bookmark"></i>
-                                    </a>
-                                </div>
-                                <div class="pro-content">
-                                    <h3 class="title">
-                                        <a href="doctor-profile.html">کاترینا برتفولد</a>
-                                        <i class="fas fa-check-circle verified"></i>
-                                    </h3>
-                                    <p class="speciality"> MS - ارتوپدی ، MBBS ، M.Ch - ارتوپدی </p>
-                                    <div class="rating">
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star"></i>
-                                        <span class="d-inline-block average-rating">(52)</span>
-                                    </div>
-                                    <ul class="available-info">
-                                        <li>
-                                            <i class="fas fa-map-marker-alt"></i> تگزاس، آمریکا
-                                        </li>
-                                        <li>
-                                            <i class="far fa-clock"></i> در دسترس در جمعه ، 22 مهر
-                                        </li>
-                                        <li>
-                                            <i class="far fa-money-bill-alt"></i> 150 تومان - 500 تومان
-                                            <i class="fas fa-info-circle" data-toggle="tooltip" title="Lorem Ipsum"></i>
-                                        </li>
-                                    </ul>
-                                    <div class="row row-sm">
-                                        <div class="col-6">
-                                            <a href="doctor-profile.html" class="btn view-btn">مشاهده پروفایل</a>
-                                        </div>
-                                        <div class="col-6">
-                                            <a href="booking.html" class="btn book-btn">رزرو کنید</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /Doctor Widget -->
-
-                            <!-- Doctor Widget -->
-                            <div class="profile-widget">
-                                <div class="doc-img">
-                                    <a href="doctor-profile.html">
-                                        <img class="img-fluid" alt="User Image" src="assets/img/doctors/doctor-07.jpg">
-                                    </a>
-                                    <a href="javascript:void(0)" class="fav-btn">
-                                        <i class="far fa-bookmark"></i>
-                                    </a>
-                                </div>
-                                <div class="pro-content">
-                                    <h3 class="title">
-                                        <a href="doctor-profile.html">لیندا توبین</a>
-                                        <i class="fas fa-check-circle verified"></i>
-                                    </h3>
-                                    <p class="speciality"> MBBS ، MD - پزشکی عمومی ، DM - مغز و اعصاب </p>
-                                    <div class="rating">
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star"></i>
-                                        <span class="d-inline-block average-rating">(43)</span>
-                                    </div>
-                                    <ul class="available-info">
-                                        <li>
-                                            <i class="fas fa-map-marker-alt"></i> کنزاش، آمریکا
-                                        </li>
-                                        <li>
-                                            <i class="far fa-clock"></i> در دسترس در جمعه ، 22 مهر
-                                        </li>
-                                        <li>
-                                            <i class="far fa-money-bill-alt"></i> 100 تومان - 1000 تومان
-                                            <i class="fas fa-info-circle" data-toggle="tooltip" title="Lorem Ipsum"></i>
-                                        </li>
-                                    </ul>
-                                    <div class="row row-sm">
-                                        <div class="col-6">
-                                            <a href="doctor-profile.html" class="btn view-btn">مشاهده پروفایل</a>
-                                        </div>
-                                        <div class="col-6">
-                                            <a href="booking.html" class="btn book-btn">رزرو کنید</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /Doctor Widget -->
-
-                            <!-- Doctor Widget -->
-                            <div class="profile-widget">
-                                <div class="doc-img">
-                                    <a href="doctor-profile.html">
-                                        <img class="img-fluid" alt="User Image" src="assets/img/doctors/doctor-08.jpg">
-                                    </a>
-                                    <a href="javascript:void(0)" class="fav-btn">
-                                        <i class="far fa-bookmark"></i>
-                                    </a>
-                                </div>
-                                <div class="pro-content">
-                                    <h3 class="title">
-                                        <a href="doctor-profile.html">پاول ریچارد</a>
-                                        <i class="fas fa-check-circle verified"></i>
-                                    </h3>
-                                    <p class="speciality"> MBBS ، MD - پوست ، کبد </p>
-                                    <div class="rating">
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star"></i>
-                                        <span class="d-inline-block average-rating">(49)</span>
-                                    </div>
-                                    <ul class="available-info">
-                                        <li>
-                                            <i class="fas fa-map-marker-alt"></i> کالفرنیا، آمریکا
-                                        </li>
-                                        <li>
-                                            <i class="far fa-clock"></i> در دسترس در جمعه ، 22 مهر
-                                        </li>
-                                        <li>
-                                            <i class="far fa-money-bill-alt"></i> 100 تومان - 400 تومان
-                                            <i class="fas fa-info-circle" data-toggle="tooltip" title="Lorem Ipsum"></i>
-                                        </li>
-                                    </ul>
-                                    <div class="row row-sm">
-                                        <div class="col-6">
-                                            <a href="doctor-profile.html" class="btn view-btn">مشاهده پروفایل</a>
-                                        </div>
-                                        <div class="col-6">
-                                            <a href="booking.html" class="btn book-btn">رزرو کنید</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Doctor Widget -->
                         </div>
                     </div>
                 </div>
@@ -920,7 +594,7 @@
                         <div class="footer-widget footer-menu">
                             <h2 class="footer-title">برای پزشکان</h2>
                             <ul>
-                               <!-- <li><a href="login.html">‌ورود</a></li>-->
+                                <!-- <li><a href="login.html">‌ورود</a></li>-->
                             </ul>
                         </div>
                         <!-- /Footer Widget -->
@@ -933,7 +607,7 @@
                         <div class="footer-widget footer-menu">
                             <h2 class="footer-title">برای کلینیک ها</h2>
                             <ul>
-                               <!-- <li><a href="login.html">‌ورود</a></li>-->
+                                <!-- <li><a href="login.html">‌ورود</a></li>-->
                             </ul>
                         </div>
                         <!-- /Footer Widget -->

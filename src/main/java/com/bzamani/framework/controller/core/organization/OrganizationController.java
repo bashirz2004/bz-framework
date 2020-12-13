@@ -1,6 +1,6 @@
 package com.bzamani.framework.controller.core.organization;
 
-import com.bzamani.framework.controller.BaseController;
+import com.bzamani.framework.controller.core.BaseController;
 import com.bzamani.framework.model.core.organization.Organization;
 import com.bzamani.framework.service.core.organization.IOrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;

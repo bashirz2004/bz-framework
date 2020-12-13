@@ -1,17 +1,22 @@
 package com.bzamani.framework.model.core.organization;
 
 import com.bzamani.framework.config.mycustomannotation.MyLengthValidator;
-import com.bzamani.framework.model.BaseEntity;
+import com.bzamani.framework.model.core.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "CORE_ORGANIZATION", uniqueConstraints = {@UniqueConstraint(name = "unq_parent_title", columnNames = {"parent_id", "title"})})
 @SequenceGenerator(name = "sequence_db", sequenceName = "SEQ_CORE_ORGANIZATION", allocationSize = 1)
 @Setter
 @Getter
+@FilterDefs({@FilterDef(name = "organizationAuthorize", parameters = {@ParamDef(name = "username", type = "string")})})
+@Filters({@Filter(name = "organizationAuthorize", condition = " creator = (select a.id from core_user a where a.username = :username )")})
 public class Organization extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.EAGER)
