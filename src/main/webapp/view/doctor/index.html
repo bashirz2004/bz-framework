@@ -119,7 +119,7 @@
                 $('#cmbPageSize').val(50);
             }
             $.getJSON(url, jsonData, function (entities) {
-                $('#' + destinationId + ' /app/assets/script)').remove();
+                $('#' + destinationId + ' :not(script)').remove();
                 if (entities.entityList) {
                     $('#' + templateId).tmpl(entities.entityList).prependTo('#' + destinationId);
                     tmplRowIndex(destinationId, entities.pageNumber, jsonData.size);
@@ -130,7 +130,7 @@
                 if (entities.totalRecords == 0) {
                     alert('موردی یافت نشد');
                 }
-                $('table.table tbody tr/app/assets/[th]):odd').css('backgroundColor', '#c4f0f5');
+                $('table.table tbody tr:not([th]):odd').css('backgroundColor', '#c4f0f5');
                 $('#totalRecords').html(entities.totalRecords);
                 $('#pagingList > li').remove();
 
