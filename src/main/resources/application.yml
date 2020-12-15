@@ -3,6 +3,9 @@ server:
     servlet:
         context-path: /app
 spring:
+    banner:
+      image:
+          location: classpath:banner.txt
     datasource:
         url: jdbc:postgresql://localhost:5432/bz
         username: postgres
