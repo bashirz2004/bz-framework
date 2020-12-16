@@ -855,6 +855,7 @@ a.bg-danger:focus, a.bg-danger:hover, button.bg-danger:focus, button.bg-danger:h
 .card {
 	border: 1px solid #f0f0f0;
 	margin-bottom: 1.875rem;
+	background-color: #b0e4fda3;
 }
 
 .card-body {
@@ -2238,12 +2239,13 @@ html.menu-opened body {
 -----------------------*/
 
 .footer {
-	background-color: #15558d;
+	background-color: #151313;
 }
 
 .footer .footer-top {
 	padding: 40px 0;
 }
+
 
 .footer-title {
 	color: #fff;
@@ -3317,7 +3319,7 @@ html.menu-opened body {
 -----------------------*/
 
 .breadcrumb-bar {
-	background-color: #15558d;
+	background-color: #151313;
 	padding: 15px 0;
 }
 
@@ -3560,7 +3562,7 @@ html.menu-opened body {
 }
 
 .doc-department {
-	color: #20c0f3;
+	color: #191a1a;
 	font-size: 14px;
 	margin-bottom: 8px;
 }

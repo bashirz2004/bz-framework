@@ -32,7 +32,7 @@
     <![endif]-->
     <style>
         .card:hover {
-            background-color: lavender;
+            background-color: #0de0fe;
         }
     </style>
     <!-- jQuery -->
@@ -50,14 +50,6 @@
         };
 
         $(function () {
-            /* $('.chk-speciality').click(function(){
-                 alert('sssssssss');
-                 $('#specialitiesFilter input:checked').each(function () {
-                     selected_specialities.push($(this).attr('name'));
-                 });
-             });*/
-
-
             fillSpecialityCheckboxes();
             fillComboState();
             searchDoctors();
@@ -252,12 +244,13 @@
                     <div class="sort-by">
                         <span class="sort-title">مرتب سازی</span>
                         <span class="sortby-fliter">
-								<select class="select" id="cmbSerachOrder">
-									<option value="id,desc" class="sorting">امتیاز</option>
-									<option value="speciality.title,asc" class="sorting">تخصص</option>
-									<option value="address,asc" class="sorting">آدرس</option>
-								</select>
-							</span>
+                            <select class="select" id="cmbSerachOrder">
+                                <option value="id,desc" class="sorting">امتیاز</option>
+                                <option value="speciality.title,asc" class="sorting">تخصص</option>
+                                <option value="address,asc" class="sorting">آدرس</option>
+                            </select>
+                        </span>
+                        <a class="fa fa-reply-all sort-title" href="../index.html">&nbsp;بازگشت</a>
                     </div>
                 </div>
             </div>
@@ -370,13 +363,13 @@
                                         </ul>
                                     </div>
                                     <div class="clinic-booking">
-                                        <a class="view-pro-btn" href="doctor-profile.html">مشاهده پروفایل</a>
-                                        <a class="apt-btn" href="booking.html">رزرو نوبت</a>
+                                        <a class="view-pro-btn" href="javascript:void()">اطلاعات بیشتر...</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
 
 
 
