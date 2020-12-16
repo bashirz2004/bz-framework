@@ -1,41 +1,38 @@
 server:
-    port: 80
-    servlet:
-        context-path: /app
+  port: 80
+  servlet:
+    context-path: /app
 spring:
-    banner:
-      image:
-          location: classpath:banner.txt
-    datasource:
-        url: jdbc:postgresql://localhost:5432/bz
-        username: postgres
-        password: postgres
-    jpa:
-        properties:
-            hibernate:
-                dialect: org.hibernate.dialect.PostgreSQLDialect
-        hibernate:
-            ddl-auto: update
-    security:
-        jwt:
-            secret: bashir
-            expirationDateInMs: 18000000
-    #security:
-        #user:
-           # name: bzamani
-           # password: 0
-            #roles: "ADMIN"
-   # mvc:
-      #  servlet:
-        #    path: /rest
+  banner:
+    image:
+      location: classpath:banner.txt
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bz
+    username: postgres
+    password: postgres
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+  security:
+    jwt:
+      secret: bashir
+      expirationDateInMs: 18000000
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 
 logging:
-    level:
-        org:
-            hibernate:
-                type:
-                    descriptor:
-                        sql:
-                            BasicBinder: TRACE
-                SQL: DEBUG
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+        SQL: DEBUG

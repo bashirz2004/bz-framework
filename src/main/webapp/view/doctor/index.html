@@ -44,7 +44,8 @@
             "city": {"id": ''},
             "region": {"id": ''},
             "address": '',
-            "telephone": ''
+            "telephone": '',
+            "fileCode": ''
         };
 
         var searchFilters = {
@@ -200,6 +201,8 @@
         }
 
         function loadEntity(id) {
+            clearInputs();
+            clearEntity();
             $.ajax({
                 url: contextPath + "/rest/doctor/load/" + id,
                 contentType: "application/json;charset=utf-8",
@@ -320,8 +323,10 @@
         function clearInputs() {
             $('input:hidden').val('');
             $('input:text').val('');
+            $('input:file').val('');
             $('select').val('');
             $('textarea').val('');
+            $('#uploadedImage').prop("src", "");
         }
 
         function clearEntity() {
@@ -336,7 +341,8 @@
                 "city": {"id": ''},
                 "region": {"id": ''},
                 "address": '',
-                "telephone": ''
+                "telephone": '',
+                "fileCode": ''
             };
         }
 
@@ -357,6 +363,10 @@
             $("#cmbSpeciality").val(entity.speciality.id);
             $("#txtAddress").val(entity.id);
             $("#txtPhone").val(entity.id);
+            if (entity.fileCode != null && entity.fileCode.length > 0) {
+                $('#uploadedImage').prop("src", "/app/rest/core/file/download/" + entity.fileCode + "/false");
+                $("#hiddenFieldfileCode").val(entity.fileCode);
+            }
         }
 
         function setEntityFromInputs() {
@@ -372,8 +382,34 @@
                 "city": {"id": $('#cmbCity').val()},
                 "region": {"id": $('#cmbRegion').val()},
                 "address": $('#txtAddress').val(),
-                "telephone": $('#txtPhone').val()
+                "telephone": $('#txtPhone').val(),
+                "fileCode": $('#hiddenFieldfileCode').val()
             }
+        }
+
+        function uploadFile() {
+            $.ajax({
+                url: contextPath + "/rest/core/file/upload",
+                type: "POST",
+                data: new FormData($("#upload-file-form")[0]),
+                enctype: 'multipart/form-data',
+                processData: false,
+                contentType: false,
+                cache: false,
+                dataType: "text",
+                success: function (fileCode) {
+                    if (fileCode != null && fileCode.length > 0) {
+                        $('#uploadedImage').prop("src", "/app/rest/core/file/download/" + fileCode + "/false");
+                        $('#hiddenFieldfileCode').val(fileCode);
+                        $('.submit-btn').show();
+                    }
+                },
+                error: function (err) {
+                    //console.log(err.responseText);
+                    if (err.responseText && err.responseText.toLowerCase().includes('SizeLimitExceededException'.toLowerCase()))
+                        alert('خطا! حداکثر حجم تصویر شما می تواند ' + parseInt(err.responseText.substring(err.responseText.lastIndexOf('(') + 1, err.responseText.lastIndexOf(')'))) / 1048576 + ' مگابایت باشد.');
+                }
+            });
         }
 
     </script>
@@ -423,7 +459,9 @@
                                             <h2 class="table-avatar">
                                                 <a href="javascript:void(0)" class="avatar avatar-sm mr-2"><img
                                                         class="avatar-img rounded-circle"
-                                                        src={{if male}}"/app/assets/img/man.png"{{else}}"/app/assets/img/woman.png"{{/if}}
+                                                        src={{if male && fileCode==null}}"/app/assets/img/man.png"{{/if}}
+                                                            {{if !male && fileCode==null}}"/app/assets/img/woman.png"{{/if}}
+                                                            {{if fileCode!=null}}"/app/rest/core/file/download/${fileCode}/false"{{/if}}
                                                         alt="User Image"></a>
                                                 <a href="javascript:void(0)">{{if male}}آقای{{else}}خانم{{/if}} ${firstname} ${lastname}</a>
                                             </h2>
@@ -440,6 +478,15 @@
 											</a>
                                         </td>
                                     </tr>
+
+
+
+
+
+
+
+
+
 
 
 
@@ -581,8 +628,14 @@
                                         <div class="col-lg-8">
                                             <div class="service-upload">
                                                 <i class="fas fa-cloud-upload-alt"></i>
-                                                <span>آپلود تصویر</span>
-                                                <input type="file" accept="image/jpeg, image/png, image/gif,">
+                                                <span>بارگذاری تصویر</span>
+                                                <form id="upload-file-form">
+                                                    <input id="upload-file-input" type="file" name="attachment"
+                                                           accept="image/*"
+                                                           onchange="uploadFile();$('.submit-btn').hide();"/>
+                                                    <img id="uploadedImage" style="width: 8em"/>
+                                                    <input type="hidden" id="hiddenFieldfileCode"/>
+                                                </form>
                                             </div>
                                         </div>
                                         <div class="col-lg-4">

@@ -2,6 +2,7 @@ package com.bzamani.framework.service.doctor;
 
 import com.bzamani.framework.model.doctor.Doctor;
 import com.bzamani.framework.repository.doctor.IDoctorRepository;
+import com.bzamani.framework.service.core.file.IFileAttachmentService;
 import com.bzamani.framework.service.impl.core.GenericService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,9 +23,32 @@ public class DoctorService extends GenericService<Doctor, Long> implements IDoct
     @Autowired
     private IDoctorRepository iDoctorRepository;
 
+    @Autowired
+    private IFileAttachmentService iFileAttachmentService;
+
     @Override
     protected JpaRepository<Doctor, Long> getGenericRepo() {
         return iDoctorRepository;
+    }
+
+    @Override
+    @Transactional
+    public Doctor save(Doctor doctor) {
+        doctor.setFileCode(doctor.getFileCode().length() == 0 ? null : doctor.getFileCode());
+        String oldFileCode = null;
+        String newFileCode = doctor.getFileCode();
+        if (doctor.getId() != null && doctor.getId() > 0) //edit mode
+            oldFileCode = loadByEntityId(doctor.getId()).getFileCode();
+        iFileAttachmentService.finalizeNewAndDeleteOldAttachment(newFileCode, oldFileCode);
+        return super.save(doctor);
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteByEntityId(Long id) {
+        if (loadByEntityId(id).getFileCode() != null)
+            iFileAttachmentService.finalizeNewAndDeleteOldAttachment(null, loadByEntityId(id).getFileCode());
+        return super.deleteByEntityId(id);
     }
 
     @Override

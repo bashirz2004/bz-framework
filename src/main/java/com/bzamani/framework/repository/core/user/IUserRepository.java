@@ -7,9 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
-public interface IUserRepository extends JpaRepository<User, Long>  {
-
-  User findUserByUsernameEquals(String username);
-
-
+public interface IUserRepository extends JpaRepository<User, Long> {
+    User findUserByUsernameEquals(String username);
 }
