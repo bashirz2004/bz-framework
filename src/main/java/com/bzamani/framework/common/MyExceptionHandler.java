@@ -1,34 +1,37 @@
 package com.bzamani.framework.common;
 
 import com.bzamani.framework.common.core.ErrorMesaage;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.servlet.http.HttpServletRequest;
+import java.nio.file.AccessDeniedException;
 
 @ControllerAdvice
 public class MyExceptionHandler extends ResponseEntityExceptionHandler {
     // Catch file size exceeded exception!
     @ExceptionHandler(MultipartException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
-    ResponseEntity<ErrorMesaage> handleMultipartException(HttpServletRequest request, Throwable ex) {
-        HttpStatus status = getStatus(request);
+    ResponseEntity<ErrorMesaage> handleMultipartException(Throwable ex, WebRequest request) {
         System.out.println("Error: " + ex.getMessage());
-        ErrorMesaage errorMesaage = new ErrorMesaage(status,"", ex.getMessage());
-        return new ResponseEntity<ErrorMesaage>(errorMesaage,null,status);
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("Content-Type", "application/json;charset=utf-8");
+        ErrorMesaage errorMesaage = new ErrorMesaage(status, "3333333", ex.getMessage());
+        return new ResponseEntity<ErrorMesaage>(errorMesaage, responseHeaders, status);
     }
 
-    private HttpStatus getStatus(HttpServletRequest request) {
-        Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
-        if (statusCode == null) {
-            return HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-        return HttpStatus.valueOf(statusCode);
+    @ExceptionHandler({AccessDeniedException.class})
+    public ResponseEntity<Object> handleAccessDeniedException(Exception ex, WebRequest request) {
+        return new ResponseEntity<Object>("Access denied message here", new HttpHeaders(), HttpStatus.FORBIDDEN);
     }
 
 }

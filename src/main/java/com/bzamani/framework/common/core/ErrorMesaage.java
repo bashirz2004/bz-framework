@@ -1,7 +1,11 @@
 package com.bzamani.framework.common.core;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
+@Setter
+@Getter
 public class ErrorMesaage {
     private HttpStatus httpStatus;
     private String code;
