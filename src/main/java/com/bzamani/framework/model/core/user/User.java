@@ -1,6 +1,6 @@
 package com.bzamani.framework.model.core.user;
 
-import com.bzamani.framework.config.mycustomannotation.MyLengthValidator;
+import com.bzamani.framework.common.config.mycustomannotation.MyLengthValidator;
 import com.bzamani.framework.model.core.BaseEntity;
 import com.bzamani.framework.model.core.organization.Organization;
 import com.bzamani.framework.model.core.action.Action;

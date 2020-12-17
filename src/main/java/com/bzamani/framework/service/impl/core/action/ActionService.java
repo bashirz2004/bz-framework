@@ -1,6 +1,6 @@
 package com.bzamani.framework.service.impl.core.action;
 
-import com.bzamani.framework.config.security.SecurityUtility;
+import com.bzamani.framework.common.utility.SecurityUtility;
 import com.bzamani.framework.model.core.action.Action;
 import com.bzamani.framework.repository.core.action.IActionRepository;
 import com.bzamani.framework.service.impl.core.GenericService;

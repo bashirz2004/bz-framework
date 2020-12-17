@@ -1,6 +1,6 @@
 package com.bzamani.framework.controller.core.file;
 
-import com.bzamani.framework.config.Utility;
+import com.bzamani.framework.common.utility.Utility;
 import com.bzamani.framework.model.core.file.FileAttachment;
 import com.bzamani.framework.service.core.file.IFileAttachmentService;
 import org.apache.commons.lang3.RandomStringUtils;

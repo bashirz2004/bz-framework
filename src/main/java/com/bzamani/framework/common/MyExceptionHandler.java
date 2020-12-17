@@ -1,5 +1,6 @@
-package com.bzamani.framework.controller;
+package com.bzamani.framework.common;
 
+import com.bzamani.framework.common.core.ErrorMesaage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,10 +16,11 @@ public class MyExceptionHandler extends ResponseEntityExceptionHandler {
     // Catch file size exceeded exception!
     @ExceptionHandler(MultipartException.class)
     @ResponseBody
-    ResponseEntity<?> handleControllerException(HttpServletRequest request, Throwable ex) {
+    ResponseEntity<ErrorMesaage> handleMultipartException(HttpServletRequest request, Throwable ex) {
         HttpStatus status = getStatus(request);
         System.out.println("Error: " + ex.getMessage());
-        return new ResponseEntity(ex.getMessage(), status);
+        ErrorMesaage errorMesaage = new ErrorMesaage(status,"", ex.getMessage());
+        return new ResponseEntity<ErrorMesaage>(errorMesaage,null,status);
     }
 
     private HttpStatus getStatus(HttpServletRequest request) {

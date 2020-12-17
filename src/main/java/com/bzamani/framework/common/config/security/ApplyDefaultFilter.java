@@ -1,6 +1,5 @@
-package com.bzamani.framework.config;
+package com.bzamani.framework.common.config.security;
 
-import com.bzamani.framework.config.security.SecurityUtility;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;

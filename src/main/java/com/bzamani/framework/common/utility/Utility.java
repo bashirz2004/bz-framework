@@ -1,4 +1,4 @@
-package com.bzamani.framework.config;
+package com.bzamani.framework.common.utility;
 
 import org.springframework.web.multipart.MultipartFile;
 

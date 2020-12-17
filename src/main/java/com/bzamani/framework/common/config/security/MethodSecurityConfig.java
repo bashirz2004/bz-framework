@@ -1,4 +1,4 @@
-package com.bzamani.framework.config.security;
+package com.bzamani.framework.common.config.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;

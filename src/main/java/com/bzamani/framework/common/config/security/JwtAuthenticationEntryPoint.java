@@ -1,4 +1,4 @@
-package com.bzamani.framework.config.security;
+package com.bzamani.framework.common.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;

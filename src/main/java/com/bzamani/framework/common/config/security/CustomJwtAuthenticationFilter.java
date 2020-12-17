@@ -1,4 +1,4 @@
-package com.bzamani.framework.config.security;
+package com.bzamani.framework.common.config.security;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;

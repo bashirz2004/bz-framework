@@ -1,7 +1,6 @@
-package com.bzamani.framework.config.security;
+package com.bzamani.framework.common.utility;
 
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 

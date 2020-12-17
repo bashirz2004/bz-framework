@@ -1,4 +1,4 @@
-package com.bzamani.framework.config;
+package com.bzamani.framework.common.config;
 
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.annotation.Bean;

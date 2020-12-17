@@ -1,4 +1,4 @@
-package com.bzamani.framework.config.security;
+package com.bzamani.framework.common.config.security;
 
 import com.bzamani.framework.model.core.action.Action;
 import com.bzamani.framework.repository.core.user.IUserRepository;

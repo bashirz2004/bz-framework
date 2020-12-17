@@ -1,6 +1,6 @@
 package com.bzamani.framework.controller.apipublic;
 
-import com.bzamani.framework.config.security.SecurityUtility;
+import com.bzamani.framework.common.utility.SecurityUtility;
 import com.bzamani.framework.controller.core.BaseController;
 import com.bzamani.framework.model.core.baseinfo.BaseInfo;
 import com.bzamani.framework.model.doctor.Doctor;

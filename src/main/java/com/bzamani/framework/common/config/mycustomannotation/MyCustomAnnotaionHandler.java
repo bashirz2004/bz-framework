@@ -1,4 +1,4 @@
-package com.bzamani.framework.config.mycustomannotation;
+package com.bzamani.framework.common.config.mycustomannotation;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

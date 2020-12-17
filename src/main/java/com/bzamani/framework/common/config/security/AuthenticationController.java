@@ -1,4 +1,4 @@
-package com.bzamani.framework.config.security;
+package com.bzamani.framework.common.config.security;
 
 import com.bzamani.framework.controller.core.BaseController;
 import com.bzamani.framework.model.core.user.User;
