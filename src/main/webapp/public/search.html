@@ -320,8 +320,12 @@
                                 <div class="doc-info-left">
                                     <div class="doctor-img">
                                         <a href="doctor-profile.html" >
-                                            <img src={{if !male}}"../assets/img/woman.png"{{else}}"../assets/img/man.png"{{/if}} class="img-fluid"
-                                                 alt="User Image">
+                                            <img
+                                             src={{if male && fileCode==null}}"/app/assets/img/man.png"{{/if}}
+                                                            {{if !male && fileCode==null}}"/app/assets/img/woman.png"{{/if}}
+                                                            {{if fileCode!=null}}"/app/rest/core/file/download/${fileCode}/false"{{/if}}
+                                            class="img-fluid"
+                                            alt="User Image">
                                         </a>
                                     </div>
                                     <div class="doc-info-cont">

@@ -299,7 +299,13 @@
                             <div class="profile-widget">
                                 <div class="doc-img">
                                     <a href="doctor-profile.html">
-                                        <img class="img-fluid" alt="User Image" style="width:4em" src={{if male}}"/app/assets/img/man.png"{{else}}"/app/assets/img/woman.png"{{/if}}>
+                                        <img class="img-fluid"
+                                             alt="User Image"
+                                             style="width:4em"
+                                              src={{if male && fileCode==null}}"/app/assets/img/man.png"{{/if}}
+                                                            {{if !male && fileCode==null}}"/app/assets/img/woman.png"{{/if}}
+                                                            {{if fileCode!=null}}"/app/rest/core/file/download/${fileCode}/false"{{/if}}
+                                             >
                                     </a>
                                     <a href="javascript:void(0)" class="fav-btn">
                                         <i class="far fa-bookmark"></i>
