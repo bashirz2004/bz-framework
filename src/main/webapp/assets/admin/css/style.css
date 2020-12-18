@@ -2007,13 +2007,13 @@ html.menu-opened body {
 	min-height: 100vh;
 }
 .page-wrapper {
-	margin-right: 90px;
-
+	margin-right: 240px;
+	padding-top: 60px;
 	position: relative;
 	transition: all 0.4s ease;
 }
 .page-wrapper > .content {
-	padding: 1.875rem 1.875rem 0;
+	/*padding: 1.875rem 1.875rem 0;*/
 }
 .page-header {
 	margin-bottom: 1.875rem;

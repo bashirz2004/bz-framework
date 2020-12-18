@@ -415,44 +415,41 @@
     </script>
 
 <body>
-
-<div class="page-wrapper">
-    <div class="content container-fluid">
-        <div class="row">
-            <div class="col-md-12 d-flex">
-                <!-- Grid -->
-                <div class="card card-table flex-fill">
-                    <div class="row">
-                        <div class="col-sm-2 col-auto mt-2">
-                            <h4 class="card-title">لیست پزشکان</h4>
-                        </div>
-                        <div class="top-nav-search col-sm-3">
-                            <input type="text" id="txtSearchDoctor" class="form-control searchFilter"
-                                   placeholder="جستجو براساس تخصص ...">
-                        </div>
-                        <button class="btn" onclick="searchDoctor()"><i class="fa fa-search"></i></button>
-                        <button class="btn" onclick="clearSearch()"><i class="fa fa-eraser"></i></button>
-                        <div class="col-sm-5 col">
-                            <a href="#add_edit_modal" data-toggle="modal"
-                               onclick="clearEntity();clearInputs();"
-                               class="btn btn-primary float-right mt-1">افزودن</a>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover table-center mb-0">
-                                <thead>
-                                <tr>
-                                    <th>ردیف</th>
-                                    <th>نام پزشک</th>
-                                    <th>تلفن</th>
-                                    <th>تخصص</th>
-                                    <th>آدرس</th>
-                                    <th>عملیات</th>
-                                </tr>
-                                </thead>
-                                <tbody id="doctorList">
-                                <script id="doctorTemplate"  type="text/x-jquery-tmpl">
+<div class="row">
+    <div class="col-md-12 d-flex">
+        <!-- Grid -->
+        <div class="card card-table flex-fill">
+            <div class="row">
+                <div class="col-sm-2 col-auto mt-2">
+                    <h4 class="card-title">لیست پزشکان</h4>
+                </div>
+                <div class="top-nav-search col-sm-3">
+                    <input type="text" id="txtSearchDoctor" class="form-control searchFilter"
+                           placeholder="جستجو براساس تخصص ...">
+                </div>
+                <button class="btn" onclick="searchDoctor()"><i class="fa fa-search"></i></button>
+                <button class="btn" onclick="clearSearch()"><i class="fa fa-eraser"></i></button>
+                <div class="col-sm-5 col">
+                    <a href="#add_edit_modal" data-toggle="modal"
+                       onclick="clearEntity();clearInputs();"
+                       class="btn btn-primary float-right mt-1">افزودن</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-center mb-0">
+                        <thead>
+                        <tr>
+                            <th>ردیف</th>
+                            <th>نام پزشک</th>
+                            <th>تلفن</th>
+                            <th>تخصص</th>
+                            <th>آدرس</th>
+                            <th>عملیات</th>
+                        </tr>
+                        </thead>
+                        <tbody id="doctorList">
+                        <script id="doctorTemplate" type="text/x-jquery-tmpl">
                                     <tr>
                                         <td><span class="tmplRowIndex"></span></td>
                                         <td>
@@ -497,188 +494,188 @@
 
 
 
-                                </script>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <!-- /Grid -->
-            </div>
 
-            <!-- paging -->
-            <div class="row col-md-12 card-body">
-                <div class="col-md-9">
-                    <ul class="pagination" id="pagingList">
-
-                    </ul>
-                </div>
-                <div class="col-md-3 dataTables_length" id="DataTables_Table_0_length">
-                    <span class="col-sm-4">تعداد</span>
-                    <select id="cmbPageSize" name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
-                            class="custom-select custom-select-sm form-control form-control-sm col-sm-3">
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                    <span class="col-xs-2 col-md-2 col-sm-6">از</span>
-                    <span class="col-xs-2 col-md-2 col-sm-6" id="totalRecords"></span>
+                        </script>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <!-- paging -->
-
-
-            <!-- Add/Edit Modal -->
-            <div class="modal fade custom-modal" id="add_edit_modal" aria-hidden="true" role="dialog">
-                <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">افزودن / ویرایش پزشک </h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                                    onclick="fillGrid('doctorTemplate', 'doctorList', contextPath + '/rest/doctor/searchDoctors', searchFilters)">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <!-- Add Doctor -->
-                            <input type="hidden" id="hiddenFieldId"/>
-                            <div class="service-fields mb-3">
-                                <div class="row">
-                                    <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label>نام <span class="text-danger">*</span></label>
-                                            <input class="form-control" type="text" id="txtFirstname" required="">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label>نام خانوادگی <span class="text-danger">*</span></label>
-                                            <input class="form-control" type="text" id="txtLastname" required="">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label>نظام پزشکی </label>
-                                            <input class="form-control" type="text" id="txtMedicalNationalNumber">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label>جنسیت<span class="text-danger">*</span></label>
-                                            <select id="cmbGender" class="form-control">
-                                                <option value="..."></option>
-                                                <option value="true">مرد</option>
-                                                <option value="false">زن</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="service-fields mb-3">
-                                    <div class="row">
-                                        <div class="col-lg-3">
-                                            <div class="form-group">
-                                                <label>استان<span class="text-danger">*</span></label>
-                                                <select class="form-control" id="cmbState" required=""></select>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <div class="form-group">
-                                                <label>شهر<span class="text-danger">*</span></label>
-                                                <select class="form-control" id="cmbCity" required=""></select>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <div class="form-group">
-                                                <label>منطقه<span class="text-danger">*</span></label>
-                                                <select class="form-control" id="cmbRegion" required=""></select>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <div class="form-group">
-                                                <label>تخصص<span class="text-danger">*</span></label>
-                                                <select class="form-control" id="cmbSpeciality"
-                                                        required=""></select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="service-fields mb-3">
-                                    <div class="row">
-                                        <div class="col-lg-8">
-                                            <div class="form-group">
-                                                <label>آدرس<span class="text-danger">*</span></label>
-                                                <textarea id="txtAddress"
-                                                          class="form-control service-desc"></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <div class="form-group">
-                                                <label>تلفن<span class="text-danger">*</span></label>
-                                                <textarea id="txtPhone"
-                                                          class="form-control service-desc"></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="service-fields mb-3">
-                                    <div class="row">
-                                        <div class="col-lg-8">
-                                            <div class="service-upload">
-                                                <i class="fas fa-cloud-upload-alt"></i>
-                                                <span>بارگذاری تصویر</span>
-                                                <form id="upload-file-form">
-                                                    <input id="upload-file-input" type="file" name="attachment"
-                                                           accept="image/*"
-                                                           onchange="uploadFile();$('.submit-btn').hide();"/>
-                                                    <img id="uploadedImage" style="width: 8em"/>
-                                                    <input type="hidden" id="hiddenFieldfileCode"/>
-                                                </form>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <div class="submit-section">
-                                                <button class="btn btn-primary submit-btn" onclick="saveEntity()"> ثبت
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /Add Doctor -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- /Add/Edit Modal -->
-
-            <!-- Delete Modal -->
-            <div class="modal fade" id="delete_doctor_modal" aria-hidden="true" role="dialog">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <div class="form-content p-2">
-                                <h4 class="modal-title">تاییدیه حذف</h4>
-                                <p class="mb-4">آیا از حدف اطمینان کافی دارید؟</p>
-                                <button type="button" class="btn btn-primary" data-dismiss="modal"
-                                        onclick="deleteEntity()">بله
-                                </button>
-                                <button type="button" class="btn btn-danger" data-dismiss="modal"
-                                        onclick="rowDeselected()">خیر
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- /Delete Modal -->
-
         </div>
-        <!-- /Page Wrapper -->
+        <!-- /Grid -->
     </div>
+
+    <!-- paging -->
+    <div class="row col-md-12 card-body">
+        <div class="col-md-9">
+            <ul class="pagination" id="pagingList">
+
+            </ul>
+        </div>
+        <div class="col-md-3 dataTables_length" id="DataTables_Table_0_length">
+            <span class="col-sm-4">تعداد</span>
+            <select id="cmbPageSize" name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+                    class="custom-select custom-select-sm form-control form-control-sm col-sm-3">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+            <span class="col-xs-2 col-md-2 col-sm-6">از</span>
+            <span class="col-xs-2 col-md-2 col-sm-6" id="totalRecords"></span>
+        </div>
+    </div>
+    <!-- paging -->
+
+
+    <!-- Add/Edit Modal -->
+    <div class="modal fade custom-modal" id="add_edit_modal" aria-hidden="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">افزودن / ویرایش پزشک </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                            onclick="fillGrid('doctorTemplate', 'doctorList', contextPath + '/rest/doctor/searchDoctors', searchFilters)">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Add Doctor -->
+                    <input type="hidden" id="hiddenFieldId"/>
+                    <div class="service-fields mb-3">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>نام <span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="txtFirstname" required="">
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>نام خانوادگی <span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="txtLastname" required="">
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>نظام پزشکی </label>
+                                    <input class="form-control" type="text" id="txtMedicalNationalNumber">
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>جنسیت<span class="text-danger">*</span></label>
+                                    <select id="cmbGender" class="form-control">
+                                        <option value="..."></option>
+                                        <option value="true">مرد</option>
+                                        <option value="false">زن</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="service-fields mb-3">
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <div class="form-group">
+                                        <label>استان<span class="text-danger">*</span></label>
+                                        <select class="form-control" id="cmbState" required=""></select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="form-group">
+                                        <label>شهر<span class="text-danger">*</span></label>
+                                        <select class="form-control" id="cmbCity" required=""></select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="form-group">
+                                        <label>منطقه<span class="text-danger">*</span></label>
+                                        <select class="form-control" id="cmbRegion" required=""></select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="form-group">
+                                        <label>تخصص<span class="text-danger">*</span></label>
+                                        <select class="form-control" id="cmbSpeciality"
+                                                required=""></select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="service-fields mb-3">
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <div class="form-group">
+                                        <label>آدرس<span class="text-danger">*</span></label>
+                                        <textarea id="txtAddress"
+                                                  class="form-control service-desc"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label>تلفن<span class="text-danger">*</span></label>
+                                        <textarea id="txtPhone"
+                                                  class="form-control service-desc"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="service-fields mb-3">
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <div class="service-upload">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <span>بارگذاری تصویر</span>
+                                        <form id="upload-file-form">
+                                            <input id="upload-file-input" type="file" name="attachment"
+                                                   accept="image/*"
+                                                   onchange="uploadFile();$('.submit-btn').hide();"/>
+                                            <img id="uploadedImage" style="width: 8em"/>
+                                            <input type="hidden" id="hiddenFieldfileCode"/>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="submit-section">
+                                        <button class="btn btn-primary submit-btn" onclick="saveEntity()"> ثبت
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Add Doctor -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Add/Edit Modal -->
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="delete_doctor_modal" aria-hidden="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="form-content p-2">
+                        <h4 class="modal-title">تاییدیه حذف</h4>
+                        <p class="mb-4">آیا از حدف اطمینان کافی دارید؟</p>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                onclick="deleteEntity()">بله
+                        </button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"
+                                onclick="rowDeselected()">خیر
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Delete Modal -->
+
 </div>
+<!-- /Page Wrapper -->
+
 <!-- Bootstrap Core JS -->
 <script src="/app/assets/admin/js/popper.min.js"></script>
 <script src="/app/assets/admin/plugins/bootstrap-rtl/js/bootstrap.min.js"></script>

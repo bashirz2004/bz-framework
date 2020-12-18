@@ -131,7 +131,7 @@ div.dhtmlxMenu_dhx_skyblue_SubLevelArea_Polygon table.dhtmlxMebu_SubLevelArea_Tb
 	height: 24px;
 	cursor: default;
 	background-image:
-		url("imgs_rtl/dhxmenu_subselbg.gif") !important;
+		url("tree/imgs_rtl/") !important;
 	background-repeat: repeat-x;
 	background-position: top;
 }

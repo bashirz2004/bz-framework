@@ -1,6 +1,7 @@
 package com.bzamani.framework.common;
 
 import com.bzamani.framework.common.core.ErrorMesaage;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,9 +30,24 @@ public class MyExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<ErrorMesaage>(errorMesaage, responseHeaders, status);
     }
 
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler({AccessDeniedException.class})
     public ResponseEntity<Object> handleAccessDeniedException(Exception ex, WebRequest request) {
         return new ResponseEntity<Object>("Access denied message here", new HttpHeaders(), HttpStatus.FORBIDDEN);
     }
+
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    ResponseEntity<ErrorMesaage> handleConstraintViolationException(Throwable ex, WebRequest request) {
+        System.out.println("Error: " + ex.getMessage());
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("Content-Type", "application/json;charset=utf-8");
+        ErrorMesaage errorMesaage = new ErrorMesaage(status, "444444", ex.getMessage());
+        return new ResponseEntity<ErrorMesaage>(errorMesaage, responseHeaders, status);
+    }
+
 
 }

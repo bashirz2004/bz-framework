@@ -29,7 +29,7 @@ public class OrganizationService extends GenericService<Organization, Long> impl
     }
 
     @Override
-    public Map<String, Object> getAllGridByMyQuery(String title, String description, Boolean active, int page, int size, String[] sort) {
+    public Map<String, Object> getAllGridByMyQuery(String title, Boolean active, int page, int size, String[] sort) {
         List<Sort.Order> orders = new ArrayList<Sort.Order>();
         if (sort[0].contains(",")) {
             for (String sortOrder : sort) {
@@ -42,7 +42,7 @@ public class OrganizationService extends GenericService<Organization, Long> impl
         List<Organization> organizations = new ArrayList<Organization>();
         Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
         Page<Organization> pageTuts;
-        pageTuts = iOrganizationRepository.getAllGridByMyQuery(title, description, active, pagingSort);
+        pageTuts = iOrganizationRepository.getAllGridByMyQuery(title, active, pagingSort);
         organizations = pageTuts.getContent();
         Map<String, Object> response = new HashMap<>();
         response.put("entityList", organizations);

@@ -26,10 +26,6 @@ public class Organization extends BaseEntity {
     @Column(name = "title")
     private String title;
 
-    @MyLengthValidator(minLenght = 0, maxLength = 50, message = "Error. length of field 'description' is not valid ! ")
-    @Column(name = "description")
-    private String description;
-
     @Column(name = "active")
     private boolean active;
 

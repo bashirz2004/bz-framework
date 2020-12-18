@@ -17,9 +17,8 @@ public interface IOrganizationRepository extends JpaRepository<Organization, Lon
 
     @Query("SELECT e FROM Organization e where 1=1 " +
             " and e.title like COALESCE(cast(:title AS text), e.title)||'%' " +
-            " and e.description =  COALESCE(cast(:description AS text), e.description) " +
             " and e.active = CASE WHEN :active is null THEN e.active ELSE :active END ")
-    Page<Organization> getAllGridByMyQuery(@Param("title") String title, @Param("description") String description, @Param("active") Boolean active, Pageable pageable);
+    Page<Organization> getAllGridByMyQuery(@Param("title") String title, @Param("active") Boolean active, Pageable pageable);
 
     @Query("SELECT e FROM Organization e where e.parent is null ")
     List<Organization> getRoot();

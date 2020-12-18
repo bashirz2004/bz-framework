@@ -25,9 +25,9 @@
 
     <!-- jQuery -->
     <script src="/app/assets/admin/js/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" src="tree.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="dhtmlxmenu_dhx_skyblue.css">
-    <link rel="stylesheet" type="text/css" href="dhtmlxtree.css"/>
+    <script type="text/javascript" src="tree/tree.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="tree/dhtmlxmenu_dhx_skyblue.css">
+    <link rel="stylesheet" type="text/css" href="tree/dhtmlxtree.css"/>
     <style type="text/css">
         .dhtmlxMenu_dhx_skyblue_SubLevelArea_Polygon {
             direction: rtl !important;
@@ -38,9 +38,16 @@
         var im1 = "tombs_open.gif";
         var im2 = "tombs.gif";
         var parentId = 1;
-        var MenuId = -1;
-        var powerTitle = "";
+        var nodeId = -1;
+        var organizationTitle = "";
         var scroll;
+        var entityData = {
+            "id": '',
+            "title": '',
+            "active": '',
+            "parent": {"id": ''}
+        };
+        var contextPath = "/app";
 
         var FirstData = '<?xml version="1.0" encoding="utf-8"?><tree id="0">' +
             '<item  text="سازمان" id="1" open="1"' +
@@ -57,47 +64,47 @@
 
         function initTree() {
             configTree();
-            $.get("/app/rest/core/organization/getChildrenAsString/1", function (data) {
+            $.get(contextPath + "/rest/core/organization/getChildrenAsString/1", function (data) {
                 XMLData = XMLData + data + "</item>   </tree>";
                 tree.loadXMLString(XMLData);
             });
         }
 
         function configTree() {
-            tree = new dhtmlXTreeObject("treeboxbox_tree", "100%", "100%", 0);
+            tree = new dhtmlXTreeObject("tree_div", "100%", "80%", 0);
             tree.setSkin('dhx_skyblue');
-            tree.setImagePath("imgs_rtl/");
+            tree.setImagePath("tree/imgs_rtl/");
 
             tree.enableHighlighting(true);
             tree.attachEvent("onRightClick", function (id, e) {
-                MenuId = id;
-                parentsText = tree.getItemText(MenuId);
-                findParents(MenuId);
-                powerTitle = tree.getItemText(id);
+                nodeId = id;
+                parentsText = tree.getItemText(nodeId);
+                findParents(nodeId);
+                organizationTitle = tree.getItemText(id);
                 menu.showContextMenu(e.clientX, e.clientY);
             });
 
             tree.attachEvent("onClick", function (id, e) {
-                MenuId = id;
-                parentsText = tree.getItemText(MenuId);
-                findParents(MenuId);
-                powerTitle = tree.getItemText(id);
+                nodeId = id;
+                parentsText = tree.getItemText(nodeId);
+                findParents(nodeId);
+                organizationTitle = tree.getItemText(id);
             });
             tree.attachEvent('onOpenEnd', function (id, state) {
                 if (state == 1) {
                     treeOnClick(id);
                 }
-                MenuId = id;
-                parentsText = tree.getItemText(MenuId);
-                findParents(MenuId);
-                powerTitle = tree.getItemText(id);
+                nodeId = id;
+                parentsText = tree.getItemText(nodeId);
+                findParents(nodeId);
+                organizationTitle = tree.getItemText(id);
             });
 
             //Start Config Contex Menu
             menu = new dhtmlXMenuObject();
             menu.renderAsContextMenu();
             menu.attachEvent("onClick", onButtonClick);
-            menu.loadXML("ContextMenu.xml");
+            menu.loadXML("tree/ContextMenu.xml");
 
 
         }
@@ -123,7 +130,7 @@
             var treeStr = '';
             var src = '<item text="..." im0="leaf.gif" id="t' + id + '"/>';
             if (tree.getItemText('t' + id) === '...') {
-                $.get("/app/rest/core/organization/getChildrenAsString/" + id, function (data) {
+                $.get(contextPath + "/rest/core/organization/getChildrenAsString/" + id, function (data) {
                     XMLData = XMLData.replace(src, data);
                     tree.destructor();
                     configTree();
@@ -136,24 +143,38 @@
 
         function onButtonClick(menuitemId) {
             if (menuitemId === '1') { //  حالت درج
-               // var url = "Edit.jsp?id=" + MenuId + "&editMode=0&level=" + parentsText;
-                //showFancyBox(url);
+                openAddModal(nodeId);
             } else if (menuitemId === '2') { //  حالت ویرایش
-                //var url = "Edit.jsp?id=" + MenuId + "&editMode=1&level=" + parentsText;
-               // viewFancyBox(url, '90%', '100%');
+                openEditModal(nodeId);
             } else if (menuitemId === '3') { //  حالت حذف
-                deleteClicked(MenuId);
+                deleteClicked(nodeId);
             }
         }
 
-        function showFancyBox(url) {
-            //viewFancyBox(url, "90%", "100%");
+        function openAddModal(nodeId) {
+            $('#hiddenFieldParentId').val(nodeId);
+            $('#modal_link').click();
+        }
+
+        function openEditModal(nodeId) {
+            $.ajax({
+                url: contextPath + "/rest/core/organization/load/" + nodeId,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                type: 'GET',
+                success: function (res) {
+                    $('#modal_link').click();
+                    setInputsByEntity(res);
+                },
+                error: function (err) {
+                }
+            });
         }
 
         function deleteClicked(id) {
             if (id > 0 && confirm('آیا از حذف اطمینان دارید؟')) {
                 $.ajax({
-                    url: "/app/rest/core/organization/delete/" + id,
+                    url: contextPath + "/rest/core/organization/delete/" + id,
                     type: 'DELETE',
                     contentType: 'application/json; charset=utf-8',
                     success: function (res) {
@@ -171,22 +192,132 @@
 
         function refreshTree() {
             tree.destructor();
-            $("#treeboxbox_tree").html('');
+            $("#tree_div").html('');
             parentId = 1;
-            MenuId = -1;
+            nodeId = -1;
             XMLData = FirstData;
             initTree();
         }
 
-        function clearText() {
-            $("#txtSearchTree").val('');
+        function clearInputs() {
+            $('#hiddenFieldId').val('');
+            $('#txtTitle').val('');
+            $('#cmbActive').val('');
+        }
+
+        function clearEntity() {
+            entityData = {
+                "id": '',
+                "title": '',
+                "enabled": ''
+            };
+        }
+
+        function setInputsByEntity(entity) {
+            $("#hiddenFieldId").val(entity.id);
+            $("#hiddenFieldParentId").val(entity.parent.id);
+            $("#txtTitle").val(entity.title);
+            $("#cmbActive").val(entity.active.toString());
+        }
+
+        function setEntityFromInputs() {
+            clearEntity();
+            entityData = {
+                "id": $('#hiddenFieldId').val(),
+                "title": $('#txtTitle').val(),
+                "active": $('#cmbActive').val(),
+                "parent": {"id": $('#hiddenFieldParentId').val()}
+            }
+        }
+
+        function saveEntity() {
+            if (validateForm() == 'ok') {
+                setEntityFromInputs();
+                $.ajax({
+                    url: contextPath + "/rest/core/organization/save",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify(entityData),
+                    type: 'POST',
+                    success: function (res) {
+                        $('#hiddenFieldId').val(res.id);
+                        alert(" ثبت با موقثیت انجام شد.");
+                    },
+                    error: function (err) {
+                        console.log(err.responseText);
+                        alert(" خطا!");
+                    }
+                });
+            } else alert(validateForm());
+        }
+
+        function validateForm() {
+            if (!$('#hiddenFieldParentId').val() > 0 || $('#txtTitle').val() == '' || !$('#cmbActive').val() > 0)
+                return 'پرکردن فیلدهای ستاره دار اجباری است.'
+            else return 'ok';
         }
 
     </script>
 <body>
 
-<div id="treeboxbox_tree"
-     style="width:98%;background-color:#f5f5f5;border :1px solid Silver;overflow:scroll;margin: 1em"></div>
+<a id="modal_link" href="#add_edit_modal" data-toggle="modal" onclick="clearEntity();clearInputs();"></a>
+
+<div id="tree_div"
+     style="width:98%;background-color:#f5f5f5;border :1px solid Silver;overflow:hidden;margin: 1em">
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal fade custom-modal" id="add_edit_modal" aria-hidden="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">افزودن / ویرایش سازمان </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                        onclick="refreshTree()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Add Organization -->
+                <input type="hidden" id="hiddenFieldId"/>
+                <input type="hidden" id="hiddenFieldParentId"/>
+                <div class="service-fields mb-3">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>عنوان <span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="txtTitle" required="">
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>وضعیت<span class="text-danger">*</span></label>
+                                <select id="cmbActive" class="form-control">
+                                    <option value="..."></option>
+                                    <option value="true">فعال</option>
+                                    <option value="false">غیرفعال</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="service-fields mb-3">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="submit-section" style="text-align: center">
+                                    <button class="btn btn-primary submit-btn" onclick="saveEntity()"> ثبت
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Add Organization -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Add/Edit Modal -->
+
 <!-- Bootstrap Core JS -->
 <script src="/app/assets/admin/plugins/bootstrap-rtl/js/bootstrap.min.js"></script>
 </body>

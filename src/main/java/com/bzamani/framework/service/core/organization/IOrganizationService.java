@@ -8,7 +8,7 @@ import java.util.Map;
 
 public interface IOrganizationService extends IGenericService<Organization, Long> {
 
-    Map<String, Object> getAllGridByMyQuery(String title, String description, Boolean active, int page, int size, String[] sort);
+    Map<String, Object> getAllGridByMyQuery(String title, Boolean active, int page, int size, String[] sort);
 
     List<Organization> getAllByParentId(Long parentId);
 

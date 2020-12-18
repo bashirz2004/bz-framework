@@ -49,13 +49,12 @@ public class OrganizationController extends BaseController {
     @GetMapping("/getAllGridByMyQuery")
     public Map<String, Object> getAllGridByMyQuery(
             @RequestParam(required = false) String title,
-            @RequestParam(required = false) String description,
             @RequestParam(required = false) Boolean active,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "3") int size,
             @RequestParam(defaultValue = "id,desc") String[] sort) {
 
-        return iOrganizationService.getAllGridByMyQuery(title, description, active, page, size, sort);
+        return iOrganizationService.getAllGridByMyQuery(title, active, page, size, sort);
     }
 
     @GetMapping("/getAllByParentId")
