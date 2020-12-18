@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>ساختار سازمان</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/app/assets/img/favicon.png">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/app/assets/admin/plugins/bootstrap-rtl/css/bootstrap.min.css">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="/app/assets/admin/css/font-awesome.min.css">
+
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/app/assets/admin/css/style.css">
+
+    <!--[if lt IE 9]>
+    <script src="/app/assets/js/html5shiv.min.js"></script>
+    <script src="/app/assets/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery -->
+    <script src="/app/assets/admin/js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="tree.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="dhtmlxmenu_dhx_skyblue.css">
+    <link rel="stylesheet" type="text/css" href="dhtmlxtree.css"/>
+    <style type="text/css">
+        .dhtmlxMenu_dhx_skyblue_SubLevelArea_Polygon {
+            direction: rtl !important;
+        }
+    </style>
+    <script type="text/javascript">
+        var im0 = "iconText.gif";
+        var im1 = "tombs_open.gif";
+        var im2 = "tombs.gif";
+        var parentId = 1;
+        var MenuId = -1;
+        var powerTitle = "";
+        var scroll;
+
+        var FirstData = '<?xml version="1.0" encoding="utf-8"?><tree id="0">' +
+            '<item  text="سازمان" id="1" open="1"' +
+            ' im0="' + im0 + '"' +
+            ' im1="' + im1 + '"' +
+            ' im2="' + im2 + '">' +
+            ' isVirtual="false"';
+        var XMLData = FirstData;
+
+        var parentsText = "";
+        $(function () {
+            initTree();
+        });
+
+        function initTree() {
+            configTree();
+            $.get("/app/rest/core/organization/getChildrenAsString/1", function (data) {
+                XMLData = XMLData + data + "</item>   </tree>";
+                tree.loadXMLString(XMLData);
+            });
+        }
+
+        function configTree() {
+            tree = new dhtmlXTreeObject("treeboxbox_tree", "100%", "100%", 0);
+            tree.setSkin('dhx_skyblue');
+            tree.setImagePath("imgs_rtl/");
+
+            tree.enableHighlighting(true);
+            tree.attachEvent("onRightClick", function (id, e) {
+                MenuId = id;
+                parentsText = tree.getItemText(MenuId);
+                findParents(MenuId);
+                powerTitle = tree.getItemText(id);
+                menu.showContextMenu(e.clientX, e.clientY);
+            });
+
+            tree.attachEvent("onClick", function (id, e) {
+                MenuId = id;
+                parentsText = tree.getItemText(MenuId);
+                findParents(MenuId);
+                powerTitle = tree.getItemText(id);
+            });
+            tree.attachEvent('onOpenEnd', function (id, state) {
+                if (state == 1) {
+                    treeOnClick(id);
+                }
+                MenuId = id;
+                parentsText = tree.getItemText(MenuId);
+                findParents(MenuId);
+                powerTitle = tree.getItemText(id);
+            });
+
+            //Start Config Contex Menu
+            menu = new dhtmlXMenuObject();
+            menu.renderAsContextMenu();
+            menu.attachEvent("onClick", onButtonClick);
+            menu.loadXML("ContextMenu.xml");
+
+
+        }
+
+        function getTreeAttrValueByItemId(attrName, itemId, xmlData) {
+            var xmlDoc = $.parseXML(xmlData);
+            var attrValue = $(xmlDoc).find('item').filter(function (index) {
+                return $(this).attr("id") == itemId;
+            }).attr(attrName);
+            return attrValue;
+        }
+
+        function findParents(id) {
+            if (id > 0) {
+                var parentId = tree.getParentId(id);
+                parentsText = tree.getItemText(parentId) + "/" + parentsText;
+                findParents(parentId);
+            }
+        }
+
+        function treeOnClick(id) {
+            var tempScrollTop = $('.containerTableStyle').scrollTop();
+            var treeStr = '';
+            var src = '<item text="..." im0="leaf.gif" id="t' + id + '"/>';
+            if (tree.getItemText('t' + id) === '...') {
+                $.get("/app/rest/core/organization/getChildrenAsString/" + id, function (data) {
+                    XMLData = XMLData.replace(src, data);
+                    tree.destructor();
+                    configTree();
+                    tree.loadXMLString(XMLData);
+                    tree.openItem(id);
+                    $('.containerTableStyle').scrollTop(tempScrollTop);
+                });
+            }
+        }
+
+        function onButtonClick(menuitemId) {
+            if (menuitemId === '1') { //  حالت درج
+               // var url = "Edit.jsp?id=" + MenuId + "&editMode=0&level=" + parentsText;
+                //showFancyBox(url);
+            } else if (menuitemId === '2') { //  حالت ویرایش
+                //var url = "Edit.jsp?id=" + MenuId + "&editMode=1&level=" + parentsText;
+               // viewFancyBox(url, '90%', '100%');
+            } else if (menuitemId === '3') { //  حالت حذف
+                deleteClicked(MenuId);
+            }
+        }
+
+        function showFancyBox(url) {
+            //viewFancyBox(url, "90%", "100%");
+        }
+
+        function deleteClicked(id) {
+            if (id > 0 && confirm('آیا از حذف اطمینان دارید؟')) {
+                $.ajax({
+                    url: "/app/rest/core/organization/delete/" + id,
+                    type: 'DELETE',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (res) {
+                        if (res)
+                            tree.deleteItem(id, true);
+                        else
+                            alert(" حذف این ایتم امکان پذیر نمی باشد. ");
+                    },
+                    error: function () {
+                        alert("خطا");
+                    }
+                });
+            }
+        }
+
+        function refreshTree() {
+            tree.destructor();
+            $("#treeboxbox_tree").html('');
+            parentId = 1;
+            MenuId = -1;
+            XMLData = FirstData;
+            initTree();
+        }
+
+        function clearText() {
+            $("#txtSearchTree").val('');
+        }
+
+    </script>
+<body>
+
+<div id="treeboxbox_tree"
+     style="width:98%;background-color:#f5f5f5;border :1px solid Silver;overflow:scroll;margin: 1em"></div>
+<!-- Bootstrap Core JS -->
+<script src="/app/assets/admin/plugins/bootstrap-rtl/js/bootstrap.min.js"></script>
+</body>
+</html>

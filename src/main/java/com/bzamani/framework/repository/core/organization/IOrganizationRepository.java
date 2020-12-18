@@ -9,6 +9,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Repository
 @Transactional
 public interface IOrganizationRepository extends JpaRepository<Organization, Long> {
@@ -18,6 +20,12 @@ public interface IOrganizationRepository extends JpaRepository<Organization, Lon
             " and e.description =  COALESCE(cast(:description AS text), e.description) " +
             " and e.active = CASE WHEN :active is null THEN e.active ELSE :active END ")
     Page<Organization> getAllGridByMyQuery(@Param("title") String title, @Param("description") String description, @Param("active") Boolean active, Pageable pageable);
+
+    @Query("SELECT e FROM Organization e where e.parent is null ")
+    List<Organization> getRoot();
+
+    @Query("SELECT e FROM Organization e where e.parent.id = :parentId ")
+    List<Organization> getAllByParentId(@Param("parentId") Long parentId);
 
     /*@Query("SELECT u FROM Organization u ")
     Page<Organization> staticQuery(@Param("title") String title, @Param("description") String description, @Param("active") Boolean active, Pageable pageable);*/

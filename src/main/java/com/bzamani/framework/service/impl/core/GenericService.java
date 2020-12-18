@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service
-@Transactional
 public abstract class GenericService<T extends BaseEntity, PK> implements IGenericService<T, PK> {
 
   protected abstract JpaRepository<T, PK> getGenericRepo();
