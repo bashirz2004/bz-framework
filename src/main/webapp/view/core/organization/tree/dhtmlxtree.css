@@ -3439,14 +3439,6 @@ div.dhxform_item_template div.dhx_cell_editor div.dhx_cell_toolbar_def div.dhx_t
 	margin-left: 1px;
 }
 
-.dhxtree_dhx_skyblue .standartTreeRow, .dhxtree_dhx_skyblue .standartTreeRow_lor {
-	border-right: 1px solid transparent;
-	border-left: 1px solid transparent;
-	font-family: 'IranSansNormal' !important;
-	font-size: 12px !important;
-	overflow: hidden;
-	padding: 0;
-}
 
 .dhxtree_dhx_skyblue .selectedTreeRow_lor, .dhxtree_dhx_skyblue .selectedTreeRow {
 	background-color: #b5deff;

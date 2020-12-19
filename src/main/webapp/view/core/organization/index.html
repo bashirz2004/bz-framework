@@ -25,6 +25,52 @@
 
     <!-- jQuery -->
     <script src="/app/assets/admin/js/jquery-3.2.1.min.js"></script>
+
+    <!-- pace mask -->
+    <script>
+        paceOptions = {
+            elements: false,
+            document: true, // disabled
+            eventLag: false, // disabled
+            ajax: {
+                trackMethods: ['GET', 'POST', 'DELETE', 'PUT'],
+                trackWebSockets: false
+            },
+            restartOnPushState: true,
+            restartOnRequestAfter: true
+        };
+        $(function () {
+            $("body").prepend("<div class='pace-cover' style='display: none;'></div>");
+            Pace.on("start", function () {
+                $(".pace-cover").fadeIn();
+            });
+            Pace.on("done", function () {
+                $(".pace-cover").fadeOut();
+            });
+        });
+    </script>
+    <script type="text/javascript" src="/app/view/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/app/view/components/pace/themes/blue/pace-theme-flash.css"/>
+    <style>
+        .pace-cover {
+            position: fixed;
+            left: 0px;
+            top: 1px;
+            width: 100%;
+            height: 100%;
+            z-index: 99999;
+            background: rgba(0, 0, 0, 0.4);
+        }
+    </style>
+    <!-- /pace mask -->
+
+    <!-- sweet alert -->
+    <script type="text/javascript" src="/app/view/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/app/view/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/app/view/components/sweetalert/sweetalert2.min.css">
+    <!-- /sweet alert -->
+
+    <!-- dhtml tree -->
     <script type="text/javascript" src="tree/tree.min.js"></script>
     <link rel="stylesheet" type="text/css" href="tree/dhtmlxmenu_dhx_skyblue.css">
     <link rel="stylesheet" type="text/css" href="tree/dhtmlxtree.css"/>
@@ -33,6 +79,10 @@
             direction: rtl !important;
         }
     </style>
+    <!-- /dhtml tree -->
+    <script src="/app/view/components/autocomplete/jquery-ui-1.8.17.custom.min.js"></script>
+    <link rel="stylesheet" href="/app/view/components/autocomplete/jquery-ui-1.8.17.custom.css"/>
+
     <script type="text/javascript">
         var im0 = "iconText.gif";
         var im1 = "tombs_open.gif";
@@ -60,7 +110,43 @@
         var parentsText = "";
         $(function () {
             initTree();
+            configAutoComplete();
         });
+
+        function configAutoComplete() {
+            $.curCSS = function (element, prop, val) {
+                return $(element).css(prop, val);
+            };
+            $("#txtSearchTree").autocomplete({
+                source: function (req, resp) {
+                    var searchFilter = {
+                        title: req.term,
+                        size: 10
+                    };
+                    $.getJSON(contextPath + "/rest/core/organization/searchOrganization", searchFilter, function (data) {
+                        resp($.map(data.entityList, function (organization) {
+                            return {
+                                label: organization.title,
+                                value: organization.id
+                            };
+                        }));
+                    });
+                },
+                select: function (event, ui) {
+                    setOrganizationsearch(ui.item.value);
+                    $(event.target).val(ui.item.label);
+                    return false;
+                },
+                minLength: 3,
+                delay: 2000
+            });
+            $("#txtSearchTree").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    event.preventDefault();
+                    return false;
+                }
+            });
+        }
 
         function initTree() {
             configTree();
@@ -100,13 +186,11 @@
                 organizationTitle = tree.getItemText(id);
             });
 
-            //Start Config Contex Menu
+            //Start Config Context Menu
             menu = new dhtmlXMenuObject();
             menu.renderAsContextMenu();
             menu.attachEvent("onClick", onButtonClick);
             menu.loadXML("tree/ContextMenu.xml");
-
-
         }
 
         function getTreeAttrValueByItemId(attrName, itemId, xmlData) {
@@ -127,7 +211,6 @@
 
         function treeOnClick(id) {
             var tempScrollTop = $('.containerTableStyle').scrollTop();
-            var treeStr = '';
             var src = '<item text="..." im0="leaf.gif" id="t' + id + '"/>';
             if (tree.getItemText('t' + id) === '...') {
                 $.get(contextPath + "/rest/core/organization/getChildrenAsString/" + id, function (data) {
@@ -172,7 +255,7 @@
         }
 
         function deleteClicked(id) {
-            if (id > 0 && confirm('آیا از حذف اطمینان دارید؟')) {
+            showConfirm('تاییدیه حذف اطلاعات', 'آیا از حذف اطمینان دارید؟', function () {
                 $.ajax({
                     url: contextPath + "/rest/core/organization/delete/" + id,
                     type: 'DELETE',
@@ -181,13 +264,13 @@
                         if (res)
                             tree.deleteItem(id, true);
                         else
-                            alert(" حذف این ایتم امکان پذیر نمی باشد. ");
+                            showMessage("حذف این ایتم امکان پذیر نمی باشد.", "", "error");
                     },
                     error: function () {
-                        alert("خطا");
+                        showMessage("حذف این ایتم امکان پذیر نمی باشد.", "", "error");
                     }
                 });
-            }
+            });
         }
 
         function refreshTree() {
@@ -241,26 +324,49 @@
                     type: 'POST',
                     success: function (res) {
                         $('#hiddenFieldId').val(res.id);
-                        alert(" ثبت با موقثیت انجام شد.");
+                        showMessage("ثبت با موفقیت انجام شد.", "", "success");
+                        $('#btnCloseModal').click();
                     },
                     error: function (err) {
-                        console.log(err.responseText);
-                        alert(" خطا!");
+                        if (err.responseText.toLowerCase().includes("unq_parent_title"))
+                            showMessage("خطا", "نام واحد سازمانی تکراری است.", "error");
+                        else
+                            showMessage("خطای نامشخص رخ داده است.", "", "error");
                     }
                 });
-            } else alert(validateForm());
+            } else
+                showMessage("پرکردن فیلدهای ستاره دار الزامی است.", "", "warning");
         }
 
         function validateForm() {
             if (!$('#hiddenFieldParentId').val() > 0 || $('#txtTitle').val() == '' || !$('#cmbActive').val() > 0)
-                return 'پرکردن فیلدهای ستاره دار اجباری است.'
+                return;
             else return 'ok';
         }
+
+        function clearSearch() {
+            $("#txtSearchTree").val('');
+        }
+
+        function setOrganizationsearch(id) {
+            //under construction
+        }
+
 
     </script>
 <body>
 
 <a id="modal_link" href="#add_edit_modal" data-toggle="modal" onclick="clearEntity();clearInputs();"></a>
+
+<div class="row m-1">
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+        <input type="text" id="txtSearchTree" class="form-control ui-autocomplete-input" autocomplete="off"
+               maxlength="30" role="textbox" aria-autocomplete="list" aria-haspopup="true"/>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+        <input type="button" id="clear" class="btn btn-primary" onclick="clearSearch()" value='پاک کردن'/>
+    </div>
+</div>
 
 <div id="tree_div"
      style="width:98%;background-color:#f5f5f5;border :1px solid Silver;overflow:hidden;margin: 1em">
@@ -272,9 +378,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">افزودن / ویرایش سازمان </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCloseModal"
                         onclick="refreshTree()">
-                    <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true">x</span>
                 </button>
             </div>
             <div class="modal-body">

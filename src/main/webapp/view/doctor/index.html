@@ -29,6 +29,51 @@
 
     <!-- jQuery -->
     <script src="/app/assets/admin/js/jquery-3.2.1.min.js"></script>
+
+    <!-- pace mask -->
+    <script>
+        paceOptions = {
+            elements: false,
+            document: true, // disabled
+            eventLag: false, // disabled
+            ajax: {
+                trackMethods: ['GET', 'POST', 'DELETE', 'PUT'],
+                trackWebSockets: false
+            },
+            restartOnPushState: true,
+            restartOnRequestAfter: true
+        };
+        $(function () {
+            $("body").prepend("<div class='pace-cover' style='display: none;'></div>");
+            Pace.on("start", function () {
+                $(".pace-cover").fadeIn();
+            });
+            Pace.on("done", function () {
+                $(".pace-cover").fadeOut();
+            });
+        });
+    </script>
+    <script type="text/javascript" src="/app/view/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/app/view/components/pace/themes/blue/pace-theme-flash.css"/>
+    <style>
+        .pace-cover {
+            position: fixed;
+            left: 0px;
+            top: 1px;
+            width: 100%;
+            height: 100%;
+            z-index: 99999;
+            background: rgba(0, 0, 0, 0.4);
+        }
+    </style>
+    <!-- /pace mask -->
+
+    <!-- sweet alert -->
+    <script type="text/javascript" src="/app/view/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/app/view/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/app/view/components/sweetalert/sweetalert2.min.css">
+    <!-- /sweet alert -->
+
     <script src="/app/assets/js/jquery.template.js"></script>
     <script src="/app/assets/js/grid-utility.js"></script>
     <script>
@@ -129,7 +174,7 @@
                     tmplRowIndex(destinationId, 0, jsonData.size);
                 }
                 if (entities.totalRecords == 0) {
-                    alert('موردی یافت نشد');
+                    showMessage("موردی یافت نشد.", "", "info");
                 }
                 $('table.table tbody tr:not([th]):odd').css('backgroundColor', '#c4f0f5');
                 $('#totalRecords').html(entities.totalRecords);
@@ -183,13 +228,14 @@
                     type: 'DELETE',
                     success: function (res) {
                         fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
-                        alert(" حذف با موقثیت انجام شد.");
+                        showMessage("حذف با موفقیت انجام شد.", "", "success");
                     },
                     error: function (err) {
+                        showMessage("خطا در حذف اطلاعات", "", "error");
                     }
                 });
             else
-                alert('هیچ رکوردی انتخاب نشده است.');
+                showMessage("هیچ رکوردی انتخاب نشده است.", "", "error");
         }
 
         function rowSelected(id) {
@@ -227,18 +273,20 @@
                     type: 'POST',
                     success: function (res) {
                         $('#hiddenFieldId').val(res.id);
-                        alert(" ثبت با موقثیت انجام شد.");
+                        showMessage("ثبت با موفقیت انجام شد.", "", "success");
+                        $('#btnCloseModal').click();
                     },
                     error: function (err) {
+                        showMessage("خطا در ثبت اطلاعات", "", "error");
                     }
                 });
-            } else alert(validateForm());
+            } else showMessage("پرکردن فیلدهای ستاره دار الزامی است.", "", "warning");
         }
 
         function validateForm() {
             if ($('#txtFirstname').val() == '' || $('#txtLastname').val() == '' || $('#txtAddress').val() == '' || $('#txtPhone').val() == ''
                 || !$('#cmbSpeciality').val() > 0 || !$('#cmbState').val() > 0 || !$('#cmbCity').val() > 0 || !$('#cmbRegion').val() > 0)
-                return 'پرکردن فیلدهای ستاره دار اجباری است.'
+                return;
             else return 'ok';
         }
 
@@ -255,7 +303,6 @@
                     });
                 },
                 error: function (err) {
-                    console.log("error ---- " + err);
                 }
             });
         }
@@ -276,7 +323,6 @@
                         callBackFunction();
                 },
                 error: function (err) {
-                    console.log("error ---- " + err);
                 }
             });
         }
@@ -297,7 +343,6 @@
                         callBackFunction();
                 },
                 error: function (err) {
-                    console.log("error ---- " + err);
                 }
             });
         }
@@ -315,7 +360,6 @@
                     });
                 },
                 error: function (err) {
-                    console.log("error ---- " + err);
                 }
             });
         }
@@ -405,9 +449,8 @@
                     }
                 },
                 error: function (err) {
-                    //console.log(err.responseText);
                     if (err.responseText && err.responseText.toLowerCase().includes('SizeLimitExceededException'.toLowerCase()))
-                        alert('خطا! حداکثر حجم تصویر شما می تواند ' + parseInt(err.responseText.substring(err.responseText.lastIndexOf('(') + 1, err.responseText.lastIndexOf(')'))) / 1048576 + ' مگابایت باشد.');
+                        showMessage('خطا! حداکثر حجم تصویر شما می تواند ' + parseInt(err.responseText.substring(err.responseText.lastIndexOf('(') + 1, err.responseText.lastIndexOf(')'))) / 1048576 + ' مگابایت باشد.', "", "error");
                 }
             });
         }
@@ -495,6 +538,9 @@
 
 
 
+
+
+
                         </script>
                         </tbody>
                     </table>
@@ -533,7 +579,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">افزودن / ویرایش پزشک </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"  id="btnCloseModal"
                             onclick="fillGrid('doctorTemplate', 'doctorList', contextPath + '/rest/doctor/searchDoctors', searchFilters)">
                         <span aria-hidden="true">&times;</span>
                     </button>
