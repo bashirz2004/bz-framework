@@ -12,4 +12,5 @@ public interface IOrganizationService extends IGenericService<Organization, Long
 
     List<Organization> getAllByParentId(Long parentId);
 
+    List<Long> getAllParentIds(Long organizationId);
 }

@@ -46,7 +46,7 @@ public class OrganizationController extends BaseController {
         return iOrganizationService.getAllGrid(page, size, sort);
     }
 
-    @GetMapping("/searchOrganization")
+    @GetMapping("/searchOrganizationAutoComplete")
     public Map<String, Object> searchOrganization(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) Boolean active,
@@ -99,5 +99,65 @@ public class OrganizationController extends BaseController {
         }
         return mainTreeNode;
     }
+
+    @GetMapping(value = "/searchOrganizationTree/{organizationId}", produces = "text/plain;charset=UTF-8")
+    public String searchOrganizationTree(@PathVariable long organizationId) {
+        StringBuffer result = new StringBuffer("");
+        if (organizationId == 1) {
+            return getAllByParentId(organizationId);
+        } else {
+            List<Long> organIds = iOrganizationService.getAllParentIds(organizationId);
+            for (Long currentOrgan : organIds) {
+                Organization org = iOrganizationService.loadByEntityId(currentOrgan);
+                if (currentOrgan == 1) {
+                    makeTreeString(org, result);
+                } else {
+                    String path = "<item text=\"...\" im0=\"leaf.gif\" id=\"t" + currentOrgan + "\"/>";
+                    result = new StringBuffer(result.toString().replace(path, makeTreeForSearchResult(org)));
+                }
+            }
+            return result.toString();
+        }
+    }
+
+    public void makeTreeString(Organization organization, StringBuffer returnValue) {
+        List<Organization> children = new ArrayList<Organization>(organization.getChildren());
+        String im0 = "iconText.gif";
+        String im1 = "tombs_open.gif";
+        String im2 = "tombs.gif";
+
+        for (Organization org : children) {
+            returnValue.append("<item     text=\"" + org.getTitle() + "\" id=\"" + org.getId() + "\"   im0=\"" + im0 + "\" im1=\"" + im1 + "\" im2=\"" + im2 + "\"");
+            if (org.getChildren().size() > 0) {
+                returnValue.append(">");
+                returnValue.append("<item text=\"...\" im0=\"leaf.gif\" id=\"t" + org.getId() + "\"/>");
+                returnValue.append("</item>");
+            } else {
+                returnValue.append("/>");
+            }
+        }
+    }
+
+    public StringBuffer makeTreeForSearchResult(Organization organization) {
+        StringBuffer returnVal = new StringBuffer();
+        List<Organization> children = new ArrayList<Organization>(organization.getChildren());
+        String im0 = "iconText.gif";
+        String im1 = "tombs_open.gif";
+        String im2 = "tombs.gif";
+
+        for (Organization org : children) {
+
+            returnVal.append("<item     text=\"" + org.getTitle() + "\" id=\"" + org.getId() + "\"   im0=\"" + im0 + "\" im1=\"" + im1 + "\" im2=\"" + im2 + "\"");
+            if (org.getChildren().size() > 0) {
+                returnVal.append(">");
+                returnVal.append("<item text=\"...\" im0=\"leaf.gif\" id=\"t" + org.getId() + "\"/>");
+                returnVal.append("</item>");
+            } else {
+                returnVal.append("/>");
+            }
+        }
+        return returnVal;
+    }
+
 
 }

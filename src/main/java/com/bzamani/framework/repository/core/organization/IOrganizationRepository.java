@@ -23,8 +23,14 @@ public interface IOrganizationRepository extends JpaRepository<Organization, Lon
     @Query("SELECT e FROM Organization e where e.parent is null ")
     List<Organization> getRoot();
 
-    @Query("SELECT e FROM Organization e where e.parent.id = :parentId ")
+    @Query("SELECT e FROM Organization e where e.parent.id = :parentId order by e.title asc ")
     List<Organization> getAllByParentId(@Param("parentId") Long parentId);
+
+    @Query(" select cp3.id from Organization cp1,  Organization cp2, Organization cp3 "
+            + "	where 	cp1.id = :organizationId and cp1.hierarchyCode like cp3.hierarchyCode||'%' and "
+            + "			cp3.hierarchyCode like cp2.hierarchyCode||'%'  and	cp2.parent.id is null  "
+            + " group by cp3.id, cp3.hierarchyCode order by cp3.hierarchyCode asc ")
+    List<Long> getAllParentIds(@Param("organizationId") Long organizationId);
 
 
     /*@Query("SELECT u FROM Organization u ")

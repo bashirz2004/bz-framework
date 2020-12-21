@@ -16,10 +16,8 @@ import java.util.Set;
 @Getter
 public class Organization extends BaseEntity {
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
-    //@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Organization parent;
 
     @MyLengthValidator(minLenght = 0, maxLength = 50, message = "Error. length of field 'title' is not valid ! ")
@@ -29,13 +27,12 @@ public class Organization extends BaseEntity {
     @Column(name = "active")
     private boolean active;
 
+    @Column(name = "hierarchy_code",updatable = false)
+    private String hierarchyCode;
+
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
     private Set<Organization> children;
-
-    public Organization() {
-
-    }
 
 
 }

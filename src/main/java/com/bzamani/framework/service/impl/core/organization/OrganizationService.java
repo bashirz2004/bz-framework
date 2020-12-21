@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,6 +59,20 @@ public class OrganizationService extends GenericService<Organization, Long> impl
             return iOrganizationRepository.getAllByParentId(parentId);
         else
             return iOrganizationRepository.getRoot();
+    }
+
+    @Override
+    public List<Long> getAllParentIds(Long organizationId) {
+        return iOrganizationRepository.getAllParentIds(organizationId);
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteByEntityId(Long id) {
+        if (id > 1L)
+            return super.deleteByEntityId(id);
+        else
+            return false;
     }
 
     private Sort.Direction getSortDirection(String direction) {

@@ -25,10 +25,6 @@ import java.util.Set;
 @Filters({@Filter(name = "organizationAuthorize", condition = " username = :username ")})
 public class User extends BaseEntity implements UserDetails {
 
-  /*@Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQG_CORE_USER")
-  private Long id;*/
-
     @NotNull
     @MyLengthValidator(minLenght = 1, maxLength = 30, message = "Error. length of field USERNAME is not valid ! ")
     @Column(name = "USERNAME", nullable = false)
