@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+@PreAuthorize("hasRole('2')")
 @RestController
 @RequestMapping(value = "/rest/core/user", produces = "application/json;charset=UTF-8")
 public class UserController extends BaseController {
@@ -24,7 +25,7 @@ public class UserController extends BaseController {
     @Value("${server.port}") //read from application.yml file
     String testYAMLFile;
 
-    @PreAuthorize("hasRole('2')")
+    @PreAuthorize("hasRole('3')")
     @PostMapping("/save")
     public User create(@RequestBody User user) {
         System.out.println("-------------------- " + testPropFile);
@@ -32,7 +33,7 @@ public class UserController extends BaseController {
         return iUserService.save(user);
     }
 
-    @PreAuthorize("hasRole('2')")
+    @PreAuthorize("hasRole('3')")
     @DeleteMapping("/delete/{id}")
     public boolean delete(@PathVariable("id") long id) {
         return iUserService.deleteByEntityId(id);

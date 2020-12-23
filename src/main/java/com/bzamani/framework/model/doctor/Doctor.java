@@ -2,6 +2,7 @@ package com.bzamani.framework.model.doctor;
 
 import com.bzamani.framework.model.core.BaseEntity;
 import com.bzamani.framework.model.core.baseinfo.BaseInfo;
+import com.bzamani.framework.model.core.organization.Organization;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,22 +32,22 @@ public class Doctor extends BaseEntity {
     private boolean male;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_id", nullable = false)
     private BaseInfo state;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id", nullable = false)
     private BaseInfo city;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "region_id", nullable = false)
     private BaseInfo region;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "speciality_id", nullable = false)
     private BaseInfo speciality;
 
@@ -55,6 +56,11 @@ public class Doctor extends BaseEntity {
 
     @Column(name = "telephone")
     private String telephone;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organization_id", nullable = false)
+    private Organization organization;
 
     @Column(name = "fileCode")
     private String fileCode;

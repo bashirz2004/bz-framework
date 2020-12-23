@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-
+@PreAuthorize("hasRole('1000')")
 @RestController
 @RequestMapping(value = "/rest/doctor", produces = "application/json;charset=UTF-8")
 public class DoctorController extends BaseController {

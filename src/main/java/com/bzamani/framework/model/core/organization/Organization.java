@@ -32,6 +32,7 @@ public class Organization extends BaseEntity {
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
+    @OrderBy("title")
     private Set<Organization> children;
 
 

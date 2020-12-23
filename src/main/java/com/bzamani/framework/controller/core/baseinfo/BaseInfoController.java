@@ -4,11 +4,13 @@ import com.bzamani.framework.controller.core.BaseController;
 import com.bzamani.framework.model.core.baseinfo.BaseInfo;
 import com.bzamani.framework.service.core.baseinfo.IBaseInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 
+@PreAuthorize("hasRole('4')")
 @RestController
 @RequestMapping(value = "/rest/core/baseinfo", produces = "application/json;charset=UTF-8")
 public class BaseInfoController extends BaseController {
@@ -16,6 +18,7 @@ public class BaseInfoController extends BaseController {
     @Autowired
     IBaseInfoService iBaseInfoService;
 
+    @PreAuthorize("hasRole('5')")
     @PostMapping("/save")
     public BaseInfo save(@RequestBody BaseInfo baseInfo) {
         return iBaseInfoService.save(baseInfo);
@@ -26,6 +29,7 @@ public class BaseInfoController extends BaseController {
         return iBaseInfoService.loadByEntityId(id);
     }
 
+    @PreAuthorize("hasRole('5')")
     @DeleteMapping("/delete/{id}")
     public boolean delete(@PathVariable("id") long id) {
         return iBaseInfoService.deleteByEntityId(id);

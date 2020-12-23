@@ -6,12 +6,14 @@ import com.bzamani.framework.controller.core.BaseController;
 import com.bzamani.framework.model.core.organization.Organization;
 import com.bzamani.framework.service.core.organization.IOrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@PreAuthorize("hasRole('6')")
 @RestController
 @RequestMapping(value = "/rest/core/organization", produces = "application/json;charset=UTF-8")
 public class OrganizationController extends BaseController {
@@ -19,6 +21,7 @@ public class OrganizationController extends BaseController {
     @Autowired
     IOrganizationService iOrganizationService;
 
+    @PreAuthorize("hasRole('7')")
     @PostMapping("/save")
     public Organization save(@RequestBody Organization organization) {
         return iOrganizationService.save(organization);
@@ -29,6 +32,7 @@ public class OrganizationController extends BaseController {
         return iOrganizationService.loadByEntityId(id);
     }
 
+    @PreAuthorize("hasRole('7')")
     @DeleteMapping("/delete/{id}")
     public boolean delete(@PathVariable("id") long id) {
         return iOrganizationService.deleteByEntityId(id);

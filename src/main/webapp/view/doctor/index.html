@@ -23,7 +23,10 @@
     <![endif]-->
 
     <!-- jQuery -->
-    <script src="/app/assets/admin/js/jquery-3.2.1.min.js"></script>
+    <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
+    <!-- fancybox -->
+    <script src="/app/view/components/fancybox/jquery.fancybox.js"></script>
+    <link rel="stylesheet" href="/app/view/components/fancybox/jquery.fancybox.css"/>
 
     <!-- pace mask -->
     <script>
@@ -70,7 +73,8 @@
     <!-- /sweet alert -->
 
     <script src="/app/assets/js/jquery.template.js"></script>
-    <script src="/app/assets/js/grid-utility.js"></script>
+    <script src="/app/assets/bzamani/grid-utility.js"></script>
+    <script src="/app/assets/bzamani/general-utility.js"></script>
 
     <script>
         var contextPath = "/app";
@@ -86,6 +90,7 @@
             "region": {"id": ''},
             "address": '',
             "telephone": '',
+            "organization": {"id": ''},
             "fileCode": ''
         };
 
@@ -225,7 +230,7 @@
 
         function validateForm() {
             if ($('#txtFirstname').val() == '' || $('#txtLastname').val() == '' || $('#txtAddress').val() == '' || $('#txtPhone').val() == ''
-                || !$('#cmbSpeciality').val() > 0 || !$('#cmbState').val() > 0 || !$('#cmbCity').val() > 0 || !$('#cmbRegion').val() > 0)
+                || !$('#cmbSpeciality').val() > 0 || !$('#cmbState').val() > 0 || !$('#cmbCity').val() > 0 || !$('#cmbRegion').val() > 0 || !$('#hiddenFieldOrganizationId').val() > 0 || $('#txtOrganizationTitle').val() == '')
                 return;
             else return 'ok';
         }
@@ -317,6 +322,7 @@
                 "region": {"id": ''},
                 "address": '',
                 "telephone": '',
+                "organization": {"id": ''},
                 "fileCode": ''
             };
         }
@@ -334,10 +340,12 @@
                     $("#cmbRegion").val(entity.region.id);
                 });
             });
-
+            $("#hiddenFieldOrganizationId").val(entity.organization.id);
+            $("#txtOrganizationTitle").val(entity.organization.title);
             $("#cmbSpeciality").val(entity.speciality.id);
             $("#txtAddress").val(entity.id);
             $("#txtPhone").val(entity.id);
+
             if (entity.fileCode != null && entity.fileCode.length > 0) {
                 $('#uploadedImage').prop("src", "/app/rest/core/file/download/" + entity.fileCode + "/false");
                 $("#hiddenFieldfileCode").val(entity.fileCode);
@@ -358,6 +366,7 @@
                 "region": {"id": $('#cmbRegion').val()},
                 "address": $('#txtAddress').val(),
                 "telephone": $('#txtPhone').val(),
+                "organization": {"id": $('#hiddenFieldOrganizationId').val()},
                 "fileCode": $('#hiddenFieldfileCode').val()
             }
         }
@@ -390,6 +399,11 @@
             $('#image_full_size').attr("src", "/app/rest/core/file/download/" + fileCode + "/false");
         }
 
+        function setOrganization(id, title) {
+           $('#hiddenFieldOrganizationId').val(id);
+            $('#txtOrganizationTitle').val(title);
+        }
+
     </script>
 
 <body>
@@ -407,16 +421,16 @@
                 </div>
                 <div class="float-left">
                     <a href="javascript:void(0)" onclick="searchDoctor();"
-                       class="btn btn-block btn-outline-info">جستجو</a>
+                       class="btn btn-block btn-outline-info btn-rounded">جستجو</a>
                 </div>
                 <div class="float-left">
-                    <a href="javascript:void(0)" onclick="clearSearch();" class="btn btn-block btn-outline-danger">پاک
+                    <a href="javascript:void(0)" onclick="clearSearch();" class="btn btn-block btn-outline-danger btn-rounded">پاک
                         کردن</a>
                 </div>
                 <div class="float-left">
                     <a href="#add_edit_modal" data-toggle="modal"
                        onclick="clearEntity();clearInputs();"
-                       class="btn btn-block btn-outline-success">جدید</a>
+                       class="btn btn-block btn-outline-success btn-rounded">جدید</a>
                 </div>
             </div>
             <div class="card-body">
@@ -437,6 +451,10 @@
                                 <i class="fa fa-sort-up sort-grid" order="lastname,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="lastname,desc"></i>
                             </th>
+                            <th>واحد سازمانی
+                                <i class="fa fa-sort-up sort-grid" order="organization.title,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="organization.title,desc"></i>
+                            </th>
                             <th>تخصص
                                 <i class="fa fa-sort-up sort-grid" order="speciality.title,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="speciality.title,desc"></i>
@@ -452,10 +470,6 @@
                             <th>منطقه
                                 <i class="fa fa-sort-up sort-grid" order="region.title,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="region.title,desc"></i>
-                            </th>
-                            <th>آدرس
-                                <i class="fa fa-sort-up sort-grid" order="address,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="address,desc"></i>
                             </th>
                             <th>تلفن
                                 <i class="fa fa-sort-up sort-grid" order="telephone,asc"></i>
@@ -488,11 +502,11 @@
                                                <a href="javascript:void(0)">${lastname}</a>
                                             </h2>
                                         </td>
-                                        <td>${speciality.title}</td>
+                                        <td>${organization.title}</td>
+                                         <td>${speciality.title}</td>
                                         <td>${state.title}</td>
                                         <td>${city.title}</td>
                                         <td>${region.title}</td>
-                                        <td title="${address}">${address.substring(0,25)}</td>
                                         <td>${telephone}</td>
                                         <td class="text-right">
                                             <a class="btn btn-sm bg-success-light" data-toggle="modal" href="#add_edit_modal" onclick="loadEntity(${id})" >
@@ -503,6 +517,8 @@
 											</a>
                                         </td>
                                     </tr>
+
+
 
 
 
@@ -627,18 +643,32 @@
 
                         <div class="service-fields mb-3">
                             <div class="row">
-                                <div class="col-lg-8">
+                                <div class="col-lg-9">
                                     <div class="form-group">
                                         <label>آدرس<span class="text-danger">*</span></label>
-                                        <textarea id="txtAddress"
-                                                  class="form-control service-desc"></textarea>
+                                        <input type="text" id="txtAddress" class="form-control service-desc" />
                                     </div>
                                 </div>
-                                <div class="col-lg-4">
+                                <div class="col-lg-3">
                                     <div class="form-group">
                                         <label>تلفن<span class="text-danger">*</span></label>
-                                        <textarea id="txtPhone"
-                                                  class="form-control service-desc"></textarea>
+                                        <input type="text" id="txtPhone" class="form-control service-desc" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="service-fields mb-3">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group col-lg-12">
+                                        <input type="hidden" id="hiddenFieldOrganizationId" />
+                                        <label class="float-left col-lg-2">واحد سازمانی<span class="text-danger">*</span></label>
+                                        <input class="form-control col-lg-7 col-sm-10 float-left" disabled type="text" id="txtOrganizationTitle" required="">
+                                        <button class="btn btn-primary form-control col-lg-1 col-sm-1 float-left"
+                                                onclick="viewFancyBox('/app/view/core/organization/organizationSelect.html','70%','90%')">
+                                            ...
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -654,7 +684,8 @@
                                             <input id="upload-file-input" type="file" name="attachment"
                                                    accept="image/*"
                                                    onchange="uploadFile();$('.submit-btn').hide();"/>
-                                            <img id="uploadedImage" style="width: 8em"/>
+                                            <img id="uploadedImage"
+                                                 style="width: 8em;border: 1px solid;border-radius: 10px;box-shadow: 0px 0px 10px 1px;"/>
                                             <input type="hidden" id="hiddenFieldfileCode"/>
                                         </form>
                                     </div>

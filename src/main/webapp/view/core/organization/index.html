@@ -187,14 +187,6 @@
             menu.loadXML("/app/assets/tree/contextMenu.xml");
         }
 
-        function getTreeAttrValueByItemId(attrName, itemId, xmlData) {
-            var xmlDoc = $.parseXML(xmlData);
-            var attrValue = $(xmlDoc).find('item').filter(function (index) {
-                return $(this).attr("id") == itemId;
-            }).attr(attrName);
-            return attrValue;
-        }
-
         function findParents(id) {
             if (id > 0) {
                 var parentId = tree.getParentId(id);
@@ -283,7 +275,7 @@
         function clearInputs() {
             $('#hiddenFieldId').val('');
             $('#txtTitle').val('');
-            $('#cmbActive').val('');
+            $('#cmbActive').val('true');
         }
 
         function clearEntity() {
@@ -365,10 +357,10 @@
 
 
     </script>
-<body>
+<body style="overflow: hidden">
 
 <a id="modal_link" href="#add_edit_modal" data-toggle="modal" onclick="clearEntity();clearInputs();"></a>
-
+<h5 class="m-1">مدیریت ساختار سازمان</h5>
 <div class="row m-1">
     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
         <input type="text" id="txtSearchTree" class="form-control ui-autocomplete-input" autocomplete="off"
@@ -411,7 +403,7 @@
                                 <label>وضعیت<span class="text-danger">*</span></label>
                                 <select id="cmbActive" class="form-control">
                                     <option value="..."></option>
-                                    <option value="true">فعال</option>
+                                    <option value="true" selected>فعال</option>
                                     <option value="false">غیرفعال</option>
                                 </select>
                             </div>
