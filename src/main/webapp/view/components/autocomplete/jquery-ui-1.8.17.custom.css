@@ -293,7 +293,7 @@
  *
  * http://docs.jquery.com/UI/Autocomplete#theming
  */
-.ui-autocomplete { position: absolute; cursor: default;font-family: tahoma;font-size: 13px;direction:rtl;width: 200px }
+.ui-autocomplete { position: absolute; cursor: default;font-family: iransans-medium;font-size: 14px;direction:rtl;width: 30%;top: 5px }
 
 /* workarounds */
 * html .ui-autocomplete { width:1px; } /* without this, the menu expands to 100% in IE6 */

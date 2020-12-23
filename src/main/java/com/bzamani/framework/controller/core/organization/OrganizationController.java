@@ -88,9 +88,9 @@ public class OrganizationController extends BaseController {
 
         for (Organization organization : lstPower) {
             treeNode = new TreeNode(organization.getId().toString(), organization.getTitle());
-            treeNode.setIm0("iconText.gif");
-            treeNode.setIm1("tombs_open.gif");
-            treeNode.setIm2("tombs.gif");
+            treeNode.setIm0("leaf.gif");
+            treeNode.setIm1("folderOpen.gif");
+            treeNode.setIm2("folderClosed.gif");
             treeNode.setChildCount(organization.getChildren().size());
             if (lstParrentId.contains(organization.getId())) {
                 treeNode = makeChildTreeNode(treeNode, organization, lstParrentId);
@@ -122,9 +122,9 @@ public class OrganizationController extends BaseController {
 
     public void makeTreeString(Organization organization, StringBuffer returnValue) {
         List<Organization> children = new ArrayList<Organization>(organization.getChildren());
-        String im0 = "iconText.gif";
-        String im1 = "tombs_open.gif";
-        String im2 = "tombs.gif";
+        String im0 = "leaf.gif";
+        String im1 = "folderOpen.gif";
+        String im2 = "folderClosed.gif";
 
         for (Organization org : children) {
             returnValue.append("<item     text=\"" + org.getTitle() + "\" id=\"" + org.getId() + "\"   im0=\"" + im0 + "\" im1=\"" + im1 + "\" im2=\"" + im2 + "\"");
@@ -141,9 +141,9 @@ public class OrganizationController extends BaseController {
     public StringBuffer makeTreeForSearchResult(Organization organization) {
         StringBuffer returnVal = new StringBuffer();
         List<Organization> children = new ArrayList<Organization>(organization.getChildren());
-        String im0 = "iconText.gif";
-        String im1 = "tombs_open.gif";
-        String im2 = "tombs.gif";
+        String im0 = "leaf.gif";
+        String im1 = "folderOpen.gif";
+        String im2 = "folderClosed.gif";
 
         for (Organization org : children) {
 

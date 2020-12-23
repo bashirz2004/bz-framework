@@ -1,4 +1,4 @@
-function showMessage(title, message, type, okCallback) {
+function showMessage(title, message, type) {
     swal({
         title: title,
         text: message,
@@ -8,7 +8,7 @@ function showMessage(title, message, type, okCallback) {
         confirmButtonText: "ok",
         timer: 10000
     }).then(function () {
-        return okCallback();
+        //return okCallback();
     }, function () {
 
     });

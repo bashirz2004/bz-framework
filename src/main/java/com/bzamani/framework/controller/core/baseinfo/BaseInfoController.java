@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/rest/core/baseinfo", produces = "application/json;charset=UTF-8")
@@ -39,4 +40,29 @@ public class BaseInfoController extends BaseController {
     public List<BaseInfo> getAllByParentId(@PathVariable long parentId) {
         return iBaseInfoService.getAllByParentId(parentId);
     }
+
+    @GetMapping(value = "/getAllHeadersAsXml", produces = "text/plain;charset=UTF-8")
+    public String getAllHeadersAsXml() {
+        return iBaseInfoService.getAllHeadersAsXml();
+    }
+
+    @GetMapping(value = "/getChildsAsXml/{id}", produces = "text/plain;charset=UTF-8")
+    public String getChildsAsXml(@PathVariable String id) {
+        return iBaseInfoService.getChildsAsXml(id);
+    }
+
+    @GetMapping("/searchBaseInfo")
+    public Map<String, Object> searchBaseInfo(
+            @RequestParam(required = false) String title,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "title,asc") String[] sort) {
+        return iBaseInfoService.searchBaseInfo(title, page, size, sort);
+    }
+
+    @RequestMapping(value = "/reMakeTreeAfterAutoComplete/{id}", produces = "text/plain;charset=UTF-8")
+    public String reMakeTreeAfterAutoComplete(@PathVariable Long id) {
+        return iBaseInfoService.reMakeTreeAfterAutoComplete(id);
+    }
+
 }

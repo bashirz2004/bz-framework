@@ -1,0 +1,304 @@
+.dhtmlxMenu_dhx_skyblue_Middle.dir_left div.align_right {
+	float: right;
+}
+
+div.dhtmlxMenu_dhx_skyblue_TopLevel_Item_Normal, div.dhtmlxMenu_dhx_skyblue_TopLevel_Item_Disabled, div.dhtmlxMenu_dhx_skyblue_TopLevel_Item_Selected
+	{
+	position: relative;
+	float: left;
+	font-size: 11px;
+	color: black;
+	cursor: default;
+	white-space: nowrap;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+	height: 22px;
+	line-height: 22px;
+	vertical-align: middle;
+	margin: 3px 2px 0 0;
+	padding: 0 3px;
+}
+
+div.dhtmlxMenu_dhx_skyblue_TopLevel_Item_Normal div.top_level_text, div.dhtmlxMenu_dhx_skyblue_TopLevel_Item_Disabled div.top_level_text,
+	div.dhtmlxMenu_dhx_skyblue_TopLevel_Item_Selected div.top_level_text {
+	float: left;
+	margin: 0 3px;
+}
+
+div.dhtmlxMenu_dhx_skyblue_TopLevel_Item_Normal, div.dhtmlxMenu_dhx_skyblue_TopLevel_Item_Disabled {
+	border: 1px solid #ebebeb;
+}
+
+div.dhtmlxMenu_dhx_skyblue_TopLevel_Item_Disabled {
+	color: #999 !important;
+}
+
+div.dhtmlxMenu_dhx_skyblue_TopLevel_Item_Selected {
+	border: 1px solid #a1ceed;
+	background-color: #b5deff;
+	color: black;
+}
+
+div.dhtmlxMenu_dhx_skyblue_SubLevelArea_Polygon {
+	position: absolute;
+	border: 1px solid #a4bed4;
+	box-shadow: 0 0 3px #ccc;
+	padding: 3px 0;
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	border-top-right-radius: 2px;
+	background-color: #e7f1ff;
+	overflow: hidden;
+	cursor: default;
+	line-height: normal;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+
+div.dhtmlxMenu_dhx_skyblue_SubLevelArea_Polygon table.dhtmlxMebu_SubLevelArea_Tbl td {
+	font-size: 11px;
+	color: black;
+	line-height: normal;
+	padding: 0 3px;
+	border-top: 1px solid #e7f1ff;
+	border-bottom: 1px solid #e7f1ff;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+
+div.dhtmlxMenu_dhx_skyblue_SubLevelArea_Polygon table.dhtmlxMebu_SubLevelArea_Tbl tr.sub_item_selected td {
+	background-color: #b5deff;
+	border-top: 1px solid #a1ceed;
+	border-bottom: 1px solid #a1ceed;
+	color: black;
+}
+
+div.dhtmlxMenu_dhx_skyblue_SubLevelArea_Polygon table.dhtmlxMebu_SubLevelArea_Tbl tr.sub_item_selected div.sub_item_hk {
+	color: #333 !important;
+}
+
+div.dhtmlxMenu_dhx_skyblue_SubLevelArea_Polygon table.dhtmlxMebu_SubLevelArea_Tbl td.sub_item_icon {
+	width: 18px;
+	text-align: center;
+	vertical-align: middle;
+}
+
+div.dhtmlxMenu_dhx_skyblue_SubLevelArea_Polygon table.dhtmlxMebu_SubLevelArea_Tbl td.sub_item_icon img.sub_icon {
+	float: left;
+	margin: 0;
+	width: 18px;
+	height: 18px;
+}
+
+div.dhtmlxMenu_dhx_skyblue_SubLevelArea_Polygon table.dhtmlxMebu_SubLevelArea_Tbl div.sub_item_text {
+	padding: 0 4px 0 1px; /*r.ghafari*/
+	height: 22px;
+	line-height: 21px;
+	white-space: nowrap;
+	text-align: right; /*r.ghafari*/
+}
+
+div.dhtmlxMenu_dhx_skyblue_SubLevelArea_Polygon table.dhtmlxMebu_SubLevelArea_Tbl tr.sub_item_dis div.sub_item_text {
+	color: #999 !important;
+}
+
+div.dhtmlxMenu_dhx_skyblue_SubLevelArea_Polygon table.dhtmlxMebu_SubLevelArea_Tbl td.sub_item_hk {
+	padding-left: 8px;
+	padding-right: 8px;
+}
+
+div.dhtmlxMenu_dhx_skyblue_SubLevelArea_Polygon table.dhtmlxMebu_SubLevelArea_Tbl td.sub_item_hk div.sub_item_hk {
+	font-size: 10px;
+	color: #4d4d4d;
+	text-align: right;
+}
+
+div.dhtmlxMenu_dhx_skyblue_SubLevelArea_Polygon table.dhtmlxMebu_SubLevelArea_Tbl tr.sub_item_dis td.sub_item_hk div.sub_item_hk
+	{
+	color: #9b9b9b !important;
+}
+
+div.dhtmlxMenu_dhx_skyblue_SubLevelArea_Polygon table.dhtmlxMebu_SubLevelArea_Tbl div.complex_arrow {
+	width: 4px;
+	margin: 0 2px 0 5px;
+	height: 22px;
+	background-image: url("imgs/dhxmenu_skyblue/dhxmenu_subar.gif");
+	background-repeat: no-repeat;
+	background-position: 0 0;
+	overflow: hidden;
+	font-size: 1px;
+	float: right;
+}
+
+div.dhtmlxMenu_dhx_skyblue_SubLevelArea_Polygon table.dhtmlxMebu_SubLevelArea_Tbl tr.sub_item_selected div.complex_arrow
+	{
+	background-position: -4px 0 !important;
+}
+
+div.dhtmlxMenu_dhx_skyblue_SubLevelArea_Polygon table.dhtmlxMebu_SubLevelArea_Tbl tr.sub_item_dis div.complex_arrow {
+	background-position: -8px 0 !important;
+}
+
+div.dhtmlxMenu_dhx_skyblue_SubLevelArea_Polygon table.dhtmlxMebu_SubLevelArea_Tbl div.complex_arrow_loading {
+	width: 11px;
+	height: 22px;
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-image: url("imgs/dhxmenu_skyblue/dhxmenu_loader.gif");
+	float: right;
+}
+
+div.dhtmlxMenu_dhx_skyblue_SubLevelArea_Polygon table.dhtmlxMebu_SubLevelArea_Tbl div.sub_icon {
+	float: left;
+	margin: 0;
+	width: 18px;
+	height: 18px;
+	background-position: top right;
+	background-repeat: no-repeat;
+	background-image: url("imgs/dhxmenu_skyblue/dhxmenu_chrd.gif");
+}
+
+div.dhtmlxMenu_dhx_skyblue_SubLevelArea_Polygon table.dhtmlxMebu_SubLevelArea_Tbl div.sub_icon.chbx_0 {
+	background-position: 0 0 !important;
+}
+
+div.dhtmlxMenu_dhx_skyblue_SubLevelArea_Polygon table.dhtmlxMebu_SubLevelArea_Tbl div.sub_icon.chbx_1 {
+	background-position: -18px 0 !important;
+}
+
+div.dhtmlxMenu_dhx_skyblue_SubLevelArea_Polygon table.dhtmlxMebu_SubLevelArea_Tbl tr.sub_item_dis div.sub_icon.chbx_0 {
+	background-position: -36px 0 !important;
+}
+
+div.dhtmlxMenu_dhx_skyblue_SubLevelArea_Polygon table.dhtmlxMebu_SubLevelArea_Tbl tr.sub_item_dis div.sub_icon.chbx_1 {
+	background-position: -54px 0 !important;
+}
+
+div.dhtmlxMenu_dhx_skyblue_SubLevelArea_Polygon table.dhtmlxMebu_SubLevelArea_Tbl div.sub_icon.rdbt_0 {
+	background-position: -72px 0 !important;
+}
+
+div.dhtmlxMenu_dhx_skyblue_SubLevelArea_Polygon table.dhtmlxMebu_SubLevelArea_Tbl div.sub_icon.rdbt_1 {
+	background-position: -90px 0 !important;
+}
+
+div.dhtmlxMenu_dhx_skyblue_SubLevelArea_Polygon table.dhtmlxMebu_SubLevelArea_Tbl tr.sub_item_dis div.sub_icon.rdbt_0 {
+	background-position: -108px 0 !important;
+}
+
+.standartTreeImage img {
+	width: 18px;
+	height: 24px;
+	background-position: center center;
+	background-repeat: no-repeat;
+	border: 0;
+	padding: 0;
+	margin: 0;
+	font-size: 1px;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+
+.dhx_tree_opacity {
+	opacity: 0;
+	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0);
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+
+.dhx_bg_img_fix {
+	width: 18px;
+	height: 18px; /*r.ghafari*/
+	background-repeat: no-repeat;
+	background-position: center;
+	background-position-x: center;
+	background-position-y: center;
+}
+
+.dhxtree_dhx_skyblue {
+	background-color: #fff;
+	color: black;
+}
+
+* html .dhxtree_dhx_skyblue .standartTreeRow, * html .dhxtree_dhx_skyblue .standartTreeRow_lor {
+	border-right: 0 solid red;
+	border-left: 0 solid red;
+}
+
+* html .dhxtree_dhx_skyblue span.standartTreeRow, * html .dhxtree_dhx_skyblue span.standartTreeRow_lor {
+	margin-left: 1px;
+}
+
+
+.dhxtree_dhx_skyblue .selectedTreeRow_lor, .dhxtree_dhx_skyblue .selectedTreeRow {
+	background-color: #b5deff;
+	background-repeat: repeat-x;
+	border: 1px solid #a1ceed;
+	color: black;
+	line-height: 17px;
+	font-size: 14px;
+	overflow: hidden;
+}
+
+html>body .dhxtree_dhx_skyblue .selectedTreeRow, html>body .dhxtree_dhx_skyblue .selectedTreeRow_lor {
+	padding: 1px 0 1px 0;
+}
+
+body:nth-of-type(1) .dhxtree_dhx_skyblue span.selectedTreeRow, body:nth-of-type(1) .dhxtree_dhx_skyblue span.selectedTreeRow_lor
+	{
+	padding: 1px 0 1px 0;
+	padding-top: 0;
+	box-sizing: border-box;
+	line-height: 12px;
+	height: 13px;
+}
+
+.dhxtree_skin_detect {
+	position: absolute;
+	left: 0;
+	top: -100px;
+	margin: 0;
+	padding: 0;
+	border: 0 solid white;
+	width: 10px;
+	height: 10px;
+	overflow: hidden;
+}
+
+div.gridbox {
+	overflow: hidden;
+	text-align: left;
+}
+
+.dhx_sub_row {
+	background-color: #fff;
+}
+
+div.gridbox table.obj {
+	height: 1px;
+}
+
+.dhtmlxMenu_dhx_skyblue_SubLevelArea_Polygon {
+	direction: rtl !important;
+}
+

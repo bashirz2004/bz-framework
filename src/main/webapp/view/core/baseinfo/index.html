@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>ساختار سازمان</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/app/assets/img/favicon.png">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/app/assets/admin/plugins/bootstrap-rtl/css/bootstrap.min.css">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="/app/assets/admin/css/font-awesome.min.css">
+
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/app/assets/admin/css/style.css">
+
+    <!--[if lt IE 9]>
+    <script src="/app/assets/js/html5shiv.min.js"></script>
+    <script src="/app/assets/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery -->
+    <script src="/app/assets/admin/js/jquery-3.2.1.min.js"></script>
+
+    <!-- pace mask -->
+    <script>
+        paceOptions = {
+            elements: false,
+            document: true, // disabled
+            eventLag: false, // disabled
+            ajax: {
+                trackMethods: ['GET', 'POST', 'DELETE', 'PUT'],
+                trackWebSockets: false
+            },
+            restartOnPushState: true,
+            restartOnRequestAfter: true
+        };
+        $(function () {
+            $("body").prepend("<div class='pace-cover' style='display: none;'></div>");
+            Pace.on("start", function () {
+                $(".pace-cover").fadeIn();
+            });
+            Pace.on("done", function () {
+                $(".pace-cover").fadeOut();
+            });
+        });
+    </script>
+    <script type="text/javascript" src="/app/view/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/app/view/components/pace/themes/blue/pace-theme-flash.css"/>
+    <style>
+        .pace-cover {
+            position: fixed;
+            left: 0px;
+            top: 1px;
+            width: 100%;
+            height: 100%;
+            z-index: 99999;
+            background: rgba(0, 0, 0, 0.4);
+        }
+    </style>
+    <!-- /pace mask -->
+
+    <!-- sweet alert -->
+    <script type="text/javascript" src="/app/view/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/app/view/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/app/view/components/sweetalert/sweetalert2.min.css">
+    <!-- /sweet alert -->
+
+    <!-- dhtml tree -->
+    <script type="text/javascript" src="/app/assets/tree/tree.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/app/assets/tree/tree.css"/>
+    <!-- /dhtml tree -->
+
+    <!-- autocomplete -->
+    <script src="/app/view/components/autocomplete/jquery-ui-1.8.17.custom.min.js"></script>
+    <link rel="stylesheet" href="/app/view/components/autocomplete/jquery-ui-1.8.17.custom.css"/>
+    <!-- /autocomplete -->
+
+    <script type="text/javascript">
+        var im0 = "leaf.gif";
+        var im1 = "folderOpen.gif";
+        var im2 = "folderClosed.gif";
+        var nodeHeaderId = -1;
+        var nodeId = -1;
+        var FirstData = '<?xml version="1.0" encoding="utf-8"?><tree id="0">';
+        var XMLData = FirstData;
+        var parentsText = "";
+        var entityData = {
+            "id": '',
+            "title": '',
+            "code": '',
+            "header": {"id": ''},
+            "parent": {"id": ''}
+        };
+
+        var contextPath = "/app";
+
+        $(function () {
+            initTree();
+            configAutoComplete();
+        });
+
+        function configAutoComplete() {
+            $.curCSS = function (element, attrib, val) {
+                $(element).css(attrib, val);
+            };
+            $("#txtSearchTree").autocomplete({
+                source: function (req, resp) {
+                    var searchFilter = {
+                        title: req.term,
+                        size: 10
+                    };
+                    $.getJSON(contextPath + "/rest/core/baseinfo/searchBaseInfo", searchFilter, function (data) {
+                        resp($.map(data.entityList, function (result) {
+                            return {
+                                label: result.title,
+                                value: result.id
+                            };
+                        }));
+                    });
+                },
+                select: function (event, ui) {
+                    findAndLocateInTree(ui.item.value);
+                    $(event.target).val(ui.item.label);
+                    return false;
+                },
+                minLength: 3,
+                delay: 1000
+            });
+        }
+
+        function reMakeTreeAfterAutoComplete(id) {
+            XMLData = FirstData;
+            $.get(contextPath + "/rest/core/baseinfo/reMakeTreeAfterAutoComplete/" + id, function (data) {
+                XMLData = XMLData + data + "</tree>";
+                tree.destructor();
+                configTree();
+                tree.loadXMLString(XMLData);
+                tree.selectItem("B" + id);
+                tree.focusItem("B" + id);
+            });
+        }
+
+        function initTree() {
+            configTree();
+            $.get(contextPath + "/rest/core/baseinfo/getAllHeadersAsXml", function (data) {
+                XMLData = XMLData + data + "</tree>";
+                tree.loadXMLString(XMLData);
+            });
+        }
+
+        function configTree() {
+            tree = new dhtmlXTreeObject("tree_div", "100%", "100%", 0);
+            tree.setSkin('dhx_skyblue');
+            tree.setImagePath("/app/assets/tree/icons/");
+            tree.enableHighlighting(true);
+            tree.attachEvent("onRightClick", function (id, e) {
+                nodeId = id;
+                nodeHeaderId = -1;
+                setBaseInformationHeaderId(nodeId);
+                parentsText = tree.getItemText(nodeId);
+                findParents(nodeId);
+                menu.showContextMenu(e.clientX, e.clientY);
+            });
+            tree.attachEvent("onClick", function (id, e) {
+                nodeId = id;
+                nodeHeaderId = -1;
+                setBaseInformationHeaderId(nodeId);
+                parentsText = tree.getItemText(nodeId);
+                findParents(nodeId);
+            });
+            tree.attachEvent('onOpenEnd', function (id, state) {
+                if (state == 1)
+                    treeOnClick(id);
+                nodeId = id;
+                nodeHeaderId = -1;
+                setBaseInformationHeaderId(nodeId);
+                parentsText = tree.getItemText(nodeId);
+                findParents(nodeId);
+            });
+
+            menu = new dhtmlXMenuObject();
+            menu.renderAsContextMenu();
+            menu.attachEvent("onClick", onButtonClick);
+            menu.loadXML("/app/assets/tree/contextMenu.xml");
+        }
+
+        function setBaseInformationHeaderId(nodeId) {
+            if (nodeId.substring(0, 1) == "B") {
+                nodeHeaderId = tree.getParentId(nodeId);
+                setBaseInformationHeaderId(nodeHeaderId);
+            }
+        }
+
+        function findParents(id) {
+            if (id > 0) {
+                var parentId = tree.getParentId(id);
+                parentsText = tree.getItemText(parentId) + "/" + parentsText;
+                findParents(parentId);
+            }
+        }
+
+        function treeOnClick(id) {
+            var tempScrollTop = $('.containerTableStyle').scrollTop();
+            var src = '<item text="..." im0="leaf.gif" id="t' + id + '" />';
+            if (tree.getItemText('t' + id) === '...') {
+                $.get(contextPath + "/rest/core/baseinfo/getChildsAsXml/" + id,
+                    function (data) {
+                        XMLData = XMLData.replace(src, data);
+                        tree.destructor();
+                        configTree();
+                        tree.loadXMLString(XMLData);
+                        tree.openItem(id);
+                        $('.containerTableStyle').scrollTop(tempScrollTop);
+                    });
+            }
+        }
+
+        function onButtonClick(menuitemId) {
+            if (menuitemId === '1') { //  حالت درج
+                openAddModal();
+            } else if (menuitemId === '2') { //  حالت ویرایش
+                if (nodeId.substring(0, 1) == "B") {
+                    openEditModal()
+                } else
+                    showMessage(" عملیات ویرایش برای این آیتم مجاز نمی باشد.", "", "error");
+            } else if (menuitemId === '3') { // یعنی حالت حذف
+                if (nodeId.substring(0, 1) == "B")
+                    deleteClicked(nodeId);
+                else
+                    showMessage(" عملیات حذف برای این آیتم مجاز نمی باشد.", "", "error");
+            }
+        }
+
+        function openAddModal() {
+            clearEntity();
+            clearInputs();
+            if (nodeHeaderId == '-1') {
+                $('#hiddenFieldHeaderId').val(nodeId.substring(1));
+                $('#hiddenFieldParentId').val(null);
+            } else {
+                $('#hiddenFieldHeaderId').val(nodeHeaderId.substring(1));
+                $('#hiddenFieldParentId').val(nodeId.substring(1));
+            }
+            $('#modal_link').click();
+        }
+
+        function openEditModal() {
+            $.ajax({
+                url: contextPath + "/rest/core/baseinfo/load/" + nodeId.substring(1),
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                type: 'GET',
+                success: function (res) {
+                    $('#modal_link').click();
+                    setInputsByEntity(res);
+                },
+                error: function (err) {
+                }
+            });
+        }
+
+        function deleteClicked(id) {
+            if (id.substring(0, 1) != "H") {
+                showConfirm('تاییدیه حذف اطلاعات', 'آیا از حذف اطمینان دارید؟', function () {
+                    $.ajax({
+                        url: contextPath + "/rest/core/baseinfo/delete/" + id.substring(1),
+                        type: 'DELETE',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (res) {
+                            if (res) {
+                                tree.deleteItem(id, true);
+                            } else
+                                showMessage(" حذف این آیتم امکان پذیر نمی باشد. ", "", "error");
+                        },
+                        error: function () {
+                            showMessage(" حذف این آیتم امکان پذیر نمی باشد. ", "", "error");
+                        }
+                    });
+                });
+            }
+        }
+
+        function refreshTree() {
+            tree.destructor();
+            $("#tree_div").html('');
+            nodeId = -1;
+            nodeHeaderId = -1;
+            XMLData = FirstData;
+            initTree();
+        }
+
+        function clearInputs() {
+            $('#hiddenFieldId').val('');
+            $('#hiddenFieldHeaderId').val();
+            $('#hiddenFieldParentId').val();
+            $('#txtTitle').val('');
+            $('#txtCode').val(null);
+        }
+
+        function clearEntity() {
+            entityData = {
+                "id": '',
+                "title": '',
+                "code": null,
+                "header": {"id": ''},
+                "parent": null
+            };
+        }
+
+        function setInputsByEntity(entity) {
+            $("#hiddenFieldId").val(entity.id);
+            $("#hiddenFieldHeaderId").val(entity.header.id);
+            $("#hiddenFieldParentId").val(entity.parent != null ? entity.parent.id : null);
+            $("#txtTitle").val(entity.title);
+            $("#txtCode").val(entity.code);
+        }
+
+        function setEntityFromInputs() {
+            entityData = {
+                "id": $('#hiddenFieldId').val(),
+                "title": $('#txtTitle').val(),
+                "code": $('#txtCode').val().length > 0 ? $('#txtCode').val() : null,
+                "header": {"id": $('#hiddenFieldHeaderId').val()},
+                "parent": $('#hiddenFieldParentId').val() > 0 ? {"id": $('#hiddenFieldParentId').val()} : null
+            }
+        }
+
+        function saveEntity() {
+            if (validateForm() == 'ok') {
+                setEntityFromInputs();
+                $.ajax({
+                    url: contextPath + "/rest/core/baseinfo/save",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify(entityData),
+                    type: 'POST',
+                    success: function (res) {
+                        $('#hiddenFieldId').val(res.id);
+                        showMessage("ثبت با موفقیت انجام شد.", "", "success");
+                        findAndLocateInTree(res.id);
+                        $('#btnCloseModal').click();
+                    },
+                    error: function (err) {
+                        if (err.responseText.toLowerCase().includes("unq_parent_title"))
+                            showMessage("خطا", "عنوان وارد شده تکراری است.", "error");
+                        else
+                            showMessage("خطای نامشخص رخ داده است.", "", "error");
+                    }
+                });
+            } else
+                showMessage("پرکردن فیلدهای ستاره دار الزامی است.", "", "warning");
+        }
+
+        function validateForm() {
+            if (!$('#hiddenFieldHeaderId').val() > 0 || $('#txtTitle').val() == '')
+                return;
+            else return 'ok';
+        }
+
+        function clearSearch() {
+            $("#txtSearchTree").val('');
+            tree.closeAllItems();
+            $("#txtSearchTree").focus();
+            tree._unselectItems();
+        }
+
+        function findAndLocateInTree(id) {
+            if (id > 0)
+                reMakeTreeAfterAutoComplete(id);
+            else
+                clearSearch();
+        }
+
+
+    </script>
+<body>
+
+<a id="modal_link" href="#add_edit_modal" data-toggle="modal"></a>
+
+<div class="row m-1">
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+        <input type="text" id="txtSearchTree" class="form-control ui-autocomplete-input" autocomplete="off"
+               placeholder="حداقل 3 کاراکنر تایپ کنید..."
+               maxlength="30" role="textbox" aria-autocomplete="list" aria-haspopup="true"/>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+        <input type="button" id="clear" class="btn btn-primary" onclick="clearSearch()" value='پاک کردن'/>
+    </div>
+</div>
+
+<div class="col-xl-6  col-md-6 col-sm-10" id="tree_div"
+     style="background-color:#f5f5f5;border :1px solid Silver;overflow:hidden;margin: 1em">
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal fade custom-modal" id="add_edit_modal" aria-hidden="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">افزودن / ویرایش </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCloseModal">
+                    <span aria-hidden="true">x</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Add Baseinfo -->
+                <input type="hidden" id="hiddenFieldId"/>
+                <input type="hidden" id="hiddenFieldHeaderId"/>
+                <input type="hidden" id="hiddenFieldParentId"/>
+                <div class="service-fields mb-3">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="form-group">
+                                <label>عنوان <span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="txtTitle" required="">
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label>کد</label>
+                                <input class="form-control" type="text" id="txtCode">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="service-fields mb-3">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="submit-section" style="text-align: center">
+                                    <button class="btn btn-primary submit-btn" onclick="saveEntity()"> ثبت</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Add baseInfo -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Add/Edit Modal -->
+
+<!-- Bootstrap Core JS -->
+<script src="/app/assets/admin/plugins/bootstrap-rtl/js/bootstrap.min.js"></script>
+</body>
+</html>

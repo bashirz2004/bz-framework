@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class BaseInfoHeaderService  extends GenericService<BaseInfoHeader, Long> implements IBaseInfoHeaderService {
     @Autowired
@@ -18,4 +20,8 @@ public class BaseInfoHeaderService  extends GenericService<BaseInfoHeader, Long>
         return iBaseInfoHeaderRepository;
     }
 
+    @Override
+    public List<BaseInfoHeader> getAllHeaders() {
+        return iBaseInfoHeaderRepository.getAllHeaders();
+    }
 }

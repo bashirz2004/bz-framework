@@ -72,8 +72,7 @@ public class OrganizationService extends GenericService<Organization, Long> impl
         if (id > 1L)
             return super.deleteByEntityId(id);
         else
-            return false;
-    }
+            return false; }
 
     private Sort.Direction getSortDirection(String direction) {
         if (direction.equals("asc"))
