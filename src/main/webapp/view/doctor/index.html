@@ -93,11 +93,16 @@
             "specialityTitle": '',
             "sort": "id,desc",
             "page": 0,
-            "size": 5
+            "size": 8
         };
 
         $(function () {
             fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+
+            $('.sort-grid').on("click", function () {
+                searchFilters.sort = $(this).attr("order");
+                fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+            });
 
             $('#cmbPageSize').change(function () {
                 searchFilters.size = $(this).val();
@@ -128,11 +133,12 @@
         }
 
         function clearSearch() {
+            $('#cmbPageSize').val(8);
             searchFilters = {
                 "specialityTitle": '',
                 "sort": "id,desc",
                 "page": 0,
-                "size": 5
+                "size": 8
             };
             $('.searchFilter').val('');
             fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
@@ -380,6 +386,10 @@
             });
         }
 
+        function setImagePath(fileCode) {
+            $('#image_full_size').attr("src", "/app/rest/core/file/download/" + fileCode + "/false");
+        }
+
     </script>
 
 <body>
@@ -387,20 +397,26 @@
     <div class="col-md-12 d-flex">
         <!-- Grid -->
         <div class="card card-table flex-fill">
-            <div class="row">
-                <div class="col-sm-2 col-auto mt-2">
-                    <h4 class="card-title">لیست پزشکان</h4>
+            <div class="col-sm-12">
+                <div class="float-left mt-1">
+                    <h5>لیست پزشکان</h5>
                 </div>
-                <div class="top-nav-search col-sm-3">
+                <div class="float-left col-sm-3 col-md-5 col-lg-8 col-xl-8">
                     <input type="text" id="txtSearchDoctor" class="form-control searchFilter"
                            placeholder="جستجو براساس تخصص ...">
                 </div>
-                <button class="btn" onclick="searchDoctor()"><i class="fa fa-search"></i></button>
-                <button class="btn" onclick="clearSearch()"><i class="fa fa-eraser"></i></button>
-                <div class="col-sm-5 col">
+                <div class="float-left">
+                    <a href="javascript:void(0)" onclick="searchDoctor();"
+                       class="btn btn-block btn-outline-info">جستجو</a>
+                </div>
+                <div class="float-left">
+                    <a href="javascript:void(0)" onclick="clearSearch();" class="btn btn-block btn-outline-danger">پاک
+                        کردن</a>
+                </div>
+                <div class="float-left">
                     <a href="#add_edit_modal" data-toggle="modal"
                        onclick="clearEntity();clearInputs();"
-                       class="btn btn-primary float-right mt-1">افزودن</a>
+                       class="btn btn-block btn-outline-success">جدید</a>
                 </div>
             </div>
             <div class="card-body">
@@ -409,10 +425,42 @@
                         <thead>
                         <tr>
                             <th class="text-center">ردیف</th>
-                            <th>نام پزشک</th>
-                            <th>تلفن</th>
-                            <th>تخصص</th>
-                            <th>آدرس</th>
+                            <th>تصویر
+                                <i class="fa fa-sort-up sort-grid" order="fileCode,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="fileCode,desc"></i>
+                            </th>
+                            <th>نام
+                                <i class="fa fa-sort-up sort-grid" order="firstname,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="firstname,desc"></i>
+                            </th>
+                            <th>نام خانوادگی
+                                <i class="fa fa-sort-up sort-grid" order="lastname,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="lastname,desc"></i>
+                            </th>
+                            <th>تخصص
+                                <i class="fa fa-sort-up sort-grid" order="speciality.title,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="speciality.title,desc"></i>
+                            </th>
+                            <th>استان
+                                <i class="fa fa-sort-up sort-grid" order="state.title,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="state.title,desc"></i>
+                            </th>
+                            <th>شهر
+                                <i class="fa fa-sort-up sort-grid" order="city.title,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="city.title,desc"></i>
+                            </th>
+                            <th>منطقه
+                                <i class="fa fa-sort-up sort-grid" order="region.title,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="region.title,desc"></i>
+                            </th>
+                            <th>آدرس
+                                <i class="fa fa-sort-up sort-grid" order="address,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="address,desc"></i>
+                            </th>
+                            <th>تلفن
+                                <i class="fa fa-sort-up sort-grid" order="telephone,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="telephone,desc"></i>
+                            </th>
                             <th>عملیات</th>
                         </tr>
                         </thead>
@@ -422,18 +470,30 @@
                                         <td class="text-center"><span class="tmplRowIndex"></span></td>
                                         <td>
                                             <h2 class="table-avatar">
-                                                <a href="javascript:void(0)" class="avatar avatar-sm mr-2"><img
+                                                <a href="#image_modal" data-toggle="modal" class="avatar avatar-sm mr-2"><img onclick="setImagePath('${fileCode}')"
                                                         class="avatar-img rounded-circle"
                                                         src={{if male && fileCode==null}}"/app/assets/img/man.png"{{/if}}
                                                             {{if !male && fileCode==null}}"/app/assets/img/woman.png"{{/if}}
                                                             {{if fileCode!=null}}"/app/rest/core/file/download/${fileCode}/false"{{/if}}
                                                         alt="User Image"></a>
-                                                <a href="javascript:void(0)">{{if male}}آقای{{else}}خانم{{/if}} ${firstname} ${lastname}</a>
                                             </h2>
                                         </td>
-                                        <td>${telephone}</td>
+                                        <td>
+                                            <h2 class="table-avatar">
+                                                <a href="javascript:void(0)">${firstname}</a>
+                                            </h2>
+                                        </td>
+                                        <td>
+                                            <h2 class="table-avatar">
+                                               <a href="javascript:void(0)">${lastname}</a>
+                                            </h2>
+                                        </td>
                                         <td>${speciality.title}</td>
-                                        <td title="${address}">${region.title} - ${address.substring(0,50)}</td>
+                                        <td>${state.title}</td>
+                                        <td>${city.title}</td>
+                                        <td>${region.title}</td>
+                                        <td title="${address}">${address.substring(0,25)}</td>
+                                        <td>${telephone}</td>
                                         <td class="text-right">
                                             <a class="btn btn-sm bg-success-light" data-toggle="modal" href="#add_edit_modal" onclick="loadEntity(${id})" >
 												<i class="fe fe-pencil"></i> ویرایش
@@ -443,15 +503,6 @@
 											</a>
                                         </td>
                                     </tr>
-
-
-
-
-
-
-
-
-
 
 
 
@@ -486,7 +537,8 @@
             <span class="col-sm-4">تعداد</span>
             <select id="cmbPageSize" name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
                     class="custom-select custom-select-sm form-control form-control-sm col-sm-3">
-                <option value="5" selected>5</option>
+                <option value="5">5</option>
+                <option value="8" selected>8</option>
                 <option value="10">10</option>
                 <option value="50">50</option>
                 <option value="100">100</option>
@@ -504,7 +556,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">افزودن / ویرایش پزشک </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"  id="btnCloseModal"
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCloseModal"
                             onclick="fillGrid('doctorTemplate', 'doctorList', contextPath + '/rest/doctor/searchDoctors', searchFilters)">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -643,6 +695,24 @@
         </div>
     </div>
     <!-- /Delete Modal -->
+
+    <!-- image_modal -->
+    <div class="modal fade custom-modal" id="image_modal" aria-hidden="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تصویر پزشک </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <img src="" class="img-fluid" alt="هنوز تصویری برای این شخص آپلود نشده است." id="image_full_size">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /image_modal -->
 
 </div>
 <!-- /Page Wrapper -->

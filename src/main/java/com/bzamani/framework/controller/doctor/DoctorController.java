@@ -55,7 +55,7 @@ public class DoctorController extends BaseController {
             @RequestParam(required = false) String specialities,
             @RequestParam(required = false) String genders,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "8") int size,
             @RequestParam(defaultValue = "id,desc") String[] sort) {
 
         return iDoctorService.searchDoctors(firstname, lastname,

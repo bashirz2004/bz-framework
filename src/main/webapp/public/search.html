@@ -46,13 +46,18 @@
             "regionId": -1,
             "address": '',
             "sort": "id,desc",
-            "size": 10
+            "size": 5
         };
 
         $(function () {
             fillSpecialityCheckboxes();
             fillComboState();
             searchDoctors();
+
+            $("#btnMore").click(function () {
+                searchFilters.size += 5;
+                searchDoctors();
+            });
 
             $("#cmbSerachOrder").change(function () {
                 searchFilters.sort = $(this).val();
@@ -168,7 +173,6 @@
             searchFilters.specialities = selected_specialities.join();
             searchFilters.genders = selected_genders.join();
             searchFilters.address = $("#txtSearchAddress").val();
-            console.log(searchFilters);
             $.ajax({
                 type: "GET",
                 url: contextPath + "/api/public/doctor/searchDoctors",
@@ -250,7 +254,7 @@
                                 <option value="address,asc" class="sorting">آدرس</option>
                             </select>
                         </span>
-                        <a class="fa fa-reply-all sort-title" href="../index.html">&nbsp;بازگشت</a>
+                        <a class="fa fa-reply-all sort-title" href="../index.html" style="font-family: iransans-ulight">&nbsp;بازگشت</a>
                     </div>
                 </div>
             </div>
@@ -391,9 +395,13 @@
 
 
 
+
                     </script>
                 </div>
                 <!-- /Doctor Widget -->
+                <div class="text-center col-sm-12">
+                    <a class="btn btn-primary btn-md" href="javascript:void(0);" id="btnMore">بارگذاری بیشتر</a>
+                </div>
             </div>
 
         </div>

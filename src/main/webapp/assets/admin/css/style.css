@@ -126,7 +126,7 @@ input:-webkit-autofill:focus {
     box-shadow: none;
     color: #333;
     font-size: 15px;
-    height: 40px;
+    height: 35px;
 }
 .form-control:focus {
 	border-color: #00d0f1;
@@ -1647,7 +1647,7 @@ html.menu-opened body {
 
 .top-nav-search {
     float: right;
-    margin-right: 15px;
+	margin-top: 3px;
 }
 .top-nav-search form {
     margin-top: 10px;
@@ -1655,7 +1655,6 @@ html.menu-opened body {
     width: 230px;
 }
 .top-nav-search .form-control {
-
     border-color: rgba(0, 0, 0, 0.1);
     border-radius: 50px;
     color: #333;
@@ -4675,5 +4674,8 @@ table.table-inbox tbody tr.checked {
 	max-height: 200px;
 	overflow-y: auto;
 	text-align: right;
+}
+.sort-grid{
+	cursor: pointer !important;
 }
 
