@@ -330,7 +330,10 @@
                                             <i class="fas fa-map-marker-alt"></i>${region.title}
                                         </li>
                                         <li>
-                                            <i class="far fa-clock"></i>${address.substring(0,25)}
+                                            <i class="far fa-clock"></i>
+                                            {{if address}}
+                                                ${address.substring(0,25)}
+                                            {{/if}}
                                         </li>
                                         <li>
                                             <i class="fas fa-phone"></i>${telephone}

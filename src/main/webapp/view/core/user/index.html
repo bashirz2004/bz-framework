@@ -1,1 +1,584 @@
-user
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>لیست کاربران</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/app/assets/img/favicon.png">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/app/assets/bzamani/bootstrap.css">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="/app/assets/admin/css/font-awesome.min.css">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/app/assets/bzamani/style-admin.css">
+
+    <!--[if lt IE 9]>
+    <script src="/app/assets/js/html5shiv.min.js"></script>
+    <script src="/app/assets/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery -->
+    <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
+    <!-- fancybox -->
+    <script src="/app/assets/bzamani/components/fancybox/jquery.fancybox.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/fancybox/jquery.fancybox.css"/>
+
+    <!-- pace mask -->
+    <script>
+        paceOptions = {
+            elements: false,
+            document: true, // disabled
+            eventLag: false, // disabled
+            ajax: {
+                trackMethods: ['GET', 'POST', 'DELETE', 'PUT'],
+                trackWebSockets: false
+            },
+            restartOnPushState: true,
+            restartOnRequestAfter: true
+        };
+        $(function () {
+            $("body").prepend("<div class='pace-cover' style='display: none;'></div>");
+            Pace.on("start", function () {
+                $(".pace-cover").fadeIn();
+            });
+            Pace.on("done", function () {
+                $(".pace-cover").fadeOut();
+            });
+        });
+    </script>
+    <script type="text/javascript" src="/app/assets/bzamani/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
+    <style>
+        .pace-cover {
+            position: fixed;
+            left: 0px;
+            top: 1px;
+            width: 100%;
+            height: 100%;
+            z-index: 99999;
+            background: rgba(0, 0, 0, 0.4);
+        }
+    </style>
+    <!-- /pace mask -->
+
+    <!-- sweet alert -->
+    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/sweetalert/sweetalert2.min.css">
+    <!-- /sweet alert -->
+
+    <script src="/app/assets/bzamani/jquery.template.js"></script>
+    <script src="/app/assets/bzamani/grid-utility.js"></script>
+    <script src="/app/assets/bzamani/general-utility.js"></script>
+
+    <script>
+        var contextPath = "/app";
+        var entityData = {
+            "id": '',
+            "username": '',
+            "password": '',
+            "personel": {"id": ''},
+            "fileCode": ''
+        };
+
+        var searchFilters = {
+            "firstname": '',
+            "lastname": '',
+            "nationalCode": '',
+            "username": '',
+            "sort": "id,desc",
+            "page": 0,
+            "size": 8
+        };
+
+        $(function () {
+            fillGrid('userTemplate', 'userList', contextPath + "/rest/core/user/searchUser", searchFilters);
+
+            $('.sort-grid').on("click", function () {
+                searchFilters.sort = $(this).attr("order");
+                fillGrid('userTemplate', 'userList', contextPath + "/rest/core/user/searchUser", searchFilters);
+            });
+
+            $('#cmbPageSize').change(function () {
+                searchFilters.size = $(this).val();
+                fillGrid('userTemplate', 'userList', contextPath + "/rest/core/user/searchUser", searchFilters);
+            });
+
+            $('.searchFilter').keydown(function (e) {
+                if (e.which == 13)  // the enter key code
+                    searchUser();
+            });
+
+        });
+
+        function searchUser() {
+            searchFilters.firstname = $("#txtSearchFirstname").val();
+            searchFilters.lastname = $("#txtSearchLastname").val();
+            searchFilters.nationalCode = $("#txtSearchNationalCode").val();
+            searchFilters.username = $("#txtSearchUsername").val();
+            fillGrid('userTemplate', 'userList', contextPath + "/rest/core/user/searchUser", searchFilters);
+        }
+
+        function clearSearch() {
+            $('#cmbPageSize').val(8);
+            searchFilters = {
+                "firstname": '',
+                "lastname": '',
+                "nationalCode": '',
+                "username": '',
+                "sort": "id,desc",
+                "page": 0,
+                "size": 8
+            };
+            $('.searchFilter').val('');
+            fillGrid('userTemplate', 'userList', contextPath + "/rest/core/user/searchUser", searchFilters);
+        }
+
+        function next() {
+            searchFilters.page = searchFilters.page + 1;
+            fillGrid('userTemplate', 'userList', contextPath + "/rest/core/user/searchUser", searchFilters);
+        }
+
+        function previous() {
+            searchFilters.page = searchFilters.page - 1;
+            fillGrid('userTemplate', 'userList', contextPath + "/rest/core/user/searchUser", searchFilters);
+        }
+
+        function goTo(pageNumber) {
+            searchFilters.page = pageNumber;
+            fillGrid('userTemplate', 'userList', contextPath + "/rest/core/user/searchUser", searchFilters);
+        }
+
+        function deleteEntity() {
+            if ($('#hiddenFieldId').val() > 0)
+                $.ajax({
+                    url: contextPath + "/rest/core/user/delete/" + $('#hiddenFieldId').val(),
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    type: 'DELETE',
+                    success: function (res) {
+                        fillGrid('userTemplate', 'userList', contextPath + "/rest/core/user/searchUser", searchFilters);
+                        showMessage("حذف با موفقیت انجام شد.", "", "success");
+                    },
+                    error: function (err) {
+                        showMessage("خطا در حذف اطلاعات", "", "error");
+                    }
+                });
+            else
+                showMessage("هیچ رکوردی انتخاب نشده است.", "", "error");
+        }
+
+        function rowSelected(id) {
+            $('#hiddenFieldId').val(id);
+        }
+
+        function rowDeselected() {
+            $('#hiddenFieldId').val();
+        }
+
+        function loadEntity(id) {
+            clearInputs();
+            clearEntity();
+            $.ajax({
+                url: contextPath + "/rest/core/user/load/" + id,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                type: 'GET',
+                success: function (res) {
+                    setInputsByEntity(res);
+                },
+                error: function (err) {
+                }
+            });
+        }
+
+        function saveEntity() {
+            if (validateForm() == 'ok') {
+                setEntityFromInputs();
+                $.ajax({
+                    url: contextPath + "/rest/core/user/save",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify(entityData),
+                    type: 'POST',
+                    success: function (res) {
+                        $('#hiddenFieldId').val(res.id);
+                        showMessage("ثبت با موفقیت انجام شد.", "", "success");
+                        $('#btnCloseModal').click();
+                    },
+                    error: function (err) {
+                        if (err.responseText.includes("unq_user_personel_id"))
+                            showMessage("خطا. قبلا کاربری با این پرسنل ایجاد شده است.", "", "error");
+                        else if (err.responseText.includes("unq_username"))
+                            showMessage("خطا. نام کاربری تکراری است.", "", "error");
+                    }
+                });
+            }
+        }
+
+        function validateForm() {
+            if (!$('#hiddenFieldId').val() > 0) {
+                if ($('#txtUsername').val() == '' || $('#txtPassword').val() == '' || $('#txtPasswordRepeat').val() == ''
+                    || !$('#hiddenFieldPersonelId').val() > 0 || $('#txtPersonelTitle').val() == '') {
+                    showMessage("پرکردن فیلدهای ستاره دار الزامی است.", "", "warning");
+                    return;
+                } else if ($('#txtPassword').val() != $('#txtPasswordRepeat').val()) {
+                    showMessage("رمز عبور و تکرار آن باید یکسان باشند.", "", "warning");
+                    return;
+                } else return 'ok';
+            } else if ($('#txtUsername').val() == '' || !$('#hiddenFieldPersonelId').val() > 0 || $('#txtPersonelTitle').val() == '') {
+                showMessage("پرکردن فیلدهای ستاره دار الزامی است.", "", "warning");
+                return;
+            }
+        }
+
+        function clearEntity() {
+            entityData = {
+                "id": '',
+                "username": '',
+                "password": '',
+                "personel": {"id": ''}
+            };
+        }
+
+        function clearInputs(){
+            $(".password-related").show();
+        }
+
+        function setInputsByEntity(entity) {
+            $(".password-related").hide();
+            $("#hiddenFieldId").val(entity.id);
+            $("#txtUsername").val(entity.username);
+            $("#hiddenFieldPersonelId").val(entity.personel.id);
+            $("#txtPersonelTitle").val(entity.personel.firstname + " " + entity.personel.lastname);
+            if (entity.personel.fileCode != null && entity.personel.fileCode.length > 0) {
+                $('#uploadedImage').prop("src", "/app/rest/core/file/download/" + entity.personel.fileCode + "/false");
+            }
+        }
+
+        function setEntityFromInputs() {
+            clearEntity();
+            entityData = {
+                "id": $('#hiddenFieldId').val(),
+                "personel": {"id": $('#hiddenFieldPersonelId').val()},
+                "username": $('#txtUsername').val(),
+                "password": $('#txtPassword').val()
+            }
+        }
+
+
+        function setImagePath(fileCode) {
+            if (fileCode)
+                $('#image_full_size').attr("src", "/app/rest/core/file/download/" + fileCode + "/false");
+        }
+
+        function setPersonel(id, firstname, lastname, fileCode) {
+            $('#hiddenFieldPersonelId').val(id);
+            $('#txtPersonelTitle').val(firstname + " " + lastname);
+            if (fileCode)
+                $('#uploadedImage').attr("src", "/app/rest/core/file/download/" + fileCode + "/false");
+        }
+
+        function openUserOrganizations(id){
+            viewFancyBox('/app/view/core/user/userOrganizations.html?userId='+id,'90%','90%');
+        }
+
+    </script>
+
+<body>
+<div class="row">
+    <div class="col-md-12 d-flex">
+        <!-- Grid -->
+        <div class="card card-table flex-fill">
+            <div class="col-sm-12" style="background-color: darkslategray;border-radius: 10px 10px 0px 0px">
+                <div class="float-left mt-1">
+                    <h5 class="text-white">لیست کاربران</h5>
+                </div>
+                <div class="float-right">
+                    <a href="#add_edit_modal" data-toggle="modal" title="جدید"
+                       onclick="clearEntity();clearInputs();"
+                       class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-plus"></i></a>
+                </div>
+                <div class="float-right">
+                    <a href="javascript:void(0)" onclick="clearSearch();" data-toggle="tooltip" title="پاک کردن فیلترها"
+                       class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-eraser"></i></a>
+                </div>
+                <div class="float-right search-section" style="display: none">
+                    <a href="javascript:void(0)" onclick="searchUser();" data-toggle="tooltip" title="جستجو"
+                       class="btn btn-block btn-rounded btn-outline-secondary"><i class="fa fa-filter"></i></a>
+                </div>
+                <div class="float-right">
+                    <a href="javascript:void(0)" onclick="$('.search-section').slideToggle();"
+                       class="btn btn-block btn-rounded btn-outline-secondary"><i class="fa fa-search"></i></a>
+                </div>
+            </div>
+            <div class="col-sm-12 search-section" style="display: none">
+                <label class="float-left" style="padding-top: .5em">فیلتر کردن نتایج براساس : </label>
+                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                    <input type="text" id="txtSearchFirstname" class="form-control searchFilter" placeholder="نام ...">
+                </div>
+                <div class="float-left col-sm-2 col-md-3 col-lg-2 col-xl-2">
+                    <input type="text" id="txtSearchLastname" class="form-control searchFilter"
+                           placeholder="نام خانوادگی ...">
+                </div>
+                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                    <input type="text" id="txtSearchNationalCode" class="form-control searchFilter"
+                           placeholder="کدملی ...">
+                </div>
+                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                    <input type="text" id="txtSearchUsername" class="form-control searchFilter"
+                           placeholder="نام کاربری ...">
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-center mb-0">
+                        <thead>
+                        <tr>
+                            <th class="text-center">ردیف</th>
+                            <th>تصویر
+                                <i class="fa fa-sort-up sort-grid" order="personel.fileCode,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="personel.fileCode,desc"></i>
+                            </th>
+                            <th>نام
+                                <i class="fa fa-sort-up sort-grid" order="personel.firstname,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="personel.firstname,desc"></i>
+                            </th>
+                            <th>نام خانوادگی
+                                <i class="fa fa-sort-up sort-grid" order="personel.lastname,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="personel.lastname,desc"></i>
+                            </th>
+                            <th>واحد سازمانی
+                                <i class="fa fa-sort-up sort-grid" order="personel.organization.title,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="personel.organization.title,desc"></i>
+                            </th>
+                            <th>کدملی
+                                <i class="fa fa-sort-up sort-grid" order="personel.nationalCode,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="personel.nationalCode,desc"></i>
+                            </th>
+                            <th>نام کاربری
+                                <i class="fa fa-sort-up sort-grid" order="username,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="username,desc"></i>
+                            </th>
+                            <th>عملیات</th>
+                        </tr>
+                        </thead>
+                        <tbody id="userList">
+                        <script id="userTemplate" type="text/x-jquery-tmpl">
+                                    <tr>
+                                        <td class="text-center"><span class="tmplRowIndex"></span></td>
+                                        <td>
+                                            <h2 class="table-avatar">
+                                                <a href="#image_modal" data-toggle="modal" class="avatar avatar-sm mr-2"><img onclick="setImagePath({{if personel.fileCode}}personelfilecode{{/if}})"
+                                                        class="avatar-img rounded-circle"
+                                                        src={{if personel.male && personel.fileCode==null}}"/app/assets/img/man.png"{{/if}}
+                                                            {{if !personel.male && personel.fileCode==null}}"/app/assets/img/woman.png"{{/if}}
+                                                            {{if personel.fileCode!=null}}"/app/rest/core/file/download/${personel.fileCode}/false"{{/if}}
+                                                        alt="User Image"></a>
+                                            </h2>
+                                        </td>
+                                        <td>
+                                            <h2 class="table-avatar">
+                                                <a href="javascript:void(0)">${personel.firstname}</a>
+                                            </h2>
+                                        </td>
+                                        <td>
+                                            <h2 class="table-avatar">
+                                               <a href="javascript:void(0)">${personel.lastname}</a>
+                                            </h2>
+                                        </td>
+                                        <td>${personel.organization.title}</td>
+                                        <td>${personel.nationalCode}</td>
+                                        <td>${username}</td>
+                                        <td class="text-right">
+                                            <div class="float-right">
+                                                <div class="float-right">
+                                                     <a href="#delete_user_modal" onclick="rowSelected(${id})"  data-toggle="modal" title="حذف"
+                                                                    class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-trash"></i></a>
+                                                </div>
+                                                <div class="float-right">
+                                                     <a href="#add_edit_modal" onclick="loadEntity(${id})"  data-toggle="modal" title="ویرایش"
+                                                                    class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-pencil"></i></a>
+                                                </div>
+                                                <div class="float-right">
+                                                     <a href="javascript:void(0)" onclick="openUserOrganizations(${id})"  data-toggle="modal" title="دسترسی به سازمان ها"
+                                                                    class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-building-o"></i></a>
+                                                </div>
+                                                <div class="float-right">
+                                                     <a href="javascript:void(0)"   data-toggle="modal" title="دسترسی به منوها"
+                                                                    class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-check-square-o"></i></a>
+                                                </div>
+                                                <div class="float-right">
+                                                     <a href="javascript:void(0)"   data-toggle="modal" title="تغییر رمز عبور"
+                                                                    class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-key"></i></a>
+                                                </div>
+                                                <div class="float-right">
+                                                     <a href="javascript:void(0)"   data-toggle="modal" title="تمدید اعتبار کاربر"
+                                                                    class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-address-book-o"></i></a>
+                                                </div>
+                                                <div class="float-right">
+                                                     <a href="javascript:void(0)"   data-toggle="modal" title="تمدید اعتبار رمز عبور"
+                                                                    class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-line-chart"></i></a>
+                                                </div>
+                                                <div class="float-right">
+                                                     <a href="javascript:void(0)"   data-toggle="modal" title="فعال/غیرفعال سازی"
+                                                                    class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-exclamation-triangle"></i></a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                        </script>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- /Grid -->
+    </div>
+
+    <!-- paging -->
+    <div class="row col-md-12 card-body pl-5" style="text-align: center!important;">
+        <span class="float-left pt-2"> صفحه &nbsp;</span>
+        <span class="float-left pt-2" id="currentPage"></span>
+        <span class="float-left pt-2">&nbsp;از &nbsp;</span>
+        <span class="float-left pt-2" id="totalPages"></span>&nbsp;
+
+        <ul class="pagination float-left" id="pagingList"></ul>&nbsp;
+
+        <span class="float-left pt-2" id="totalRecords"></span>
+        <span class="float-left pt-2"> مورد &nbsp;</span>
+
+        <select id="cmbPageSize" class="float-left" style="height: 35px;border-radius: 8px;cursor: pointer">
+            <option value="5">5</option>
+            <option value="8" selected>8</option>
+            <option value="10">10</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+        </select>
+    </div>
+    <!-- paging -->
+
+    <!-- Add/Edit Modal -->
+    <div class="modal fade custom-modal" id="add_edit_modal" aria-hidden="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-white">افزودن / ویرایش کاربر </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCloseModal"
+                            onclick="fillGrid('userTemplate', 'userList', contextPath + '/rest/core/user/searchUser', searchFilters)">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Add User -->
+                    <input type="hidden" id="hiddenFieldId"/>
+                    <div class="service-fields mb-3">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <input type="hidden" id="hiddenFieldPersonelId"/>
+                                    <label>پرسنل<span class="text-danger">*</span><span
+                                            style="cursor: pointer" class="fa fa-search text-info"
+                                            title="انتخاب پرسنل"
+                                            onclick="viewFancyBox('/app/view/core/personel/personelSelect.html','90%','90%')"></span></label>
+                                    <div>
+                                        <input class="form-control" disabled type="text" id="txtPersonelTitle"
+                                               required="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>نام کاربری<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="txtUsername" required="">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="password-related">رمز عبور <span class="text-danger">*</span></label>
+                                    <input class="form-control password-related" type="password" id="txtPassword" required="">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="password-related">تکرار رمز عبور <span class="text-danger">*</span></label>
+                                    <input class="form-control password-related" type="password" id="txtPasswordRepeat" required="">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="service-fields mb-3">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="submit-section">
+                                        <button class="btn btn-primary submit-btn" onclick="saveEntity()"> ثبت
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-lg-8">
+                                    <img id="uploadedImage"
+                                         style="width: 8em;border: 1px solid;border-radius: 10px;box-shadow: 0px 0px 10px 1px;"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Add User -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Add/Edit Modal -->
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="delete_user_modal" aria-hidden="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="form-content p-2">
+                        <h4 class="modal-title">تاییدیه حذف</h4>
+                        <p class="mb-4">آیا از حدف اطمینان کافی دارید؟</p>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                onclick="deleteEntity()">بله
+                        </button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"
+                                onclick="rowDeselected()">خیر
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Delete Modal -->
+
+    <!-- image_modal -->
+    <div class="modal fade custom-modal" id="image_modal" aria-hidden="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تصویر پرسنلی کاربر </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <img src="" class="img-fluid" alt="هنوز تصویری برای این شخص آپلود نشده است." id="image_full_size">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /image_modal -->
+
+</div>
+<!-- /Page Wrapper -->
+
+<!-- Bootstrap Core JS -->
+<script src="/app/assets/bzamani/bootstrap.min.js"></script>
+
+</body>
+</html>

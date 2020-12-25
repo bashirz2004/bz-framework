@@ -223,15 +223,18 @@
                         $('#btnCloseModal').click();
                     },
                     error: function (err) {
-                        showMessage("خطا در ثبت اطلاعات", "", "error");
+                        if (err.responseText.includes("unq_personel_nationalcode"))
+                            showMessage("خطا. کدملی تکراری است.", "", "error");
                     }
                 });
-            } else showMessage("پرکردن فیلدهای ستاره دار الزامی است.", "", "warning");
+            } else showMessage(validateForm(), "", "warning");
         }
 
         function validateForm() {
-            if ($('#txtFirstname').val() == '' || $('#txtLastname').val() == '' || !$('#hiddenFieldOrganizationId').val() > 0 || $('#txtOrganizationTitle').val() == '')
-                return;
+            if ($('#txtNationalCode').val() == '' || $('#txtFirstname').val() == '' || $('#txtLastname').val() == '' || !$('#hiddenFieldOrganizationId').val() > 0 || $('#txtOrganizationTitle').val() == '')
+                return "پرکردن فیلدهای ستاره دار الزامی است.";
+            else if ($('#txtNationalCode').val().length != 10)
+                return "کدملی باید 10 رقمی باشد.";
             else return 'ok';
         }
 
@@ -502,6 +505,7 @@
 
 
 
+
                         </script>
                         </tbody>
                     </table>
@@ -563,7 +567,7 @@
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label>کدملی </label>
+                                    <label>کدملی <span class="text-danger">*</span></label>
                                     <input class="form-control" type="text" id="txtNationalCode">
                                 </div>
                             </div>

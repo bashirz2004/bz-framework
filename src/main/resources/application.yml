@@ -36,3 +36,5 @@ logging:
             sql:
               BasicBinder: TRACE
         SQL: DEBUG
+bzamani:
+  organization-id-for-guest-users: 2

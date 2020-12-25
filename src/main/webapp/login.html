@@ -26,6 +26,13 @@
     <!-- jQuery -->
     <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
     <script src="/app/assets/bzamani/jquery.cookie.js"></script>
+
+    <!-- sweet alert -->
+    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/sweetalert/sweetalert2.min.css">
+    <!-- /sweet alert -->
+
     <script>
         var contextPath = "/app";
         $(function () {
@@ -45,13 +52,13 @@
                     }),
                     type: 'POST',
                     success: function (res) {
-                        localStorage.setItem("authenticatedUserFullName", res.firstname + " " + res.lastname);
+                        localStorage.setItem("authenticatedUserFullName", res.personel.firstname + " " + res.personel.lastname);
                         $.cookie('Authorization', "Bearer-" + res.token, {expires: 1, path: '/'});
                         document.location.href = contextPath + "/dashboard.html";
                     },
                     error: function (err) {
                         if (err.responseText.includes("Bad credentials")) {
-                            alert("نام کاربری یا کلمه عبور اشتباه است.");
+                            showMessage("نام کاربری یا کلمه عبور اشتباه است.", "", "error");
                         }
                         ;
                     }

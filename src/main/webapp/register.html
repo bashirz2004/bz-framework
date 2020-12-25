@@ -26,6 +26,13 @@
 
     <!-- jQuery -->
     <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
+
+    <!-- sweet alert -->
+    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/sweetalert/sweetalert2.min.css">
+    <!-- /sweet alert -->
+
     <script>
         var contextPath = "/app";
         $(function () {
@@ -35,33 +42,39 @@
         function register() {
             if (validateForm() == 'ok') {
                 $.ajax({
-                    url: contextPath + "/api/public/user/registerUserByHimself",
+                    url: contextPath + "/api/public/user/selfRegister",
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
                     data: JSON.stringify({
                         "username": $('#txtUsername').val(),
                         "password": $('#txtPassword').val(),
+                        "passwordRepeat": $('#txtRepeatPassword').val(),
                         "firstname": $('#txtFirstname').val(),
                         "lastname": $('#txtLastname').val(),
+                        "nationalCode": $('#txtNationalCode').val(),
+                        "male": $('#cmbGender').val(),
                     }),
                     type: 'POST',
                     success: function (res) {
-                        alert("کاربر " + res.username + " با موقثیت ایجاد شد.");
-                        document.location.href = contextPath + "/view/login.html";
+                        showMessage("کاربر " + res.username + " با موقثیت ایجاد شد.", "", "success");
+                        document.location.href = contextPath + "/login.html";
                     },
                     error: function (err) {
-                        if (err.responseText.includes("unq_username")) {
-                            alert("خطا در ثبت کاربر. با این نام کاربری قبلا ثبت نام انجام شده است!");
-                        }
+                        if (err.responseText.includes("unq_username") || err.responseText.includes("username already exists"))
+                            showMessage("خطا در ثبت کاربر. با این نام کاربری قبلا ثبت نام انجام شده است!", "", "error");
+                        else if (err.responseText.includes("unq_personel_nationalcode"))
+                            showMessage("خطا در ثبت کاربر. با این کدملی قبلا ثبت نام انجام شده است!", "", "error");
+
                     }
                 });
-            } else alert(validateForm());
+            } else showMessage(validateForm(), "", "warning");
         }
 
         function validateForm() {
-            if ($('#txtFirstname').val() == '' || $('#txtLastname').val() == '' || $('#txtUsername').val() == '' || $('#txtPassword').val() == '' || $('#txtRepeatPassword').val() == '')
-                return 'پرکردن همه فیلدها اجباری است.'
-
+            if ($('#cmbGender').val() == '...' || $('#txtFirstname').val() == '' || $('#txtLastname').val() == '' || $('#txtUsername').val() == '' || $('#txtPassword').val() == '' || $('#txtRepeatPassword').val() == '' || $('#txtNationalCode').val() == '')
+                return 'پرکردن همه فیلدها اجباری است.';
+            else if ($('#txtNationalCode').val().length != 10)
+                return 'کدملی باید 10 رقمی باشد.';
             else if ($('#txtPassword').val() != $('#txtRepeatPassword').val())
                 return 'رمز عبور و تکرار آن یکسان نیستند.';
             else return 'ok';
@@ -103,8 +116,21 @@
                                     <label class="focus-label"> نام خانوادگی</label>
                                 </div>
                                 <div class="form-group form-focus">
+                                    <input type="text" class="form-control floating" id="txtNationalCode" maxlength="10"
+                                           minlength="10">
+                                    <label class="focus-label">کدملی</label>
+                                </div>
+                                <div class="form-group form-focus">
+                                    <select id="cmbGender" class="form-control floating">
+                                        <option value="..."></option>
+                                        <option value="true">مرد</option>
+                                        <option value="false">زن</option>
+                                    </select>
+                                    <label class="focus-label">جنسیت</label>
+                                </div>
+                                <div class="form-group form-focus">
                                     <input type="text" class="form-control floating" id="txtUsername">
-                                    <label class="focus-label">نام کاربری / شماره موبایل </label>
+                                    <label class="focus-label">نام کاربری( مثلا شماره موبایل) </label>
                                 </div>
                                 <div class="form-group form-focus">
                                     <input type="password" class="form-control floating" id="txtPassword">

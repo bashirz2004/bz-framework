@@ -13,7 +13,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "core_personel")
+@Table(name = "core_personel",uniqueConstraints = {@UniqueConstraint(name = "unq_personel_nationalCode", columnNames = "nationalCode")})
 @FilterDefs({@FilterDef(name = "organizationAuthorize", parameters = {@ParamDef(name = "username", type = "string")})})
 @Filters({@Filter(name = "organizationAuthorize", condition = " exists ( select 1 from core_user_organization uo join core_user u on u.id = uo.user_id and u.username = :username and uo.organization_id = organization_id ) ")})
 @SequenceGenerator(name = "sequence_db", sequenceName = "seq_core_personel", allocationSize = 1)
@@ -42,6 +42,7 @@ public class Personel extends BaseEntity {
     @Column(name = "birth_certificate_number")
     private String birthCertificateNumber;
 
+    @NotNull
     @Column(name = "nationalCode")
     private String nationalCode;
 

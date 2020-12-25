@@ -35,7 +35,7 @@ public class PersonelService extends GenericService<Personel, Long> implements I
     @Override
     @Transactional
     public Personel save(Personel personel) {
-        personel.setFileCode(personel.getFileCode().length() == 0 ? null : personel.getFileCode());
+        personel.setFileCode(personel.getFileCode() == null || personel.getFileCode().length() == 0 ? null : personel.getFileCode());
         String oldFileCode = null;
         String newFileCode = personel.getFileCode();
         if (personel.getId() != null && personel.getId() > 0) //edit mode

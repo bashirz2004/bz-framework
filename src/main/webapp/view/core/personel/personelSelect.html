@@ -133,6 +133,11 @@
             fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
         }
 
+        function selectPersonel(id,firstname,lastname,fileCode){
+            parent.setPersonel(id,firstname,lastname,fileCode);
+            parent.$.fancybox.close();
+        }
+
     </script>
 
 <body>
@@ -217,7 +222,7 @@
                         </thead>
                         <tbody id="personelList">
                         <script id="personelTemplate" type="text/x-jquery-tmpl">
-                                    <tr>
+                                    <tr ondblclick="selectPersonel(${id},'${firstname}','${lastname}','${fileCode}')">
                                         <td class="text-center"><span class="tmplRowIndex"></span></td>
                                         <td>
                                             <h2 class="table-avatar">

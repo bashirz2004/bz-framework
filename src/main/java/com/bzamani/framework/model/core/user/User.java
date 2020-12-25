@@ -2,8 +2,9 @@ package com.bzamani.framework.model.core.user;
 
 import com.bzamani.framework.common.config.mycustomannotation.MyLengthValidator;
 import com.bzamani.framework.model.core.BaseEntity;
-import com.bzamani.framework.model.core.organization.Organization;
 import com.bzamani.framework.model.core.action.Action;
+import com.bzamani.framework.model.core.organization.Organization;
+import com.bzamani.framework.model.core.personel.Personel;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.*;
@@ -17,12 +18,16 @@ import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
-@Table(name = "CORE_USER", uniqueConstraints = {@UniqueConstraint(name = "unq_username", columnNames = "username")})
+@Table(name = "CORE_USER", uniqueConstraints = {@UniqueConstraint(name = "unq_username", columnNames = "username"),@UniqueConstraint(name = "unq_user_personel_id", columnNames = "personel_id")})
 @SequenceGenerator(name = "sequence_db", sequenceName = "SEQ_CORE_USER", allocationSize = 1)
 @Setter
 @Getter
 @FilterDefs({@FilterDef(name = "organizationAuthorize", parameters = {@ParamDef(name = "username", type = "string")})})
-@Filters({@Filter(name = "organizationAuthorize", condition = " username = :username ")})
+@Filters({@Filter(name = "organizationAuthorize", condition =
+        " exists ( select 1 from core_personel p " +
+                "           join core_user_organization uo on uo.organization_id = p.organization_id " +
+                "           join core_user u on u.id = uo.user_id " +
+                "          where p.id = personel_id and u.username = :username ) ")})
 public class User extends BaseEntity implements UserDetails {
 
     @NotNull
@@ -36,20 +41,6 @@ public class User extends BaseEntity implements UserDetails {
     @Getter
     @Setter
     private String password;
-
-    @NotNull
-    @MyLengthValidator(minLenght = 1, maxLength = 30, message = "Error. length of field firstname is not valid ! ")
-    @Column(name = "firstname", nullable = false)
-    @Getter
-    @Setter
-    private String firstname;
-
-    @NotNull
-    @MyLengthValidator(minLenght = 1, maxLength = 30, message = "Error. length of field lastname is not valid ! ")
-    @Column(name = "lastname", nullable = false)
-    @Getter
-    @Setter
-    private String lastname;
 
     @NotNull
     @Column(name = "is_accountNonExpired", nullable = false)
@@ -75,11 +66,12 @@ public class User extends BaseEntity implements UserDetails {
     @Setter
     private boolean enabled;
 
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "personel_id", nullable = false)
+    private Personel personel;
 
-  /*@ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "PERSONELID", updatable = false, nullable = false)
-  private BasePersonel personel;
-
+  /*
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "CLASSIFICATION_ID", nullable = false)
   private BaseInformation classification;
