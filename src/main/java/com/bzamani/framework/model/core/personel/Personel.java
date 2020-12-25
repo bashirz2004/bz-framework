@@ -5,12 +5,17 @@ import com.bzamani.framework.model.core.baseinfo.BaseInfo;
 import com.bzamani.framework.model.core.organization.Organization;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "core_personel")
+@FilterDefs({@FilterDef(name = "organizationAuthorize", parameters = {@ParamDef(name = "username", type = "string")})})
+@Filters({@Filter(name = "organizationAuthorize", condition = " exists ( select 1 from core_user_organization uo join core_user u on u.id = uo.user_id and u.username = :username and uo.organization_id = organization_id ) ")})
 @SequenceGenerator(name = "sequence_db", sequenceName = "seq_core_personel", allocationSize = 1)
 @Setter
 @Getter

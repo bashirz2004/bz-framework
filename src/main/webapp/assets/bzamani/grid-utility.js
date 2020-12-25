@@ -34,12 +34,14 @@ function fillGrid(templateId, destinationId, url, jsonData, callBackFunction) {
         }
         $('table.table tbody tr:not([th]):odd').css('backgroundColor', '#c4f0f5');
         $('#totalRecords').html(entities.totalRecords);
+        $('#currentPage').html(entities.currentPage + 1);
+        $('#totalPages').html(entities.totalPages);
         $('#pagingList > li').remove();
 
         if (entities.currentPage == 0)
             $('#pagingList').append('<li class="page-item"><a class="page-link disabled" > قبلی </a></li>');
         else
-            $('#pagingList').append('<li class="page-item"><a class="page-link" onclick="previous()"> قبلی </a></li>');
+            $('#pagingList').append('<li class="page-item"><a class="page-link" style="cursor: pointer" onclick="previous()"> قبلی </a></li>');
 
         for (let i = 0; i < entities.totalPages; i++) {
             if (entities.currentPage == i)
@@ -52,7 +54,7 @@ function fillGrid(templateId, destinationId, url, jsonData, callBackFunction) {
         if (entities.currentPage == entities.totalPages - 1)
             $('#pagingList').append('<li class="page-item"><a class="page-link disabled" > بعدی </a></li>');
         else
-            $('#pagingList').append('<li class="page-item"><a class="page-link" onclick="next()"> بعدی </a></li>');
+            $('#pagingList').append('<li class="page-item"><a class="page-link" style="cursor: pointer" onclick="next()"> بعدی </a></li>');
 
 
         if (callBackFunction != null && typeof callBackFunction == 'function')

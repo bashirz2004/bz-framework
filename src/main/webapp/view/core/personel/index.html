@@ -139,6 +139,8 @@
         function clearSearch() {
             $('#cmbPageSize').val(8);
             searchFilters = {
+                "firstname": '',
+                "lastname": '',
                 "nationalCode": '',
                 "sort": "id,desc",
                 "page": 0,
@@ -349,11 +351,11 @@
                        class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-plus"></i></a>
                 </div>
                 <div class="float-right">
-                    <a href="javascript:void(0)" onclick="clearSearch();"  data-toggle="tooltip" title="پاک کردن فیلترها"
+                    <a href="javascript:void(0)" onclick="clearSearch();" data-toggle="tooltip" title="پاک کردن فیلترها"
                        class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-eraser"></i></a>
                 </div>
                 <div class="float-right search-section" style="display: none">
-                    <a href="javascript:void(0)" onclick="searchPersonel();"  data-toggle="tooltip" title="جستجو"
+                    <a href="javascript:void(0)" onclick="searchPersonel();" data-toggle="tooltip" title="جستجو"
                        class="btn btn-block btn-rounded btn-outline-secondary"><i class="fa fa-filter"></i></a>
                 </div>
                 <div class="float-right">
@@ -497,6 +499,9 @@
 
 
 
+
+
+
                         </script>
                         </tbody>
                     </table>
@@ -507,28 +512,26 @@
     </div>
 
     <!-- paging -->
-    <div class="row col-md-12 card-body">
-        <div class="col-md-9">
-            <ul class="pagination" id="pagingList">
+    <div class="row col-md-12 card-body pl-5" style="text-align: center!important;">
+        <span class="float-left pt-2"> صفحه &nbsp;</span>
+        <span class="float-left pt-2" id="currentPage"></span>
+        <span class="float-left pt-2">&nbsp;از &nbsp;</span>
+        <span class="float-left pt-2" id="totalPages"></span>&nbsp;
 
-            </ul>
-        </div>
-        <div class="col-md-3 dataTables_length" id="DataTables_Table_0_length">
-            <span class="col-sm-4">تعداد</span>
-            <select id="cmbPageSize" name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
-                    class="custom-select custom-select-sm form-control form-control-sm col-sm-3">
-                <option value="5">5</option>
-                <option value="8" selected>8</option>
-                <option value="10">10</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-            </select>
-            <span class="col-xs-2 col-md-2 col-sm-6">از</span>
-            <span class="col-xs-2 col-md-2 col-sm-6" id="totalRecords"></span>
-        </div>
+        <ul class="pagination float-left" id="pagingList"></ul>&nbsp;
+
+        <span class="float-left pt-2" id="totalRecords"></span>
+        <span class="float-left pt-2"> مورد &nbsp;</span>
+
+        <select id="cmbPageSize" class="float-left" style="height: 35px;border-radius: 8px;cursor: pointer">
+            <option value="5">5</option>
+            <option value="8" selected>8</option>
+            <option value="10">10</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+        </select>
     </div>
     <!-- paging -->
-
 
     <!-- Add/Edit Modal -->
     <div class="modal fade custom-modal" id="add_edit_modal" aria-hidden="true" role="dialog">

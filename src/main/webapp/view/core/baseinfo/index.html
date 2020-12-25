@@ -117,7 +117,7 @@
                     $.getJSON(contextPath + "/rest/core/baseinfo/searchBaseInfo", searchFilter, function (data) {
                         resp($.map(data.entityList, function (result) {
                             return {
-                                label: result.title,
+                                label: result.parent != null ? result.parent.title : result.header.title + " > " + result.title,
                                 value: result.id
                             };
                         }));
