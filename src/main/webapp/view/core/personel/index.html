@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <title>لیست پزشکان</title>
+    <title>لیست پرسنل</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/app/assets/img/favicon.png">
@@ -83,11 +83,14 @@
             "male": '',
             "firstname": '',
             "lastname": '',
-            "medicalNationalNumber": '',
-            "speciality": {"id": ''},
-            "state": {"id": ''},
-            "city": {"id": ''},
-            "region": {"id": ''},
+            "birthCertificateNumber": '',
+            "nationalCode": '',
+            "fatherName": '',
+            "motherName": '',
+            "birthPlace": '',
+            "educationLevel": {"id": ''},
+            "militaryServiceStatus": {"id": ''},
+            "mobile": '',
             "address": '',
             "telephone": '',
             "organization": {"id": ''},
@@ -95,84 +98,80 @@
         };
 
         var searchFilters = {
-            "specialityTitle": '',
+            "firstname": '',
+            "lastname": '',
+            "nationalCode": '',
             "sort": "id,desc",
             "page": 0,
             "size": 8
         };
 
         $(function () {
-            fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+            fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
 
             $('.sort-grid').on("click", function () {
                 searchFilters.sort = $(this).attr("order");
-                fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+                fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
             });
 
             $('#cmbPageSize').change(function () {
                 searchFilters.size = $(this).val();
-                fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+                fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
             });
 
-            $('#txtSearchDoctor').keydown(function (e) {
+            $('.searchFilter').keydown(function (e) {
                 if (e.which == 13)  // the enter key code
-                    searchDoctor();
+                    searchPersonel();
             });
 
-            fillComboBaseInfo(1000,"cmbSpeciality");
-            fillComboBaseInfo(1,cmbSpeciality);
+            fillComboBaseInfo(2, "cmbMilitaryServiceStatus");
+            fillComboBaseInfo(3, "cmbEducationLevel");
 
-            $("#cmbState").change(function () {
-                fillComboCity($(this).val());
-                $("#cmbRegion").html("<select class='select' id='cmbRegion'></select>");
-            });
-
-            $("#cmbCity").change(function () {
-                fillComboRegion($(this).val());
-            });
         });
 
-        function searchDoctor() {
-            searchFilters.specialityTitle = $("#txtSearchDoctor").val();
-            fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+        function searchPersonel() {
+            searchFilters.firstname = $("#txtSearchFirstname").val();
+            searchFilters.lastname = $("#txtSearchLastname").val();
+            searchFilters.nationalCode = $("#txtSearchNationalCode").val();
+            fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
         }
 
         function clearSearch() {
             $('#cmbPageSize').val(8);
             searchFilters = {
-                "specialityTitle": '',
+                "nationalCode": '',
                 "sort": "id,desc",
                 "page": 0,
                 "size": 8
             };
             $('.searchFilter').val('');
-            fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+            fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
         }
 
         function next() {
             searchFilters.page = searchFilters.page + 1;
-            fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+            fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
         }
 
         function previous() {
             searchFilters.page = searchFilters.page - 1;
-            fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+            fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
         }
 
         function goTo(pageNumber) {
             searchFilters.page = pageNumber;
-            fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+            fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
         }
 
         function deleteEntity() {
             if ($('#hiddenFieldId').val() > 0)
                 $.ajax({
-                    url: contextPath + "/rest/doctor/delete/" + $('#hiddenFieldId').val(),
+                    url: contextPath + "/rest/core/personel/delete/" + $('#hiddenFieldId').val(),
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
                     type: 'DELETE',
                     success: function (res) {
-                        fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+                        fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
                         showMessage("حذف با موفقیت انجام شد.", "", "success");
                     },
                     error: function (err) {
@@ -195,7 +194,7 @@
             clearInputs();
             clearEntity();
             $.ajax({
-                url: contextPath + "/rest/doctor/load/" + id,
+                url: contextPath + "/rest/core/personel/load/" + id,
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 type: 'GET',
@@ -211,7 +210,7 @@
             if (validateForm() == 'ok') {
                 setEntityFromInputs();
                 $.ajax({
-                    url: contextPath + "/rest/doctor/save",
+                    url: contextPath + "/rest/core/personel/save",
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
                     data: JSON.stringify(entityData),
@@ -229,50 +228,9 @@
         }
 
         function validateForm() {
-            if ($('#txtFirstname').val() == '' || $('#txtLastname').val() == '' || $('#txtAddress').val() == '' || $('#txtPhone').val() == ''
-                || !$('#cmbSpeciality').val() > 0 || !$('#cmbState').val() > 0 || !$('#cmbCity').val() > 0 || !$('#cmbRegion').val() > 0 || !$('#hiddenFieldOrganizationId').val() > 0 || $('#txtOrganizationTitle').val() == '')
+            if ($('#txtFirstname').val() == '' || $('#txtLastname').val() == '' || !$('#hiddenFieldOrganizationId').val() > 0 || $('#txtOrganizationTitle').val() == '')
                 return;
             else return 'ok';
-        }
-
-        function fillComboCity(stateId, callBackFunction) {
-            $.ajax({
-                type: "GET",
-                url: contextPath + "/api/public/baseinfo/getAllByParentId/" + stateId,
-                contentType: "application/json;charset=utf-8",
-                dataType: "json",
-                success: function (res) {
-                    $("#cmbCity").html("<select class='select' id='cmbCity'></select>");
-                    $("#cmbCity").append("<option value=-1>...</option>");
-                    $.each(res, function (index, value) {
-                        $("#cmbCity").append("<option value=" + value.id + ">" + value.title + "</option>");
-                    });
-                    if (callBackFunction != null && typeof callBackFunction == 'function')
-                        callBackFunction();
-                },
-                error: function (err) {
-                }
-            });
-        }
-
-        function fillComboRegion(cityId, callBackFunction) {
-            $.ajax({
-                type: "GET",
-                url: contextPath + "/api/public/baseinfo/getAllByParentId/" + cityId,
-                contentType: "application/json;charset=utf-8",
-                dataType: "json",
-                success: function (res) {
-                    $("#cmbRegion").html("<select class='select' id='cmbRegion'></select>");
-                    $("#cmbRegion").append("<option value=-1>...</option>");
-                    $.each(res, function (index, value) {
-                        $("#cmbRegion").append("<option value=" + value.id + ">" + value.title + "</option>");
-                    });
-                    if (callBackFunction != null && typeof callBackFunction == 'function')
-                        callBackFunction();
-                },
-                error: function (err) {
-                }
-            });
         }
 
         function clearEntity() {
@@ -281,11 +239,14 @@
                 "male": '',
                 "firstname": '',
                 "lastname": '',
-                "medicalNationalNumber": '',
-                "speciality": {"id": ''},
-                "state": {"id": ''},
-                "city": {"id": ''},
-                "region": {"id": ''},
+                "birthCertificateNumber": '',
+                "nationalCode": '',
+                "fatherName": '',
+                "motherName": '',
+                "birthPlace": '',
+                "educationLevel": {"id": ''},
+                "militaryServiceStatus": {"id": ''},
+                "mobile": '',
                 "address": '',
                 "telephone": '',
                 "organization": {"id": ''},
@@ -295,23 +256,21 @@
 
         function setInputsByEntity(entity) {
             $("#hiddenFieldId").val(entity.id);
+            $("#cmbGender").val(entity.male.toString());
             $("#txtFirstname").val(entity.firstname);
             $("#txtLastname").val(entity.lastname);
-            $("#txtMedicalNationalNumber").val(entity.medicalNationalNumberl);
-            $("#cmbGender").val(entity.male.toString());
-            $("#cmbState").val(entity.state.id);
-            fillComboCity(entity.state.id, function () {
-                fillComboRegion(entity.city.id, function () {
-                    $("#cmbCity").val(entity.city.id);
-                    $("#cmbRegion").val(entity.region.id);
-                });
-            });
+            $("#txtBirthCertificateNumber").val(entity.birthCertificateNumber);
+            $("#txtNationalCode").val(entity.nationalCode);
+            $("#txtFatherName").val(entity.fatherName);
+            $("#txtMotherName").val(entity.motherName);
+            $("#txtBirthPlace").val(entity.birthPlace);
+            $("#cmbEducationLevel").val(entity.educationLevel != null ? entity.educationLevel.id : -1);
+            $("#cmbMilitaryServiceStatus").val(entity.militaryServiceStatus != null ? entity.militaryServiceStatus.id : -1);
+            $("#txtMobile").val(entity.mobile);
+            $("#txtAddress").val(entity.address);
+            $("#txtTelephone").val(entity.telephone);
             $("#hiddenFieldOrganizationId").val(entity.organization.id);
             $("#txtOrganizationTitle").val(entity.organization.title);
-            $("#cmbSpeciality").val(entity.speciality.id);
-            $("#txtAddress").val(entity.address);
-            $("#txtPhone").val(entity.telephone);
-
             if (entity.fileCode != null && entity.fileCode.length > 0) {
                 $('#uploadedImage').prop("src", "/app/rest/core/file/download/" + entity.fileCode + "/false");
                 $("#hiddenFieldfileCode").val(entity.fileCode);
@@ -325,13 +284,16 @@
                 "male": $('#cmbGender').val(),
                 "firstname": $('#txtFirstname').val(),
                 "lastname": $('#txtLastname').val(),
-                "medicalNationalNumber": $('#txtMedicalNationalNumber').val(),
-                "speciality": {"id": $('#cmbSpeciality').val()},
-                "state": {"id": $('#cmbState').val()},
-                "city": {"id": $('#cmbCity').val()},
-                "region": {"id": $('#cmbRegion').val()},
+                "birthCertificateNumber": $('#txtBirthCertificateNumber').val(),
+                "nationalCode": $('#txtNationalCode').val(),
+                "fatherName": $('#txtFirstname').val(),
+                "motherName": $('#txtMotherName').val(),
+                "birthPlace": $('#txtBirthPlace').val(),
+                "educationLevel": $('#cmbEducationLevel').val() > 0 ? {"id": $('#cmbEducationLevel').val()} : null,
+                "militaryServiceStatus": $('#cmbMilitaryServiceStatus').val() > 0 ? {"id": $('#cmbMilitaryServiceStatus').val()} : null,
+                "mobile": $('#txtMobile').val(),
                 "address": $('#txtAddress').val(),
-                "telephone": $('#txtPhone').val(),
+                "telephone": $('#txtTelephone').val(),
                 "organization": {"id": $('#hiddenFieldOrganizationId').val()},
                 "fileCode": $('#hiddenFieldfileCode').val()
             }
@@ -366,7 +328,7 @@
         }
 
         function setOrganization(id, title) {
-           $('#hiddenFieldOrganizationId').val(id);
+            $('#hiddenFieldOrganizationId').val(id);
             $('#txtOrganizationTitle').val(title);
         }
 
@@ -377,26 +339,40 @@
     <div class="col-md-12 d-flex">
         <!-- Grid -->
         <div class="card card-table flex-fill">
-            <div class="col-sm-12">
+            <div class="col-sm-12" style="background-color: darkslategray;border-radius: 10px 10px 0px 0px">
                 <div class="float-left mt-1">
-                    <h5>لیست پزشکان</h5>
+                    <h5 class="text-white">لیست پرسنل</h5>
                 </div>
-                <div class="float-left col-sm-3 col-md-5 col-lg-8 col-xl-8">
-                    <input type="text" id="txtSearchDoctor" class="form-control searchFilter"
-                           placeholder="جستجو براساس تخصص ...">
-                </div>
-                <div class="float-left">
-                    <a href="javascript:void(0)" onclick="searchDoctor();"
-                       class="btn btn-block btn-outline-info btn-rounded">جستجو</a>
-                </div>
-                <div class="float-left">
-                    <a href="javascript:void(0)" onclick="clearSearch();" class="btn btn-block btn-outline-danger btn-rounded">پاک
-                        کردن</a>
-                </div>
-                <div class="float-left">
-                    <a href="#add_edit_modal" data-toggle="modal"
+                <div class="float-right">
+                    <a href="#add_edit_modal" data-toggle="modal" title="جدید"
                        onclick="clearEntity();clearInputs();"
-                       class="btn btn-block btn-outline-success btn-rounded">جدید</a>
+                       class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-plus"></i></a>
+                </div>
+                <div class="float-right">
+                    <a href="javascript:void(0)" onclick="clearSearch();"  data-toggle="tooltip" title="پاک کردن فیلترها"
+                       class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-eraser"></i></a>
+                </div>
+                <div class="float-right search-section" style="display: none">
+                    <a href="javascript:void(0)" onclick="searchPersonel();"  data-toggle="tooltip" title="جستجو"
+                       class="btn btn-block btn-rounded btn-outline-secondary"><i class="fa fa-filter"></i></a>
+                </div>
+                <div class="float-right">
+                    <a href="javascript:void(0)" onclick="$('.search-section').slideToggle();"
+                       class="btn btn-block btn-rounded btn-outline-secondary"><i class="fa fa-search"></i></a>
+                </div>
+            </div>
+            <div class="col-sm-12 search-section" style="display: none">
+                <label class="float-left" style="padding-top: .5em">فیلتر کردن نتایج براساس : </label>
+                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                    <input type="text" id="txtSearchFirstname" class="form-control searchFilter" placeholder="نام ...">
+                </div>
+                <div class="float-left col-sm-2 col-md-3 col-lg-2 col-xl-2">
+                    <input type="text" id="txtSearchLastname" class="form-control searchFilter"
+                           placeholder="نام خانوادگی ...">
+                </div>
+                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                    <input type="text" id="txtSearchNationalCode" class="form-control searchFilter"
+                           placeholder="کدملی ...">
                 </div>
             </div>
             <div class="card-body">
@@ -421,21 +397,21 @@
                                 <i class="fa fa-sort-up sort-grid" order="organization.title,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="organization.title,desc"></i>
                             </th>
-                            <th>تخصص
-                                <i class="fa fa-sort-up sort-grid" order="speciality.title,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="speciality.title,desc"></i>
+                            <th>مدرک نحصیلی
+                                <i class="fa fa-sort-up sort-grid" order="educationLevel.title,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="educationLevel.title,desc"></i>
                             </th>
-                            <th>استان
-                                <i class="fa fa-sort-up sort-grid" order="state.title,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="state.title,desc"></i>
+                            <th>وضعیت نظام وظیفه
+                                <i class="fa fa-sort-up sort-grid" order="militaryServiceStatus.title,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="militaryServiceStatus.title,desc"></i>
                             </th>
-                            <th>شهر
-                                <i class="fa fa-sort-up sort-grid" order="city.title,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="city.title,desc"></i>
+                            <th>کدملی
+                                <i class="fa fa-sort-up sort-grid" order="nationalCode,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="nationalCode,desc"></i>
                             </th>
-                            <th>منطقه
-                                <i class="fa fa-sort-up sort-grid" order="region.title,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="region.title,desc"></i>
+                            <th>موبایل
+                                <i class="fa fa-sort-up sort-grid" order="mobile,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="mobile,desc"></i>
                             </th>
                             <th>تلفن
                                 <i class="fa fa-sort-up sort-grid" order="telephone,asc"></i>
@@ -444,8 +420,8 @@
                             <th>عملیات</th>
                         </tr>
                         </thead>
-                        <tbody id="doctorList">
-                        <script id="doctorTemplate" type="text/x-jquery-tmpl">
+                        <tbody id="personelList">
+                        <script id="personelTemplate" type="text/x-jquery-tmpl">
                                     <tr>
                                         <td class="text-center"><span class="tmplRowIndex"></span></td>
                                         <td>
@@ -469,20 +445,42 @@
                                             </h2>
                                         </td>
                                         <td>${organization.title}</td>
-                                         <td>${speciality.title}</td>
-                                        <td>${state.title}</td>
-                                        <td>${city.title}</td>
-                                        <td>${region.title}</td>
+                                        <td>
+                                            {{if educationLevel}}
+                                                ${educationLevel.title}
+                                            {{/if}}
+                                        </td>
+                                        <td>
+                                            {{if militaryServiceStatus}}
+                                                ${militaryServiceStatus.title}
+                                            {{/if}}
+                                        </td>
+                                        <td>${nationalCode}</td>
+                                        <td>${mobile}</td>
                                         <td>${telephone}</td>
                                         <td class="text-right">
-                                            <a class="btn btn-sm bg-success-light" data-toggle="modal" href="#add_edit_modal" onclick="loadEntity(${id})" >
-												<i class="fe fe-pencil"></i> ویرایش
-											</a>
-											<a  data-toggle="modal" href="#delete_doctor_modal" class="btn btn-sm bg-danger-light" onclick="rowSelected(${id})" >
-												<i class="fe fe-trash"></i> حذف
-											</a>
+                                            <div class="float-right">
+                                                <div class="float-right">
+                                                     <a href="#delete_personel_modal" onclick="rowSelected(${id})"  data-toggle="modal" title="حذف"
+                                                                    class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-trash"></i></a>
+                                                </div>
+                                                <div class="float-right">
+                                                     <a href="#add_edit_modal" onclick="loadEntity(${id})"  data-toggle="modal" title="ویرایش"
+                                                                    class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-pencil"></i></a>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -537,36 +535,36 @@
         <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">افزودن / ویرایش پزشک </h5>
+                    <h5 class="modal-title text-white">افزودن / ویرایش پرسنل </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCloseModal"
-                            onclick="fillGrid('doctorTemplate', 'doctorList', contextPath + '/rest/doctor/searchDoctors', searchFilters)">
+                            onclick="fillGrid('personelTemplate', 'personelList', contextPath + '/rest/core/personel/searchPersonels', searchFilters)">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <!-- Add Doctor -->
+                    <!-- Add Personel -->
                     <input type="hidden" id="hiddenFieldId"/>
                     <div class="service-fields mb-3">
                         <div class="row">
-                            <div class="col-lg-3">
+                            <div class="col-lg-2">
                                 <div class="form-group">
                                     <label>نام <span class="text-danger">*</span></label>
                                     <input class="form-control" type="text" id="txtFirstname" required="">
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-2">
                                 <div class="form-group">
                                     <label>نام خانوادگی <span class="text-danger">*</span></label>
                                     <input class="form-control" type="text" id="txtLastname" required="">
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label>نظام پزشکی </label>
-                                    <input class="form-control" type="text" id="txtMedicalNationalNumber">
+                                    <label>کدملی </label>
+                                    <input class="form-control" type="text" id="txtNationalCode">
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-2">
                                 <div class="form-group">
                                     <label>جنسیت<span class="text-danger">*</span></label>
                                     <select id="cmbGender" class="form-control">
@@ -576,32 +574,75 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label>مدرک تحصیلی</label>
+                                    <select class="form-control" id="cmbEducationLevel"></select>
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label>وضعیت نظام وظیفه</label>
+                                    <select class="form-control" id="cmbMilitaryServiceStatus"></select>
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label>محل تولد</label>
+                                    <input class="form-control" type="text" id="txtBirthPlace">
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label>نام پدر</label>
+                                    <input class="form-control" type="text" id="txtFatherName">
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label>نام مادر</label>
+                                    <input class="form-control" type="text" id="txtMotherName">
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label>شماره شناسنامه</label>
+                                    <input class="form-control" type="text" id="txtBirthCertificateNumber">
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label>موبایل</label>
+                                    <input type="text" id="txtMobile" class="form-control service-desc"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label>تلفن</label>
+                                    <input type="text" id="txtTelephone" class="form-control service-desc"/>
+                                </div>
+                            </div>
                         </div>
+
                         <div class="service-fields mb-3">
                             <div class="row">
-                                <div class="col-lg-3">
+                                <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label>استان<span class="text-danger">*</span></label>
-                                        <select class="form-control" id="cmbState" required=""></select>
+                                        <label>آدرس</label>
+                                        <input type="text" id="txtAddress" class="form-control service-desc"/>
                                     </div>
                                 </div>
-                                <div class="col-lg-3">
+                                <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label>شهر<span class="text-danger">*</span></label>
-                                        <select class="form-control" id="cmbCity" required=""></select>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3">
-                                    <div class="form-group">
-                                        <label>منطقه<span class="text-danger">*</span></label>
-                                        <select class="form-control" id="cmbRegion" required=""></select>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3">
-                                    <div class="form-group">
-                                        <label>تخصص<span class="text-danger">*</span></label>
-                                        <select class="form-control" id="cmbSpeciality"
-                                                required=""></select>
+                                        <input type="hidden" id="hiddenFieldOrganizationId"/>
+                                        <label>واحد سازمانی<span class="text-danger">*</span><span
+                                                style="cursor: pointer" class="fa fa-search text-info"
+                                                title="انتخاب واحد سازمانی"
+                                                onclick="viewFancyBox('/app/view/core/organization/organizationSelect.html','70%','90%')"></span></label>
+                                        <div>
+                                            <input class="form-control" disabled type="text" id="txtOrganizationTitle"
+                                                   required="">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -609,34 +650,7 @@
 
                         <div class="service-fields mb-3">
                             <div class="row">
-                                <div class="col-lg-9">
-                                    <div class="form-group">
-                                        <label>آدرس<span class="text-danger">*</span></label>
-                                        <input type="text" id="txtAddress" class="form-control service-desc" />
-                                    </div>
-                                </div>
-                                <div class="col-lg-3">
-                                    <div class="form-group">
-                                        <label>تلفن<span class="text-danger">*</span></label>
-                                        <input type="text" id="txtPhone" class="form-control service-desc" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
-                        <div class="service-fields mb-3">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="form-group col-lg-12">
-                                        <input type="hidden" id="hiddenFieldOrganizationId" />
-                                        <label class="float-left col-lg-2">واحد سازمانی<span class="text-danger">*</span></label>
-                                        <input class="form-control col-lg-7 col-sm-10 float-left" disabled type="text" id="txtOrganizationTitle" required="">
-                                        <button class="btn btn-primary form-control col-lg-1 col-sm-1 float-left" style="width: 3rem"
-                                                onclick="viewFancyBox('/app/view/core/organization/organizationSelect.html','70%','90%')">
-                                            ...
-                                        </button>
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
@@ -665,7 +679,7 @@
                             </div>
                         </div>
                     </div>
-                    <!-- /Add Doctor -->
+                    <!-- /Add Personel -->
                 </div>
             </div>
         </div>
@@ -673,7 +687,7 @@
     <!-- /Add/Edit Modal -->
 
     <!-- Delete Modal -->
-    <div class="modal fade" id="delete_doctor_modal" aria-hidden="true" role="dialog">
+    <div class="modal fade" id="delete_personel_modal" aria-hidden="true" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-body">
@@ -698,7 +712,7 @@
         <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">تصویر پزشک </h5>
+                    <h5 class="modal-title">تصویر پرسنل </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

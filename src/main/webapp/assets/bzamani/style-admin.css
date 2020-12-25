@@ -514,7 +514,7 @@ button.bg-danger:hover {
     border-color: #00d0f1!important;
 }
 .btn-primary {
-	background-color: #00d0f1;
+	background-color: #0dd9f9;
     border: 1px solid #00d0f1;
 }
 .btn-primary:hover,
@@ -1705,7 +1705,7 @@ html.menu-opened body {
     position: fixed;
     top: 60px;
     transition: all 0.2s ease-in-out 0s;
-    width: 240px;
+    width: 200px;
     z-index: 1001;
 }
 .sidebar.opened {
@@ -2004,7 +2004,7 @@ html.menu-opened body {
 	min-height: 100vh;
 }
 .page-wrapper {
-	margin-right: 240px;
+	margin-right: 200px;
 	padding-top: 60px;
 	position: relative;
 	transition: all 0.4s ease;
@@ -2568,10 +2568,10 @@ html.menu-opened body {
 	margin-top: 40px;
 }
 .submit-btn {
-    border-radius: 50px;
+    border-radius: 35px;
     font-size: 18px;
     font-weight: 600;
-    min-width: 200px;
+    min-width: 150px;
     padding: 10px 20px;
 }
 
@@ -4300,8 +4300,6 @@ table.table-inbox tbody tr.checked {
 		font-size: 30px;
 		height: 60px;
 		justify-content: center;
-		margin-right: 15px;
-		padding: 0 15px;
 	}
 	.mini-sidebar .header-left .logo img {
 		height: auto;

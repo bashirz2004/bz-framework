@@ -11,15 +11,15 @@ public interface IDoctorRepository extends JpaRepository<Doctor, Long> {
     @Query("SELECT e FROM Doctor e where 1 = 1  " +
             " and e.firstname like COALESCE(cast('%'||:firstname||'%' AS text), '%'||e.firstname)||'%'  " +
             " and e.lastname like COALESCE(cast('%'||:lastname||'%' AS text), '%'||e.lastname)||'%' " +
-            " and e.medicalNationalNumber = COALESCE(cast(:medicalNationalNumber AS text), e.medicalNationalNumber) " +
+            " and case when e.medicalNationalNumber is null then 'foo' else e.medicalNationalNumber end like '%' || coalesce(cast( :medicalNationalNumber as text), case when e.medicalNationalNumber is null then 'foo' else e.medicalNationalNumber end) || '%'" +
             " and e.male = CASE WHEN :male is null THEN e.male ELSE :male END " +
             " and e.state.id =  CASE WHEN :stateId > 0L THEN :stateId ELSE e.state.id END " +
             " and e.city.id = CASE WHEN :cityId > 0L THEN :cityId ELSE e.city.id END " +
             " and e.region.id = CASE WHEN :regionId > 0L THEN :regionId ELSE e.region.id END " +
             " and e.speciality.id = CASE WHEN :specialityId > 0L THEN :specialityId ELSE e.speciality.id END " +
             " and e.speciality.title like COALESCE(cast('%'||:specialityTitle||'%' AS text), '%'||e.speciality.title)||'%'  " +
-            " and e.address like COALESCE(cast('%'||:address||'%' AS text), '%'||e.address)||'%' " +
-            " and e.telephone like COALESCE(cast('%'||:telephone||'%' AS text), '%'||e.telephone)||'%' " +
+            " and case when e.address is null then 'foo' else e.address end like '%' || coalesce(cast( :address as text), case when e.address is null then 'foo' else e.address end) || '%'" +
+            " and case when e.telephone is null then 'foo' else e.telephone end like '%' || coalesce(cast( :telephone as text), case when e.telephone is null then 'foo' else e.telephone end) || '%'" +
             " and instr(CASE WHEN :genders!='' THEN :genders ELSE cast(e.male as text) END, cast(e.male as text),  1,  1) > 0 " +
             " and instr(CASE WHEN :specialities!='' THEN :specialities ELSE cast(e.speciality.id as text) END, cast(e.speciality.id as text),  1,  1) > 0 "
     )

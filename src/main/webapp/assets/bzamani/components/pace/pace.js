@@ -921,7 +921,7 @@
   };
 
   if (typeof define === 'function' && define.amd) {
-    define(['pace'], function() {
+    define(['src/main/webapp/assets/bzamani/components/pace/pace'], function() {
       return Pace;
     });
   } else if (typeof exports === 'object') {

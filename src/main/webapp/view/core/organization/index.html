@@ -9,7 +9,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="/app/assets/img/favicon.png">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="/app/assets/bzamani/bootstrap.min.css">
+    <link rel="stylesheet" href="/app/assets/bzamani/bootstrap.css">
 
     <!-- Fontawesome CSS -->
     <link rel="stylesheet" href="/app/assets/admin/css/font-awesome.min.css">
@@ -49,8 +49,8 @@
             });
         });
     </script>
-    <script type="text/javascript" src="/app/view/components/pace/pace.min.js"></script>
-    <link rel="stylesheet" href="/app/view/components/pace/themes/blue/pace-theme-flash.css"/>
+    <script type="text/javascript" src="/app/assets/bzamani/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
     <style>
         .pace-cover {
             position: fixed;
@@ -65,17 +65,17 @@
     <!-- /pace mask -->
 
     <!-- sweet alert -->
-    <script type="text/javascript" src="/app/view/components/sweetalert/sweetalert2.min.js"></script>
-    <script type="text/javascript" src="/app/view/components/sweetalert/sweetAlertConfirm.js"></script>
-    <link rel="stylesheet" href="/app/view/components/sweetalert/sweetalert2.min.css">
+    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/sweetalert/sweetalert2.min.css">
     <!-- /sweet alert -->
 
     <!-- dhtml tree -->
-    <script type="text/javascript" src="/app/assets/tree/tree.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/app/assets/tree/tree.css"/>
+    <script type="text/javascript" src="/app/assets/bzamani/components/tree/tree.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/app/assets/bzamani/components/tree/tree.css"/>
     <!-- /dhtml tree -->
-    <script src="/app/view/components/autocomplete/jquery-ui-1.8.17.custom.min.js"></script>
-    <link rel="stylesheet" href="/app/view/components/autocomplete/jquery-ui-1.8.17.custom.css"/>
+    <script src="/app/assets/bzamani/components/autocomplete/jquery-ui-1.8.17.custom.min.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/autocomplete/jquery-ui-1.8.17.custom.css"/>
 
     <script type="text/javascript">
         var im0 = "leaf.gif";
@@ -153,7 +153,7 @@
         function configTree() {
             tree = new dhtmlXTreeObject("tree_div", "100%", "80%", 0);
             tree.setSkin('dhx_skyblue');
-            tree.setImagePath("/app/assets/tree/icons/");
+            tree.setImagePath("/app/assets/bzamani/components/tree/icons/");
 
             tree.enableHighlighting(true);
             tree.attachEvent("onRightClick", function (id, e) {
@@ -184,7 +184,7 @@
             menu = new dhtmlXMenuObject();
             menu.renderAsContextMenu();
             menu.attachEvent("onClick", onButtonClick);
-            menu.loadXML("/app/assets/tree/contextMenu.xml");
+            menu.loadXML("/app/assets/bzamani/components/tree/contextMenu.xml");
         }
 
         function findParents(id) {
