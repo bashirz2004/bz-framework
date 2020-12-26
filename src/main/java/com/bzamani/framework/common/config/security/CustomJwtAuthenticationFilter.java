@@ -2,6 +2,7 @@ package com.bzamani.framework.common.config.security;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,6 +48,8 @@ public class CustomJwtAuthenticationFilter extends OncePerRequestFilter {
                 //inja nabayad logout beshe az SecurityContextHolder???????????????
                 SecurityContextHolder.clearContext();
                 System.out.println("Cannot set the Security Context");
+                request.setAttribute("exception", new AccessDeniedException("شما به این بخش دسترسی ندارید. لطفا مجددا در سامانه لاگین نمایید."));
+                //response.sendRedirect("/login.html");
             }
         } catch (ExpiredJwtException ex) {
             request.setAttribute("exception", ex);
