@@ -20,5 +20,6 @@ public interface IPersonelService extends IGenericService<Personel, Long> {
                                        String telephone,
                                        String mobile,
                                        Long organizationId, int page, int size, String[] sort);
+    Personel findByEmailEquals(String email);
 
 }

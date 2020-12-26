@@ -39,6 +39,7 @@ public interface IPersonelRepository extends JpaRepository<Personel, Long> {
                                   @Param("mobile") String mobile,
                                   @Param("organizationId") Long organizationId,
                                   Pageable pageable);
+    Personel findByEmailEquals(String email);
 
 
 }

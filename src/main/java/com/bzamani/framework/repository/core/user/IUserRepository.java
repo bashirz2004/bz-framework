@@ -4,6 +4,7 @@ import com.bzamani.framework.model.core.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -34,4 +35,8 @@ public interface IUserRepository extends JpaRepository<User, Long> {
                           @Param("credentialsNonExpired") Boolean credentialsNonExpired,
                           @Param("enabled") Boolean enabled,
                           Pageable pageable);
+
+    @Modifying
+    @Query("update User e set e.password = :newPassword where exists (select 1 from User u join Personel p on p.id = u.personel.id where u.id = e.id and p.email = :email )")
+    Integer changePasswordByEmail(@Param("email") String email, @Param("newPassword") String newPassword);
 }

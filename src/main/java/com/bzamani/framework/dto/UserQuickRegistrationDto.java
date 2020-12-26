@@ -13,5 +13,6 @@ public class UserQuickRegistrationDto {
     private String passwordRepeat;
     private Boolean male;
     private String nationalCode;
+    private String email;
 
 }

@@ -85,6 +85,7 @@
             "lastname": '',
             "birthCertificateNumber": '',
             "nationalCode": '',
+            "email": '',
             "fatherName": '',
             "motherName": '',
             "birthPlace": '',
@@ -225,13 +226,15 @@
                     error: function (err) {
                         if (err.responseText.includes("unq_personel_nationalcode"))
                             showMessage("خطا. کدملی تکراری است.", "", "error");
+                        if (err.responseText.includes("unq_personel_email"))
+                            showMessage("خطا. ایمیل تکراری است.", "", "error");
                     }
                 });
             } else showMessage(validateForm(), "", "warning");
         }
 
         function validateForm() {
-            if ($('#txtNationalCode').val() == '' || $('#txtFirstname').val() == '' || $('#txtLastname').val() == '' || !$('#hiddenFieldOrganizationId').val() > 0 || $('#txtOrganizationTitle').val() == '')
+            if ($('#txtNationalCode').val() == '' || $('#txtFirstname').val() == '' || $('#txtLastname').val() == '' || !$('#hiddenFieldOrganizationId').val() > 0 || $('#txtOrganizationTitle').val() == '' || $('#txtEmail').val() == '')
                 return "پرکردن فیلدهای ستاره دار الزامی است.";
             else if ($('#txtNationalCode').val().length != 10)
                 return "کدملی باید 10 رقمی باشد.";
@@ -246,6 +249,7 @@
                 "lastname": '',
                 "birthCertificateNumber": '',
                 "nationalCode": '',
+                "email": '',
                 "fatherName": '',
                 "motherName": '',
                 "birthPlace": '',
@@ -266,6 +270,7 @@
             $("#txtLastname").val(entity.lastname);
             $("#txtBirthCertificateNumber").val(entity.birthCertificateNumber);
             $("#txtNationalCode").val(entity.nationalCode);
+            $("#txtEmail").val(entity.email);
             $("#txtFatherName").val(entity.fatherName);
             $("#txtMotherName").val(entity.motherName);
             $("#txtBirthPlace").val(entity.birthPlace);
@@ -291,6 +296,7 @@
                 "lastname": $('#txtLastname').val(),
                 "birthCertificateNumber": $('#txtBirthCertificateNumber').val(),
                 "nationalCode": $('#txtNationalCode').val(),
+                "email": $('#txtEmail').val(),
                 "fatherName": $('#txtFirstname').val(),
                 "motherName": $('#txtMotherName').val(),
                 "birthPlace": $('#txtBirthPlace').val(),
@@ -633,10 +639,16 @@
 
                         <div class="service-fields mb-3">
                             <div class="row">
-                                <div class="col-lg-6">
+                                <div class="col-lg-4">
                                     <div class="form-group">
                                         <label>آدرس</label>
                                         <input type="text" id="txtAddress" class="form-control service-desc"/>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label>ایمیل <span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" dir="ltr" id="txtEmail">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">

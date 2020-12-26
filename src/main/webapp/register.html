@@ -33,6 +33,43 @@
     <link rel="stylesheet" href="/app/assets/bzamani/components/sweetalert/sweetalert2.min.css">
     <!-- /sweet alert -->
 
+    <!-- pace mask -->
+    <script>
+        paceOptions = {
+            elements: false,
+            document: true, // disabled
+            eventLag: false, // disabled
+            ajax: {
+                trackMethods: ['GET', 'POST', 'DELETE', 'PUT'],
+                trackWebSockets: false
+            },
+            restartOnPushState: true,
+            restartOnRequestAfter: true
+        };
+        $(function () {
+            $("body").prepend("<div class='pace-cover' style='display: none;'></div>");
+            Pace.on("start", function () {
+                $(".pace-cover").fadeIn();
+            });
+            Pace.on("done", function () {
+                $(".pace-cover").fadeOut();
+            });
+        });
+    </script>
+    <script type="text/javascript" src="/app/assets/bzamani/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
+    <style>
+        .pace-cover {
+            position: fixed;
+            left: 0px;
+            top: 1px;
+            width: 100%;
+            height: 100%;
+            z-index: 99999;
+            background: rgba(0, 0, 0, 0.4);
+        }
+    </style>
+    <!-- /pace mask -->
     <script>
         var contextPath = "/app";
         $(function () {
@@ -52,6 +89,7 @@
                         "firstname": $('#txtFirstname').val(),
                         "lastname": $('#txtLastname').val(),
                         "nationalCode": $('#txtNationalCode').val(),
+                        "email": $('#txtEmail').val(),
                         "male": $('#cmbGender').val(),
                     }),
                     type: 'POST',
@@ -71,7 +109,7 @@
         }
 
         function validateForm() {
-            if ($('#cmbGender').val() == '...' || $('#txtFirstname').val() == '' || $('#txtLastname').val() == '' || $('#txtUsername').val() == '' || $('#txtPassword').val() == '' || $('#txtRepeatPassword').val() == '' || $('#txtNationalCode').val() == '')
+            if ($('#cmbGender').val() == '...' || $('#txtFirstname').val() == '' || $('#txtLastname').val() == '' || $('#txtUsername').val() == '' || $('#txtPassword').val() == '' || $('#txtRepeatPassword').val() == '' || $('#txtNationalCode').val() == '' || $('#txtEmail').val() == '' )
                 return 'پرکردن همه فیلدها اجباری است.';
             else if ($('#txtNationalCode').val().length != 10)
                 return 'کدملی باید 10 رقمی باشد.';
@@ -127,6 +165,10 @@
                                         <option value="false">زن</option>
                                     </select>
                                     <label class="focus-label">جنسیت</label>
+                                </div>
+                                <div class="form-group form-focus">
+                                    <input type="email" class="form-control floating" id="txtEmail">
+                                    <label class="focus-label">پست الکترونیکی(جهت ارسال رمزعبور فراموش شده شما) </label>
                                 </div>
                                 <div class="form-group form-focus">
                                     <input type="text" class="form-control floating" id="txtUsername">

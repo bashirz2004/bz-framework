@@ -108,5 +108,10 @@ public class PersonelService extends GenericService<Personel, Long> implements I
             return Sort.Direction.DESC;
         return Sort.Direction.ASC;
     }
+
+    @Override
+    public Personel findByEmailEquals(String email) {
+        return iPersonelRepository.findByEmailEquals(email);
+    }
 }
 

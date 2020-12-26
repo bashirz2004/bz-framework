@@ -25,7 +25,16 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-
+  mail:
+    host: smtp.gmail.com
+    username: bashir.z2004@gmail.com
+    password: dsmvjlgryrtmieul
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 logging:
   level:

@@ -75,4 +75,9 @@ public class PublicAPIController extends BaseController {
     public User selfRegister(@RequestBody UserQuickRegistrationDto userDto) throws Exception {
         return iUserService.selfRegister(userDto);
     }
+
+    @PostMapping("/user/sendPasswordToUserEmail")
+    public void sendPasswordToUserEmail(@RequestParam String email) throws Exception {
+         iUserService.sendPasswordToUserEmail(email);
+    }
 }

@@ -9,6 +9,7 @@ import com.bzamani.framework.service.core.action.IActionService;
 import com.bzamani.framework.service.core.personel.IPersonelService;
 import com.bzamani.framework.service.core.user.IUserService;
 import com.bzamani.framework.service.impl.core.GenericService;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,6 +41,9 @@ public class UserService extends GenericService<User, Long> implements IUserServ
     @Autowired
     IPersonelService iPersonelService;
 
+    @Autowired
+    JavaMailSender emailSender;
+
     @Value("${bzamani.organization-id-for-guest-users}") //read from application.yml file
     Long guestOrganizationId;
 
@@ -57,8 +63,7 @@ public class UserService extends GenericService<User, Long> implements IUserServ
         if (user.getId() == null) {
             PasswordEncoder encoder = new BCryptPasswordEncoder();
             user.setPassword(encoder.encode(user.getPassword().trim()));
-        }
-        else{
+        } else {
             user.setPassword(loadByEntityId(user.getId()).getPassword());
         }
         return super.save(user);
@@ -75,6 +80,7 @@ public class UserService extends GenericService<User, Long> implements IUserServ
         p.setLastname(userDto.getLastname());
         p.setMale(userDto.getMale());
         p.setNationalCode(userDto.getNationalCode().trim());
+        p.setEmail(userDto.getEmail().trim());
         Organization org = new Organization();
         org.setId(guestOrganizationId);
         p.setOrganization(org);
@@ -91,6 +97,35 @@ public class UserService extends GenericService<User, Long> implements IUserServ
         //user.setActions(actions);
         return iUserRepository.save(newUser);
     }
+
+    @Override
+    @Transactional
+    public void sendPasswordToUserEmail(String email) throws Exception {
+        checkMail(email);
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("noreply@bz-framework.com");
+        message.setTo(email);
+        message.setSubject("رمز عبور جدید شما");
+        message.setText(generateRandomPasswordAndUpdatePasswordOfUser(email));
+        emailSender.send(message);
+    }
+
+    public void checkMail(String email) throws Exception {
+        if (iPersonelService.findByEmailEquals(email) == null)
+            throw new Exception("فردی تاکنون با این ایمیل ثبت نام نکرده است.");
+    }
+
+    @Transactional
+    public String generateRandomPasswordAndUpdatePasswordOfUser(String email) throws Exception {
+        String newPassword = RandomStringUtils.random(10, true, true);
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        Integer result = iUserRepository.changePasswordByEmail(email, encoder.encode(newPassword));
+        if (result > 0)
+            return newPassword;
+        else
+            throw new Exception("برای شما هنوز حساب کاربری ایجاد نشده است.");
+    }
+
 
     @Override
     public Map<String, Object> searchUser(String firstname,

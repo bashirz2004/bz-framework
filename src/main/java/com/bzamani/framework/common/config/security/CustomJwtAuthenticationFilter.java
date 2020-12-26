@@ -45,11 +45,7 @@ public class CustomJwtAuthenticationFilter extends OncePerRequestFilter {
                 // Spring Security Configurations successfully.
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             } else {
-                //inja nabayad logout beshe az SecurityContextHolder???????????????
                 SecurityContextHolder.clearContext();
-                System.out.println("Cannot set the Security Context");
-                request.setAttribute("exception", new AccessDeniedException("شما به این بخش دسترسی ندارید. لطفا مجددا در سامانه لاگین نمایید."));
-                //response.sendRedirect("/login.html");
             }
         } catch (ExpiredJwtException ex) {
             request.setAttribute("exception", ex);
