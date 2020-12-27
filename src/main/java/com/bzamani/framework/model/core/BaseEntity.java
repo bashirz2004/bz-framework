@@ -15,23 +15,26 @@ import java.util.Date;
 @MappedSuperclass
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "creator", "lastUpdater"})
 public abstract class BaseEntity implements Serializable {
-  @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence_db")
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence_db")
+    private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "creator")
-  @JsonIgnore
-  private User creator;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "creator")
+    @JsonIgnore
+    private User creator;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "lastUpdater")
-  @JsonIgnore
-  private User lastUpdater;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lastUpdater")
+    @JsonIgnore
+    private User lastUpdater;
 
-  @Column(name = "create_date")
-  private Date createDate = new Date();
+    @Column(name = "create_date")
+    private Date createDate;
 
-  @Column(name = "last_update_date")
-  private Date lastUpdateDate = new Date();
+    @Column(name = "last_update_date")
+    private Date lastUpdateDate;
+
+    @Column(name = "ip")
+    private String ip;
 }

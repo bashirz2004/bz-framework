@@ -94,14 +94,20 @@
                     }),
                     type: 'POST',
                     success: function (res) {
-                        showMessage("کاربر " + res.username + " با موقثیت ایجاد شد.", "", "success");
-                        document.location.href = contextPath + "/login.html";
+                        showConfirm(res.personel.firstname + " " + res.personel.lastname + " عزیز حساب کاربری شما با موفقیت ایجاد شد.", "آیا برای ورود به سامانه آماده هستید؟", function () {
+                            document.location.href = contextPath + "/login.html";
+                        });
                     },
                     error: function (err) {
                         if (err.responseText.includes("unq_username") || err.responseText.includes("username already exists"))
-                            showMessage("خطا در ثبت کاربر. با این نام کاربری قبلا ثبت نام انجام شده است!", "", "error");
+                            showMessage("خطا در ثبت کاربر", " با این نام کاربری قبلا ثبت نام انجام شده است.", "error");
                         else if (err.responseText.includes("unq_personel_nationalcode"))
-                            showMessage("خطا در ثبت کاربر. با این کدملی قبلا ثبت نام انجام شده است!", "", "error");
+                            showMessage("خطا در ثبت کاربر", " با این کدملی قبلا ثبت نام انجام شده است.", "error");
+                        else if (err.responseText.includes("unq_personel_email"))
+                            showMessage("خطا در ثبت کاربر", " با این ایمیل قبلا ثبت نام انجام شده است.", "error");
+                        else
+                            showMessage(err.responseJSON.message, "", "error");
+
 
                     }
                 });
@@ -109,7 +115,7 @@
         }
 
         function validateForm() {
-            if ($('#cmbGender').val() == '...' || $('#txtFirstname').val() == '' || $('#txtLastname').val() == '' || $('#txtUsername').val() == '' || $('#txtPassword').val() == '' || $('#txtRepeatPassword').val() == '' || $('#txtNationalCode').val() == '' || $('#txtEmail').val() == '' )
+            if ($('#cmbGender').val() == '...' || $('#txtFirstname').val() == '' || $('#txtLastname').val() == '' || $('#txtUsername').val() == '' || $('#txtPassword').val() == '' || $('#txtRepeatPassword').val() == '' || $('#txtNationalCode').val() == '' || $('#txtEmail').val() == '')
                 return 'پرکردن همه فیلدها اجباری است.';
             else if ($('#txtNationalCode').val().length != 10)
                 return 'کدملی باید 10 رقمی باشد.';
@@ -167,7 +173,7 @@
                                     <label class="focus-label">جنسیت</label>
                                 </div>
                                 <div class="form-group form-focus">
-                                    <input type="email" class="form-control floating" id="txtEmail">
+                                    <input type="email" dir="ltr" class="form-control floating" id="txtEmail">
                                     <label class="focus-label">پست الکترونیکی(جهت ارسال رمزعبور فراموش شده شما) </label>
                                 </div>
                                 <div class="form-group form-focus">
@@ -183,7 +189,7 @@
                                     <label class="focus-label"> تکرار رمزعبور </label>
                                 </div>
                                 <div class="text-right">
-                                    <a class="forgot-link" href="login.html">اکانت دارم</a>
+                                    <a class="forgot-link" href="login.html">حساب کاربری دارم</a>
                                 </div>
                                 <button class="btn btn-primary btn-block btn-lg login-btn" onclick="register()">
                                     ثبت‌نام

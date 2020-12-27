@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>مدیک</title>
+    <title>ورود به سامانه</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
 
     <!-- Favicons -->
@@ -32,42 +32,52 @@
     <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
     <link rel="stylesheet" href="/app/assets/bzamani/components/sweetalert/sweetalert2.min.css">
     <!-- /sweet alert -->
-
+    <script src='https://www.google.com/recaptcha/api.js'></script>
     <script>
         var contextPath = "/app";
         $(function () {
             localStorage.clear();
-            $.removeCookie('Authorization', { path: '/' });
+            $.removeCookie('Authorization', {path: '/'});
         });
 
         function login() {
             if ($('#txtUsername').val() != '' && $('#txtPassword').val() != '') {
+                //console.log($('iframe[scrolling=no]').contents());
+                $('#hiddenFieldUsername').val($('#txtUsername').val());
+                $('#hiddenFieldPassword').val($('#txtPassword').val());
                 $.ajax({
-                    url: contextPath + "/authenticate",
+                    url: contextPath + "/authenticate?g-recaptcha-response=" + $('#g-recaptcha-response').val(),
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
                     data: JSON.stringify({
-                        "username": $('#txtUsername').val(),
-                        "password": $('#txtPassword').val()
+                        "g-recaptcha-response": $('#g-recaptcha-response').val(),
+                        "username": $('#hiddenFieldUsername').val(),
+                        "password": $('#hiddenFieldPassword').val()
                     }),
                     type: 'POST',
                     success: function (res) {
                         localStorage.setItem("authenticatedUserFullName", res.personel.firstname + " " + res.personel.lastname);
                         $.cookie('Authorization', "Bearer-" + res.token, {expires: 1, path: '/'});
-                        document.location.href = contextPath + "/dashboard.html";
+                        document.location.href = contextPath + "/index.html";
                     },
                     error: function (err) {
                         if (err.responseText.includes("Bad credentials")) {
                             showMessage("نام کاربری یا کلمه عبور اشتباه است.", "", "error");
-                        }
-                        ;
+                        } else if (err.responseText.includes("The response parameter is missing")) {
+                            showMessage("مگه شما ربات هستید؟", "", "error");
+                        } else
+                            showMessage("با عرض پوزش، امکان ورود به سامانه وجود ندارد.", "", "error");
                     }
                 });
             } else
                 $('#txtUsername').focus();
         }
     </script>
-
+    <style>
+        .rc-anchor-container {
+            width: 100% !important;
+        }
+    </style>
 </head>
 <body class="account-page">
 
@@ -89,8 +99,13 @@
                             </div>
                             <div class="col-md-12 col-lg-6 login-right">
                                 <div class="login-header">
-                                    <h3> ورود به <span>مدیک</span></h3>
+                                    <h3> ورود به <span>سامانه</span></h3>
                                 </div>
+                                <form id="formLogin">
+                                    <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response"/>
+                                    <input type="hidden" id="hiddenFieldUsername" name="username"/>
+                                    <input type="hidden" id="hiddenFieldPassword" name="password"/>
+                                </form>
                                 <div class="form-group form-focus">
                                     <input type="text" class="form-control floating" id="txtUsername">
                                     <label class="focus-label">نام کاربری</label>
@@ -99,13 +114,17 @@
                                     <input type="password" class="form-control floating" id="txtPassword">
                                     <label class="focus-label">رمزعبور</label>
                                 </div>
+                                <div class="form-group form-focus">
+                                    <div class="g-recaptcha" data-sitekey="6LfAqRYaAAAAADjef9Myz5oOGGa_1ykOGiHLLa6_">
+                                    </div>
+                                </div>
                                 <div class="text-right">
-                                    <a class="forgot-link" href="forgot-password.html">فراموشی رمزعبور</a>
+                                    <a class="forgot-link" href="forgot-password.html">رمزعبورم رو فراموش کردم!</a>
                                 </div>
                                 <button class="btn btn-primary btn-block btn-lg login-btn" onclick="login()">‌ورود
                                 </button>
                                 <div class="text-center dont-have">
-                                    اکانت ندارم. مایل به
+                                    حساب کاربری ندارم. مایل به
                                     <a href="register.html">ثبت نام</a>
                                     هستم.
                                 </div>

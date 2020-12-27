@@ -1,5 +1,7 @@
 package com.bzamani.framework.service.impl.core.user;
 
+import com.bzamani.framework.common.utility.DateUtility;
+import com.bzamani.framework.common.utility.SecurityUtility;
 import com.bzamani.framework.dto.UserQuickRegistrationDto;
 import com.bzamani.framework.model.core.organization.Organization;
 import com.bzamani.framework.model.core.personel.Personel;
@@ -24,10 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class UserService extends GenericService<User, Long> implements IUserService {
@@ -72,9 +71,12 @@ public class UserService extends GenericService<User, Long> implements IUserServ
     @Override
     @Transactional
     public User selfRegister(UserQuickRegistrationDto userDto) throws Exception {
+        List<User> usersCreatedByCurrentIP = iUserRepository.findAllByIpOrderByLastUpdateDateDesc(SecurityUtility.getRequestIp());
+        if (usersCreatedByCurrentIP != null && usersCreatedByCurrentIP.size() > 0)
+            if (DateUtility.getDiffSeconds(usersCreatedByCurrentIP.get(0).getLastUpdateDate(), new Date()) < 60)
+                throw new Exception("کاربر گرامی حداقل فاصله زمانی بین ثبت دو کاربر، 1 دقیقه می باشد. ");
         if (findUserByUsernameEquals(userDto.getUsername()) != null)
-            throw new Exception("username already exists!");
-
+            throw new Exception("خطا در ثبت کاربر. با این نام کاربری قبلا ثبت نام انجام شده است!");
         Personel p = new Personel();
         p.setFirstname(userDto.getFirstname());
         p.setLastname(userDto.getLastname());
@@ -89,13 +91,13 @@ public class UserService extends GenericService<User, Long> implements IUserServ
         User newUser = new User();
         newUser.setPersonel(p);
         PasswordEncoder encoder = new BCryptPasswordEncoder();
-        newUser.setPassword(encoder.encode(userDto.getPassword().trim()));
+        newUser.setPassword(userDto.getPassword().trim());
         newUser.setUsername(userDto.getUsername().trim());
 
         //Set<Action> actions = new HashSet<>();
         //actions.add(iActionService.loadByEntityId(3L));//patient
         //user.setActions(actions);
-        return iUserRepository.save(newUser);
+        return save(newUser);
     }
 
     @Override
@@ -105,21 +107,23 @@ public class UserService extends GenericService<User, Long> implements IUserServ
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("noreply@bz-framework.com");
         message.setTo(email);
-        message.setSubject("رمز عبور جدید شما");
-        message.setText(generateRandomPasswordAndUpdatePasswordOfUser(email));
+        message.setSubject("bz-framework: " + "رمز عبور جدید شما");
+        message.setText("کاربر گرامی نام کاربری و رمزعبور جدید شما به این شرح می باشد: " + "\n" +
+                "username: " + iUserRepository.findByEmail(email).getUsername() + "\n" +
+                "password: " + updatePasswordOfUser(email, RandomStringUtils.random(10, true, true)));
         emailSender.send(message);
     }
 
     public void checkMail(String email) throws Exception {
         if (iPersonelService.findByEmailEquals(email) == null)
             throw new Exception("فردی تاکنون با این ایمیل ثبت نام نکرده است.");
+        else if (DateUtility.getDiffSeconds(iUserRepository.findByEmail(email).getLastUpdateDate(), new Date()) < 60)
+            throw new Exception("از آخرین ایمیل ارسال شده باید حداقل یک دقیقه گذشته باشد.");
     }
 
     @Transactional
-    public String generateRandomPasswordAndUpdatePasswordOfUser(String email) throws Exception {
-        String newPassword = RandomStringUtils.random(10, true, true);
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
-        Integer result = iUserRepository.changePasswordByEmail(email, encoder.encode(newPassword));
+    public String updatePasswordOfUser(String email, String newPassword) throws Exception {
+        Integer result = iUserRepository.changePasswordByEmail(email, new BCryptPasswordEncoder().encode(newPassword), new Date());
         if (result > 0)
             return newPassword;
         else

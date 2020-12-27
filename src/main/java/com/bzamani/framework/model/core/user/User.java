@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
-@Table(name = "CORE_USER", uniqueConstraints = {@UniqueConstraint(name = "unq_username", columnNames = "username"),@UniqueConstraint(name = "unq_user_personel_id", columnNames = "personel_id")})
+@Table(name = "CORE_USER", uniqueConstraints = {@UniqueConstraint(name = "unq_username", columnNames = "username"), @UniqueConstraint(name = "unq_user_personel_id", columnNames = "personel_id")})
 @SequenceGenerator(name = "sequence_db", sequenceName = "SEQ_CORE_USER", allocationSize = 1)
 @Setter
 @Getter
@@ -103,5 +103,9 @@ public class User extends BaseEntity implements UserDetails {
 
     @Transient
     private String token;
+
+    public User() {
+
+    }
 
 }

@@ -35,6 +35,11 @@ spring:
           auth: true
           starttls:
             enable: true
+google:
+  recaptcha:
+    key:
+      site: 6LfAqRYaAAAAADjef9Myz5oOGGa_1ykOGiHLLa6_
+      secret: 6LfAqRYaAAAAAHw8W__o7I9hQtg9e1pMhjVto1M3
 
 logging:
   level:

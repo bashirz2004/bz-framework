@@ -10,6 +10,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+import java.util.List;
+
 @Repository
 @Transactional
 public interface IUserRepository extends JpaRepository<User, Long> {
@@ -37,6 +40,11 @@ public interface IUserRepository extends JpaRepository<User, Long> {
                           Pageable pageable);
 
     @Modifying
-    @Query("update User e set e.password = :newPassword where exists (select 1 from User u join Personel p on p.id = u.personel.id where u.id = e.id and p.email = :email )")
-    Integer changePasswordByEmail(@Param("email") String email, @Param("newPassword") String newPassword);
+    @Query("update User e set e.password = :newPassword , e.lastUpdateDate = :now where exists (select 1 from User u join Personel p on p.id = u.personel.id where u.id = e.id and p.email = :email )")
+    Integer changePasswordByEmail(@Param("email") String email, @Param("newPassword") String newPassword, @Param("now") Date now);
+
+    @Query("from User e where exists (select 1 from User u join Personel p on p.id = u.personel.id where u.id = e.id and p.email = :email )")
+    User findByEmail(@Param("email") String email);
+
+    List<User> findAllByIpOrderByLastUpdateDateDesc(String ip);
 }
