@@ -42,11 +42,10 @@
 
         function login() {
             if ($('#txtUsername').val() != '' && $('#txtPassword').val() != '') {
-                //console.log($('iframe[scrolling=no]').contents());
                 $('#hiddenFieldUsername').val($('#txtUsername').val());
                 $('#hiddenFieldPassword').val($('#txtPassword').val());
                 $.ajax({
-                    url: contextPath + "/authenticate?g-recaptcha-response=" + $('#g-recaptcha-response').val(),
+                    url: contextPath + "/authenticate",
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
                     data: JSON.stringify({
