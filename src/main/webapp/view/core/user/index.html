@@ -21,12 +21,17 @@
     <script src="/app/assets/js/html5shiv.min.js"></script>
     <script src="/app/assets/js/respond.min.js"></script>
     <![endif]-->
-
     <!-- jQuery -->
     <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
     <!-- fancybox -->
     <script src="/app/assets/bzamani/components/fancybox/jquery.fancybox.js"></script>
     <link rel="stylesheet" href="/app/assets/bzamani/components/fancybox/jquery.fancybox.css"/>
+
+    <!-- Datetimepicker  -->
+    <script src="/app/assets/bzamani/components/datepicker/persian-date.js"></script>
+    <script src="/app/assets/bzamani/components/datepicker/persian-datepicker.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/datepicker/persian-datepicker.css">
+    <!-- /Datetimepicker  -->
 
     <!-- pace mask -->
     <script>
@@ -83,7 +88,10 @@
             "username": '',
             "password": '',
             "personel": {"id": ''},
-            "fileCode": ''
+            "enabled": true,
+            "accountNonLocked": true,
+            "userExpireDateShamsi": '',
+            "passwordExpireDateShamsi": ''
         };
 
         var searchFilters = {
@@ -97,6 +105,7 @@
         };
 
         $(function () {
+            initializeDatePicker();
             fillGrid('userTemplate', 'userList', contextPath + "/rest/core/user/searchUser", searchFilters);
 
             $('.sort-grid').on("click", function () {
@@ -223,18 +232,18 @@
 
         function validateForm() {
             if (!$('#hiddenFieldId').val() > 0) {
-                if ($('#txtUsername').val() == '' || $('#txtPassword').val() == '' || $('#txtPasswordRepeat').val() == ''
-                    || !$('#hiddenFieldPersonelId').val() > 0 || $('#txtPersonelTitle').val() == '') {
+                if ($('#txtUsername').val() == '' || $('#txtPassword').val() == '' || $('#txtPasswordRepeat').val() == '' || !$('#hiddenFieldPersonelId').val() > 0 || $('#txtPersonelTitle').val() == '' || $('#txtUserExpireDateShamsi').val() == '' || $('#txtPasswordExpireDateShamsi').val() == '') {
                     showMessage("پرکردن فیلدهای ستاره دار الزامی است.", "", "warning");
                     return;
                 } else if ($('#txtPassword').val() != $('#txtPasswordRepeat').val()) {
                     showMessage("رمز عبور و تکرار آن باید یکسان باشند.", "", "warning");
                     return;
                 } else return 'ok';
-            } else if ($('#txtUsername').val() == '' || !$('#hiddenFieldPersonelId').val() > 0 || $('#txtPersonelTitle').val() == '') {
+            } else if ($('#txtUsername').val() == '' || !$('#hiddenFieldPersonelId').val() > 0 || $('#txtPersonelTitle').val() == '' || $('#txtUserExpireDateShamsi').val() == '' || $('#txtPasswordExpireDateShamsi').val() == '') {
                 showMessage("پرکردن فیلدهای ستاره دار الزامی است.", "", "warning");
                 return;
-            }
+            } else
+                return "ok";
         }
 
         function clearEntity() {
@@ -242,16 +251,29 @@
                 "id": '',
                 "username": '',
                 "password": '',
-                "personel": {"id": ''}
+                "personel": {"id": ''},
+                "enabled": true,
+                "accountNonLocked": true,
+                "userExpireDateShamsi": '',
+                "passwordExpireDateShamsi": ''
             };
         }
 
-        function clearInputs(){
-            $(".password-related").show();
+        function clearInputs() {
+            $(".password-related").removeProp("disabled");
+            $("#hiddenFieldId").val("");
+            $("#txtUsername").val("");
+            $("#hiddenFieldPersonelId").val("");
+            $("#txtPersonelTitle").val("");
+            $('#uploadedImage').prop("src", "");
+            $('#txtUserExpireDateShamsi').val("");
+            $('#txtPasswordExpireDateShamsi').val("");
+            $('#enable_switch').prop("checked", "checked");
+            $('#lock_switch').prop("checked", "");
         }
 
         function setInputsByEntity(entity) {
-            $(".password-related").hide();
+            $(".password-related").prop("disabled", "disabled");
             $("#hiddenFieldId").val(entity.id);
             $("#txtUsername").val(entity.username);
             $("#hiddenFieldPersonelId").val(entity.personel.id);
@@ -259,6 +281,10 @@
             if (entity.personel.fileCode != null && entity.personel.fileCode.length > 0) {
                 $('#uploadedImage').prop("src", "/app/rest/core/file/download/" + entity.personel.fileCode + "/false");
             }
+            $('#txtUserExpireDateShamsi').val(entity.userExpireDateShamsi);
+            $('#txtPasswordExpireDateShamsi').val(entity.passwordExpireDateShamsi);
+            entity.enabled == true ? $('#enable_switch').prop("checked", "checked") : $('#enable_switch').prop("checked", "");
+            entity.accountNonLocked == true ? $('#lock_switch').prop("checked", "") : $('#lock_switch').prop("checked", "checked");
         }
 
         function setEntityFromInputs() {
@@ -267,7 +293,11 @@
                 "id": $('#hiddenFieldId').val(),
                 "personel": {"id": $('#hiddenFieldPersonelId').val()},
                 "username": $('#txtUsername').val(),
-                "password": $('#txtPassword').val()
+                "password": $('#txtPassword').val(),
+                "enabled": $('#enable_switch').prop("checked"),
+                "accountNonLocked": !$('#lock_switch').prop("checked"),
+                "userExpireDateShamsi": $('#txtUserExpireDateShamsi').val(),
+                "passwordExpireDateShamsi": $('#txtPasswordExpireDateShamsi').val()
             }
         }
 
@@ -275,6 +305,8 @@
         function setImagePath(fileCode) {
             if (fileCode)
                 $('#image_full_size').attr("src", "/app/rest/core/file/download/" + fileCode + "/false");
+            else
+                $('#image_full_size').attr("src", "");
         }
 
         function setPersonel(id, firstname, lastname, fileCode) {
@@ -284,8 +316,16 @@
                 $('#uploadedImage').attr("src", "/app/rest/core/file/download/" + fileCode + "/false");
         }
 
-        function openUserOrganizations(id){
-            viewFancyBox('/app/view/core/user/userOrganizations.html?userId='+id,'90%','90%');
+        function refreshGrid() {
+            fillGrid('userTemplate', 'userList', contextPath + "/rest/core/user/searchUser", searchFilters);
+        }
+
+        function openUserOrganizations(id) {
+            viewFancyBox('/app/view/core/user/userOrganizations.html?userId=' + id, '90%', '90%');
+        }
+
+        function openChangePasswordByAdmin(id) {
+            viewFancyBox('/app/view/core/user/changePasswordByAdmin.html?userId=' + id, '60%', '60%');
         }
 
     </script>
@@ -365,6 +405,22 @@
                                 <i class="fa fa-sort-up sort-grid" order="username,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="username,desc"></i>
                             </th>
+                            <th>اعتبار کاربر
+                                <i class="fa fa-sort-up sort-grid" order="userExpireDateShamsi,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="userExpireDateShamsi,desc"></i>
+                            </th>
+                            <th>اعتبار پسورد
+                                <i class="fa fa-sort-up sort-grid" order="passwordExpireDateShamsi,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="passwordExpireDateShamsi,desc"></i>
+                            </th>
+                            <th>فعال
+                                <i class="fa fa-sort-up sort-grid" order="enabled,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="enabled,desc"></i>
+                            </th>
+                            <th>مسدود
+                                <i class="fa fa-sort-up sort-grid" order="accountNonLocked,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="accountNonLocked,desc"></i>
+                            </th>
                             <th>عملیات</th>
                         </tr>
                         </thead>
@@ -374,7 +430,7 @@
                                         <td class="text-center"><span class="tmplRowIndex"></span></td>
                                         <td>
                                             <h2 class="table-avatar">
-                                                <a href="#image_modal" data-toggle="modal" class="avatar avatar-sm mr-2"><img onclick="setImagePath({{if personel.fileCode}}personelfilecode{{/if}})"
+                                                <a href="#image_modal" data-toggle="modal" class="avatar avatar-sm mr-2"><img onclick="setImagePath('${personel.fileCode}')"
                                                         class="avatar-img rounded-circle"
                                                         src={{if personel.male && personel.fileCode==null}}"/app/assets/img/man.png"{{/if}}
                                                             {{if !personel.male && personel.fileCode==null}}"/app/assets/img/woman.png"{{/if}}
@@ -395,7 +451,11 @@
                                         <td>${personel.organization.title}</td>
                                         <td>${personel.nationalCode}</td>
                                         <td>${username}</td>
-                                        <td class="text-right">
+                                        <td>${userExpireDateShamsi}</td>
+                                        <td>${passwordExpireDateShamsi}</td>
+                                        <td class="text-center">{{if enabled}}<i class="fa fa-check text-success" aria-hidden="true"></i>{{else}}<i class="fa fa-remove text-secondary" aria-hidden="true"></i>{{/if}}</td>
+                                        <td class="text-center">{{if !accountNonLocked}}<i class="fa fa-lock text-danger" aria-hidden="true"></i>{{else}}<i class="fa fa-unlock text-info" aria-hidden="true"></i>{{/if}}</td>
+                                        <td class="text-center">
                                             <div class="float-right">
                                                 <div class="float-right">
                                                      <a href="#delete_user_modal" onclick="rowSelected(${id})"  data-toggle="modal" title="حذف"
@@ -406,32 +466,31 @@
                                                                     class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-pencil"></i></a>
                                                 </div>
                                                 <div class="float-right">
-                                                     <a href="javascript:void(0)" onclick="openUserOrganizations(${id})"  data-toggle="modal" title="دسترسی به سازمان ها"
+                                                     <a onclick="openUserOrganizations(${id})"  data-toggle="modal" title="دسترسی به سازمان ها"
                                                                     class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-building-o"></i></a>
                                                 </div>
                                                 <div class="float-right">
-                                                     <a href="javascript:void(0)"   data-toggle="modal" title="دسترسی به منوها"
+                                                     <a data-toggle="modal" title="دسترسی به منوها"
                                                                     class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-check-square-o"></i></a>
                                                 </div>
                                                 <div class="float-right">
-                                                     <a href="javascript:void(0)"   data-toggle="modal" title="تغییر رمز عبور"
+                                                     <a onclick="openChangePasswordByAdmin(${id})"  data-toggle="modal" title="تغییر رمز عبور"
                                                                     class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-key"></i></a>
-                                                </div>
-                                                <div class="float-right">
-                                                     <a href="javascript:void(0)"   data-toggle="modal" title="تمدید اعتبار کاربر"
-                                                                    class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-address-book-o"></i></a>
-                                                </div>
-                                                <div class="float-right">
-                                                     <a href="javascript:void(0)"   data-toggle="modal" title="تمدید اعتبار رمز عبور"
-                                                                    class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-line-chart"></i></a>
-                                                </div>
-                                                <div class="float-right">
-                                                     <a href="javascript:void(0)"   data-toggle="modal" title="فعال/غیرفعال سازی"
-                                                                    class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-exclamation-triangle"></i></a>
                                                 </div>
                                             </div>
                                         </td>
                                     </tr>
+
+
+
+
+
+
+
+
+
+
+
 
                         </script>
                         </tbody>
@@ -466,7 +525,7 @@
 
     <!-- Add/Edit Modal -->
     <div class="modal fade custom-modal" id="add_edit_modal" aria-hidden="true" role="dialog">
-        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title text-white">افزودن / ویرایش کاربر </h5>
@@ -480,7 +539,7 @@
                     <input type="hidden" id="hiddenFieldId"/>
                     <div class="service-fields mb-3">
                         <div class="row">
-                            <div class="col-lg-6">
+                            <div class="col-lg-4">
                                 <div class="form-group">
                                     <input type="hidden" id="hiddenFieldPersonelId"/>
                                     <label>پرسنل<span class="text-danger">*</span><span
@@ -493,22 +552,39 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-4">
                                 <div class="form-group">
                                     <label>نام کاربری<span class="text-danger">*</span></label>
                                     <input class="form-control" type="text" id="txtUsername" required="">
                                 </div>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-4">
                                 <div class="form-group">
-                                    <label class="password-related">رمز عبور <span class="text-danger">*</span></label>
-                                    <input class="form-control password-related" type="password" id="txtPassword" required="">
+                                    <label>تاریخ اعتبار کاربر<span class="text-danger">*</span></label>
+                                    <input class="form-control datetimepicker" type="text" id="txtUserExpireDateShamsi" required="">
                                 </div>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-4">
                                 <div class="form-group">
-                                    <label class="password-related">تکرار رمز عبور <span class="text-danger">*</span></label>
-                                    <input class="form-control password-related" type="password" id="txtPasswordRepeat" required="">
+                                    <label class="password-related">رمز عبور <span class="text-danger">*</span></label>
+                                    <input class="form-control password-related" type="password" id="txtPassword"
+                                           required="">
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="password-related">تکرار رمز عبور <span
+                                            class="text-danger">*</span></label>
+                                    <input class="form-control password-related" type="password" id="txtPasswordRepeat"
+                                           required="">
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label>تاریخ اعتبار رمز عبور<span
+                                            class="text-danger">*</span></label>
+                                    <input class="form-control datetimepicker" type="text" id="txtPasswordExpireDateShamsi"
+                                           required="">
                                 </div>
                             </div>
                         </div>
@@ -521,7 +597,27 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="col-lg-8">
+                                <div class="col-lg-4">
+                                    <div class="form-group float-left">
+                                        <label>فعال<span class="text-danger">*</span></label>
+                                        <div class="status-toggle">
+                                            <label class="switch" for="enable_switch">
+                                                <input type="checkbox" id="enable_switch">
+                                                <span class="slider round"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group float-left">
+                                        <label>مسدود<span class="text-danger">*</span></label>
+                                        <div class="status-toggle">
+                                            <label class="switch" for="lock_switch">
+                                                <input type="checkbox" id="lock_switch">
+                                                <span class="slider round"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 text-center">
                                     <img id="uploadedImage"
                                          style="width: 8em;border: 1px solid;border-radius: 10px;box-shadow: 0px 0px 10px 1px;"/>
                                 </div>

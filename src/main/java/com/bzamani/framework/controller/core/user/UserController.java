@@ -1,6 +1,7 @@
 package com.bzamani.framework.controller.core.user;
 
 import com.bzamani.framework.controller.core.BaseController;
+import com.bzamani.framework.dto.selfUserRegistrationDto;
 import com.bzamani.framework.model.core.user.User;
 import com.bzamani.framework.service.core.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,4 +59,9 @@ public class UserController extends BaseController {
                 accountNonExpired, accountNonLocked, credentialsNonExpired, enabled, page, size, sort);
     }
 
+    @PreAuthorize("hasRole('10')")
+    @PostMapping("/changePasswordByAdmin")
+    public boolean changePasswordByAdmin(@RequestBody selfUserRegistrationDto dto) {
+        return iUserService.changePasswordByAdmin(dto.getUserId(), dto.getPassword());
+    }
 }

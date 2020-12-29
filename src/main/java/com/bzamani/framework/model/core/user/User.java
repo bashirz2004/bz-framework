@@ -66,6 +66,17 @@ public class User extends BaseEntity implements UserDetails {
     @Setter
     private boolean enabled;
 
+    @Column(name = "user_expire_date_shamsi")
+    @Getter
+    @Setter
+    private String userExpireDateShamsi;
+
+    @Column(name = "password_expire_date_shamsi")
+    @Getter
+    @Setter
+    private String passwordExpireDateShamsi;
+
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "personel_id", nullable = false)

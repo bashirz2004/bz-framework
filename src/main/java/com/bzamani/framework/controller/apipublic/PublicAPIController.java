@@ -2,7 +2,7 @@ package com.bzamani.framework.controller.apipublic;
 
 import com.bzamani.framework.common.utility.SecurityUtility;
 import com.bzamani.framework.controller.core.BaseController;
-import com.bzamani.framework.dto.UserQuickRegistrationDto;
+import com.bzamani.framework.dto.selfUserRegistrationDto;
 import com.bzamani.framework.model.core.baseinfo.BaseInfo;
 import com.bzamani.framework.model.core.user.User;
 import com.bzamani.framework.model.doctor.Doctor;
@@ -72,7 +72,7 @@ public class PublicAPIController extends BaseController {
     }
 
     @PostMapping("/user/selfRegister")
-    public User selfRegister(@RequestBody UserQuickRegistrationDto userDto) throws Exception {
+    public User selfRegister(@RequestBody selfUserRegistrationDto userDto) throws Exception {
         return iUserService.selfRegister(userDto);
     }
 

@@ -43,6 +43,10 @@ public interface IUserRepository extends JpaRepository<User, Long> {
     @Query("update User e set e.password = :newPassword , e.lastUpdateDate = :now where exists (select 1 from User u join Personel p on p.id = u.personel.id where u.id = e.id and p.email = :email )")
     Integer changePasswordByEmail(@Param("email") String email, @Param("newPassword") String newPassword, @Param("now") Date now);
 
+    @Modifying
+    @Query("update User e set e.password = :newPassword , e.lastUpdateDate = :now where e.id = :userId ")
+    Integer changePasswordByAdmin(@Param("userId") long userId, @Param("newPassword") String newPassword, @Param("now") Date now);
+
     @Query("from User e where exists (select 1 from User u join Personel p on p.id = u.personel.id where u.id = e.id and p.email = :email )")
     User findByEmail(@Param("email") String email);
 

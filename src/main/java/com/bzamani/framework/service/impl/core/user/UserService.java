@@ -2,12 +2,13 @@ package com.bzamani.framework.service.impl.core.user;
 
 import com.bzamani.framework.common.utility.DateUtility;
 import com.bzamani.framework.common.utility.SecurityUtility;
-import com.bzamani.framework.dto.UserQuickRegistrationDto;
+import com.bzamani.framework.dto.selfUserRegistrationDto;
 import com.bzamani.framework.model.core.organization.Organization;
 import com.bzamani.framework.model.core.personel.Personel;
 import com.bzamani.framework.model.core.user.User;
 import com.bzamani.framework.repository.core.user.IUserRepository;
 import com.bzamani.framework.service.core.action.IActionService;
+import com.bzamani.framework.service.core.organization.IOrganizationService;
 import com.bzamani.framework.service.core.personel.IPersonelService;
 import com.bzamani.framework.service.core.user.IUserService;
 import com.bzamani.framework.service.impl.core.GenericService;
@@ -43,6 +44,9 @@ public class UserService extends GenericService<User, Long> implements IUserServ
     @Autowired
     JavaMailSender emailSender;
 
+    @Autowired
+    IOrganizationService iOrganizationService;
+
     @Value("${bzamani.organization-id-for-guest-users}") //read from application.yml file
     Long guestOrganizationId;
 
@@ -62,21 +66,26 @@ public class UserService extends GenericService<User, Long> implements IUserServ
         if (user.getId() == null) {
             PasswordEncoder encoder = new BCryptPasswordEncoder();
             user.setPassword(encoder.encode(user.getPassword().trim()));
+            user.setAccountNonExpired(true);
+            user.setCredentialsNonExpired(true);
+            user.setAccountNonLocked(true);
+            user.setEnabled(true);
+            user.setUserExpireDateShamsi(DateUtility.todayShamsi(365));
+            user.setPasswordExpireDateShamsi(DateUtility.todayShamsi(365));
         } else {
-            user.setPassword(loadByEntityId(user.getId()).getPassword());
+            user.setPassword(loadByEntityId(user.getId()).getPassword()); //should not change
+            user.setPersonel(loadByEntityId(user.getId()).getPersonel()); //should not change
+            user.setOrganizations(loadByEntityId(user.getId()).getOrganizations());//should not change
+            user.setActions(loadByEntityId(user.getId()).getActions());//should not change
         }
         return super.save(user);
     }
 
     @Override
     @Transactional
-    public User selfRegister(UserQuickRegistrationDto userDto) throws Exception {
-        List<User> usersCreatedByCurrentIP = iUserRepository.findAllByIpOrderByLastUpdateDateDesc(SecurityUtility.getRequestIp());
-        if (usersCreatedByCurrentIP != null && usersCreatedByCurrentIP.size() > 0)
-            if (DateUtility.getDiffSeconds(usersCreatedByCurrentIP.get(0).getLastUpdateDate(), new Date()) < 60)
-                throw new Exception("کاربر گرامی حداقل فاصله زمانی بین ثبت دو کاربر، 1 دقیقه می باشد. ");
-        if (findUserByUsernameEquals(userDto.getUsername()) != null)
-            throw new Exception("خطا در ثبت کاربر. با این نام کاربری قبلا ثبت نام انجام شده است!");
+    public User selfRegister(selfUserRegistrationDto userDto) throws Exception {
+        checkInputData(userDto.getUsername());
+
         Personel p = new Personel();
         p.setFirstname(userDto.getFirstname());
         p.setLastname(userDto.getLastname());
@@ -90,14 +99,30 @@ public class UserService extends GenericService<User, Long> implements IUserServ
 
         User newUser = new User();
         newUser.setPersonel(p);
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
         newUser.setPassword(userDto.getPassword().trim());
         newUser.setUsername(userDto.getUsername().trim());
+        newUser.setAccountNonExpired(true);
+        newUser.setCredentialsNonExpired(true);
+        newUser.setAccountNonLocked(true);
+        newUser.setEnabled(true);
+        newUser.setUserExpireDateShamsi(DateUtility.todayShamsi(365));
+        newUser.setPasswordExpireDateShamsi(DateUtility.todayShamsi(365));
 
         //Set<Action> actions = new HashSet<>();
         //actions.add(iActionService.loadByEntityId(3L));//patient
         //user.setActions(actions);
         return save(newUser);
+    }
+
+    public void checkInputData(String username) throws Exception {
+        if (iOrganizationService.loadByEntityId(guestOrganizationId) == null)
+            throw new Exception("واحد سازمانی برای کاربران پورتا تعریف نشده است.");
+        List<User> usersCreatedByCurrentIP = iUserRepository.findAllByIpOrderByLastUpdateDateDesc(SecurityUtility.getRequestIp());
+        if (usersCreatedByCurrentIP != null && usersCreatedByCurrentIP.size() > 0)
+            if (DateUtility.getDiffSeconds(usersCreatedByCurrentIP.get(0).getLastUpdateDate(), new Date()) < 60)
+                throw new Exception("کاربر گرامی حداقل فاصله زمانی بین ثبت دو کاربر، 1 دقیقه می باشد. ");
+        if (findUserByUsernameEquals(username) != null)
+            throw new Exception("خطا در ثبت کاربر. با این نام کاربری قبلا ثبت نام انجام شده است!");
     }
 
     @Override
@@ -130,6 +155,15 @@ public class UserService extends GenericService<User, Long> implements IUserServ
             throw new Exception("برای شما هنوز حساب کاربری ایجاد نشده است.");
     }
 
+    @Transactional
+    @Override
+    public boolean changePasswordByAdmin(Long userId, String newPassword) {
+        Integer result = iUserRepository.changePasswordByAdmin(userId, new BCryptPasswordEncoder().encode(newPassword), new Date());
+        if (result > 0)
+            return true;
+        else
+            return false;
+    }
 
     @Override
     public Map<String, Object> searchUser(String firstname,

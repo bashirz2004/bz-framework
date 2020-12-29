@@ -37,7 +37,18 @@
         var contextPath = "/app";
         $(function () {
             localStorage.clear();
+
             $.removeCookie('Authorization', {path: '/'});
+
+            $('#txtUsername').keydown(function (e) {
+                if (e.which == 13)  // the enter key code
+                    login();
+            });
+
+            $('#txtPassword').keydown(function (e) {
+                if (e.which == 13)  // the enter key code
+                    login();
+            });
         });
 
         function login() {
@@ -63,9 +74,9 @@
                         if (err.responseText.includes("Bad credentials")) {
                             showMessage("نام کاربری یا کلمه عبور اشتباه است.", "", "error");
                         } else if (err.responseText.includes("The response parameter is missing")) {
-                            showMessage("مگه شما ربات هستید؟", "", "error");
+                            showMessage("اشکال در کپچا. نکنه شما ربات هستید؟", "", "error");
                         } else
-                            showMessage("با عرض پوزش، امکان ورود به سامانه وجود ندارد.", "", "error");
+                            showMessage(err.responseJSON.message, "", "error");
                     }
                 });
             } else

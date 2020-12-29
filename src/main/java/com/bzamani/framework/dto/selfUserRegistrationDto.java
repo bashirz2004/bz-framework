@@ -5,7 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserQuickRegistrationDto {
+public class selfUserRegistrationDto {
+    private Long userId;
     private String firstname;
     private String lastname;
     private String username;
@@ -14,5 +15,7 @@ public class UserQuickRegistrationDto {
     private Boolean male;
     private String nationalCode;
     private String email;
+    private String userExpireDateShamsi;
+    private String passwordExpireDateShamsi;
 
 }
