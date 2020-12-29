@@ -60,6 +60,7 @@
             <version>1.18.16</version>
             <scope>provided</scope>
         </dependency>
+        <!-- used to generate random numbers and strings -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -69,6 +70,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
             <version>2.2.5.RELEASE</version>
+        </dependency>
+        <!-- calendar used in DateUtility -->
+        <dependency>
+            <groupId>net.time4j</groupId>
+            <artifactId>time4j-calendar</artifactId>
+            <version>4.28</version>
         </dependency>
     </dependencies>
 
