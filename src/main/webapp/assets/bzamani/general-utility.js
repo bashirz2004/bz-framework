@@ -55,6 +55,97 @@ function getUrlParameter(sParam) {
     }
 }
 
-function initializeDatePicker(){
-    $(".datetimepicker").persianDatepicker();
+function initializeDatePicker() {
+    $(".mydatepicker").persianDatepicker({
+        "inline": false,
+        "format": "YYYY/MM/DD",
+        "viewMode": "day",
+        "initialValue": true,
+        //"minDate": 1609085457485,
+        //"maxDate": 1610035857493,
+        "autoClose": true,
+        "position": "auto",
+        "onlyTimePicker": false,
+        "onlySelectOnDate": true,
+        "calendarType": "persian",
+        "inputDelay": 800,
+        "observer": true,
+        "calendar": {
+            "persian": {
+                "locale": "en",
+                "showHint": false,
+                "leapYearMode": "algorithmic"
+            },
+            "gregorian": {
+                "locale": "en",
+                "showHint": false
+            }
+        },
+        "navigator": {
+            "enabled": true,
+            "scroll": {
+                "enabled": false
+            },
+            "text": {
+                "btnNextText": "<<",
+                "btnPrevText": ">>"
+            }
+        },
+        "toolbox": {
+            "enabled": true,
+            "calendarSwitch": {
+                "enabled": false,
+                "format": "MMMM"
+            },
+            "todayButton": {
+                "enabled": true,
+                "text": {
+                    "fa": "امروز",
+                    "en": "امروز"
+                }
+            },
+            "submitButton": {
+                "enabled": false,
+                "text": {
+                    "fa": "تایید",
+                    "en": "Submit"
+                }
+            },
+            "text": {
+                "btnToday": "امروز"
+            }
+        },
+        "timePicker": {
+            "enabled": false,
+            "step": 1,
+            "hour": {
+                "enabled": true,
+                "step": null
+            },
+            "minute": {
+                "enabled": true,
+                "step": null
+            },
+            "second": {
+                "enabled": true,
+                "step": null
+            },
+            "meridian": {
+                "enabled": true
+            }
+        },
+        "dayPicker": {
+            "enabled": true,
+            "titleFormat": "YYYY MMMM"
+        },
+        "monthPicker": {
+            "enabled": true,
+            "titleFormat": "YYYY"
+        },
+        "yearPicker": {
+            "enabled": true,
+            "titleFormat": "YYYY"
+        },
+        "responsive": true
+    });
 }

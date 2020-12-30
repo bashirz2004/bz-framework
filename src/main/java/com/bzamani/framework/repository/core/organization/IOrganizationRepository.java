@@ -32,11 +32,4 @@ public interface IOrganizationRepository extends JpaRepository<Organization, Lon
             + " group by cp3.id, cp3.hierarchyCode order by cp3.hierarchyCode asc ")
     List<Long> getAllParentIds(@Param("organizationId") Long organizationId);
 
-
-    /*@Query("SELECT u FROM Organization u ")
-    Page<Organization> staticQuery(@Param("title") String title, @Param("description") String description, @Param("active") Boolean active, Pageable pageable);*/
-
-   /* @Modifying
-    @Query("update Organization set active = :active where id = :id")
-    long changeStatus(@Param("id") long id, @Param("active") boolean active);*/
 }

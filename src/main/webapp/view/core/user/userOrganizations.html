@@ -1,1 +1,316 @@
-Under construction
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+
+    <script type="text/javascript">
+        var restUrl = "<c:url value = '/rest/core/power/basePower' />";
+        var userRestUrl = "<c:url value='/rest/core/security/user' />";
+
+        var tree;
+        var treeRootId = 1;
+        var superRootNode = {
+            id : 0,
+            text : 'tree super root node',
+            item : []
+        };
+        $(function() {
+
+            $("#treebox").height($(window).height() - 80);
+
+            configTree();
+            $.getJSON(restUrl + "/allAuthorizeJsonTree?id=" + treeRootId, function(dataSource) {
+                superRootNode.item.push(dataSource);
+                tree.loadJSONObject(superRootNode);
+                tree.openItem(treeRootId);
+
+                getCurrentUser();
+            });
+        });
+
+        function configTree() {
+            tree = new dhtmlXTreeObject('treebox', '100%', '100%', 0);
+            tree.setImagePath("<c:url value='/Scripts/MyJQuery/dhtmlxTree/imgs_rtl/' />");
+            tree.setXMLAutoLoading(restUrl + "/allAuthorizeJsonTree");
+            tree.setDataMode("json");
+            tree.enableCheckBoxes(1, 0);
+        }
+
+        function getCurrentUser() {
+            $.get("<c:url value='/rest/core/security/user/authenitacedUser' />", function(user) {
+
+                if (user.id == currentUserId)
+                    $('#btnAddPowers, #btnAddExcludedPower').remove();
+
+                currentUserId = currentUserId < 0 ? user.id : currentUserId;
+                $.get(userRestUrl + "/load/powers/" + user.id, function(powers) {
+                    if ($.grep(powers, function(e) {
+                        return e.id == 1;
+                    })[0] != null) {
+                        tree.setUserData(treeRootId, 'access', 'true');
+                    } else {
+                        tree.setUserData(treeRootId, 'access', 'false');
+                        tree.showItemCheckbox(treeRootId, 0);
+                    }
+                    $("#userPowerGrid").grid("fillTable");
+                    $("#userExcludedPowerGrid").grid("fillTable");
+
+                });
+            });
+        }
+        // UserPower
+        function addPowers() {
+            var message = '';
+            var checkedItems = getChecked();
+            if(checkedItems.length == 0)
+                return;
+            var data = {
+                userId : currentUserId,
+                userPowers : [],
+                userExcludedPowers : []
+            };
+            data.userPowers = createPowerObject($("#userPowerGrid").grid("getGridData"));
+            data.userExcludedPowers = createPowerObject($("#userExcludedPowerGrid").grid("getGridData"));
+
+            $.each(checkedItems, function(i, power) {
+                if (!exists(data.userExcludedPowers, power) && !exists(data.userPowers, power) && ($.grep(data.userPowers, function(e) {
+                    return e.hierarchiCode.match(new RegExp(power.hierarchiCode + '.*'));
+                }).length == 0) && ($.grep(data.userPowers, function(e) {
+                    return power.hierarchiCode.match(new RegExp(e.hierarchiCode + '.*'));
+                }).length == 0)) {
+                    data.userPowers.push({
+                        id : power.id,
+                        title : power.title,
+                        fullTitle : power.fullTitle,
+                        hierarchiCode : power.hierarchiCode
+                    });
+                } else {
+                    message += power.fullTitle + '<br>';
+                }
+            });
+            if (message) {
+                message = '<spring:message code="UI.General.Power.existsInPowers" />:<br>' + message;
+                showMessage(message, {
+                    toastType: 'warning'
+                });
+            } else if (checkedItems) {
+                saveAll(data);
+            }
+
+        }
+
+        function deleteUserPower(entityId) {
+            baharanConfirm("تایید حذف", "آیا مایل به حذف هستید؟", function() {
+                var data = {
+                    userId : currentUserId,
+                    userPowers : [],
+                    userExcludedPowers : []
+                };
+                data.userPowers = createPowerObject($("#userPowerGrid").grid("getGridData"), entityId);
+                data.userExcludedPowers = createPowerObject($("#userExcludedPowerGrid").grid("getGridData"));
+                saveAll(data);
+            });
+        }
+        function createPowerObject(powers, excludeId) {
+            var arr = [];
+            $.each(powers, function(i, entity) {
+                if(!excludeId || entity.id != excludeId) {
+                    arr.push({
+                        id : entity.id,
+                        title : entity.title,
+                        fullTitle : entity.fullTitle,
+                        hierarchiCode : entity.hierarchiCode
+                    });
+                }
+            });
+            return arr;
+        }
+
+        function exists(list, power) {
+            if ($.grep(list, function(e) {
+                return e.id == power.id;
+            }).length > 0)
+                return true;
+
+            return false;
+        }
+
+        function saveAll(data) {
+            $.ajax({
+                url : userRestUrl + '/savePowerAuthorize',
+                type : 'POST',
+                dataType : 'json',
+                contentType : 'application/json; charset=utf-8',
+                data : JSON.stringify(data),
+                success : function(res) {
+                    uncheckAll();
+                    $("#userPowerGrid").grid("fillTable");
+                    $("#userExcludedPowerGrid").grid("fillTable");
+                },
+                error: function(xhr) {
+                    var errorMessage = JSON.parse(xhr.responseText);
+                    if (errorMessage.message.trim().length > 0) {
+                        showMessage(errorMessage.message, {
+                            toastType: 'warning'
+                        });
+                    }
+                    else {
+                        message = 'سامانه قادر به انجام درخواست شما نمیباشد ،خطای شما برای بررسی به مدیر سیستم ارسال گردید';
+                        showMessage(message, {
+                            toastType: 'warning'
+                        });
+                    }
+                }
+            });
+        }
+
+        function getChecked() {
+            var result = [];
+            var selectItemsId = tree.getAllChecked().split(',');
+            if (selectItemsId != '') {
+                $.each(selectItemsId, function(i, id) {
+                    if (tree.getUserData(id, 'access') == 'true') {
+                        result.push({
+                            id : selectItemsId[i],
+                            title : tree.getItemText(selectItemsId[i]),
+                            fullTitle : getFullTitle(selectItemsId[i]),
+                            hierarchiCode : tree.getUserData(selectItemsId[i], 'hierarchiCode')
+                        });
+                    } else {
+                        showMessage('شما به رده ی ' + getFullTitle(selectItemsId[i]) + ' دسترسی ندارید.', {
+                            toastType: 'warning'
+                        });
+                        return false;
+                    }
+                });
+
+                // check exists with hierarchi
+                var existsWithHierarchi = true;
+                $.each(result, function(i, power) {
+                    if ($.grep(result, function(e) {
+                        return (power.id != e.id && power.hierarchiCode.match(new RegExp(e.hierarchiCode + '.*')));
+                    }).length != 0) {
+                        existsWithHierarchi = false;
+                    }
+                });
+
+                if (!existsWithHierarchi) {
+                    showMessage('<spring:message code="UI.General.Power.existsInHierarchi" />', {
+                        toastType: 'warning'
+                    });
+                    return '';
+                }
+
+            } else {
+                showMessage('حداقل یک رده انتخاب کنید', {
+                    toastType: 'warning'
+                });
+            }
+
+            return result;
+        }
+
+        function uncheckAll() {
+            $.each(tree.getAllChecked().split(','), function(i, node) {
+                tree.setCheck(node, false);
+            });
+        }
+
+        function getFullTitle(id) {
+            if (id == 0) {
+                return '';
+            } else {
+                var fullTitle = getFullTitle(tree.getParentId(id)) + '-' + tree.getItemText(id);
+                return (fullTitle.charAt(0) == '-' ? fullTitle.substr(1) : fullTitle);
+            }
+        }
+    </script>
+</head>
+<body onload="pageLoad()" class="appWrapper rtl backTrans">
+<div id="wrap" class="animsition animsition-default">
+    <section id="content" class="contentBody">
+        <div class="page page-rtl-layout p-10">
+            <div class="pagecontent">
+                <div id="table_content" class="tile table_content collapse in col-sm-4">
+                    <div class="tile-header dvd dvd-btm">
+                        <h3 class="custom-font ">
+                            <strong> رده های مجاز </strong>
+                        </h3>
+                        <ul class="controls">
+                            <li>
+                                <a role="button" onclick="$('#userPowerGrid').grid('fillTable');" data-tooltip="tooltip" data-placement="bottom" data-original-title="بازخوانی لیست رکوردها">
+                                    <i class="fa fa-refresh fa-lg  text-drank" role="button"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tile-body">
+                        <div class="table-responsive">
+                            <table class="table table-custom table-hover table-condensed grid" id="userPowerGrid" data-component="grid" data-options="url:'<c:url value = '/rest/core/security/user/load/powers/' />' + currentUserId,createSearchOptions:true,fillTable:false" width="100%"
+                                   align="center">
+                                <thead>
+                                <tr class="bg-dutch">
+                                    <th nowrap="nowrap">
+                                        <spring:message code="UI.General.Row" />
+                                    </th>
+                                    <th nowrap="nowrap">
+                                        <spring:message code="UI.General.Power.power" />
+                                    </th>
+                                    <th nowrap="nowrap" style="text-align: center;">
+                                        <spring:message code="UI.General.Delete" />
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody id="userPowerEntityBody" class="entityBody">
+                                <script id="userPowerRowTemplate" type="text/html">
+                                    <tr id="pattern${id}">
+                                        <td >
+                                            <span class="tmplRowIndex"></span>
+                                        </td >
+                                        <td >
+                                            ${fullTitle ? fullTitle : title}
+                                        </td>
+                                        <td class="text-center">
+                                            <i class="fa fa-lg fa-remove text-red" style="cursor: pointer;" onclick="deleteUserPower('${id}')" />
+                                        </td>
+                                    </tr>
+                                </script>
+                                </tbody>
+                            </table>
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td align="left">
+                                        <nbaharan:PluginDataGridPagingNew gridId="userPowerGrid" pageSize="10" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="table_content" class="tile table_content collapse in col-sm-4">
+                    <div class="tile-header dvd dvd-btm">
+                        <h3 class="custom-font ">
+                            <strong> درختواره رده ها </strong>
+                        </h3>
+                        <ul class="controls">
+                            <li>
+                                <a role="button" onclick="uncheckAll()" data-tooltip="tooltip" data-placement="bottom" data-original-title="حذف موارد انتخابی">
+                                    <i class="fa fa-remove fa-lg text-red" role="button"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a role="button" id="btnAddPowers" onclick="addPowers();" data-tooltip="tooltip" data-placement="bottom" data-original-title="افزودن به لیست رده های  مجاز">
+                                    <i class="fa fa-arrow-right fa-lg text-success" role="button"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tile-body">
+                        <div id="treebox" style="background-color: #f5f5f5; border: 1px solid Silver; overflow: scroll;"></div>
+                    </div>
+                </div>
+            </div>
+    </section>
+
+</body>
+</html>

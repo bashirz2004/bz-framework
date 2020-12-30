@@ -27,11 +27,11 @@
     <script src="/app/assets/bzamani/components/fancybox/jquery.fancybox.js"></script>
     <link rel="stylesheet" href="/app/assets/bzamani/components/fancybox/jquery.fancybox.css"/>
 
-    <!-- Datetimepicker  -->
+    <!-- datepicker  -->
     <script src="/app/assets/bzamani/components/datepicker/persian-date.js"></script>
     <script src="/app/assets/bzamani/components/datepicker/persian-datepicker.js"></script>
     <link rel="stylesheet" href="/app/assets/bzamani/components/datepicker/persian-datepicker.css">
-    <!-- /Datetimepicker  -->
+    <!-- /datepicker  -->
 
     <!-- pace mask -->
     <script>
@@ -122,7 +122,6 @@
                 if (e.which == 13)  // the enter key code
                     searchUser();
             });
-
         });
 
         function searchUser() {
@@ -561,7 +560,7 @@
                             <div class="col-lg-4">
                                 <div class="form-group">
                                     <label>تاریخ اعتبار کاربر<span class="text-danger">*</span></label>
-                                    <input class="form-control datetimepicker" type="text" id="txtUserExpireDateShamsi" required="">
+                                    <input class="form-control mydatepicker" type="text" id="txtUserExpireDateShamsi" required="">
                                 </div>
                             </div>
                             <div class="col-lg-4">
@@ -583,7 +582,7 @@
                                 <div class="form-group">
                                     <label>تاریخ اعتبار رمز عبور<span
                                             class="text-danger">*</span></label>
-                                    <input class="form-control datetimepicker" type="text" id="txtPasswordExpireDateShamsi"
+                                    <input class="form-control mydatepicker" type="text" id="txtPasswordExpireDateShamsi"
                                            required="">
                                 </div>
                             </div>
