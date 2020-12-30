@@ -49,20 +49,21 @@
                 if (e.which == 13)  // the enter key code
                     login();
             });
+
         });
 
         function login() {
+            $('#hiddenPassword').val($('#txtPassword').val());
+            preventSavePasswordInBrowswe();
             if ($('#txtUsername').val() != '' && $('#txtPassword').val() != '') {
-                $('#hiddenFieldUsername').val($('#txtUsername').val());
-                $('#hiddenFieldPassword').val($('#txtPassword').val());
                 $.ajax({
                     url: contextPath + "/authenticate",
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
                     data: JSON.stringify({
                         "g-recaptcha-response": $('#g-recaptcha-response').val(),
-                        "username": $('#hiddenFieldUsername').val(),
-                        "password": $('#hiddenFieldPassword').val()
+                        "username": $('#txtUsername').val(),
+                        "password": $('#hiddenPassword').val()
                     }),
                     type: 'POST',
                     success: function (res) {
@@ -82,6 +83,24 @@
             } else
                 $('#txtUsername').focus();
         }
+
+        function generateBullets(length) {
+            var characters = "•";
+            var generatedString = "";
+            for (i = 0; i < length; i++)
+                generatedString += characters;
+            return generatedString;
+        }
+
+        function preventSavePasswordInBrowswe() {
+            //to avoid save password in browser mozilla only
+            if (navigator.userAgent.search('Firefox') >= 0) {
+                $("#txtPassword").css('font-size', '22px');
+            }
+            $("#txtPassword").val(generateBullets($("#txtPassword").val().length));
+            $("#txtPassword").attr('type', 'text');
+        }
+
     </script>
     <style>
         .rc-anchor-container {
@@ -111,16 +130,13 @@
                                 <div class="login-header">
                                     <h3> ورود به <span>سامانه</span></h3>
                                 </div>
-                                <form id="formLogin">
-                                    <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response"/>
-                                    <input type="hidden" id="hiddenFieldUsername" name="username"/>
-                                    <input type="hidden" id="hiddenFieldPassword" name="password"/>
-                                </form>
+                                <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response"/>
                                 <div class="form-group form-focus">
                                     <input type="text" class="form-control floating" id="txtUsername">
                                     <label class="focus-label">نام کاربری</label>
                                 </div>
                                 <div class="form-group form-focus">
+                                    <input type="hidden" id="hiddenPassword"/>
                                     <input type="password" class="form-control floating" id="txtPassword">
                                     <label class="focus-label">رمزعبور</label>
                                 </div>
