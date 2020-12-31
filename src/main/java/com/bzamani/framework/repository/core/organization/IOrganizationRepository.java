@@ -1,5 +1,6 @@
 package com.bzamani.framework.repository.core.organization;
 
+import com.bzamani.framework.dto.OrganizationDto;
 import com.bzamani.framework.model.core.organization.Organization;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,5 +32,28 @@ public interface IOrganizationRepository extends JpaRepository<Organization, Lon
             + "			cp3.hierarchyCode like cp2.hierarchyCode||'%'  and	cp2.parent.id is null  "
             + " group by cp3.id, cp3.hierarchyCode order by cp3.hierarchyCode asc ")
     List<Long> getAllParentIds(@Param("organizationId") Long organizationId);
+
+    @Query("	select  new com.bzamani.framework.dto.OrganizationDto(                              " +
+            "		p.id as id,  																	" +
+            "		p.title as title,																" +
+            "		p.parent.id as parentId,                                                        " +
+            "		case when exists( from User u join u.organizations uo			                " +
+            "						  where uo.id = p.id						    	            " +
+            "				   		  	and u.id = :userId									        " +
+            "				 		) then true else false end as authorized,                      	" +
+            "		p.hierarchyCode as hierarchyCode,					                  			" +
+            "   	cast((select count(a.id) from Organization a where a.parent.id = p.id) as integer) as childCount   )                         									" +
+            "	from Organization p                                                                 " +
+            "	where p.hierarchyCode in (                                                          " +
+            "              select substring(org.hierarchyCode,1,length(p.hierarchyCode))            " +
+            "   	          from User u join u.organizations uo,Organization org                  " +
+            "   	        where u.id = :userId and uo.id = org.id   )                             " +
+            "     and p.parent.id = :parentId order by p.title                                      "
+    )
+    List<OrganizationDto> getAuthorizeOrganizationsForUserId(@Param("userId") long userId, @Param("parentId") Long parentId);
+
+    @Query("  select count(u.id) from User u join u.organizations o where u.id = :userId and o.id = :organizationId ")
+    int userHaveAccessToOrganization(@Param("userId") long userId, @Param("organizationId") long organizationId);
+
 
 }

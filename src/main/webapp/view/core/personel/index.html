@@ -108,16 +108,16 @@
         };
 
         $(function () {
-            fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
+            refreshGrid();
 
             $('.sort-grid').on("click", function () {
                 searchFilters.sort = $(this).attr("order");
-                fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
+                refreshGrid();
             });
 
             $('#cmbPageSize').change(function () {
                 searchFilters.size = $(this).val();
-                fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
+                refreshGrid();
             });
 
             $('.searchFilter').keydown(function (e) {
@@ -134,7 +134,7 @@
             searchFilters.firstname = $("#txtSearchFirstname").val();
             searchFilters.lastname = $("#txtSearchLastname").val();
             searchFilters.nationalCode = $("#txtSearchNationalCode").val();
-            fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
+            refreshGrid();
         }
 
         function clearSearch() {
@@ -148,22 +148,22 @@
                 "size": 8
             };
             $('.searchFilter').val('');
-            fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
+            refreshGrid();
         }
 
         function next() {
             searchFilters.page = searchFilters.page + 1;
-            fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
+            refreshGrid();
         }
 
         function previous() {
             searchFilters.page = searchFilters.page - 1;
-            fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
+            refreshGrid();
         }
 
         function goTo(pageNumber) {
             searchFilters.page = pageNumber;
-            fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
+            refreshGrid();
         }
 
         function deleteEntity() {
@@ -174,7 +174,7 @@
                     dataType: "json",
                     type: 'DELETE',
                     success: function (res) {
-                        fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
+                        refreshGrid();
                         showMessage("حذف با موفقیت انجام شد.", "", "success");
                     },
                     error: function (err) {
@@ -183,6 +183,10 @@
                 });
             else
                 showMessage("هیچ رکوردی انتخاب نشده است.", "", "error");
+        }
+
+        function refreshGrid() {
+            fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
         }
 
         function rowSelected(id) {
@@ -512,6 +516,7 @@
 
 
 
+
                         </script>
                         </tbody>
                     </table>
@@ -574,7 +579,8 @@
                             <div class="col-lg-2">
                                 <div class="form-group">
                                     <label>کدملی <span class="text-danger">*</span></label>
-                                    <input class="form-control" maxlength="10" minlength="10" type="text" id="txtNationalCode">
+                                    <input class="form-control" maxlength="10" minlength="10" type="text"
+                                           id="txtNationalCode">
                                 </div>
                             </div>
                             <div class="col-lg-2">

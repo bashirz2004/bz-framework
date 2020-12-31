@@ -1,316 +1,436 @@
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>واحدهای سازمانی کاربر</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/app/assets/img/favicon.png">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/app/assets/bzamani/bootstrap.css">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="/app/assets/admin/css/font-awesome.min.css">
+
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/app/assets/bzamani/style-admin.css">
+
+    <!--[if lt IE 9]>
+    <script src="/app/assets/js/html5shiv.min.js"></script>
+    <script src="/app/assets/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery -->
+    <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
+
+    <!-- pace mask -->
+    <script>
+        paceOptions = {
+            elements: false,
+            document: true, // disabled
+            eventLag: false, // disabled
+            ajax: {
+                trackMethods: ['GET', 'POST', 'DELETE', 'PUT'],
+                trackWebSockets: false
+            },
+            restartOnPushState: true,
+            restartOnRequestAfter: true
+        };
+        $(function () {
+            $("body").prepend("<div class='pace-cover' style='display: none;'></div>");
+            Pace.on("start", function () {
+                $(".pace-cover").fadeIn();
+            });
+            Pace.on("done", function () {
+                $(".pace-cover").fadeOut();
+            });
+        });
+    </script>
+    <script type="text/javascript" src="/app/assets/bzamani/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
+    <style>
+        .pace-cover {
+            position: fixed;
+            left: 0px;
+            top: 1px;
+            width: 100%;
+            height: 100%;
+            z-index: 99999;
+            background: rgba(0, 0, 0, 0.4);
+        }
+    </style>
+    <!-- /pace mask -->
+
+    <!-- sweet alert -->
+    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/sweetalert/sweetalert2.min.css">
+    <!-- /sweet alert -->
+
+    <!-- dhtml tree -->
+    <script type="text/javascript" src="/app/assets/bzamani/components/tree/tree.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/app/assets/bzamani/components/tree/tree.css"/>
+    <!-- /dhtml tree -->
+
+    <script src="/app/assets/bzamani/jquery.template.js"></script>
+    <script src="/app/assets/bzamani/grid-utility.js"></script>
+    <script src="/app/assets/bzamani/general-utility.js"></script>
 
     <script type="text/javascript">
-        var restUrl = "<c:url value = '/rest/core/power/basePower' />";
-        var userRestUrl = "<c:url value='/rest/core/security/user' />";
-
+        var currentUserId = getUrlParameter("userId");
         var tree;
         var treeRootId = 1;
         var superRootNode = {
-            id : 0,
-            text : 'tree super root node',
-            item : []
+            id: 0,
+            text: 'tree super root node',
+            item: []
         };
-        $(function() {
+        var searchFilters = {
+            "userId": currentUserId,
+            "organizationTitle": '',
+            "sort": "id,desc",
+            "page": 0,
+            "size": 5
+        };
+        var contextPath = "/app";
 
-            $("#treebox").height($(window).height() - 80);
+        $(function () {
+            initTree();
+            refreshGrid();
 
-            configTree();
-            $.getJSON(restUrl + "/allAuthorizeJsonTree?id=" + treeRootId, function(dataSource) {
-                superRootNode.item.push(dataSource);
-                tree.loadJSONObject(superRootNode);
-                tree.openItem(treeRootId);
+            $('.sort-grid').on("click", function () {
+                searchFilters.sort = $(this).attr("order");
+                refreshGrid();
+            });
 
-                getCurrentUser();
+            $('#cmbPageSize').change(function () {
+                searchFilters.size = $(this).val();
+                refreshGrid();
+            });
+
+            $('.searchFilter').keydown(function (e) {
+                if (e.which == 13)  // the enter key code
+                    searchUserOrganizations();
             });
         });
 
+
+        function initTree() {
+            configTree();
+            $.get(contextPath + "/rest/core/organization/getChildrenAsJsonTreeAuthorize?id=" + treeRootId, function (data) {
+                superRootNode.item.push(data);
+                tree.loadJSONObject(superRootNode);
+                tree.openItem(treeRootId);
+            });
+        }
+
         function configTree() {
-            tree = new dhtmlXTreeObject('treebox', '100%', '100%', 0);
-            tree.setImagePath("<c:url value='/Scripts/MyJQuery/dhtmlxTree/imgs_rtl/' />");
-            tree.setXMLAutoLoading(restUrl + "/allAuthorizeJsonTree");
+            tree = new dhtmlXTreeObject('tree_div', '100%', '100%', 0);
+            tree.setImagePath("/app/assets/bzamani/components/tree/icons/");
+            tree.setXMLAutoLoading(contextPath + "/rest/core/organization/getChildrenAsJsonTreeAuthorize");
             tree.setDataMode("json");
             tree.enableCheckBoxes(1, 0);
         }
 
-        function getCurrentUser() {
-            $.get("<c:url value='/rest/core/security/user/authenitacedUser' />", function(user) {
-
-                if (user.id == currentUserId)
-                    $('#btnAddPowers, #btnAddExcludedPower').remove();
-
-                currentUserId = currentUserId < 0 ? user.id : currentUserId;
-                $.get(userRestUrl + "/load/powers/" + user.id, function(powers) {
-                    if ($.grep(powers, function(e) {
-                        return e.id == 1;
-                    })[0] != null) {
-                        tree.setUserData(treeRootId, 'access', 'true');
-                    } else {
-                        tree.setUserData(treeRootId, 'access', 'false');
-                        tree.showItemCheckbox(treeRootId, 0);
-                    }
-                    $("#userPowerGrid").grid("fillTable");
-                    $("#userExcludedPowerGrid").grid("fillTable");
-
-                });
-            });
-        }
-        // UserPower
-        function addPowers() {
-            var message = '';
-            var checkedItems = getChecked();
-            if(checkedItems.length == 0)
-                return;
-            var data = {
-                userId : currentUserId,
-                userPowers : [],
-                userExcludedPowers : []
+        function addSelectedOrganizations() {
+            let checkedItems = tree.getAllChecked().split(',');
+            let data = {
+                userId: currentUserId,
+                organizationIds: []
             };
-            data.userPowers = createPowerObject($("#userPowerGrid").grid("getGridData"));
-            data.userExcludedPowers = createPowerObject($("#userExcludedPowerGrid").grid("getGridData"));
-
-            $.each(checkedItems, function(i, power) {
-                if (!exists(data.userExcludedPowers, power) && !exists(data.userPowers, power) && ($.grep(data.userPowers, function(e) {
-                    return e.hierarchiCode.match(new RegExp(power.hierarchiCode + '.*'));
-                }).length == 0) && ($.grep(data.userPowers, function(e) {
-                    return power.hierarchiCode.match(new RegExp(e.hierarchiCode + '.*'));
-                }).length == 0)) {
-                    data.userPowers.push({
-                        id : power.id,
-                        title : power.title,
-                        fullTitle : power.fullTitle,
-                        hierarchiCode : power.hierarchiCode
-                    });
-                } else {
-                    message += power.fullTitle + '<br>';
-                }
-            });
-            if (message) {
-                message = '<spring:message code="UI.General.Power.existsInPowers" />:<br>' + message;
-                showMessage(message, {
-                    toastType: 'warning'
+            if (checkedItems.length == 0 || (checkedItems.length == 1 && checkedItems[0] == '')) {
+                showMessage("هیچ واحد سازمانی انتخاب نشده است.", "", "warning");
+                return;
+            } else {
+                $.each(checkedItems, function (i) {
+                    data.organizationIds.push(checkedItems[i]);
                 });
-            } else if (checkedItems) {
                 saveAll(data);
             }
-
-        }
-
-        function deleteUserPower(entityId) {
-            baharanConfirm("تایید حذف", "آیا مایل به حذف هستید؟", function() {
-                var data = {
-                    userId : currentUserId,
-                    userPowers : [],
-                    userExcludedPowers : []
-                };
-                data.userPowers = createPowerObject($("#userPowerGrid").grid("getGridData"), entityId);
-                data.userExcludedPowers = createPowerObject($("#userExcludedPowerGrid").grid("getGridData"));
-                saveAll(data);
-            });
-        }
-        function createPowerObject(powers, excludeId) {
-            var arr = [];
-            $.each(powers, function(i, entity) {
-                if(!excludeId || entity.id != excludeId) {
-                    arr.push({
-                        id : entity.id,
-                        title : entity.title,
-                        fullTitle : entity.fullTitle,
-                        hierarchiCode : entity.hierarchiCode
-                    });
-                }
-            });
-            return arr;
-        }
-
-        function exists(list, power) {
-            if ($.grep(list, function(e) {
-                return e.id == power.id;
-            }).length > 0)
-                return true;
-
-            return false;
         }
 
         function saveAll(data) {
             $.ajax({
-                url : userRestUrl + '/savePowerAuthorize',
-                type : 'POST',
-                dataType : 'json',
-                contentType : 'application/json; charset=utf-8',
-                data : JSON.stringify(data),
-                success : function(res) {
+                url: contextPath + '/rest/core/user/saveUserOrganizations',
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(data),
+                success: function (res) {
+                    showMessage("ثبت با موفقیت انجام شد.", "", "success");
                     uncheckAll();
-                    $("#userPowerGrid").grid("fillTable");
-                    $("#userExcludedPowerGrid").grid("fillTable");
+                    refreshGrid();
                 },
-                error: function(xhr) {
-                    var errorMessage = JSON.parse(xhr.responseText);
-                    if (errorMessage.message.trim().length > 0) {
-                        showMessage(errorMessage.message, {
-                            toastType: 'warning'
-                        });
-                    }
-                    else {
-                        message = 'سامانه قادر به انجام درخواست شما نمیباشد ،خطای شما برای بررسی به مدیر سیستم ارسال گردید';
-                        showMessage(message, {
-                            toastType: 'warning'
-                        });
-                    }
+                error: function (err) {
+                    showMessage(err.responseJSON.message, "", "error");
                 }
             });
         }
 
-        function getChecked() {
-            var result = [];
-            var selectItemsId = tree.getAllChecked().split(',');
-            if (selectItemsId != '') {
-                $.each(selectItemsId, function(i, id) {
-                    if (tree.getUserData(id, 'access') == 'true') {
-                        result.push({
-                            id : selectItemsId[i],
-                            title : tree.getItemText(selectItemsId[i]),
-                            fullTitle : getFullTitle(selectItemsId[i]),
-                            hierarchiCode : tree.getUserData(selectItemsId[i], 'hierarchiCode')
-                        });
-                    } else {
-                        showMessage('شما به رده ی ' + getFullTitle(selectItemsId[i]) + ' دسترسی ندارید.', {
-                            toastType: 'warning'
-                        });
-                        return false;
-                    }
-                });
-
-                // check exists with hierarchi
-                var existsWithHierarchi = true;
-                $.each(result, function(i, power) {
-                    if ($.grep(result, function(e) {
-                        return (power.id != e.id && power.hierarchiCode.match(new RegExp(e.hierarchiCode + '.*')));
-                    }).length != 0) {
-                        existsWithHierarchi = false;
-                    }
-                });
-
-                if (!existsWithHierarchi) {
-                    showMessage('<spring:message code="UI.General.Power.existsInHierarchi" />', {
-                        toastType: 'warning'
-                    });
-                    return '';
-                }
-
-            } else {
-                showMessage('حداقل یک رده انتخاب کنید', {
-                    toastType: 'warning'
-                });
-            }
-
-            return result;
-        }
-
         function uncheckAll() {
-            $.each(tree.getAllChecked().split(','), function(i, node) {
+            $.each(tree.getAllChecked().split(','), function (i, node) {
                 tree.setCheck(node, false);
             });
         }
 
-        function getFullTitle(id) {
-            if (id == 0) {
-                return '';
-            } else {
-                var fullTitle = getFullTitle(tree.getParentId(id)) + '-' + tree.getItemText(id);
-                return (fullTitle.charAt(0) == '-' ? fullTitle.substr(1) : fullTitle);
-            }
+        // manage grid
+
+        function refreshGrid() {
+            fillGrid('userTemplate', 'userList', contextPath + "/rest/core/user/searchUserOrganizations", searchFilters);
         }
+
+        function searchUserOrganizations() {
+            searchFilters.organizationTitle = $("#txtSearchOrganizationTitle").val();
+            searchFilters.userId = currentUserId;
+            refreshGrid();
+        }
+
+        function clearSearch() {
+            $('#cmbPageSize').val(5);
+            searchFilters = {
+                "userId": currentUserId,
+                "organizationTitle": '',
+                "sort": "id,desc",
+                "page": 0,
+                "size": 5
+            };
+            $('.searchFilter').val('');
+            refreshGrid();
+        }
+
+        function next() {
+            searchFilters.page = searchFilters.page + 1;
+            refreshGrid();
+        }
+
+        function previous() {
+            searchFilters.page = searchFilters.page - 1;
+            refreshGrid();
+        }
+
+        function goTo(pageNumber) {
+            searchFilters.page = pageNumber;
+            refreshGrid();
+        }
+
+        function deleteEntity() {
+            if ($('#hiddenFieldId').val() > 0)
+                $.ajax({
+                    url: contextPath + "/rest/core/user/deleteUserOrganization/" + currentUserId + "/" + $('#hiddenFieldId').val(),
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    type: 'DELETE',
+                    success: function (res) {
+                        showMessage("حذف با موفقیت انجام شد.", "", "success");
+                        refreshGrid();
+                        uncheckAll();
+                        clearSearch();
+                    },
+                    error: function (err) {
+                        if (err.responseText.includes("Forbidden"))
+                            showMessage("شما مجوز انجام این عملیات را ندارید.", "", "error");
+                        else
+                            showMessage("خطا در حذف اطلاعات", "", "error");
+                    }
+                });
+            else
+                showMessage("هیچ رکوردی انتخاب نشده است.", "", "error");
+        }
+
+        function rowSelected(id) {
+            $('#hiddenFieldId').val(id);
+        }
+
+        function rowDeselected() {
+            $('#hiddenFieldId').val();
+        }
+
+
     </script>
 </head>
-<body onload="pageLoad()" class="appWrapper rtl backTrans">
-<div id="wrap" class="animsition animsition-default">
-    <section id="content" class="contentBody">
-        <div class="page page-rtl-layout p-10">
-            <div class="pagecontent">
-                <div id="table_content" class="tile table_content collapse in col-sm-4">
-                    <div class="tile-header dvd dvd-btm">
-                        <h3 class="custom-font ">
-                            <strong> رده های مجاز </strong>
-                        </h3>
-                        <ul class="controls">
-                            <li>
-                                <a role="button" onclick="$('#userPowerGrid').grid('fillTable');" data-tooltip="tooltip" data-placement="bottom" data-original-title="بازخوانی لیست رکوردها">
-                                    <i class="fa fa-refresh fa-lg  text-drank" role="button"></i>
-                                </a>
-                            </li>
-                        </ul>
+<body>
+<div class="col-xl-12 col-lg-12 col-md-12 com-sm-12 float-left">
+    <h5 class="col-xl-4 col-lg-4 col-md-4 com-sm-12 float-left">دسترسی واحدهای سازمانی کاربر</h5>
+    <div class="col-xl-8 col-lg-8 col-md-8 com-sm-12 float-left">
+        <input type="button" id="btnAdd" class="btn btn-primary" onclick="addSelectedOrganizations()" value='>>'
+               title="افزودن به لیست"/>
+    </div>
+    <div class="col-xl-4 col-lg-4 col-md-4 com-sm-12 float-left">
+        <div class="col-xl-12 col-lg-12 col-md-12 com-sm-12 float-left" id="tree_div"
+             style="background-color:#f5f5f5;border :1px solid Silver;overflow:hidden;margin: 1em;border-radius: 10px"></div>
+    </div>
+    <div class="col-xl-8 col-lg-8 col-md-8 com-sm-12 float-left">
+        <div class="col-xl-12 float-left">
+            <input type="hidden" id="hiddenFieldId"/>
+            <div class="d-flex">
+                <!-- Grid -->
+                <div class="card card-table flex-fill">
+                    <div style="background-color: darkslategray;border-radius: 10px 10px 0px 0px">
+                        <div class="float-left mt-1">
+                            <h6 class="text-white">واحدهای سازمانی کاربر</h6>
+                        </div>
+                        <div class="float-right">
+                            <a href="javascript:void(0)" onclick="clearSearch();" data-toggle="tooltip"
+                               title="پاک کردن فیلترها"
+                               class="btn btn-block btn-outline-secondary btn-rounded"><i
+                                    class="fa fa-eraser"></i></a>
+                        </div>
+                        <div class="float-right search-section">
+                            <a href="javascript:void(0)" onclick="searchUserOrganizations();" data-toggle="tooltip"
+                               title="جستجو"
+                               class="btn btn-block btn-rounded btn-outline-secondary"><i
+                                    class="fa fa-filter"></i></a>
+                        </div>
                     </div>
-                    <div class="tile-body">
+                    <div class="col-sm-12 search-section">
+                        <label class="float-left" style="padding-top: .5em">فیلتر کردن براساس : </label>
+                        <div class="float-left col-xl-6 col-lg-6 col-md-6 com-sm-12">
+                            <input type="text" id="txtSearchOrganizationTitle" class="form-control searchFilter"
+                                   placeholder="عنوان ...">
+                        </div>
+                    </div>
+                    <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-custom table-hover table-condensed grid" id="userPowerGrid" data-component="grid" data-options="url:'<c:url value = '/rest/core/security/user/load/powers/' />' + currentUserId,createSearchOptions:true,fillTable:false" width="100%"
-                                   align="center">
+                            <table class="table table-hover table-center mb-0">
                                 <thead>
-                                <tr class="bg-dutch">
-                                    <th nowrap="nowrap">
-                                        <spring:message code="UI.General.Row" />
+                                <tr>
+                                    <th class="text-center">ردیف</th>
+                                    <th>عنوان
+                                        <i class="fa fa-sort-up sort-grid" order="title,asc"></i>
+                                        <i class="fa fa-sort-down sort-grid"
+                                           order="title,desc"></i>
                                     </th>
-                                    <th nowrap="nowrap">
-                                        <spring:message code="UI.General.Power.power" />
-                                    </th>
-                                    <th nowrap="nowrap" style="text-align: center;">
-                                        <spring:message code="UI.General.Delete" />
-                                    </th>
+                                    <th>عملیات</th>
                                 </tr>
                                 </thead>
-                                <tbody id="userPowerEntityBody" class="entityBody">
-                                <script id="userPowerRowTemplate" type="text/html">
-                                    <tr id="pattern${id}">
-                                        <td >
-                                            <span class="tmplRowIndex"></span>
-                                        </td >
-                                        <td >
-                                            ${fullTitle ? fullTitle : title}
-                                        </td>
+                                <tbody id="userList">
+                                <script id="userTemplate" type="text/x-jquery-tmpl">
+                                    <tr>
+                                        <td class="text-center"><span class="tmplRowIndex"></span></td>
+                                        <td>${title}</td>
                                         <td class="text-center">
-                                            <i class="fa fa-lg fa-remove text-red" style="cursor: pointer;" onclick="deleteUserPower('${id}')" />
+                                            <div class="float-right">
+                                                <div class="float-right">
+                                                     <a href="#delete_modal" onclick="rowSelected(${id})"  data-toggle="modal" title="حذف"
+                                                                    class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-trash"></i></a>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                 </script>
                                 </tbody>
-                            </table>
-                            <table style="width: 100%;">
-                                <tr>
-                                    <td align="left">
-                                        <nbaharan:PluginDataGridPagingNew gridId="userPowerGrid" pageSize="10" />
-                                    </td>
-                                </tr>
                             </table>
                         </div>
                     </div>
                 </div>
+                <!-- /Grid -->
+            </div>
+            <!-- paging -->
+            <div class="row col-md-12 card-body pl-5" style="text-align: center!important;">
+                <span class="float-left pt-2"> صفحه &nbsp;</span>
+                <span class="float-left pt-2" id="currentPage"></span>
+                <span class="float-left pt-2">&nbsp;از &nbsp;</span>
+                <span class="float-left pt-2" id="totalPages"></span>&nbsp;
 
-                <div id="table_content" class="tile table_content collapse in col-sm-4">
-                    <div class="tile-header dvd dvd-btm">
-                        <h3 class="custom-font ">
-                            <strong> درختواره رده ها </strong>
-                        </h3>
-                        <ul class="controls">
-                            <li>
-                                <a role="button" onclick="uncheckAll()" data-tooltip="tooltip" data-placement="bottom" data-original-title="حذف موارد انتخابی">
-                                    <i class="fa fa-remove fa-lg text-red" role="button"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a role="button" id="btnAddPowers" onclick="addPowers();" data-tooltip="tooltip" data-placement="bottom" data-original-title="افزودن به لیست رده های  مجاز">
-                                    <i class="fa fa-arrow-right fa-lg text-success" role="button"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="tile-body">
-                        <div id="treebox" style="background-color: #f5f5f5; border: 1px solid Silver; overflow: scroll;"></div>
+                <ul class="pagination float-left" id="pagingList"></ul>&nbsp;
+
+                <span class="float-left pt-2" id="totalRecords"></span>
+                <span class="float-left pt-2"> مورد &nbsp;</span>
+
+                <select id="cmbPageSize" class="float-left"
+                        style="height: 35px;border-radius: 8px;cursor: pointer">
+                    <option value="5" selected>5</option>
+                    <option value="10">10</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+            <!-- paging -->
+            <!-- Delete Modal -->
+            <div class="modal fade" id="delete_modal" aria-hidden="true" role="dialog">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="form-content p-2">
+                                <h4 class="modal-title">تاییدیه حذف</h4>
+                                <p class="mb-4">آیا از حدف اطمینان کافی دارید؟</p>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                        onclick="deleteEntity()">بله
+                                </button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal"
+                                        onclick="rowDeselected()">خیر
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-    </section>
-
+            <!-- /Delete Modal -->
+        </div>
+    </div>
+</div>
+<!-- Bootstrap Core JS -->
+<script src="/app/assets/bzamani/bootstrap.min.js"></script>
 </body>
 </html>
+
+
+
+

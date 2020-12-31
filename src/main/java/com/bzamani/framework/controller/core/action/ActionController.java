@@ -43,8 +43,8 @@ public class ActionController {
     }
 
     @GetMapping("/loadMenuForCurrentUser")
-    public List<Action> loadMenuForCurrentUser() {
-        return iActionService.loadMenuForCurrentUser();
+    public List<Action> loadMenuForCurrentUser() throws Exception {
+        return iActionService.loadMenuForCurrentUser() ;
     }
 
 }

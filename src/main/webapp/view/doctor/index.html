@@ -102,16 +102,16 @@
         };
 
         $(function () {
-            fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+            refreshGrid();
 
             $('.sort-grid').on("click", function () {
                 searchFilters.sort = $(this).attr("order");
-                fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+                refreshGrid();
             });
 
             $('#cmbPageSize').change(function () {
                 searchFilters.size = $(this).val();
-                fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+                refreshGrid();
             });
 
             $('#txtSearchDoctor').keydown(function (e) {
@@ -119,8 +119,8 @@
                     searchDoctor();
             });
 
-            fillComboBaseInfo(1000,"cmbSpeciality");
-            fillComboBaseInfo(1,"cmbState");
+            fillComboBaseInfo(1000, "cmbSpeciality");
+            fillComboBaseInfo(1, "cmbState");
 
             $("#cmbState").change(function () {
                 fillComboCity($(this).val());
@@ -134,7 +134,7 @@
 
         function searchDoctor() {
             searchFilters.specialityTitle = $("#txtSearchDoctor").val();
-            fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+            refreshGrid();
         }
 
         function clearSearch() {
@@ -146,22 +146,22 @@
                 "size": 8
             };
             $('.searchFilter').val('');
-            fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+            refreshGrid();
         }
 
         function next() {
             searchFilters.page = searchFilters.page + 1;
-            fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+            refreshGrid();
         }
 
         function previous() {
             searchFilters.page = searchFilters.page - 1;
-            fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+            refreshGrid();
         }
 
         function goTo(pageNumber) {
             searchFilters.page = pageNumber;
-            fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+            refreshGrid();
         }
 
         function deleteEntity() {
@@ -172,7 +172,7 @@
                     dataType: "json",
                     type: 'DELETE',
                     success: function (res) {
-                        fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
+                        refreshGrid();
                         showMessage("حذف با موفقیت انجام شد.", "", "success");
                     },
                     error: function (err) {
@@ -181,6 +181,10 @@
                 });
             else
                 showMessage("هیچ رکوردی انتخاب نشده است.", "", "error");
+        }
+
+        function refreshGrid() {
+            fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
         }
 
         function rowSelected(id) {
@@ -366,7 +370,7 @@
         }
 
         function setOrganization(id, title) {
-           $('#hiddenFieldOrganizationId').val(id);
+            $('#hiddenFieldOrganizationId').val(id);
             $('#txtOrganizationTitle').val(title);
         }
 
@@ -390,7 +394,8 @@
                        class="btn btn-block btn-outline-info btn-rounded">جستجو</a>
                 </div>
                 <div class="float-left">
-                    <a href="javascript:void(0)" onclick="clearSearch();" class="btn btn-block btn-outline-danger btn-rounded">پاک
+                    <a href="javascript:void(0)" onclick="clearSearch();"
+                       class="btn btn-block btn-outline-danger btn-rounded">پاک
                         کردن</a>
                 </div>
                 <div class="float-left">
@@ -483,6 +488,7 @@
 											</a>
                                         </td>
                                     </tr>
+
 
 
 
@@ -611,13 +617,13 @@
                                 <div class="col-lg-9">
                                     <div class="form-group">
                                         <label>آدرس<span class="text-danger">*</span></label>
-                                        <input type="text" id="txtAddress" class="form-control service-desc" />
+                                        <input type="text" id="txtAddress" class="form-control service-desc"/>
                                     </div>
                                 </div>
                                 <div class="col-lg-3">
                                     <div class="form-group">
                                         <label>تلفن<span class="text-danger">*</span></label>
-                                        <input type="text" id="txtPhone" class="form-control service-desc" />
+                                        <input type="text" id="txtPhone" class="form-control service-desc"/>
                                     </div>
                                 </div>
                             </div>
@@ -627,10 +633,13 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="form-group col-lg-12">
-                                        <input type="hidden" id="hiddenFieldOrganizationId" />
-                                        <label class="float-left col-lg-2">واحد سازمانی<span class="text-danger">*</span></label>
-                                        <input class="form-control col-lg-7 col-sm-10 float-left" disabled type="text" id="txtOrganizationTitle" required="">
-                                        <button class="btn btn-primary form-control col-lg-1 col-sm-1 float-left" style="width: 3rem"
+                                        <input type="hidden" id="hiddenFieldOrganizationId"/>
+                                        <label class="float-left col-lg-2">واحد سازمانی<span
+                                                class="text-danger">*</span></label>
+                                        <input class="form-control col-lg-7 col-sm-10 float-left" disabled type="text"
+                                               id="txtOrganizationTitle" required="">
+                                        <button class="btn btn-primary form-control col-lg-1 col-sm-1 float-left"
+                                                style="width: 3rem"
                                                 onclick="viewFancyBox('/app/view/core/organization/organizationSelect.html','70%','90%')">
                                             ...
                                         </button>

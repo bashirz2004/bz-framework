@@ -2,7 +2,7 @@ package com.bzamani.framework.service.impl.core.user;
 
 import com.bzamani.framework.common.utility.DateUtility;
 import com.bzamani.framework.common.utility.SecurityUtility;
-import com.bzamani.framework.dto.selfUserRegistrationDto;
+import com.bzamani.framework.dto.SelfUserRegistrationDto;
 import com.bzamani.framework.model.core.organization.Organization;
 import com.bzamani.framework.model.core.personel.Personel;
 import com.bzamani.framework.model.core.user.User;
@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService extends GenericService<User, Long> implements IUserService {
@@ -83,7 +84,7 @@ public class UserService extends GenericService<User, Long> implements IUserServ
 
     @Override
     @Transactional
-    public User selfRegister(selfUserRegistrationDto userDto) throws Exception {
+    public User selfRegister(SelfUserRegistrationDto userDto) throws Exception {
         checkInputData(userDto.getUsername());
 
         Personel p = new Personel();
@@ -116,7 +117,7 @@ public class UserService extends GenericService<User, Long> implements IUserServ
 
     public void checkInputData(String username) throws Exception {
         if (iOrganizationService.loadByEntityId(guestOrganizationId) == null)
-            throw new Exception("واحد سازمانی برای کاربران پورتا تعریف نشده است.");
+            throw new Exception("واحد سازمانی برای کاربران پورتال تعریف نشده است.");
         List<User> usersCreatedByCurrentIP = iUserRepository.findAllByIpOrderByLastUpdateDateDesc(SecurityUtility.getRequestIp());
         if (usersCreatedByCurrentIP != null && usersCreatedByCurrentIP.size() > 0)
             if (DateUtility.getDiffSeconds(usersCreatedByCurrentIP.get(0).getLastUpdateDate(), new Date()) < 60)
@@ -204,6 +205,65 @@ public class UserService extends GenericService<User, Long> implements IUserServ
         response.put("totalRecords", pageTuts.getTotalElements());
         response.put("totalPages", pageTuts.getTotalPages());
         return response;
+    }
+
+    @Override
+    public Map<String, Object> searchUserOrganizations(long userId, String organizationTitle, int page, int size, String[] sort) {
+        List<Sort.Order> orders = new ArrayList<Sort.Order>();
+        if (sort[0].contains(",")) {
+            for (String sortOrder : sort) {
+                String[] _sort = sortOrder.split(",");
+                orders.add(new Sort.Order(getSortDirection(_sort[1]), _sort[0]));
+            }
+        } else {
+            orders.add(new Sort.Order(getSortDirection(sort[1]), sort[0]));
+        }
+        List<Organization> organizations = new ArrayList<Organization>();
+        Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
+        Page<Organization> pageTuts = iUserRepository.searchUserOrganizations(userId, organizationTitle, pagingSort);
+        organizations = pageTuts.getContent();
+        Map<String, Object> response = new HashMap<>();
+        response.put("entityList", organizations);
+        response.put("currentPage", pageTuts.getNumber());
+        response.put("totalRecords", pageTuts.getTotalElements());
+        response.put("totalPages", pageTuts.getTotalPages());
+        return response;
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteUserOrganization(long userId, long organizationId) throws Exception {
+        if (!iOrganizationService.userHaveAccessToOrganization(findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getId(), organizationId))
+            throw new Exception("خطا! شما به این واحد سازمانی دسترسی ندارید.");
+
+        User user = loadByEntityId(userId);
+        user.setOrganizations(user.getOrganizations().stream()
+                .filter(e -> !e.getId().equals(organizationId))
+                .collect(Collectors.toSet()));
+        iUserRepository.save(user);
+        return true;
+    }
+
+    @Override
+    @Transactional
+    public boolean addUserOrganizations(long userId, List<Long> organizationIds) throws Exception {
+        if (organizationIds != null) {
+            User user = loadByEntityId(userId);
+            Set<Organization> newSet = new HashSet<Organization>();
+            newSet = user.getOrganizations();
+            for (long organizationId : organizationIds) {
+                if (!iOrganizationService.userHaveAccessToOrganization(findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getId(), organizationId)) {
+                    throw new Exception("خطا! شما به " + iOrganizationService.loadByEntityId(organizationId).getTitle() + " دسترسی ندارید.");
+                }
+                Organization org = new Organization();
+                org.setId(organizationId);
+                if (!newSet.contains(org))
+                    newSet.add(org);
+            }
+            user.setOrganizations(newSet);
+            iUserRepository.save(user);
+        }
+        return true;
     }
 
     private Sort.Direction getSortDirection(String direction) {

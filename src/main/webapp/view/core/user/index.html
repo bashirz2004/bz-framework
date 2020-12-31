@@ -106,16 +106,16 @@
 
         $(function () {
             initializeDatePicker();
-            fillGrid('userTemplate', 'userList', contextPath + "/rest/core/user/searchUser", searchFilters);
+            refreshGrid();
 
             $('.sort-grid').on("click", function () {
                 searchFilters.sort = $(this).attr("order");
-                fillGrid('userTemplate', 'userList', contextPath + "/rest/core/user/searchUser", searchFilters);
+                refreshGrid();
             });
 
             $('#cmbPageSize').change(function () {
                 searchFilters.size = $(this).val();
-                fillGrid('userTemplate', 'userList', contextPath + "/rest/core/user/searchUser", searchFilters);
+                refreshGrid();
             });
 
             $('.searchFilter').keydown(function (e) {
@@ -129,7 +129,7 @@
             searchFilters.lastname = $("#txtSearchLastname").val();
             searchFilters.nationalCode = $("#txtSearchNationalCode").val();
             searchFilters.username = $("#txtSearchUsername").val();
-            fillGrid('userTemplate', 'userList', contextPath + "/rest/core/user/searchUser", searchFilters);
+            refreshGrid();
         }
 
         function clearSearch() {
@@ -144,22 +144,22 @@
                 "size": 8
             };
             $('.searchFilter').val('');
-            fillGrid('userTemplate', 'userList', contextPath + "/rest/core/user/searchUser", searchFilters);
+            refreshGrid();
         }
 
         function next() {
             searchFilters.page = searchFilters.page + 1;
-            fillGrid('userTemplate', 'userList', contextPath + "/rest/core/user/searchUser", searchFilters);
+            refreshGrid();
         }
 
         function previous() {
             searchFilters.page = searchFilters.page - 1;
-            fillGrid('userTemplate', 'userList', contextPath + "/rest/core/user/searchUser", searchFilters);
+            refreshGrid();
         }
 
         function goTo(pageNumber) {
             searchFilters.page = pageNumber;
-            fillGrid('userTemplate', 'userList', contextPath + "/rest/core/user/searchUser", searchFilters);
+            refreshGrid();
         }
 
         function deleteEntity() {
@@ -170,11 +170,13 @@
                     dataType: "json",
                     type: 'DELETE',
                     success: function (res) {
-                        fillGrid('userTemplate', 'userList', contextPath + "/rest/core/user/searchUser", searchFilters);
+                        refreshGrid();
                         showMessage("حذف با موفقیت انجام شد.", "", "success");
                     },
                     error: function (err) {
-                        showMessage("خطا در حذف اطلاعات", "", "error");
+                        if (err.responseJSON.message.includes("Forbidden"))
+                            showMessage("خطای سطح دسترسی", " شما مجوز انجام این کار را ندارید.", "error");
+                        else showMessage("خطا در حذف اطلاعات", "", "error");
                     }
                 });
             else
@@ -224,6 +226,9 @@
                             showMessage("خطا. قبلا کاربری با این پرسنل ایجاد شده است.", "", "error");
                         else if (err.responseText.includes("unq_username"))
                             showMessage("خطا. نام کاربری تکراری است.", "", "error");
+                        else if (err.responseJSON.message.includes("Forbidden"))
+                            showMessage("خطای سطح دسترسی", " شما مجوز انجام این کار را ندارید.", "error");
+
                     }
                 });
             }
@@ -491,6 +496,8 @@
 
 
 
+
+
                         </script>
                         </tbody>
                     </table>
@@ -560,7 +567,8 @@
                             <div class="col-lg-4">
                                 <div class="form-group">
                                     <label>تاریخ اعتبار کاربر<span class="text-danger">*</span></label>
-                                    <input class="form-control mydatepicker" type="text" id="txtUserExpireDateShamsi" required="">
+                                    <input class="form-control mydatepicker" type="text" id="txtUserExpireDateShamsi"
+                                           required="">
                                 </div>
                             </div>
                             <div class="col-lg-4">
@@ -582,7 +590,8 @@
                                 <div class="form-group">
                                     <label>تاریخ اعتبار رمز عبور<span
                                             class="text-danger">*</span></label>
-                                    <input class="form-control mydatepicker" type="text" id="txtPasswordExpireDateShamsi"
+                                    <input class="form-control mydatepicker" type="text"
+                                           id="txtPasswordExpireDateShamsi"
                                            required="">
                                 </div>
                             </div>

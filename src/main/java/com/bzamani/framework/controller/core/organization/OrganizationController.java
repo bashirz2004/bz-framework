@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@PreAuthorize("hasRole('6')")
 @RestController
 @RequestMapping(value = "/rest/core/organization", produces = "application/json;charset=UTF-8")
 public class OrganizationController extends BaseController {
@@ -161,6 +160,11 @@ public class OrganizationController extends BaseController {
             }
         }
         return returnVal;
+    }
+
+    @GetMapping(value = "/getChildrenAsJsonTreeAuthorize")
+    public TreeNode getChildrenAsJsonTreeAuthorize(long id) {
+        return iOrganizationService.getChildrenAsJsonTreeAuthorize(id);
     }
 
 

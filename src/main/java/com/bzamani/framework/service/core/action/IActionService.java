@@ -6,5 +6,5 @@ import com.bzamani.framework.service.core.IGenericService;
 import java.util.List;
 
 public interface IActionService extends IGenericService<Action, Long> {
-    List<Action> loadMenuForCurrentUser();
+    List<Action> loadMenuForCurrentUser() throws Exception;
 }

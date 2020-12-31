@@ -1,8 +1,12 @@
 package com.bzamani.framework.service.impl.core.organization;
 
+import com.bzamani.framework.common.utility.SecurityUtility;
+import com.bzamani.framework.common.utility.TreeNode;
+import com.bzamani.framework.dto.OrganizationDto;
 import com.bzamani.framework.model.core.organization.Organization;
 import com.bzamani.framework.repository.core.organization.IOrganizationRepository;
 import com.bzamani.framework.service.core.organization.IOrganizationService;
+import com.bzamani.framework.service.core.user.IUserService;
 import com.bzamani.framework.service.impl.core.GenericService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +28,9 @@ public class OrganizationService extends GenericService<Organization, Long> impl
 
     @Autowired
     IOrganizationRepository iOrganizationRepository;
+
+    @Autowired
+    IUserService iUserService;
 
     @Override
     protected JpaRepository<Organization, Long> getGenericRepo() {
@@ -53,6 +61,14 @@ public class OrganizationService extends GenericService<Organization, Long> impl
         return response;
     }
 
+    private Sort.Direction getSortDirection(String direction) {
+        if (direction.equals("asc"))
+            return Sort.Direction.ASC;
+        else if (direction.equals("desc"))
+            return Sort.Direction.DESC;
+        return Sort.Direction.ASC;
+    }
+
     @Override
     public List<Organization> getAllByParentId(Long parentId) {
         if (parentId != null)
@@ -72,14 +88,37 @@ public class OrganizationService extends GenericService<Organization, Long> impl
         if (id > 1L)
             return super.deleteByEntityId(id);
         else
-            return false; }
+            return false;
+    }
 
-    private Sort.Direction getSortDirection(String direction) {
-        if (direction.equals("asc"))
-            return Sort.Direction.ASC;
-        else if (direction.equals("desc"))
-            return Sort.Direction.DESC;
-        return Sort.Direction.ASC;
+    @Override
+    public TreeNode getChildrenAsJsonTreeAuthorize(long id) {
+        Organization organization = loadByEntityId(id);
+        TreeNode root = new TreeNode(organization.getId().toString(), organization.getTitle());
+        root.addAttr("hierarchyCode", String.valueOf(organization.getHierarchyCode()));
+
+        for (OrganizationDto item : getAuthorizeOrganizationsForUserId(iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getId(), organization.getId())) {
+            TreeNode node = new TreeNode(String.valueOf(item.getId()), item.getTitle());
+
+            node.setChildCount(item.getChildCount());
+            node.addAttr("hierarchyCode", String.valueOf(item.getHierarchyCode()));
+            node.addAttr("access", String.valueOf(item.getAuthorized()));
+            node.addAttr("text", item.getTitle());
+            node.addAttr("id", String.valueOf(item.getId()));
+            root.getChilds().add(node);
+        }
+
+        return root;
+    }
+
+    @Override
+    public List<OrganizationDto> getAuthorizeOrganizationsForUserId(long userId, Long parentId) {
+        return iOrganizationRepository.getAuthorizeOrganizationsForUserId(userId, parentId);
+    }
+
+    @Override
+    public boolean userHaveAccessToOrganization(long userId, long organizationId) {
+        return iOrganizationRepository.userHaveAccessToOrganization(userId, organizationId) > 0 ? true : false;
     }
 
 }

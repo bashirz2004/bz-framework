@@ -79,16 +79,16 @@
         };
 
         $(function () {
-            fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
+            refreshGrid();
 
             $('.sort-grid').on("click", function () {
                 searchFilters.sort = $(this).attr("order");
-                fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
+                refreshGrid();
             });
 
             $('#cmbPageSize').change(function () {
                 searchFilters.size = $(this).val();
-                fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
+                refreshGrid();
             });
 
             $('.searchFilter').keydown(function (e) {
@@ -101,6 +101,10 @@
             searchFilters.firstname = $("#txtSearchFirstname").val();
             searchFilters.lastname = $("#txtSearchLastname").val();
             searchFilters.nationalCode = $("#txtSearchNationalCode").val();
+            refreshGrid();
+        }
+
+        function refreshGrid() {
             fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
         }
 
@@ -115,26 +119,26 @@
                 "size": 8
             };
             $('.searchFilter').val('');
-            fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
+            refreshGrid();
         }
 
         function next() {
             searchFilters.page = searchFilters.page + 1;
-            fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
+            refreshGrid();
         }
 
         function previous() {
             searchFilters.page = searchFilters.page - 1;
-            fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
+            refreshGrid();
         }
 
         function goTo(pageNumber) {
             searchFilters.page = pageNumber;
-            fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
+            refreshGrid();
         }
 
-        function selectPersonel(id,firstname,lastname,fileCode){
-            parent.setPersonel(id,firstname,lastname,fileCode);
+        function selectPersonel(id, firstname, lastname, fileCode) {
+            parent.setPersonel(id, firstname, lastname, fileCode);
             parent.$.fancybox.close();
         }
 
@@ -162,7 +166,7 @@
                        class="btn btn-block btn-rounded btn-outline-secondary"><i class="fa fa-search"></i></a>
                 </div>
             </div>
-            <div class="col-sm-12 search-section" >
+            <div class="col-sm-12 search-section">
                 <label class="float-left" style="padding-top: .5em">فیلتر کردن نتایج براساس : </label>
                 <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
                     <input type="text" id="txtSearchFirstname" class="form-control searchFilter" placeholder="نام ...">
@@ -259,6 +263,7 @@
                                         <td>${mobile}</td>
                                         <td>${telephone}</td>
                                     </tr>
+
 
                         </script>
                         </tbody>

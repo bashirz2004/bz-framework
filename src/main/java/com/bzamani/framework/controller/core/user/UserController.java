@@ -1,7 +1,8 @@
 package com.bzamani.framework.controller.core.user;
 
 import com.bzamani.framework.controller.core.BaseController;
-import com.bzamani.framework.dto.selfUserRegistrationDto;
+import com.bzamani.framework.dto.SelfUserRegistrationDto;
+import com.bzamani.framework.dto.UserOrganizationDto;
 import com.bzamani.framework.model.core.user.User;
 import com.bzamani.framework.service.core.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@PreAuthorize("hasRole('2')")
 @RestController
 @RequestMapping(value = "/rest/core/user", produces = "application/json;charset=UTF-8")
 public class UserController extends BaseController {
@@ -61,7 +61,30 @@ public class UserController extends BaseController {
 
     @PreAuthorize("hasRole('10')")
     @PostMapping("/changePasswordByAdmin")
-    public boolean changePasswordByAdmin(@RequestBody selfUserRegistrationDto dto) {
+    public boolean changePasswordByAdmin(@RequestBody SelfUserRegistrationDto dto) {
         return iUserService.changePasswordByAdmin(dto.getUserId(), dto.getPassword());
+    }
+
+    @GetMapping("/searchUserOrganizations")
+    public Map<String, Object> searchUserOrganizations(
+            @RequestParam(required = true) long userId,
+            @RequestParam(required = false) String organizationTitle,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id,desc") String[] sort) {
+
+        return iUserService.searchUserOrganizations(userId, organizationTitle, page, size, sort);
+    }
+
+    @PreAuthorize("hasRole('11')")
+    @DeleteMapping("/deleteUserOrganization/{userId}/{organizationId}")
+    public boolean deleteUserOrganization(@PathVariable("userId") long userId, @PathVariable("organizationId") long organizationId) throws Exception {
+        return iUserService.deleteUserOrganization(userId, organizationId);
+    }
+
+    @PreAuthorize("hasRole('11')")
+    @PostMapping(value = "/saveUserOrganizations")
+    public boolean saveUserOrganizations(@RequestBody UserOrganizationDto dto) throws Exception {
+        return iUserService.addUserOrganizations(dto.getUserId(), dto.getOrganizationIds());
     }
 }

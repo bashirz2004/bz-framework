@@ -1,5 +1,6 @@
 package com.bzamani.framework.repository.core.user;
 
+import com.bzamani.framework.model.core.organization.Organization;
 import com.bzamani.framework.model.core.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -51,4 +52,9 @@ public interface IUserRepository extends JpaRepository<User, Long> {
     User findByEmail(@Param("email") String email);
 
     List<User> findAllByIpOrderByLastUpdateDateDesc(String ip);
+
+    @Query("SELECT o FROM User e join e.organizations o where e.id = :userId " +
+            " and o.title like COALESCE(cast('%'||:organizationTitle||'%' AS text), '%'|| o.title )||'%'  "+
+            " order by o.title ")
+    Page<Organization> searchUserOrganizations(@Param("userId") long userId, @Param("organizationTitle") String organizationTitle, Pageable pageable);
 }
