@@ -328,8 +328,8 @@
             viewFancyBox('/app/view/core/user/userOrganizations.html?userId=' + id + "&fullName=" + fullName, '90%', '90%');
         }
 
-        function openChangePasswordByAdmin(id) {
-            viewFancyBox('/app/view/core/user/changePasswordByAdmin.html?userId=' + id, '60%', '60%');
+        function openChangePasswordByAdmin(id, fullName) {
+            viewFancyBox('/app/view/core/user/changePasswordByAdmin.html?userId=' + id + "&fullName=" + fullName, '60%', '60%');
         }
 
     </script>
@@ -478,12 +478,13 @@
                                                                     class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-check-square-o"></i></a>
                                                 </div>
                                                 <div class="float-right">
-                                                     <a onclick="openChangePasswordByAdmin(${id})"  data-toggle="modal" title="تغییر رمز عبور"
+                                                     <a onclick="openChangePasswordByAdmin(${id},'${personel.firstname} ${personel.lastname}')"  data-toggle="modal" title="تغییر رمز عبور"
                                                                     class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-key"></i></a>
                                                 </div>
                                             </div>
                                         </td>
                                     </tr>
+
 
 
 
