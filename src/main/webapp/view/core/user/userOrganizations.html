@@ -81,6 +81,7 @@
 
     <script type="text/javascript">
         var currentUserId = getUrlParameter("userId");
+        var currentUserFullName = getUrlParameter("fullName");
         var tree;
         var treeRootId = 1;
         var superRootNode = {
@@ -98,6 +99,7 @@
         var contextPath = "/app";
 
         $(function () {
+            makePageHeader();
             initTree();
             refreshGrid();
 
@@ -117,6 +119,9 @@
             });
         });
 
+        function makePageHeader() {
+            $('#pageHeader').html("دسترسی واحدهای سازمانی " + currentUserFullName);
+        }
 
         function initTree() {
             configTree();
@@ -248,16 +253,16 @@
             $('#hiddenFieldId').val();
         }
 
-
     </script>
 </head>
 <body>
 <div class="col-xl-12 col-lg-12 col-md-12 com-sm-12 float-left">
-    <h5 class="col-xl-4 col-lg-4 col-md-4 com-sm-12 float-left">دسترسی واحدهای سازمانی کاربر</h5>
-    <div class="col-xl-8 col-lg-8 col-md-8 com-sm-12 float-left">
-        <input type="button" id="btnAdd" class="btn btn-primary" onclick="addSelectedOrganizations()" value='>>'
-               title="افزودن به لیست"/>
+    <h5 class="float-left" id="pageHeader"></h5>
+    <div class="float-left">
+        <input type="button" id="btnAdd" class="btn btn-primary" onclick="addSelectedOrganizations()" value='ثبت'/>
     </div>
+</div>
+<div class="col-xl-12 col-lg-12 col-md-12 com-sm-12 float-left">
     <div class="col-xl-4 col-lg-4 col-md-4 com-sm-12 float-left">
         <div class="col-xl-12 col-lg-12 col-md-12 com-sm-12 float-left" id="tree_div"
              style="background-color:#f5f5f5;border :1px solid Silver;overflow:hidden;margin: 1em;border-radius: 10px"></div>
@@ -320,6 +325,9 @@
                                             </div>
                                         </td>
                                     </tr>
+
+
+
 
 
 

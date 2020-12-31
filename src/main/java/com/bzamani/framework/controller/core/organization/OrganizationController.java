@@ -1,10 +1,12 @@
 package com.bzamani.framework.controller.core.organization;
 
 import com.bzamani.framework.common.utility.ParseTree;
+import com.bzamani.framework.common.utility.SecurityUtility;
 import com.bzamani.framework.common.utility.TreeNode;
 import com.bzamani.framework.controller.core.BaseController;
 import com.bzamani.framework.model.core.organization.Organization;
 import com.bzamani.framework.service.core.organization.IOrganizationService;
+import com.bzamani.framework.service.core.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,9 @@ public class OrganizationController extends BaseController {
 
     @Autowired
     IOrganizationService iOrganizationService;
+
+    @Autowired
+    IUserService iUserService;
 
     @PreAuthorize("hasRole('7')")
     @PostMapping("/save")
@@ -165,6 +170,13 @@ public class OrganizationController extends BaseController {
     @GetMapping(value = "/getChildrenAsJsonTreeAuthorize")
     public TreeNode getChildrenAsJsonTreeAuthorize(long id) {
         return iOrganizationService.getChildrenAsJsonTreeAuthorize(id);
+    }
+
+    @GetMapping(value = "/authenticatedUserHaveAccessToOrganization")
+    public boolean authenticatedUserHaveAccessToOrganization(long organizationId) {
+        return iOrganizationService.userHaveAccessToOrganization(
+                iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getId(), organizationId);
+
     }
 
 

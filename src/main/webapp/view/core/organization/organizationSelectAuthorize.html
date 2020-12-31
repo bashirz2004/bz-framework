@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>واحدهای سازمانی کاربر</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/app/assets/img/favicon.png">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/app/assets/bzamani/bootstrap.css">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="/app/assets/admin/css/font-awesome.min.css">
+
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/app/assets/bzamani/style-admin.css">
+
+    <!--[if lt IE 9]>
+    <script src="/app/assets/js/html5shiv.min.js"></script>
+    <script src="/app/assets/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery -->
+    <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
+
+    <!-- pace mask -->
+    <script>
+        paceOptions = {
+            elements: false,
+            document: true, // disabled
+            eventLag: false, // disabled
+            ajax: {
+                trackMethods: ['GET', 'POST', 'DELETE', 'PUT'],
+                trackWebSockets: false
+            },
+            restartOnPushState: true,
+            restartOnRequestAfter: true
+        };
+        $(function () {
+            $("body").prepend("<div class='pace-cover' style='display: none;'></div>");
+            Pace.on("start", function () {
+                $(".pace-cover").fadeIn();
+            });
+            Pace.on("done", function () {
+                $(".pace-cover").fadeOut();
+            });
+        });
+    </script>
+    <script type="text/javascript" src="/app/assets/bzamani/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
+    <style>
+        .pace-cover {
+            position: fixed;
+            left: 0px;
+            top: 1px;
+            width: 100%;
+            height: 100%;
+            z-index: 99999;
+            background: rgba(0, 0, 0, 0.4);
+        }
+    </style>
+    <!-- /pace mask -->
+
+    <!-- sweet alert -->
+    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/sweetalert/sweetalert2.min.css">
+    <!-- /sweet alert -->
+
+    <!-- dhtml tree -->
+    <script type="text/javascript" src="/app/assets/bzamani/components/tree/tree.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/app/assets/bzamani/components/tree/tree.css"/>
+    <!-- /dhtml tree -->
+
+    <script src="/app/assets/bzamani/jquery.template.js"></script>
+    <script src="/app/assets/bzamani/grid-utility.js"></script>
+    <script src="/app/assets/bzamani/general-utility.js"></script>
+
+    <script type="text/javascript">
+        var tree;
+        var treeRootId = 1;
+        var superRootNode = {
+            id: 0,
+            text: 'tree super root node',
+            item: []
+        };
+
+        var contextPath = "/app";
+
+        $(function () {
+            initTree();
+        });
+
+
+        function initTree() {
+            configTree();
+            $.get(contextPath + "/rest/core/organization/getChildrenAsJsonTreeAuthorize?id=" + treeRootId, function (data) {
+                superRootNode.item.push(data);
+                tree.loadJSONObject(superRootNode);
+                tree.openItem(treeRootId);
+            });
+        }
+
+        function configTree() {
+            tree = new dhtmlXTreeObject('tree_div', '100%', '100%', 0);
+            tree.setImagePath("/app/assets/bzamani/components/tree/icons/");
+            tree.setXMLAutoLoading(contextPath + "/rest/core/organization/getChildrenAsJsonTreeAuthorize");
+            tree.setDataMode("json");
+            tree.enableCheckBoxes(0, 0);
+            tree.attachEvent("ondblclick", function (id, e) {
+                selectOrganization(id, tree.getItemText(id));
+            });
+        }
+
+        function selectOrganization(id, title) {
+            $.get(contextPath + "/rest/core/organization/authenticatedUserHaveAccessToOrganization?organizationId=" + id, function (res) {
+                if (res == true) {
+                    parent.setOrganization(id, title);
+                    parent.$.fancybox.close();
+                } else showMessage("شما به " + title + " دسترسی ندارید.", "", "warning");
+            });
+
+
+        }
+
+
+    </script>
+</head>
+<body>
+<div class="col-xl-12 col-lg-12 col-md-12 com-sm-12 float-left">
+    <h5 class="col-xl-4 col-lg-4 col-md-4 com-sm-12 float-left">انتخاب واحد سازمانی طبق دسترسی کاربر جاری</h5>
+    <div class="col-xl-12 col-lg-12 col-md-12 com-sm-12 float-left">
+        <div class="col-xl-12 col-lg-12 col-md-12 com-sm-12 float-left" id="tree_div"
+             style="background-color:#f5f5f5;border :1px solid Silver;overflow:hidden;margin: 1em;border-radius: 10px"></div>
+    </div>
+
+</div>
+<!-- Bootstrap Core JS -->
+<script src="/app/assets/bzamani/bootstrap.min.js"></script>
+</body>
+</html>
+
+
+
+

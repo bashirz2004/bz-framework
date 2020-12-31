@@ -248,17 +248,27 @@ public class UserService extends GenericService<User, Long> implements IUserServ
     @Transactional
     public boolean addUserOrganizations(long userId, List<Long> organizationIds) throws Exception {
         if (organizationIds != null) {
+            long authenticatedUserId = findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getId();
             User user = loadByEntityId(userId);
-            Set<Organization> newSet = new HashSet<Organization>();
-            newSet = user.getOrganizations();
-            for (long organizationId : organizationIds) {
-                if (!iOrganizationService.userHaveAccessToOrganization(findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getId(), organizationId)) {
-                    throw new Exception("خطا! شما به " + iOrganizationService.loadByEntityId(organizationId).getTitle() + " دسترسی ندارید.");
+            Set<Organization> newSet = new HashSet<>();
+            newSet.addAll(user.getOrganizations()); //copy old to new
+            for (long newOrganizationId : organizationIds) {
+                if (!iOrganizationService.userHaveAccessToOrganization(authenticatedUserId, newOrganizationId)) {
+                    throw new Exception("خطا! شما به " + iOrganizationService.loadByEntityId(newOrganizationId).getTitle() + " دسترسی ندارید.");
                 }
-                Organization org = new Organization();
-                org.setId(organizationId);
-                if (!newSet.contains(org))
+
+                boolean exists = false;
+                for (Organization old : newSet) {
+                    if (old.getId().equals(newOrganizationId)) {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) {
+                    Organization org = new Organization();
+                    org.setId(newOrganizationId);
                     newSet.add(org);
+                }
             }
             user.setOrganizations(newSet);
             iUserRepository.save(user);
