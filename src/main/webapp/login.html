@@ -53,8 +53,6 @@
         });
 
         function login() {
-            $('#hiddenPassword').val($('#txtPassword').val());
-            preventSavePasswordInBrowswe();
             if ($('#txtUsername').val() != '' && $('#txtPassword').val() != '') {
                 $.ajax({
                     url: contextPath + "/authenticate",
@@ -63,7 +61,7 @@
                     data: JSON.stringify({
                         "g-recaptcha-response": $('#g-recaptcha-response').val(),
                         "username": $('#txtUsername').val(),
-                        "password": $('#hiddenPassword').val()
+                        "password": $('#txtPassword').val()
                     }),
                     type: 'POST',
                     success: function (res) {
@@ -82,23 +80,6 @@
                 });
             } else
                 $('#txtUsername').focus();
-        }
-
-        function generateBullets(length) {
-            var characters = "•";
-            var generatedString = "";
-            for (i = 0; i < length; i++)
-                generatedString += characters;
-            return generatedString;
-        }
-
-        function preventSavePasswordInBrowswe() {
-            //to avoid save password in browser mozilla only
-            if (navigator.userAgent.search('Firefox') >= 0) {
-                $("#txtPassword").css('font-size', '22px');
-            }
-            $("#txtPassword").val(generateBullets($("#txtPassword").val().length));
-            $("#txtPassword").attr('type', 'text');
         }
 
     </script>
@@ -136,7 +117,6 @@
                                     <label class="focus-label">نام کاربری</label>
                                 </div>
                                 <div class="form-group form-focus">
-                                    <input type="hidden" id="hiddenPassword"/>
                                     <input type="password" class="form-control floating" id="txtPassword">
                                     <label class="focus-label">رمزعبور</label>
                                 </div>
