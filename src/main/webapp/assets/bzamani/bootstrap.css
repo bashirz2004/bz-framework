@@ -540,7 +540,7 @@ pre code {
 .container-fluid {
     width: 100%;
     padding-left: 15px;
-    padding-right: 15px;
+    padding-right: 0px;
     margin-left: auto;
     margin-right: auto
 }

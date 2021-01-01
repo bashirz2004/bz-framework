@@ -119,7 +119,7 @@ html {
 
 body {
 	background-color: #f8f9fa;
-	color: #272b41;
+	color: #c6b17e;
 	direction: rtl;
 	font-family: iransans-ulight, sans-serif;
 	font-size: 0.9375rem;
@@ -158,11 +158,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 a {
-	color: #2E3842;
+	color: #c6b17e;
 }
 
 a:hover {
-	color: #09dca4;
+	color: #ffffff;
 }
 
 a:hover, a:active, a:focus {
@@ -1826,7 +1826,7 @@ a.bg-danger:focus, a.bg-danger:hover, button.bg-danger:focus, button.bg-danger:h
 	-webkit-box-align: center;
 	-ms-flex-align: center;
 	align-items: center;
-	background-color: #fff;
+	background-color: #00121e;
 	border: 0;
 	border-bottom: 1px solid #f0f0f0;
 	display: -webkit-box;
@@ -1853,7 +1853,7 @@ a.bg-danger:focus, a.bg-danger:hover, button.bg-danger:focus, button.bg-danger:h
 }
 
 .main-nav>li.active>a {
-	color: #09dca4;
+	color: #c6b17e;
 }
 
 .main-nav>li .submenu li a {
@@ -2232,7 +2232,7 @@ html.menu-opened body {
 -----------------------*/
 
 .footer {
-	background-color: #151313;
+	background-color: #00121e;
 }
 
 .footer .footer-top {
