@@ -3,6 +3,7 @@ package com.bzamani.framework.model.core.user;
 import com.bzamani.framework.common.config.mycustomannotation.MyLengthValidator;
 import com.bzamani.framework.model.core.BaseEntity;
 import com.bzamani.framework.model.core.action.Action;
+import com.bzamani.framework.model.core.group.Group;
 import com.bzamani.framework.model.core.organization.Organization;
 import com.bzamani.framework.model.core.personel.Personel;
 import lombok.Getter;
@@ -101,13 +102,13 @@ public class User extends BaseEntity implements UserDetails {
     private Set<Organization> organizations;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "CORE_USER_ACTION",
+    @JoinTable(name = "CORE_USER_GROUP",
             joinColumns =
             @JoinColumn(name = "USER_ID", referencedColumnName = "ID", nullable = false),
             inverseJoinColumns =
-            @JoinColumn(name = "ACTION_ID", referencedColumnName = "ID", nullable = false)
+            @JoinColumn(name = "GROUP_ID", referencedColumnName = "ID", nullable = false)
     )
-    private Set<Action> actions;
+    private Set<Group> groups;
 
     @Transient
     private Set<GrantedAuthority> authorities;

@@ -1,11 +1,13 @@
 package com.bzamani.framework.model.core.action;
 
 import com.bzamani.framework.model.core.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Entity
 @Table(name = "CORE_ACTION", uniqueConstraints = {@UniqueConstraint(name = "unq_action_code", columnNames = {"code"})})
@@ -25,7 +27,7 @@ public class Action extends BaseEntity {
     @Column(name = "src", length = 150)
     private String src;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Action parent;
 
@@ -38,7 +40,12 @@ public class Action extends BaseEntity {
     @Column(name = "icon_class", length = 30)
     private String iconClass;
 
-   /* @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
-    private Set<Action> children;*/
+    @Column(name = "hierarchy_code", updatable = false)
+    private String hierarchyCode;
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
+    @OrderBy("title")
+    private Set<Action> children;
 
 }

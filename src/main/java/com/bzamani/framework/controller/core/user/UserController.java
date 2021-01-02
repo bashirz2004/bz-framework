@@ -2,6 +2,7 @@ package com.bzamani.framework.controller.core.user;
 
 import com.bzamani.framework.controller.core.BaseController;
 import com.bzamani.framework.dto.SelfUserRegistrationDto;
+import com.bzamani.framework.dto.UserGroupDto;
 import com.bzamani.framework.dto.UserOrganizationDto;
 import com.bzamani.framework.model.core.user.User;
 import com.bzamani.framework.service.core.user.IUserService;
@@ -83,8 +84,31 @@ public class UserController extends BaseController {
     }
 
     @PreAuthorize("hasRole('11')")
-    @PostMapping(value = "/saveUserOrganizations")
-    public boolean saveUserOrganizations(@RequestBody UserOrganizationDto dto) throws Exception {
+    @PostMapping(value = "/addUserOrganizations")
+    public boolean addUserOrganizations(@RequestBody UserOrganizationDto dto) throws Exception {
         return iUserService.addUserOrganizations(dto.getUserId(), dto.getOrganizationIds());
+    }
+
+    @GetMapping("/searchUserGroups")
+    public Map<String, Object> searchUserGroups(
+            @RequestParam(required = true) long userId,
+            @RequestParam(required = false) String groupTitle,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id,desc") String[] sort) {
+
+        return iUserService.searchUserGroups(userId, groupTitle, page, size, sort);
+    }
+
+    @PreAuthorize("hasRole('12')")
+    @DeleteMapping("/deleteUserGroup/{userId}/{groupId}")
+    public boolean deleteUserGroup(@PathVariable("userId") long userId, @PathVariable("groupId") long groupId) throws Exception {
+        return iUserService.deleteUserGroup(userId, groupId);
+    }
+
+    @PreAuthorize("hasRole('12')")
+    @PostMapping(value = "/addUserGroups")
+    public boolean addUserGroups(@RequestBody UserGroupDto dto) throws Exception {
+        return iUserService.addUserGroups(dto.getUserId(), dto.getGroupIds());
     }
 }

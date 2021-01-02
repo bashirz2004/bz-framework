@@ -1,12 +1,18 @@
 package com.bzamani.framework.controller.core.action;
 
+import com.bzamani.framework.common.utility.SecurityUtility;
+import com.bzamani.framework.common.utility.TreeNode;
 import com.bzamani.framework.model.core.action.Action;
 import com.bzamani.framework.service.core.action.IActionService;
+import com.bzamani.framework.service.core.group.IGroupService;
+import com.bzamani.framework.service.core.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/rest/core/action", produces = "application/json;charset=UTF-8")
@@ -15,36 +21,26 @@ public class ActionController {
     @Autowired
     IActionService iActionService;
 
-    @PostMapping("/save")
-    public Action create(@RequestBody Action action) {
-        return iActionService.save(action);
-    }
+    @Autowired
+    IUserService iUserService;
 
-    @GetMapping("/load/{id}")
-    public Action load(@PathVariable("id") long id) {
-        return iActionService.loadByEntityId(id);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public boolean delete(@PathVariable("id") long id) {
-        return iActionService.deleteByEntityId(id);
-    }
-
-    @GetMapping("/getAll")
-    public List<Action> getAll(@RequestParam(defaultValue = "id,desc") String[] sort) {
-        return iActionService.getAll(sort);
-    }
-
-    @GetMapping("/getAllGrid")
-    public Map<String, Object> getAllGrid(@RequestParam(defaultValue = "0") int page,
-                                          @RequestParam(defaultValue = "3") int size,
-                                          @RequestParam(defaultValue = "id,desc") String[] sort) {
-        return iActionService.getAllGrid(page, size, sort);
-    }
+    @Autowired
+    IGroupService iGroupService;
 
     @GetMapping("/loadMenuForCurrentUser")
     public List<Action> loadMenuForCurrentUser() throws Exception {
-        return iActionService.loadMenuForCurrentUser() ;
+        return iActionService.loadMenuForCurrentUser();
+    }
+
+   /* @GetMapping(value = "/loadCompleteTreeAuthorize")
+    public TreeNode loadCompleteTreeAuthorize(long id) {
+        return iActionService.loadCompleteTreeAuthorize(id, iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getId());
+    }*/
+
+    @GetMapping(value = "/loadWholeTreeWithoutAuthorization")
+    public TreeNode loadWholeTreeWithoutAuthorization(long id, long groupId) {
+        Set<Action> groupActions = iGroupService.loadByEntityId(groupId).getActions();
+        return iActionService.loadWholeTreeWithoutAuthorization(id, groupActions);
     }
 
 }

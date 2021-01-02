@@ -3,11 +3,13 @@ package com.bzamani.framework.service.impl.core.user;
 import com.bzamani.framework.common.utility.DateUtility;
 import com.bzamani.framework.common.utility.SecurityUtility;
 import com.bzamani.framework.dto.SelfUserRegistrationDto;
+import com.bzamani.framework.model.core.group.Group;
 import com.bzamani.framework.model.core.organization.Organization;
 import com.bzamani.framework.model.core.personel.Personel;
 import com.bzamani.framework.model.core.user.User;
 import com.bzamani.framework.repository.core.user.IUserRepository;
 import com.bzamani.framework.service.core.action.IActionService;
+import com.bzamani.framework.service.core.group.IGroupService;
 import com.bzamani.framework.service.core.organization.IOrganizationService;
 import com.bzamani.framework.service.core.personel.IPersonelService;
 import com.bzamani.framework.service.core.user.IUserService;
@@ -48,6 +50,9 @@ public class UserService extends GenericService<User, Long> implements IUserServ
     @Autowired
     IOrganizationService iOrganizationService;
 
+    @Autowired
+    IGroupService iGroupService;
+
     @Value("${bzamani.organization-id-for-guest-users}") //read from application.yml file
     Long guestOrganizationId;
 
@@ -63,7 +68,7 @@ public class UserService extends GenericService<User, Long> implements IUserServ
 
     @Override
     @Transactional
-    public User save(User user) {
+    public User save(User user) { //save User Only, sets will not change
         if (user.getId() == null) {
             PasswordEncoder encoder = new BCryptPasswordEncoder();
             user.setPassword(encoder.encode(user.getPassword().trim()));
@@ -77,8 +82,14 @@ public class UserService extends GenericService<User, Long> implements IUserServ
             user.setPassword(loadByEntityId(user.getId()).getPassword()); //should not change
             user.setPersonel(loadByEntityId(user.getId()).getPersonel()); //should not change
             user.setOrganizations(loadByEntityId(user.getId()).getOrganizations());//should not change
-            user.setActions(loadByEntityId(user.getId()).getActions());//should not change
+            user.setGroups(loadByEntityId(user.getId()).getGroups());//should not change
         }
+        return super.save(user);
+    }
+
+    @Override
+    @Transactional
+    public User saveUserWithSets(User user) { //bayad khode karbar havasesh be set ha bashe
         return super.save(user);
     }
 
@@ -109,9 +120,6 @@ public class UserService extends GenericService<User, Long> implements IUserServ
         newUser.setUserExpireDateShamsi(DateUtility.todayShamsi(365));
         newUser.setPasswordExpireDateShamsi(DateUtility.todayShamsi(365));
 
-        //Set<Action> actions = new HashSet<>();
-        //actions.add(iActionService.loadByEntityId(3L));//patient
-        //user.setActions(actions);
         return save(newUser);
     }
 
@@ -207,6 +215,14 @@ public class UserService extends GenericService<User, Long> implements IUserServ
         return response;
     }
 
+    private Sort.Direction getSortDirection(String direction) {
+        if (direction.equals("asc"))
+            return Sort.Direction.ASC;
+        else if (direction.equals("desc"))
+            return Sort.Direction.DESC;
+        return Sort.Direction.ASC;
+    }
+
     @Override
     public Map<String, Object> searchUserOrganizations(long userId, String organizationTitle, int page, int size, String[] sort) {
         List<Sort.Order> orders = new ArrayList<Sort.Order>();
@@ -276,12 +292,73 @@ public class UserService extends GenericService<User, Long> implements IUserServ
         return true;
     }
 
-    private Sort.Direction getSortDirection(String direction) {
-        if (direction.equals("asc"))
-            return Sort.Direction.ASC;
-        else if (direction.equals("desc"))
-            return Sort.Direction.DESC;
-        return Sort.Direction.ASC;
+    @Override
+    public Map<String, Object> searchUserGroups(long userId, String groupTitle, int page, int size, String[] sort) {
+        List<Sort.Order> orders = new ArrayList<Sort.Order>();
+        if (sort[0].contains(",")) {
+            for (String sortOrder : sort) {
+                String[] _sort = sortOrder.split(",");
+                orders.add(new Sort.Order(getSortDirection(_sort[1]), _sort[0]));
+            }
+        } else {
+            orders.add(new Sort.Order(getSortDirection(sort[1]), sort[0]));
+        }
+        List<Group> groups = new ArrayList<Group>();
+        Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
+        Page<Group> pageTuts = iUserRepository.searchUserGroups(userId, groupTitle, pagingSort);
+        groups = pageTuts.getContent();
+        Map<String, Object> response = new HashMap<>();
+        response.put("entityList", groups);
+        response.put("currentPage", pageTuts.getNumber());
+        response.put("totalRecords", pageTuts.getTotalElements());
+        response.put("totalPages", pageTuts.getTotalPages());
+        return response;
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteUserGroup(long userId, long groupId) throws Exception {
+        if (!iGroupService.userHaveAccessToGroup(findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getId(), groupId))
+            throw new Exception("خطا! شما به این گروه دسترسی ندارید.");
+
+        User user = loadByEntityId(userId);
+        user.setGroups(user.getGroups().stream()
+                .filter(e -> !e.getId().equals(groupId))
+                .collect(Collectors.toSet()));
+        iUserRepository.save(user);
+        return true;
+    }
+
+    @Override
+    @Transactional
+    public boolean addUserGroups(long userId, List<Long> groupIds) throws Exception {
+        if (groupIds != null) {
+            long authenticatedUserId = findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getId();
+            User user = loadByEntityId(userId);
+            Set<Group> newSet = new HashSet<>();
+            newSet.addAll(user.getGroups()); //copy old to new
+            for (long newGroupId : groupIds) {
+                if (!iGroupService.userHaveAccessToGroup(authenticatedUserId, newGroupId)) {
+                    throw new Exception("خطا! شما به " + iGroupService.loadByEntityId(newGroupId).getTitle() + " دسترسی ندارید.");
+                }
+
+                boolean exists = false;
+                for (Group old : newSet) {
+                    if (old.getId().equals(newGroupId)) {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) {
+                    Group group = new Group();
+                    group.setId(newGroupId);
+                    newSet.add(group);
+                }
+            }
+            user.setGroups(newSet);
+            iUserRepository.save(user);
+        }
+        return true;
     }
 
 }

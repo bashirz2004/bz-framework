@@ -1,6 +1,7 @@
 package com.bzamani.framework.common.config.security;
 
 import com.bzamani.framework.model.core.action.Action;
+import com.bzamani.framework.model.core.group.Group;
 import com.bzamani.framework.repository.core.user.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,10 +28,13 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (user == null)
             throw new UsernameNotFoundException("User not found with the name " + username);
         Set<GrantedAuthority> authorities = new HashSet<>();
-        Set<Action> actions = user.getActions();
-        for (Action action : actions) {
+        Set<Action> actionsUnion = new HashSet<>();
+        for (Group group : user.getGroups())
+            actionsUnion.addAll(group.getActions());
+
+        for (Action action : actionsUnion)
             authorities.add(new SimpleGrantedAuthority("ROLE_" + action.getCode()));
-        }
+
         user.setAuthorities(authorities);
         return new User(username, user.getPassword(), authorities);
     }

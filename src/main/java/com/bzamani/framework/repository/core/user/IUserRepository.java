@@ -1,5 +1,6 @@
 package com.bzamani.framework.repository.core.user;
 
+import com.bzamani.framework.model.core.group.Group;
 import com.bzamani.framework.model.core.organization.Organization;
 import com.bzamani.framework.model.core.user.User;
 import org.springframework.data.domain.Page;
@@ -57,4 +58,10 @@ public interface IUserRepository extends JpaRepository<User, Long> {
             " and o.title like COALESCE(cast('%'||:organizationTitle||'%' AS text), '%'|| o.title )||'%'  "+
             " order by o.title ")
     Page<Organization> searchUserOrganizations(@Param("userId") long userId, @Param("organizationTitle") String organizationTitle, Pageable pageable);
+
+    @Query("SELECT g FROM User e join e.groups g where e.id = :userId " +
+            " and g.title like COALESCE(cast('%'||:groupTitle||'%' AS text), '%'|| g.title )||'%'  "+
+            " order by g.title ")
+    Page<Group> searchUserGroups(@Param("userId") long userId, @Param("groupTitle") String groupTitle, Pageable pageable);
+
 }

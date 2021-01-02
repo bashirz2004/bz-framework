@@ -2,8 +2,9 @@ package com.bzamani.framework.service.impl.core.organization;
 
 import com.bzamani.framework.common.utility.SecurityUtility;
 import com.bzamani.framework.common.utility.TreeNode;
-import com.bzamani.framework.dto.OrganizationDto;
+import com.bzamani.framework.dto.HierarchicalObjectDto;
 import com.bzamani.framework.model.core.organization.Organization;
+import com.bzamani.framework.model.core.user.User;
 import com.bzamani.framework.repository.core.organization.IOrganizationRepository;
 import com.bzamani.framework.service.core.organization.IOrganizationService;
 import com.bzamani.framework.service.core.user.IUserService;
@@ -14,7 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -95,14 +95,10 @@ public class OrganizationService extends GenericService<Organization, Long> impl
     public TreeNode getChildrenAsJsonTreeAuthorize(long id) {
         Organization organization = loadByEntityId(id);
         TreeNode root = new TreeNode(organization.getId().toString(), organization.getTitle());
-        root.addAttr("hierarchyCode", String.valueOf(organization.getHierarchyCode()));
 
-        for (OrganizationDto item : getAuthorizeOrganizationsForUserId(iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getId(), organization.getId())) {
+        for (HierarchicalObjectDto item : iOrganizationRepository.getAuthorizeOrganizationsForUserId(iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getId(), organization.getId())) {
             TreeNode node = new TreeNode(String.valueOf(item.getId()), item.getTitle());
-
             node.setChildCount(item.getChildCount());
-            node.addAttr("hierarchyCode", String.valueOf(item.getHierarchyCode()));
-            node.addAttr("access", String.valueOf(item.getAuthorized()));
             node.addAttr("text", item.getTitle());
             node.addAttr("id", String.valueOf(item.getId()));
             root.getChilds().add(node);
@@ -112,13 +108,20 @@ public class OrganizationService extends GenericService<Organization, Long> impl
     }
 
     @Override
-    public List<OrganizationDto> getAuthorizeOrganizationsForUserId(long userId, Long parentId) {
-        return iOrganizationRepository.getAuthorizeOrganizationsForUserId(userId, parentId);
+    public boolean userHaveAccessToOrganization(long userId, long organizationId) {
+        return iOrganizationRepository.userHaveAccessToOrganization(userId, organizationId) > 0 ? true : false;
     }
 
     @Override
-    public boolean userHaveAccessToOrganization(long userId, long organizationId) {
-        return iOrganizationRepository.userHaveAccessToOrganization(userId, organizationId) > 0 ? true : false;
+    @Transactional
+    public Organization save(Organization organization) {
+        if (organization.getId() == null) {
+            super.save(organization);
+            User authenticatedUser = iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername());
+            authenticatedUser.getOrganizations().add(organization);
+            return organization;
+        } else
+            return super.save(organization);
     }
 
 }

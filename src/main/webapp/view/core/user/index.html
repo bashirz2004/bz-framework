@@ -328,6 +328,10 @@
             viewFancyBox('/app/view/core/user/userOrganizations.html?userId=' + id + "&fullName=" + fullName, '90%', '90%');
         }
 
+        function openUserGroups(id, fullName) {
+            viewFancyBox('/app/view/core/user/userGroups.html?userId=' + id + "&fullName=" + fullName, '90%', '90%');
+        }
+
         function openChangePasswordByAdmin(id, fullName) {
             viewFancyBox('/app/view/core/user/changePasswordByAdmin.html?userId=' + id + "&fullName=" + fullName, '60%', '60%');
         }
@@ -474,8 +478,8 @@
                                                                     class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-building-o"></i></a>
                                                 </div>
                                                 <div class="float-right">
-                                                     <a data-toggle="modal" title="دسترسی به منوها"
-                                                                    class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-check-square-o"></i></a>
+                                                     <a onclick="openUserGroups(${id},'${personel.firstname} ${personel.lastname}')" data-toggle="modal" title="گروه های کاربری"
+                                                                    class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-address-card"></i></a>
                                                 </div>
                                                 <div class="float-right">
                                                      <a onclick="openChangePasswordByAdmin(${id},'${personel.firstname} ${personel.lastname}')"  data-toggle="modal" title="تغییر رمز عبور"

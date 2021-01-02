@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <title>واحدهای سازمانی کاربر</title>
+    <title>گروه های کاربری کاربر</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/app/assets/img/favicon.png">
@@ -83,7 +83,6 @@
         var currentUserId = getUrlParameter("userId");
         var currentUserFullName = getUrlParameter("fullName");
         var tree;
-        var treeRootId = 1;
         var superRootNode = {
             id: 0,
             text: 'tree super root node',
@@ -91,7 +90,7 @@
         };
         var searchFilters = {
             "userId": currentUserId,
-            "organizationTitle": '',
+            "groupTitle": '',
             "sort": "id,desc",
             "page": 0,
             "size": 5
@@ -115,43 +114,43 @@
 
             $('.searchFilter').keydown(function (e) {
                 if (e.which == 13)  // the enter key code
-                    searchUserOrganizations();
+                    searchUserGroups();
             });
         });
 
         function makePageHeader() {
-            $('#pageHeader').html("دسترسی واحدهای سازمانی " + currentUserFullName);
+            $('#pageHeader').html("دسترسی به گروه های کاربری " + currentUserFullName);
         }
 
         function initTree() {
             configTree();
-            $.get(contextPath + "/rest/core/organization/getChildrenAsJsonTreeAuthorize?id=" + treeRootId, function (data) {
+            $.get(contextPath + "/rest/core/group/getAuthenticatedUserGroupsAsJsonTree", function (data) {
                 superRootNode.item.push(data);
                 tree.loadJSONObject(superRootNode);
-                tree.openItem(treeRootId);
+                tree.openItem(1);
             });
         }
 
         function configTree() {
             tree = new dhtmlXTreeObject('tree_div', '100%', '100%', 0);
             tree.setImagePath("/app/assets/bzamani/components/tree/icons/");
-            tree.setXMLAutoLoading(contextPath + "/rest/core/organization/getChildrenAsJsonTreeAuthorize");
+            tree.setXMLAutoLoading(contextPath + "/rest/core/group/getChildrenAsJsonTreeAuthorize");
             tree.setDataMode("json");
             tree.enableCheckBoxes(1, 0);
         }
 
-        function addSelectedOrganizations() {
+        function addSelectedGroups() {
             let checkedItems = tree.getAllChecked().split(',');
             let data = {
                 userId: currentUserId,
-                organizationIds: []
+                groupIds: []
             };
             if (checkedItems.length == 0 || (checkedItems.length == 1 && checkedItems[0] == '')) {
                 showMessage("هیچ واحد سازمانی انتخاب نشده است.", "", "warning");
                 return;
             } else {
                 $.each(checkedItems, function (i) {
-                    data.organizationIds.push(checkedItems[i]);
+                    data.groupIds.push(checkedItems[i]);
                 });
                 saveAll(data);
             }
@@ -159,7 +158,7 @@
 
         function saveAll(data) {
             $.ajax({
-                url: contextPath + '/rest/core/user/addUserOrganizations',
+                url: contextPath + '/rest/core/user/addUserGroups',
                 type: 'POST',
                 dataType: 'json',
                 contentType: 'application/json; charset=utf-8',
@@ -184,11 +183,11 @@
         // manage grid
 
         function refreshGrid() {
-            fillGrid('userTemplate', 'userList', contextPath + "/rest/core/user/searchUserOrganizations", searchFilters);
+            fillGrid('userTemplate', 'userList', contextPath + "/rest/core/user/searchUserGroups", searchFilters);
         }
 
-        function searchUserOrganizations() {
-            searchFilters.organizationTitle = $("#txtSearchOrganizationTitle").val();
+        function searchUserGroups() {
+            searchFilters.groupTitle = $("#txtSearchGroupTitle").val();
             searchFilters.userId = currentUserId;
             refreshGrid();
         }
@@ -197,7 +196,7 @@
             $('#cmbPageSize').val(5);
             searchFilters = {
                 "userId": currentUserId,
-                "organizationTitle": '',
+                "groupTitle": '',
                 "sort": "id,desc",
                 "page": 0,
                 "size": 5
@@ -224,7 +223,7 @@
         function deleteEntity() {
             if ($('#hiddenFieldId').val() > 0)
                 $.ajax({
-                    url: contextPath + "/rest/core/user/deleteUserOrganization/" + currentUserId + "/" + $('#hiddenFieldId').val(),
+                    url: contextPath + "/rest/core/user/deleteUserGroup/" + currentUserId + "/" + $('#hiddenFieldId').val(),
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
                     type: 'DELETE',
@@ -272,7 +271,7 @@
                 <div class="card card-table flex-fill">
                     <div style="border-radius: 10px 10px 0px 0px">
                         <div class="float-left mt-1">
-                            <h6>واحدهای سازمانی کاربر</h6>
+                            <h6>کروه های کاربری کاربر</h6>
                         </div>
                         <div class="float-right">
                             <a href="javascript:void(0)" onclick="clearSearch();" data-toggle="tooltip"
@@ -281,7 +280,7 @@
                                     class="fa fa-eraser"></i></a>
                         </div>
                         <div class="float-right search-section">
-                            <a href="javascript:void(0)" onclick="searchUserOrganizations();" data-toggle="tooltip"
+                            <a href="javascript:void(0)" onclick="searchUserGroups();" data-toggle="tooltip"
                                title="جستجو"
                                class="btn btn-block btn-rounded btn-outline-secondary"><i
                                     class="fa fa-filter"></i></a>
@@ -290,7 +289,7 @@
                     <div class="col-sm-12 search-section">
                         <label class="float-left" style="padding-top: .5em">فیلتر کردن براساس : </label>
                         <div class="float-left col-xl-9 col-lg-9 col-md-9 com-sm-12">
-                            <input type="text" id="txtSearchOrganizationTitle" class="form-control searchFilter"
+                            <input type="text" id="txtSearchGroupTitle" class="form-control searchFilter"
                                    placeholder="عنوان ...">
                         </div>
                     </div>
@@ -432,7 +431,7 @@
     </div>
 </div>
 <div class="col-xl-12 col-lg-12 col-md-12 com-sm-12 float-left">
-    <input type="button" id="btnAdd" class="btn btn-primary" onclick="addSelectedOrganizations()" value='ثبت'/>
+    <input type="button" id="btnAdd" class="btn btn-primary" onclick="addSelectedGroups()" value='ثبت'/>
 </div>
 <!-- Bootstrap Core JS -->
 <script src="/app/assets/bzamani/bootstrap.min.js"></script>

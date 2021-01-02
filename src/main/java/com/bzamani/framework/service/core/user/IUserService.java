@@ -11,6 +11,9 @@ import java.util.Map;
 public interface IUserService extends IGenericService<User, Long> {
     User findUserByUsernameEquals(String username);
 
+    @Transactional
+    User saveUserWithSets(User user);
+
     User selfRegister(SelfUserRegistrationDto userDto) throws Exception;
 
     @Transactional
@@ -34,4 +37,12 @@ public interface IUserService extends IGenericService<User, Long> {
 
     boolean deleteUserOrganization(long userId, long organizationId) throws Exception;
     boolean addUserOrganizations(long userId, List<Long> organizationIds) throws Exception;
+
+    Map<String, Object> searchUserGroups(long userId, String groupTitle, int page, int size, String[] sort);
+
+    @Transactional
+    boolean deleteUserGroup(long userId, long groupId) throws Exception;
+
+    @Transactional
+    boolean addUserGroups(long userId, List<Long> groupIds) throws Exception;
 }
