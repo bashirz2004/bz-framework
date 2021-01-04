@@ -15,7 +15,8 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "core_personel",uniqueConstraints = {@UniqueConstraint(name = "unq_personel_nationalCode", columnNames = "nationalCode"),@UniqueConstraint(name = "unq_personel_email", columnNames = "email")})
 @FilterDefs({@FilterDef(name = "organizationAuthorize", parameters = {@ParamDef(name = "username", type = "string")})})
-@Filters({@Filter(name = "organizationAuthorize", condition = " exists ( select 1 from core_user_organization uo join core_user u on u.id = uo.user_id and u.username = :username and uo.organization_id = organization_id ) ")})
+@Filters({@Filter(name = "organizationAuthorize", condition = " exists ( select 1 from core_organization_authorize oa" +
+        " join core_user u on u.id = oa.user_id and u.username = :username and oa.organization_id = organization_id ) ")})
 @SequenceGenerator(name = "sequence_db", sequenceName = "seq_core_personel", allocationSize = 1)
 @Setter
 @Getter

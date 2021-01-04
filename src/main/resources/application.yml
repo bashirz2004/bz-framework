@@ -44,3 +44,13 @@ google:
 
 bzamani:
   organization-id-for-guest-users: 2
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+        SQL: DEBUG

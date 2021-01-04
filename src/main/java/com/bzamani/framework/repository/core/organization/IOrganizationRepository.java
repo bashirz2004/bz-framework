@@ -41,13 +41,13 @@ public interface IOrganizationRepository extends JpaRepository<Organization, Lon
             "	from Organization p                                                                 " +
             "	where p.hierarchyCode in (                                                          " +
             "              select substring(org.hierarchyCode,1,length(p.hierarchyCode))            " +
-            "   	          from User u join u.organizations uo,Organization org                  " +
-            "   	        where u.id = :userId and uo.id = org.id   )                             " +
+            "   	          from UserOrganizationAuthorize uoa,Organization org                  " +
+            "   	        where uoa.userId = :userId and uoa.organizationId = org.id   )                             " +
             "     and p.parent.id = :parentId order by p.title                                      "
     )
     List<HierarchicalObjectDto> getAuthorizeOrganizationsForUserId(@Param("userId") long userId, @Param("parentId") Long parentId);
 
-    @Query("  select count(u.id) from User u join u.organizations o where u.id = :userId and o.id = :organizationId ")
+    @Query("  select count(uoa.userId) from UserOrganizationAuthorize uoa where uoa.userId = :userId and uoa.organizationId = :organizationId ")
     int userHaveAccessToOrganization(@Param("userId") long userId, @Param("organizationId") long organizationId);
 
 

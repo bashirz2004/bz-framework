@@ -4,7 +4,6 @@ import com.bzamani.framework.common.utility.SecurityUtility;
 import com.bzamani.framework.common.utility.TreeNode;
 import com.bzamani.framework.dto.HierarchicalObjectDto;
 import com.bzamani.framework.model.core.organization.Organization;
-import com.bzamani.framework.model.core.user.User;
 import com.bzamani.framework.repository.core.organization.IOrganizationRepository;
 import com.bzamani.framework.service.core.organization.IOrganizationService;
 import com.bzamani.framework.service.core.user.IUserService;
@@ -110,18 +109,6 @@ public class OrganizationService extends GenericService<Organization, Long> impl
     @Override
     public boolean userHaveAccessToOrganization(long userId, long organizationId) {
         return iOrganizationRepository.userHaveAccessToOrganization(userId, organizationId) > 0 ? true : false;
-    }
-
-    @Override
-    @Transactional
-    public Organization save(Organization organization) {
-        if (organization.getId() == null) {
-            super.save(organization);
-            User authenticatedUser = iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername());
-            authenticatedUser.getOrganizations().add(organization);
-            return organization;
-        } else
-            return super.save(organization);
     }
 
 }

@@ -176,7 +176,10 @@
                         showMessage("حذف با موفقیت انجام شد.", "", "success");
                     },
                     error: function (err) {
-                        showMessage("خطا در حذف اطلاعات", "", "error");
+                        if (err.responseJSON.message.includes("Forbidden"))
+                            showMessage("خطا در حذف", " شما مجوز انجام این کار را ندارید.", "error");
+                        else
+                            showMessage("خطا در حذف اطلاعات", "", "error");
                     }
                 });
             else
@@ -226,7 +229,10 @@
                         $('#btnCloseModal').click();
                     },
                     error: function (err) {
-                        showMessage("خطا در ثبت اطلاعات", "", "error");
+                        if (err.responseJSON.message.includes("Forbidden"))
+                            showMessage("خطا در ثبت اطلاعات", " شما مجوز انجام این کار را ندارید.", "error");
+                        else
+                            showMessage("خطا در ثبت اطلاعات", "", "error");
                     }
                 });
             } else showMessage("پرکردن فیلدهای ستاره دار الزامی است.", "", "warning");
@@ -488,6 +494,8 @@
 											</a>
                                         </td>
                                     </tr>
+
+
 
 
 

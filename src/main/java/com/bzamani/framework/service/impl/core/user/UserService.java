@@ -119,7 +119,14 @@ public class UserService extends GenericService<User, Long> implements IUserServ
         newUser.setEnabled(true);
         newUser.setUserExpireDateShamsi(DateUtility.todayShamsi(365));
         newUser.setPasswordExpireDateShamsi(DateUtility.todayShamsi(365));
-
+        Set<Organization> organizations = new HashSet<>();
+        organizations.add(org);
+        newUser.setOrganizations(organizations);
+        Set<Group> groups = new HashSet<>();
+        Group group = new Group();
+        group.setId(1L); //group for public users
+        groups.add(group);
+        newUser.setGroups(groups);
         return save(newUser);
     }
 

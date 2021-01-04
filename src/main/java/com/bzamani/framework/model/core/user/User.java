@@ -26,8 +26,8 @@ import java.util.Set;
 @FilterDefs({@FilterDef(name = "organizationAuthorize", parameters = {@ParamDef(name = "username", type = "string")})})
 @Filters({@Filter(name = "organizationAuthorize", condition =
         " exists ( select 1 from core_personel p " +
-                "           join core_user_organization uo on uo.organization_id = p.organization_id " +
-                "           join core_user u on u.id = uo.user_id " +
+                "    join core_organization_authorize oa on oa.organization_id = p.organization_id " +
+                "           join core_user u on u.id = oa.user_id " +
                 "          where p.id = personel_id and u.username = :username ) ")})
 public class User extends BaseEntity implements UserDetails {
 

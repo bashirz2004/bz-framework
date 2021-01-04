@@ -30,6 +30,13 @@
     <!-- jQuery -->
     <script src="assets/bzamani/jquery-1.10.2.min.js"></script>
     <script src="assets/bzamani/jquery.template.js"></script>
+
+    <!-- sweet alert -->
+    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/sweetalert/sweetalert2.min.css">
+    <!-- /sweet alert -->
+
     <script>
         var contextPath = "/app";
         $(function () {
@@ -49,6 +56,7 @@
                     $("#menuTemplate").tmpl(res).appendTo("#menuList");
                 },
                 error: function (err) {
+                    showMessage("خطا در بارگزاری منوها",err.responseJSON.message,"error");
                     console.log(err.responseText);
                 }
             });
