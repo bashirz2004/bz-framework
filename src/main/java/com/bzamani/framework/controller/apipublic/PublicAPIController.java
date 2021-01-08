@@ -9,6 +9,7 @@ import com.bzamani.framework.model.doctor.Doctor;
 import com.bzamani.framework.service.core.baseinfo.IBaseInfoService;
 import com.bzamani.framework.service.core.user.IUserService;
 import com.bzamani.framework.service.doctor.IDoctorService;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -79,5 +80,10 @@ public class PublicAPIController extends BaseController {
     @PostMapping("/user/sendPasswordToUserEmail")
     public void sendPasswordToUserEmail(@RequestParam String email) throws Exception {
          iUserService.sendPasswordToUserEmail(email);
+    }
+
+    @GetMapping(value = "/user/getUserNewPassword", produces = "text/plain;charset=UTF-8")
+    public String getUserNewPassword(@RequestParam String mobile) throws Exception {
+        return iUserService.updatePasswordOfUserByMobile(mobile, RandomStringUtils.random(5, true, true));
     }
 }

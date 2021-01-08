@@ -113,5 +113,10 @@ public class PersonelService extends GenericService<Personel, Long> implements I
     public Personel findByEmailEquals(String email) {
         return iPersonelRepository.findByEmailEquals(email);
     }
+
+    @Override
+    public Personel findByMobileEquals(String mobile) {
+        return iPersonelRepository.findByMobileEquals(mobile);
+    }
 }
 

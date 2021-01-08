@@ -151,7 +151,9 @@ public class UserService extends GenericService<User, Long> implements IUserServ
         message.setSubject("bz-framework: " + "رمز عبور جدید شما");
         message.setText("کاربر گرامی نام کاربری و رمزعبور جدید شما به این شرح می باشد: " + "\n" +
                 "username: " + iUserRepository.findByEmail(email).getUsername() + "\n" +
-                "password: " + updatePasswordOfUser(email, RandomStringUtils.random(10, true, true)));
+                "password: " + updatePasswordOfUserByEmail(email, RandomStringUtils.random(5, true, true)) + "\n" +
+                " در صورت تمایل، پس از ورود به سامانه می توانید نسبت به تغییر رمز عبور خود اقدام کنید."
+        );
         emailSender.send(message);
     }
 
@@ -163,12 +165,26 @@ public class UserService extends GenericService<User, Long> implements IUserServ
     }
 
     @Transactional
-    public String updatePasswordOfUser(String email, String newPassword) throws Exception {
+    public String updatePasswordOfUserByEmail(String email, String newPassword) throws Exception {
         Integer result = iUserRepository.changePasswordByEmail(email, new BCryptPasswordEncoder().encode(newPassword), new Date());
         if (result > 0)
             return newPassword;
         else
-            throw new Exception("برای شما هنوز حساب کاربری ایجاد نشده است.");
+            throw new Exception("با این ایمیل، حساب کاربری ایجاد نشده است.");
+    }
+
+    @Transactional
+    @Override
+    public String updatePasswordOfUserByMobile(String mobile, String newPassword) throws Exception {
+        if (iPersonelService.findByMobileEquals(mobile) == null)
+            throw new Exception("فردی تاکنون با این شماره موبایل ثبت نام نکرده است.");
+        if (DateUtility.getDiffSeconds(iUserRepository.findByMobile(mobile).getLastUpdateDate(), new Date()) < 60)
+            throw new Exception("از آخرین پیامک ارسال شده باید حداقل یک دقیقه گذشته باشد.");
+        Integer result = iUserRepository.changePasswordByMobile(mobile, new BCryptPasswordEncoder().encode(newPassword), new Date());
+        if (result > 0)
+            return newPassword;
+        else
+            throw new Exception("با این شماره موبایل، حساب کاربری ایجاد نشده است.");
     }
 
     @Transactional

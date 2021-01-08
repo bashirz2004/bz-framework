@@ -20,6 +20,9 @@ public interface IUserService extends IGenericService<User, Long> {
     void sendPasswordToUserEmail(String email) throws Exception;
 
     @Transactional
+    String updatePasswordOfUserByMobile(String mobile, String newPassword) throws Exception;
+
+    @Transactional
     boolean changePasswordByAdmin(Long userId, String newPassword);
 
     Map<String, Object> searchUser(String firstname,
