@@ -10,6 +10,7 @@ public class SelfUserRegistrationDto {
     private String firstname;
     private String lastname;
     private String username;
+    private String oldPassword;
     private String password;
     private String passwordRepeat;
     private Boolean male;

@@ -66,6 +66,12 @@ public class UserController extends BaseController {
         return iUserService.changePasswordByAdmin(dto.getUserId(), dto.getPassword());
     }
 
+    @PostMapping("/changeAuthenticatedUserPassword")
+    public boolean changeAuthenticatedUserPassword(@RequestBody SelfUserRegistrationDto dto) throws Exception {
+        iUserService.changeAuthenticatedUserPassword(dto.getOldPassword(), dto.getPassword());
+        return true;
+    }
+
     @GetMapping("/searchUserOrganizations")
     public Map<String, Object> searchUserOrganizations(
             @RequestParam(required = true) long userId,

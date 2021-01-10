@@ -51,7 +51,7 @@ public interface IUserRepository extends JpaRepository<User, Long> {
 
     @Modifying
     @Query("update User e set e.password = :newPassword , e.lastUpdateDate = :now where e.id = :userId ")
-    Integer changePasswordByAdmin(@Param("userId") long userId, @Param("newPassword") String newPassword, @Param("now") Date now);
+    Integer changePassword(@Param("userId") long userId, @Param("newPassword") String newPassword, @Param("now") Date now);
 
     @Query("from User e where exists (select 1 from User u join Personel p on p.id = u.personel.id where u.id = e.id and p.email = :email )")
     User findByEmail(@Param("email") String email);
@@ -62,13 +62,26 @@ public interface IUserRepository extends JpaRepository<User, Long> {
     List<User> findAllByIpOrderByLastUpdateDateDesc(String ip);
 
     @Query("SELECT o FROM User e join e.organizations o where e.id = :userId " +
-            " and o.title like COALESCE(cast('%'||:organizationTitle||'%' AS text), '%'|| o.title )||'%'  "+
+            " and o.title like COALESCE(cast('%'||:organizationTitle||'%' AS text), '%'|| o.title )||'%'  " +
             " order by o.title ")
     Page<Organization> searchUserOrganizations(@Param("userId") long userId, @Param("organizationTitle") String organizationTitle, Pageable pageable);
 
     @Query("SELECT g FROM User e join e.groups g where e.id = :userId " +
-            " and g.title like COALESCE(cast('%'||:groupTitle||'%' AS text), '%'|| g.title )||'%'  "+
+            " and g.title like COALESCE(cast('%'||:groupTitle||'%' AS text), '%'|| g.title )||'%'  " +
             " order by g.title ")
     Page<Group> searchUserGroups(@Param("userId") long userId, @Param("groupTitle") String groupTitle, Pageable pageable);
+
+    @Modifying
+    @Query("update User e set e.wrongPasswordTries = 0 , e.lastUpdateDate = :now where e.id = :userId ")
+    Integer resetWrongPasswordTries(@Param("userId") long userId, @Param("now") Date now);
+
+    @Modifying
+    @Query("update User e set e.wrongPasswordTries = coalesce(e.wrongPasswordTries,0) + 1 , e.lastUpdateDate = :now where e.id = :userId ")
+    Integer increaseWrongPasswordTries(@Param("userId") long userId, @Param("now") Date now);
+
+    @Modifying
+    @Query("update User e set e.accountNonLocked = false , e.lastUpdateDate = :now where e.id = :userId ")
+    Integer lock(@Param("userId") long userId, @Param("now") Date now);
+
 
 }

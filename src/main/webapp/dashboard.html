@@ -30,6 +30,11 @@
     <!-- jQuery -->
     <script src="assets/bzamani/jquery-1.10.2.min.js"></script>
     <script src="assets/bzamani/jquery.template.js"></script>
+    <script src="assets/bzamani/general-utility.js"></script>
+
+    <!-- fancybox -->
+    <script src="assets/bzamani/components/fancybox/jquery.fancybox.js"></script>
+    <link rel="stylesheet" href="assets/bzamani/components/fancybox/jquery.fancybox.css"/>
 
     <!-- sweet alert -->
     <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
@@ -42,6 +47,10 @@
         $(function () {
             if (localStorage.getItem("authenticatedUserFullName"))
                 $('#lblUserFullName').html(localStorage.getItem("authenticatedUserFullName") + "&nbsp;");
+            if (localStorage.getItem("authenticatedUserImageFileCode"))
+                $('#userAvatar').attr("src", "/app/rest/core/file/download/" + localStorage.getItem("authenticatedUserImageFileCode") + "/false");
+            else
+                $('#userAvatar').attr("src", "/app/assets/img/man.png");
             loadMenu();
         });
 
@@ -56,7 +65,7 @@
                     $("#menuTemplate").tmpl(res).appendTo("#menuList");
                 },
                 error: function (err) {
-                    showMessage("خطا در بارگزاری منوها",err.responseJSON.message,"error");
+                    showMessage("خطا در بارگزاری منوها", err.responseJSON.message, "error");
                     console.log(err.responseText);
                 }
             });
@@ -65,6 +74,11 @@
         function loadIframe(src) {
             $("#myIframe").attr("src", contextPath + src);
         }
+
+        function openChangePasswordForm() {
+            viewFancyBox('changePasswordByUser.html?fullName=' + $('#lblUserFullName').html(), '70%', '70%');
+        }
+
     </script>
 </head>
 <body>
@@ -109,7 +123,7 @@
             <!-- Notifications -->
             <li class="nav-item dropdown noti-dropdown">
                 <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
-                    <i class="fe fe-bell"></i> <span class="badge badge-pill">3</span>
+                    <i class="fe fe-bell"></i> <span class="badge badge-pill bg-danger">3</span>
                 </a>
                 <div class="dropdown-menu notifications">
                     <div class="topnav-dropdown-header">
@@ -190,23 +204,25 @@
             <!-- /Notifications -->
 
             <!-- User Menu -->
-            <li class="nav-item dropdown has-arrow">
+            <li class="nav-item dropdown has-arrow text-white">
                 <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
-                    <span class="user-img"><img class="rounded-circle" src="assets/img/man.png"
-                                                width="31" alt="Ryan Taylor"></span>
+                    <span class="user-img">
+                        <img class="rounded-circle" id="userAvatar" src="" width="45" alt="Ryan Taylor">
+                    </span>
                 </a>
-                <div class="dropdown-menu">
-                    <div class="user-header">
+                <div class="dropdown-menu" style="background-color: #00121e">
+                    <div class="user-header" style="background-color: #00121e">
                         <div class="avatar avatar-sm">
-                            <img src="assets/img/man.png" alt="User Image"
-                                 class="avatar-img rounded-circle">
                         </div>
                         <div class="user-text">
-                            <h6 id="lblUserFullName"></h6>
-                            <p class="text-muted mb-0">خوش آمدید</p>
+                            <h6 class="text-white" id="lblUserFullName"></h6>
+                            <p class="text-muted mb-0" style="color: #c6b17e !important;">خوش آمدید</p>
                         </div>
                     </div>
-                    <a class="dropdown-item" href="login.html">خروج</a>
+                    <a class="dropdown-item text-white" href="javascript:void(0);" onclick="openChangePasswordForm()">تغییر
+                        رمز
+                        عبور</a>
+                    <a class="dropdown-item text-white" href="login.html">خروج</a>
                 </div>
             </li>
             <!-- /User Menu -->
@@ -223,7 +239,8 @@
             <div class="sidebar-menu">
                 <ul>
                     <li>
-                        <a href="dashboard.html"><i style="color: #c6b17e" class="fa fa-bar-chart-o"></i> <span>داشبورد</span></a>
+                        <a href="dashboard.html"><i style="color: #c6b17e" class="fa fa-bar-chart-o"></i>
+                            <span>داشبورد </span></a>
                     </li>
                 </ul>
             </div>
@@ -238,6 +255,18 @@
                     </ul>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
                 </script>
             </div>
         </div>
@@ -246,9 +275,10 @@
 
     <!-- Page+ Wrapper -->
     <div class="page-wrapper">
-        <div class="content container-fluid" >
+        <div class="content container-fluid">
             <iframe id="myIframe" src="view/core/charts.html" width="100%" height="590px" class="windowIframe"
-                    style="border: none;overflow: hidden" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>
+                    style="border: none;overflow: hidden" webkitallowfullscreen="true"
+                    mozallowfullscreen="true"></iframe>
         </div>
     </div>
     <!-- Page Wrapper -->
@@ -261,10 +291,6 @@
 
 <!-- Slimscroll JS -->
 <script src="assets/admin/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-
-<script src="assets/admin/plugins/raphael/raphael.min.js"></script>
-<script src="assets/admin/plugins/morris/morris.min.js"></script>
-<script src="assets/admin/chart/chart.morris.js"></script>
 
 <!-- Custom JS -->
 <script src="assets/admin/chart/script.js"></script>

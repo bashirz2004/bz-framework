@@ -25,6 +25,9 @@ public interface IUserService extends IGenericService<User, Long> {
     @Transactional
     boolean changePasswordByAdmin(Long userId, String newPassword);
 
+    @Transactional
+    void changeAuthenticatedUserPassword(String oldPassword, String newPassword) throws Exception;
+
     Map<String, Object> searchUser(String firstname,
                                    String lastname,
                                    String nationalCode,
@@ -48,4 +51,13 @@ public interface IUserService extends IGenericService<User, Long> {
 
     @Transactional
     boolean addUserGroups(long userId, List<Long> groupIds) throws Exception;
+
+    @Transactional
+    void resetWrongPasswordTries(Long userId);
+
+    @Transactional
+    void increaseWrongPasswordTries(Long userId);
+
+    @Transactional
+    void lock(Long userId);
 }

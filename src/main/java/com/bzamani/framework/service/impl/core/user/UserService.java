@@ -190,11 +190,20 @@ public class UserService extends GenericService<User, Long> implements IUserServ
     @Transactional
     @Override
     public boolean changePasswordByAdmin(Long userId, String newPassword) {
-        Integer result = iUserRepository.changePasswordByAdmin(userId, new BCryptPasswordEncoder().encode(newPassword), new Date());
+        Integer result = iUserRepository.changePassword(userId, new BCryptPasswordEncoder().encode(newPassword), new Date());
         if (result > 0)
             return true;
         else
             return false;
+    }
+
+    @Transactional
+    @Override
+    public void changeAuthenticatedUserPassword(String oldPassword, String newPassword) throws Exception {
+        User authenticatedUser = findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername());
+        if (!new BCryptPasswordEncoder().matches(oldPassword, authenticatedUser.getPassword()))
+            throw new Exception("رمز عبور قدیم صحیح نمی باشد.");
+        iUserRepository.changePassword(authenticatedUser.getId(), new BCryptPasswordEncoder().encode(newPassword), new Date());
     }
 
     @Override
@@ -382,6 +391,24 @@ public class UserService extends GenericService<User, Long> implements IUserServ
             iUserRepository.save(user);
         }
         return true;
+    }
+
+    @Transactional
+    @Override
+    public void resetWrongPasswordTries(Long userId) {
+        iUserRepository.resetWrongPasswordTries(userId, new Date());
+    }
+
+    @Transactional
+    @Override
+    public void increaseWrongPasswordTries(Long userId) {
+        iUserRepository.increaseWrongPasswordTries(userId, new Date());
+    }
+
+    @Transactional
+    @Override
+    public void lock(Long userId) {
+        iUserRepository.lock(userId, new Date());
     }
 
 }

@@ -413,14 +413,6 @@
                                 <i class="fa fa-sort-up sort-grid" order="username,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="username,desc"></i>
                             </th>
-                            <th>اعتبار کاربر
-                                <i class="fa fa-sort-up sort-grid" order="userExpireDateShamsi,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="userExpireDateShamsi,desc"></i>
-                            </th>
-                            <th>اعتبار پسورد
-                                <i class="fa fa-sort-up sort-grid" order="passwordExpireDateShamsi,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="passwordExpireDateShamsi,desc"></i>
-                            </th>
                             <th>فعال
                                 <i class="fa fa-sort-up sort-grid" order="enabled,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="enabled,desc"></i>
@@ -459,8 +451,6 @@
                                         <td>${personel.organization.title}</td>
                                         <td>${personel.nationalCode}</td>
                                         <td>${username}</td>
-                                        <td>${userExpireDateShamsi}</td>
-                                        <td>${passwordExpireDateShamsi}</td>
                                         <td class="text-center">{{if enabled}}<i class="fa fa-check text-success" aria-hidden="true"></i>{{else}}<i class="fa fa-remove text-secondary" aria-hidden="true"></i>{{/if}}</td>
                                         <td class="text-center">{{if !accountNonLocked}}<i class="fa fa-lock text-danger" aria-hidden="true"></i>{{else}}<i class="fa fa-unlock text-info" aria-hidden="true"></i>{{/if}}</td>
                                         <td class="text-center">

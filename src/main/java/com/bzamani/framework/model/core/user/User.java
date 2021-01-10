@@ -77,6 +77,11 @@ public class User extends BaseEntity implements UserDetails {
     @Setter
     private String passwordExpireDateShamsi;
 
+    @Column(name = "wrong_password_tries")
+    @Getter
+    @Setter
+    private Integer wrongPasswordTries;
+
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)

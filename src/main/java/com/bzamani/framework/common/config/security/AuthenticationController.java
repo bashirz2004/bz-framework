@@ -58,18 +58,25 @@ public class AuthenticationController extends BaseController {
             }
         }
 
+        User user = iUserService.findUserByUsernameEquals(loginInfo.get("username"));
         try {
             checkUser(loginInfo.get("username"));
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginInfo.get("username"), loginInfo.get("password")));
         } catch (DisabledException e) {
             throw new Exception("USER_DISABLED", e);
         } catch (BadCredentialsException e) {
+            //check if username exists and user entered wrong password for 5 times, lock user
+            if (user != null) {
+                iUserService.increaseWrongPasswordTries(user.getId());
+                if (user.getWrongPasswordTries() != null && user.getWrongPasswordTries() == 4)
+                    iUserService.lock(user.getId());
+            }
             throw new Exception("INVALID_CREDENTIALS", e);
         }
 
         UserDetails userdetails = userDetailsService.loadUserByUsername(loginInfo.get("username"));
-        User user = iUserService.findUserByUsernameEquals(loginInfo.get("username"));
         user.setToken(jwtUtil.generateToken(userdetails));
+        iUserService.resetWrongPasswordTries(user.getId());
         return ResponseEntity.ok().body(user);
     }
 
@@ -78,7 +85,7 @@ public class AuthenticationController extends BaseController {
         if (!user.isEnabled())
             throw new Exception("کاربر محترم، حساب کاربری شما غیر فعال شده است.");
         if (!user.isAccountNonLocked())
-            throw new Exception("کاربر محترم، در اثر چندین بار ورود رمز اشتباه، حساب کاربری شما مسدود شده است.");
+            throw new Exception("کاربر محترم، در اثر 5 بار ورود رمز اشتباه، حساب کاربری شما مسدود شده است.");
         if (user.getUserExpireDateShamsi().compareTo(DateUtility.todayShamsi()) <= 0)
             throw new Exception("کاربر محترم، اعتبار شما به پایان رسیده است.");
         if (user.getPasswordExpireDateShamsi().compareTo(DateUtility.todayShamsi()) <= 0)
