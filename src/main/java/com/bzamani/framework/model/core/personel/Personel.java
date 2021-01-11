@@ -13,7 +13,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "core_personel",uniqueConstraints = {@UniqueConstraint(name = "unq_personel_nationalCode", columnNames = "nationalCode"),@UniqueConstraint(name = "unq_personel_email", columnNames = "email")})
+@Table(name = "core_personel",uniqueConstraints = {@UniqueConstraint(name = "unq_personel_mobile", columnNames = "mobile"),@UniqueConstraint(name = "unq_personel_email", columnNames = "email")})
 @FilterDefs({@FilterDef(name = "organizationAuthorize", parameters = {@ParamDef(name = "username", type = "string")})})
 @Filters({@Filter(name = "organizationAuthorize", condition = " exists ( select 1 from core_organization_authorize oa" +
         " join core_user u on u.id = oa.user_id and u.username = :username and oa.organization_id = organization_id ) ")})
@@ -43,7 +43,6 @@ public class Personel extends BaseEntity {
     @Column(name = "birth_certificate_number")
     private String birthCertificateNumber;
 
-    @NotNull
     @Column(name = "nationalCode")
     private String nationalCode;
 
@@ -68,6 +67,7 @@ public class Personel extends BaseEntity {
     @Column(name = "telephone")
     private String telephone;
 
+    @NotNull
     @Column(name = "mobile")
     private String mobile;
 

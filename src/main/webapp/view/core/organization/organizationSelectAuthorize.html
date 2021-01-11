@@ -118,9 +118,13 @@
         function selectOrganization(id, title) {
             $.get(contextPath + "/rest/core/organization/authenticatedUserHaveAccessToOrganization?organizationId=" + id, function (res) {
                 if (res == true) {
-                    parent.setOrganization(id, title);
+                    if (getUrlParameter("isSearch") != null && getUrlParameter("isSearch") == 'true')
+                        parent.setOrganizationInSearch(id, title);
+                    else
+                        parent.setOrganization(id, title);
                     parent.$.fancybox.close();
-                } else showMessage("شما به " + title + " دسترسی ندارید.", "", "warning");
+                } else
+                    showMessage("شما به " + title + " دسترسی ندارید.", "", "warning");
             });
 
 

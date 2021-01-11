@@ -101,7 +101,8 @@
         var searchFilters = {
             "firstname": '',
             "lastname": '',
-            "nationalCode": '',
+            "mobile": '',
+            "organizationId": -1,
             "sort": "id,desc",
             "page": 0,
             "size": 8
@@ -133,7 +134,8 @@
         function searchPersonel() {
             searchFilters.firstname = $("#txtSearchFirstname").val();
             searchFilters.lastname = $("#txtSearchLastname").val();
-            searchFilters.nationalCode = $("#txtSearchNationalCode").val();
+            searchFilters.mobile = $("#txtSearchMobile").val();
+            searchFilters.organizationId = $("#hiddenFieldSearchOrganizationId").val();
             refreshGrid();
         }
 
@@ -142,7 +144,8 @@
             searchFilters = {
                 "firstname": '',
                 "lastname": '',
-                "nationalCode": '',
+                "mobile": '',
+                "organizationId": -1,
                 "sort": "id,desc",
                 "page": 0,
                 "size": 8
@@ -228,8 +231,8 @@
                         $('#btnCloseModal').click();
                     },
                     error: function (err) {
-                        if (err.responseText.includes("unq_personel_nationalcode"))
-                            showMessage("خطا. کدملی تکراری است.", "", "error");
+                        if (err.responseText.includes("unq_personel_mobile"))
+                            showMessage("خطا. شماره موبایل تکراری است.", "", "error");
                         if (err.responseText.includes("unq_personel_email"))
                             showMessage("خطا. ایمیل تکراری است.", "", "error");
                     }
@@ -238,10 +241,8 @@
         }
 
         function validateForm() {
-            if ($('#txtNationalCode').val() == '' || $('#txtFirstname').val() == '' || $('#txtLastname').val() == '' || !$('#hiddenFieldOrganizationId').val() > 0 || $('#txtOrganizationTitle').val() == '' || $('#txtEmail').val() == '')
+            if ($('#txtMobile').val() == '' || $('#txtFirstname').val() == '' || $('#txtLastname').val() == '' || !$('#hiddenFieldOrganizationId').val() > 0 || $('#txtOrganizationTitle').val() == '' || $('#txtEmail').val() == '')
                 return "پرکردن فیلدهای ستاره دار الزامی است.";
-            else if ($('#txtNationalCode').val().length != 10)
-                return "کدملی باید 10 رقمی باشد.";
             else return 'ok';
         }
 
@@ -347,6 +348,11 @@
             $('#txtOrganizationTitle').val(title);
         }
 
+        function setOrganizationInSearch(id, title) {
+            $('#hiddenFieldSearchOrganizationId').val(id);
+            $('#txtSearchOrganizationTitle').val(title);
+        }
+
     </script>
 
 <body>
@@ -381,13 +387,20 @@
                 <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
                     <input type="text" id="txtSearchFirstname" class="form-control searchFilter" placeholder="نام ...">
                 </div>
-                <div class="float-left col-sm-2 col-md-3 col-lg-2 col-xl-2">
+                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
                     <input type="text" id="txtSearchLastname" class="form-control searchFilter"
                            placeholder="نام خانوادگی ...">
                 </div>
                 <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
-                    <input type="text" id="txtSearchNationalCode" class="form-control searchFilter"
-                           placeholder="کدملی ...">
+                    <input type="text" id="txtSearchMobile" class="form-control searchFilter"
+                           placeholder="موبایل ...">
+                </div>
+                <div class="float-left col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                    <input type="hidden" id="hiddenFieldSearchOrganizationId" class="searchFilter"/>
+                    <span style="cursor: pointer" class="fa fa-search text-info col-sm-2 float-left"
+                          title="انتخاب واحد سازمانی"
+                          onclick="viewFancyBox('/app/view/core/organization/organizationSelectAuthorize.html?isSearch=true','70%','90%')"></span>
+                    <input class="form-control searchFilter col-sm-10 float-left" disabled type="text" id="txtSearchOrganizationTitle" placeholder="واحد سازمانی..." />
                 </div>
             </div>
             <div class="card-body">

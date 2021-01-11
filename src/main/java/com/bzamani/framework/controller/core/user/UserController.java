@@ -46,6 +46,7 @@ public class UserController extends BaseController {
     public Map<String, Object> searchUser(@RequestParam(required = false) String firstname,
                                           @RequestParam(required = false) String lastname,
                                           @RequestParam(required = false) String nationalCode,
+                                          @RequestParam(required = false) String mobile,
                                           @RequestParam(required = false) Long organizationId,
                                           @RequestParam(required = false) String username,
                                           @RequestParam(required = false) Boolean accountNonExpired,
@@ -56,7 +57,7 @@ public class UserController extends BaseController {
                                           @RequestParam(defaultValue = "8") int size,
                                           @RequestParam(defaultValue = "id,desc") String[] sort) {
 
-        return iUserService.searchUser(firstname, lastname, nationalCode, organizationId, username,
+        return iUserService.searchUser(firstname, lastname, nationalCode, mobile, organizationId, username,
                 accountNonExpired, accountNonLocked, credentialsNonExpired, enabled, page, size, sort);
     }
 

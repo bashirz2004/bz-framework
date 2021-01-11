@@ -25,6 +25,10 @@
     <!-- jQuery -->
     <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
 
+    <!-- fancybox -->
+    <script src="/app/assets/bzamani/components/fancybox/jquery.fancybox.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/fancybox/jquery.fancybox.css"/>
+
     <!-- pace mask -->
     <script>
         paceOptions = {
@@ -72,10 +76,11 @@
         var searchFilters = {
             "firstname": '',
             "lastname": '',
-            "nationalCode": '',
+            "mobile": '',
+            "organizationId": -1,
             "sort": "id,desc",
             "page": 0,
-            "size": 8
+            "size": 5
         };
 
         $(function () {
@@ -100,7 +105,8 @@
         function searchPersonel() {
             searchFilters.firstname = $("#txtSearchFirstname").val();
             searchFilters.lastname = $("#txtSearchLastname").val();
-            searchFilters.nationalCode = $("#txtSearchNationalCode").val();
+            searchFilters.mobile = $("#txtSearchMobile").val();
+            searchFilters.organizationId = $("#hiddenFieldSearchOrganizationId").val();
             refreshGrid();
         }
 
@@ -109,14 +115,15 @@
         }
 
         function clearSearch() {
-            $('#cmbPageSize').val(8);
+            $('#cmbPageSize').val(5);
             searchFilters = {
                 "firstname": '',
                 "lastname": '',
-                "nationalCode": '',
+                "mobile": '',
+                "organizationId": -1,
                 "sort": "id,desc",
                 "page": 0,
-                "size": 8
+                "size": 5
             };
             $('.searchFilter').val('');
             refreshGrid();
@@ -135,6 +142,11 @@
         function goTo(pageNumber) {
             searchFilters.page = pageNumber;
             refreshGrid();
+        }
+
+        function setOrganization(id, title) {
+            $('#hiddenFieldSearchOrganizationId').val(id);
+            $('#txtSearchOrganizationTitle').val(title);
         }
 
         function selectPersonel(id, firstname, lastname, fileCode) {
@@ -167,17 +179,23 @@
                 </div>
             </div>
             <div class="col-sm-12 search-section">
-                <label class="float-left" style="padding-top: .5em">فیلتر کردن نتایج براساس : </label>
+                <label class="float-left" style="padding-top: .5em">فیلتر کردن : </label>
                 <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
                     <input type="text" id="txtSearchFirstname" class="form-control searchFilter" placeholder="نام ...">
                 </div>
-                <div class="float-left col-sm-2 col-md-3 col-lg-2 col-xl-2">
+                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
                     <input type="text" id="txtSearchLastname" class="form-control searchFilter"
                            placeholder="نام خانوادگی ...">
                 </div>
                 <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
-                    <input type="text" id="txtSearchNationalCode" class="form-control searchFilter"
-                           placeholder="کدملی ...">
+                    <input type="text" id="txtSearchMobile" class="form-control searchFilter" placeholder="موبایل ...">
+                </div>
+                <div class="float-left col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                    <input type="hidden" id="hiddenFieldSearchOrganizationId" class="searchFilter"/>
+                    <span style="cursor: pointer" class="fa fa-search text-info col-sm-2 float-left"
+                          title="انتخاب واحد سازمانی"
+                          onclick="viewFancyBox('/app/view/core/organization/organizationSelectAuthorize.html','70%','90%')"></span>
+                    <input class="form-control searchFilter col-sm-10 float-left" disabled type="text" id="txtSearchOrganizationTitle" placeholder="واحد سازمانی..." />
                 </div>
             </div>
             <div class="card-body">
@@ -201,18 +219,6 @@
                             <th>واحد سازمانی
                                 <i class="fa fa-sort-up sort-grid" order="organization.title,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="organization.title,desc"></i>
-                            </th>
-                            <th>مدرک نحصیلی
-                                <i class="fa fa-sort-up sort-grid" order="educationLevel.title,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="educationLevel.title,desc"></i>
-                            </th>
-                            <th>وضعیت نظام وظیفه
-                                <i class="fa fa-sort-up sort-grid" order="militaryServiceStatus.title,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="militaryServiceStatus.title,desc"></i>
-                            </th>
-                            <th>کدملی
-                                <i class="fa fa-sort-up sort-grid" order="nationalCode,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="nationalCode,desc"></i>
                             </th>
                             <th>موبایل
                                 <i class="fa fa-sort-up sort-grid" order="mobile,asc"></i>
@@ -249,20 +255,16 @@
                                             </h2>
                                         </td>
                                         <td>${organization.title}</td>
-                                        <td>
-                                            {{if educationLevel}}
-                                                ${educationLevel.title}
-                                            {{/if}}
-                                        </td>
-                                        <td>
-                                            {{if militaryServiceStatus}}
-                                                ${militaryServiceStatus.title}
-                                            {{/if}}
-                                        </td>
-                                        <td>${nationalCode}</td>
                                         <td>${mobile}</td>
                                         <td>${telephone}</td>
                                     </tr>
+
+
+
+
+
+
+
 
 
                         </script>
@@ -287,8 +289,7 @@
         <span class="float-left pt-2"> مورد &nbsp;</span>
 
         <select id="cmbPageSize" class="float-left" style="height: 35px;border-radius: 8px;cursor: pointer">
-            <option value="5">5</option>
-            <option value="8" selected>8</option>
+            <option value="5" selected>5</option>
             <option value="10">10</option>
             <option value="50">50</option>
             <option value="100">100</option>

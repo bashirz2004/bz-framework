@@ -24,6 +24,7 @@ public interface IUserRepository extends JpaRepository<User, Long> {
             " and e.personel.firstname like COALESCE(cast('%'||:firstname||'%' AS text), '%'||e.personel.firstname)||'%'  " +
             " and e.personel.lastname like COALESCE(cast('%'||:lastname||'%' AS text), '%'||e.personel.lastname)||'%' " +
             " and case when e.personel.nationalCode is null then 'foo' else e.personel.nationalCode end like '%' || coalesce(cast( :nationalCode as text), case when e.personel.nationalCode is null then 'foo' else e.personel.nationalCode end) || '%'" +
+            " and e.personel.mobile like COALESCE(cast('%'||:mobile||'%' AS text), '%'||e.personel.mobile)||'%' " +
             " and e.personel.organization.id =  CASE WHEN :organizationId > 0L THEN :organizationId ELSE e.personel.organization.id END " +
             " and e.username like COALESCE(cast('%'||:username||'%' AS text), '%'||e.username)||'%'  " +
             " and e.accountNonExpired = CASE WHEN :accountNonExpired is null THEN e.accountNonExpired ELSE :accountNonExpired END " +
@@ -33,6 +34,7 @@ public interface IUserRepository extends JpaRepository<User, Long> {
     Page<User> searchUser(@Param("firstname") String firstname,
                           @Param("lastname") String lastname,
                           @Param("nationalCode") String nationalCode,
+                          @Param("mobile") String mobile,
                           @Param("organizationId") Long organizationId,
                           @Param("username") String username,
                           @Param("accountNonExpired") Boolean accountNonExpired,

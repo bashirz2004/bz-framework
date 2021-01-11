@@ -23,8 +23,8 @@ public interface IPersonelRepository extends JpaRepository<Personel, Long> {
             " and case when e.educationLevel is null then 1 else e.educationLevel.id end = CASE WHEN :educationLevelId > 0L THEN :educationLevelId ELSE case when e.educationLevel is null then 1 else e.educationLevel.id end END " +
             " and case when e.militaryServiceStatus is null then 1 else e.militaryServiceStatus.id end = CASE WHEN :militaryServiceStatusId > 0L THEN :militaryServiceStatusId ELSE case when e.militaryServiceStatus is null then 1 else e.militaryServiceStatus.id end END " +
             " and case when e.address is null then 'foo' else e.address end like '%' || coalesce(cast( :address as text), case when e.address is null then 'foo' else e.address end) || '%'" +
-            " and case when e.telephone is null then 'foo' else e.telephone end like '%' || coalesce(cast( :telephone as text), case when e.telephone is null then 'foo' else e.telephone end)" +
-            " and case when e.mobile is null then 'foo' else e.mobile end like '%' || coalesce(cast( :mobile as text), case when e.mobile is null then 'foo' else e.mobile end)" +
+            " and case when e.telephone is null then 'foo' else e.telephone end like '%' || coalesce(cast( :telephone as text), case when e.telephone is null then 'foo' else e.telephone end) || '%'" +
+            " and case when e.mobile is null then 'foo' else e.mobile end like '%' || coalesce(cast( :mobile as text), case when e.mobile is null then 'foo' else e.mobile end) || '%'" +
             " and e.organization.id =  CASE WHEN :organizationId > 0L THEN :organizationId ELSE e.organization.id END ")
     Page<Personel> searchPersonel(@Param("firstname") String firstname,
                                   @Param("lastname") String lastname,
@@ -41,6 +41,7 @@ public interface IPersonelRepository extends JpaRepository<Personel, Long> {
                                   @Param("mobile") String mobile,
                                   @Param("organizationId") Long organizationId,
                                   Pageable pageable);
+
     Personel findByEmailEquals(String email);
 
     Personel findByMobileEquals(String mobile);

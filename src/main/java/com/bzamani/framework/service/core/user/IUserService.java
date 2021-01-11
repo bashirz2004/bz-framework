@@ -31,6 +31,7 @@ public interface IUserService extends IGenericService<User, Long> {
     Map<String, Object> searchUser(String firstname,
                                    String lastname,
                                    String nationalCode,
+                                   String mobile,
                                    Long organizationId,
                                    String username,
                                    Boolean accountNonExpired,
