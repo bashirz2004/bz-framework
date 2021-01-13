@@ -848,7 +848,7 @@ a.bg-danger:focus, a.bg-danger:hover, button.bg-danger:focus, button.bg-danger:h
 .card {
 	border: 1px solid #f0f0f0;
 	margin-bottom: 1.875rem;
-	background-color: #b0e4fda3;
+	background-color: white;
 }
 
 .card-body {
@@ -7327,7 +7327,7 @@ html.menu-opened body {
 
 .post-author img {
 	border-radius: 100%;
-	width: 28px;
+	width: 40px;
 	margin-left: 5px;
 }
 

@@ -71,7 +71,14 @@
             });
         }
 
-        function loadIframe(src) {
+        function loadIframe(src,code) {
+            $(".menuItem").css("backgroundColor", "#00121e");
+            $(".menuItem > a").css("color", "white");
+            $(".menuItem > a").css("fontWeight", "normal");
+            $("#menu_" + code).css("backgroundColor", "#00d0f1");
+            $("#menu_" + code).css("border-radius", "3px");
+            $("#menu_" + code + '> a').css("color", "black");
+            $("#menu_" + code + '> a').css("fontWeight", "bold");
             $("#myIframe").attr("src", contextPath + src);
         }
 
@@ -247,12 +254,13 @@
             <div id="menuList" class="sidebar-menu">
                 <script id="menuTemplate" type="text/x-jquery-tmpl">
                     <ul>
-                        <li>
-                            <a onclick="loadIframe('${src}')" href="javascript:void(0)">
+                        <li id="menu_${code}" class="menuItem">
+                            <a onclick="loadIframe('${src}','${code}')" href="javascript:void(0)">
                                 <i style="color:#c6b17e" class= "${iconClass}"></i><span>${title}</span>
                             </a>
                         </li>
                     </ul>
+
 
 
 
@@ -275,7 +283,7 @@
 
     <!-- Page+ Wrapper -->
     <div class="page-wrapper">
-        <div class="content container-fluid">
+        <div class="content">
             <iframe id="myIframe" src="view/core/charts.html" width="100%" height="590px" class="windowIframe"
                     style="border: none;overflow: hidden" webkitallowfullscreen="true"
                     mozallowfullscreen="true"></iframe>
