@@ -83,6 +83,7 @@
         var searchFilters = {
             "searchBox": '',
             "categoryId": -1,
+            "confirmed": null,
             "sort": "id,desc",
             "page": 0,
             "size": 8
@@ -99,6 +100,14 @@
             $('.searchFilter').keydown(function (e) {
                 if (e.which == 13)  // the enter key code
                     searchPost();
+            });
+
+            $('#cmbSearchConfirmed').change(function () {
+                if ($(this).val() == -1)
+                    searchFilters.confirmed = null;
+                else
+                    searchFilters.confirmed = $(this).val();
+                searchPost();
             });
 
             fillCategories();
@@ -122,7 +131,6 @@
 
         function searchPost() {
             searchFilters.searchBox = $("#txtSearchBox").val();
-            searchFilters.categoryId = $("#hiddenFieldSearchCategoryId").val();
             refreshGrid();
         }
 
@@ -131,11 +139,14 @@
             searchFilters = {
                 "searchBox": '',
                 "categoryId": -1,
+                "confirmed": null,
                 "sort": "id,desc",
                 "page": 0,
                 "size": 8
             };
             $('.searchFilter').val('');
+            $(".categoryElement").css("backgroundColor", "white");
+            $(".categoryElement").css("color", "black");
             refreshGrid();
         }
 
@@ -325,21 +336,28 @@
         }
 
         function selectCategory(id) {
-            $('#hiddenFieldSearchCategoryId').val(id);
-            searchPost();
+            searchFilters.categoryId = id;
+            refreshGrid();
+
+            $(".categoryElement").css("backgroundColor", "white");
+            $(".categoryElement").css("color", "black");
+            $("#category_" + id).css("backgroundColor", "#00d0f1");
+            $("#category_" + id).css("border-radius", "3px");
+            $("#category_" + id).css("color", "white");
+            $("#category_" + id).css("fontWeight", "bold");
         }
 
 
     </script>
 </head>
-<body style="background-color: #00121e;overflow: hidden">
+<body style="background-color: #00121e;">
 
 <!-- Main Wrapper -->
 <div class="main-wrapper">
 
     <!-- Page Content -->
     <div class="content">
-        <div style="margin-left: 1em;margin-right: 1em">
+        <div style="margin-left: 1em;margin-right: 1em;">
             <div class="row">
                 <!-- Blog Sidebar -->
                 <div class="col-lg-3 col-md-12 sidebar-right theiaStickySidebar">
@@ -347,32 +365,35 @@
                     <!-- Search -->
                     <div class="card search-widget">
                         <div class="card-body">
-                            <form class="search-form">
-                                <div class="input-group">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-info  btn-sm" onclick="newPost()"> پست جدید
-                                        </button>
-                                    </div>
+                            <div class="input-group">
+                                <div class="input-group-append">
+                                    <button class="btn btn-info  btn-sm"> پست جدید
+                                    </button>
                                 </div>
+                            </div>
 
-                                <div class="input-group pt-1">
-                                    <input type="text" placeholder="عبارت جستجو ... " class="form-control searchFilter"
-                                           id="txtSearchBox">
-                                    <div class="input-group-append">
-                                        <button onclick="searchPost()" class="btn btn-primary"><i
-                                                class="fa fa-search"></i>
-                                        </button>
-                                    </div>
+                            <div class="input-group pt-1">
+                                <div class="input-group-append">
+                                    <button onclick="clearSearch()" class="btn btn-secondary"><i
+                                            class="fa fa-eraser"></i>
+                                    </button>
                                 </div>
-                                <div class="input-group pt-1">
-                                    <select class="form-control searchFilter" id="cmbSearchConfirmed">
-                                        <option id="-1">...</option>
-                                        <option id="true">تایید شده</option>
-                                        <option id="false">در انتظار تایید</option>
-                                    </select>
+                                <input type="text" placeholder="عبارت جستجو ... " class="form-control searchFilter"
+                                       id="txtSearchBox">
+                                <div class="input-group-append">
+                                    <button onclick="searchPost()" class="btn btn-primary"><i
+                                            class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="input-group pt-1">
+                                <select class="form-control searchFilter" id="cmbSearchConfirmed">
+                                    <option value="-1">فیلتر براساس وضعیت</option>
+                                    <option value="true">تایید شده</option>
+                                    <option value="false">در انتظار تایید</option>
+                                </select>
 
-                                </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                     <!-- /Search -->
@@ -380,13 +401,18 @@
                     <!-- Categories -->
                     <div class="card category-widget">
                         <div class="card-header">
-                            <h4 class="card-title"> دسته‌بندی </h4>
+                            <h4 class="card-title"> دسته‌بندی پست ها </h4>
                         </div>
                         <div class="card-body">
-                            <input type="hidden" id="hiddenFieldSearchCategoryId" class="searchFilter"/>
                             <ul class="categories" id="categoryList">
                                 <script id="categoryTemplate" type="text/x-jquery-tmpl">
-                                <li><a onclick="selectCategory(${id})">${title}<span></span></a></li>
+                                <li id="category_${id}" class="categoryElement" style="cursor:pointer" onclick="selectCategory(${id})">
+                                       <a> ${title} </a>
+                                </li>
+
+
+
+
 
 
 
@@ -415,30 +441,39 @@
                                 </div>
                                 <div class="blog-content">
                                     <ul class="entry-meta meta-item col-sm-12 float-left">
-                                        <li class="col-lg-6 col-sm-12 float-left">
-                                            <div class="post-author">
-                                                <a href="doctor-profile.html">
-                                                    <img src= {{if author.male && author.fileCode==null}}"/app/assets/img/man.png"{{/if}}
+                                        <div class="blog-info clearfix">
+                                            <div class="post-left">
+                                                <ul>
+                                                    <li class="col-md-6 col-sm-12 float-left">
+                                                        <div class="post-author">
+                                                            <a href="doctor-profile.html">
+                                                            <img src= {{if author.male && author.fileCode==null}}"/app/assets/img/man.png"{{/if}}
                                                               {{if !author.male && author.fileCode==null}}"/app/assets/img/woman.png"{{/if}}
                                                               {{if author.fileCode!=null}}"/app/rest/core/file/download/${author.fileCode}/false"{{/if}}
-                                                        alt="Post Author">
-                                                    <span class="badge badge-pill bg-secondary" style="color:white">${author.firstname} ${author.lastname}</span></a>
+                                                               alt="Post Author">
+                                                            <span>${author.firstname} ${author.lastname}</span></a>
+                                                        </div>
+                                                    </li>
+                                                    <li class="col-md-4 col-sm-12 float-left"><i class="far fa-calendar"></i>${createDateShamsi}</li>
+                                                    <li class="col-md-3 col-sm-12 float-left"><i class="far fa-comments"></i>${commentsCount} نظر</li>
+                                                    <li class="col-md-2 col-sm-12 float-left"><i class="fa fa-heart text-danger"></i>${likesCount}</li>
+                                                    <li style="display:flex;white-space:nowrap;" class="col-md-12 col-sm-12 float-left"><i class="fa fa-tags"></i>${category.title}</li>
+                                                </ul>
                                             </div>
-                                        </li>
-                                        <li class="col-lg-6 col-sm-12 float-left">
-                                            ${createDateShamsi}&nbsp;
-                                            <i class="fa fa-comments" title="تعداد نظرات"></i>${commentsCount}&nbsp;
-                                            <i class="fa fa-heart text-danger"  title="تعداد لایک ها"></i>${likesCount}&nbsp;
-                                        </li>
+									    </div>
                                     </ul>
-                                    <h3 class="blog-title"><a href="blog-details.html">${title}</a></h3>
-                                    <p class="mb-0">${body}</p>
+                                    <h3 class="blog-title"><a href="blog-details.html" style="font-weight:bolder">${title}</a></h3>
+                                    <p class="mb-0">${body.substring(0,40)} ... </p>
                                     <button class="btn btn-danger  btn-sm" onclick="deleteEntity(${id})">حذف</button>
                                     <button class="btn btn-warning  btn-sm" onclick="loadEntity(${id})">ویرایش</button>
                                     {{if !confirmed}}<button class="btn btn-primary  btn-sm" onclick="confirmPublish(${id})"><span style="color: black">تایید انتشار</span></button>{{/if}}
                                 </div>
                             </div>
                         </div>
+
+
+
+
 
 
                         </script>

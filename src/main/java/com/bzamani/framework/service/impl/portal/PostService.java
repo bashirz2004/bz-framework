@@ -53,7 +53,7 @@ public class PostService extends GenericService<Post, Long> implements IPostServ
     }
 
     @Override
-    public Map<String, Object> searchPost(String searchBox, Long categoryId, int page, int size, String[] sort) {
+    public Map<String, Object> searchPost(String searchBox, Long categoryId, Boolean confirmed, int page, int size, String[] sort) {
         List<Sort.Order> orders = new ArrayList<Sort.Order>();
         if (sort[0].contains(",")) {
             for (String sortOrder : sort) {
@@ -65,7 +65,7 @@ public class PostService extends GenericService<Post, Long> implements IPostServ
         }
         List<Post> posts = new ArrayList<Post>();
         Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
-        Page<Post> pageTuts = iPostRepository.searchPost(searchBox, categoryId, pagingSort);
+        Page<Post> pageTuts = iPostRepository.searchPost(searchBox, categoryId, confirmed, pagingSort);
         posts = pageTuts.getContent();
         Map<String, Object> response = new HashMap<>();
         response.put("entityList", posts);

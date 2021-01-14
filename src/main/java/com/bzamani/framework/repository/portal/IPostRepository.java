@@ -17,7 +17,8 @@ public interface IPostRepository extends JpaRepository<Post, Long> {
             "      or e.body like '%' || coalesce(cast( :searchBox as text), e.body ) || '%'" +
             "     or e.tags like '%' || coalesce(cast( :searchBox as text), e.tags ) || '%'" +
             "     )" +
-            " and e.category.id =  CASE WHEN :categoryId > 0L THEN :categoryId ELSE e.category.id END ")
-    Page<Post> searchPost(@Param("searchBox") String searchBox, @Param("categoryId") Long categoryId, Pageable pageable);
+            " and e.category.id =  CASE WHEN :categoryId > 0L THEN :categoryId ELSE e.category.id END " +
+            " and e.confirmed = CASE WHEN :confirmed is null THEN e.confirmed ELSE :confirmed END  ")
+    Page<Post> searchPost(@Param("searchBox") String searchBox, @Param("categoryId") Long categoryId, @Param("confirmed") Boolean confirmed, Pageable pageable);
 
 }

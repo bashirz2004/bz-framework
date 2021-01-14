@@ -7,6 +7,6 @@ import java.util.Map;
 
 public interface IPostService extends IGenericService<Post, Long> {
 
-    Map<String, Object> searchPost(String searchBox, Long categoryId, int page, int size, String[] sort);
+    Map<String, Object> searchPost(String searchBox, Long categoryId,Boolean confirmed, int page, int size, String[] sort);
 
 }

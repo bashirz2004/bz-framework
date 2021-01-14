@@ -42,10 +42,11 @@ public class PostController extends BaseController {
     @GetMapping("/searchPost")
     public Map<String, Object> searchPost(@RequestParam(required = false) String searchBox,
                                           @RequestParam(required = false) Long categoryId,
+                                          @RequestParam(required = false) Boolean confirmed,
                                           @RequestParam(defaultValue = "0") int page,
                                           @RequestParam(defaultValue = "8") int size,
                                           @RequestParam(defaultValue = "id,desc") String[] sort) {
 
-        return iPostService.searchPost(searchBox, categoryId, page, size, sort);
+        return iPostService.searchPost(searchBox, categoryId, confirmed, page, size, sort);
     }
 }
