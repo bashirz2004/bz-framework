@@ -505,6 +505,7 @@
                                     <p class="mb-0">${body.substring(0,40)} ... </p>
                                     <a href="#delete_post_modal" onclick="rowSelected(${id})"  data-toggle="modal" class="btn btn-danger  btn-sm">حذف</a>
                                     <a href="#add_edit_modal" onclick="loadEntity(${id})"  data-toggle="modal" class="btn btn-warning  btn-sm">ویرایش</a>
+                                    <a href="#comments_modal" onclick="rowSelected(${id})"  data-toggle="modal" class="btn btn-secondary  btn-sm">بررسی نظرات</a>
                                     {{if !confirmed}}<button class="btn btn-success  btn-sm" onclick="confirmPost(${id})"><span style="color: black">تایید انتشار</span></button>{{/if}}
                                 </div>
                             </div>

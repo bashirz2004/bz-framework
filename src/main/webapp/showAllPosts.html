@@ -273,7 +273,9 @@
                         showMessage("با تشکر", "نظر شما ثبت شد و پس از بررسی مدیریت، منتشر می گردد.", "success");
                     },
                     error: function (err) {
-
+                        if (err.responseText.includes("Full authentication is required")) {
+                            document.location = "login.html";
+                        }
                     }
                 });
             } else showMessage("هنوز نظری نداده اید.", "", "warning");
@@ -299,6 +301,9 @@
                 error: function (err) {
                     if (err.responseText.includes("unq_liker_post"))
                         showMessage("شما قبلا این پست را لایک کرده اید.", "", "warning");
+                    if (err.responseText.includes("Full authentication is required")) {
+                        document.location = "login.html";
+                    }
                 }
             });
         }
