@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>مشاهده کامل پست </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+
+    <!-- Favicons -->
+    <link href="/app/assets/img/favicon.png" rel="icon">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/app/assets/bzamani/bootstrap.css">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="/app/assets/admin/plugins/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/app/assets/plugins/fontawesome/css/all.min.css">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/app/assets/bzamani/style-admin.css">
+
+    <!-- jQuery -->
+    <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
+    <script src="/app/assets/bzamani/jquery.template.js"></script>
+    <script src="/app/assets/bzamani/grid-utility.js"></script>
+    <script src="/app/assets/bzamani/general-utility.js"></script>
+
+    <!-- pace mask -->
+    <script>
+        paceOptions = {
+            elements: false,
+            document: true, // disabled
+            eventLag: false, // disabled
+            ajax: {
+                trackMethods: ['GET', 'POST', 'DELETE', 'PUT'],
+                trackWebSockets: false
+            },
+            restartOnPushState: true,
+            restartOnRequestAfter: true
+        };
+        $(function () {
+            $("body").prepend("<div class='pace-cover' style='display: none;'></div>");
+            Pace.on("start", function () {
+                $(".pace-cover").fadeIn();
+            });
+            Pace.on("done", function () {
+                $(".pace-cover").fadeOut();
+            });
+        });
+    </script>
+    <script type="text/javascript" src="/app/assets/bzamani/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
+    <style>
+        .pace-cover {
+            position: fixed;
+            left: 0px;
+            top: 1px;
+            width: 100%;
+            height: 100%;
+            z-index: 99999;
+            background: rgba(0, 0, 0, 0.4);
+        }
+    </style>
+    <!-- /pace mask -->
+
+    <!-- sweet alert -->
+    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/sweetalert/sweetalert2.min.css">
+    <!-- /sweet alert -->
+
+    <script>
+        var contextPath = "/app";
+        var postId = getUrlParameter("postId");
+
+        $(function () {
+            loadEntity(postId);
+        });
+
+        function loadEntity(id) {
+            $.ajax({
+                url: contextPath + "/api/public/portal/post/load/" + id,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                type: 'GET',
+                success: function (res) {
+                    $("#hiddenFieldId").val(res.id);
+                    $("#postDetailDiv > div").remove();
+                    $("#postDetailTemplate").tmpl(res).appendTo("#postDetailDiv");
+                    loadAllComments($("#hiddenFieldId").val());
+                },
+                error: function (err) {
+                }
+            });
+        }
+
+
+        function loadAllComments(postId) {
+            $.getJSON(contextPath + "/api/public/portal/comment/getAllConfirmedCommentsByPostId", {
+                "postId": postId,
+                "sort": "id,desc",
+                "page": 0,
+                "size": 1000
+            }, function (res) {
+                $("#commentsList > li").remove();
+                $("#commentsTemplate").tmpl(res.entityList).appendTo("#commentsList");
+            });
+        }
+
+        function saveComment() {
+            if ($('#txtComment').val() != '') {
+                $.ajax({
+                    url: contextPath + "/rest/portal/comment/save",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        id: '',
+                        post: {id: $("#hiddenFieldId").val()},
+                        description: $('#txtComment').val()
+                    }),
+                    type: 'POST',
+                    success: function (res) {
+                        showMessage("با تشکر", "نظر شما ثبت شد و پس از بررسی مدیریت، منتشر می گردد.", "success");
+                    },
+                    error: function (err) {
+                        if (err.responseText.includes("Full authentication is required")) {
+                            document.location = "login.html";
+                        }
+                    }
+                });
+            } else showMessage("هنوز نظری نداده اید.", "", "warning");
+        }
+
+        function returnToHomePage() {
+            document.location = "index.html"
+        }
+
+        function likePost(postId) {
+            $.ajax({
+                url: contextPath + "/rest/portal/like/save",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify({
+                    id: '',
+                    post: {id: postId}
+                }),
+                type: 'POST',
+                success: function (res) {
+                    loadEntity(postId);
+                },
+                error: function (err) {
+                    if (err.responseText.includes("unq_liker_post"))
+                        showMessage("شما قبلا این پست را لایک کرده اید.", "", "warning");
+                    if (err.responseText.includes("Full authentication is required")) {
+                        document.location = "login.html";
+                    }
+                }
+            });
+        }
+
+    </script>
+</head>
+<body style="background-color: #00121e;">
+
+<!-- Main Wrapper -->
+<div class="main-wrapper">
+    <!-- show Post -->
+    <input type="hidden" id="hiddenFieldId"/>
+    <div class="row">
+        <div class="col-sm-12">
+            <!-- Blog Details-->
+            <div class="blog-view" id="postDetailDiv">
+                <script id="postDetailTemplate" type="text/x-jquery-tmpl">
+                                <div class="blog blog-single-post">
+                                    <div class="text-center">
+                                        <a href="javascript:void(0);">
+                                        <img src={{if fileCode!=null}}"/app/rest/core/file/download/${fileCode}/false" style="max-width: 100%"
+                                                 {{else}}"/app/assets/img/3.png"
+                                                 {{/if}}
+                                             alt="post Image"></a>
+                                    </div>
+                                    <h3 class="blog-title">${title}</h3>
+                                    <div class="blog-info clearfix">
+                                        <div class="post-left">
+                                            <ul>
+                                                <li>
+                                                    <div class="post-author">
+                                                        <a href="javascript:void(0);"><img src= {{if author.male && author.fileCode==null}}"/app/assets/img/man.png"{{/if}}
+                                                              {{if !author.male && author.fileCode==null}}"/app/assets/img/woman.png"{{/if}}
+                                                              {{if author.fileCode!=null}}"/app/rest/core/file/download/${author.fileCode}/false"{{/if}}
+                                                               alt="Post Author"><span>${author.firstname} ${author.lastname}</span></a>
+                                                    </div>
+                                                </li>
+                                                <li><i class="far fa-calendar"></i>${createDateShamsi}</li>
+                                                <li><i class="far fa-comments"></i>${commentsCount} نظر</li>
+                                                <li><i class="fa fa-tags"></i>${category.title}</li>
+                                                <li><i class="fa fa-heart text-danger" style="cursor:pointer" onclick="likePost(${id})"></i>${likesCount}</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="blog-content">
+                                        <p>${body}</p>
+                                    </div>
+                                </div>
+
+
+
+
+
+                </script>
+            </div>
+            <!-- /Blog Details-->
+
+            <div class="card blog-comments clearfix">
+                <div class="card-header">
+                    <h4 class="card-title">نظرات کاربران</h4>
+                </div>
+                <div class="card-body pb-0">
+                    <ul class="comments-list" id="commentsList">
+                        <script id="commentsTemplate" type="text/x-jquery-tmpl">
+                                        <li>
+                                            <div class="comment">
+                                                <div class="comment-author">
+                                                    <img class="avatar" src= {{if commenter.male && commenter.fileCode==null}}"/app/assets/img/man.png"{{/if}}
+                                                         {{if !commenter.male && author.fileCode==null}}"/app/assets/img/woman.png"{{/if}}
+                                                         {{if commenter.fileCode!=null}}"/app/rest/core/file/download/${commenter.fileCode}/false"{{/if}}
+                                                         alt="commenter image">
+                                                </div>
+                                                <div class="comment-block">
+													<span class="comment-by">
+														<span class="blog-author-name">${commenter.firstname} ${commenter.lastname}</span>
+													</span>
+                                                    <p>${description}</p>
+                                                    <p class="blog-date">${createDateShamsi}</p>
+                                                </div>
+                                            </div>
+                                        </li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        </script>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card new-comment clearfix">
+                <div class="card-header">
+                    <h4 class="card-title">ارسال نظر</h4>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label> نظر </label>
+                        <textarea rows="4" class="form-control" id="txtComment"></textarea>
+                    </div>
+                    <div class="submit-section">
+                        <button class="btn btn-primary submit-btn" onclick="saveComment()"> ارسال
+                        </button>
+                        <button class="btn btn-success submit-btn" onclick="returnToHomePage()"> بازگشت به صفحه اصلی
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- /show Post -->
+
+</div>
+<!-- /Main Wrapper -->
+
+
+<!-- Bootstrap Core JS -->
+<script src="/app/assets/admin/chart/popper.min.js"></script>
+
+<!-- Bootstrap Core JS -->
+<script src="/app/assets/bzamani/bootstrap.min.js"></script>
+
+<!-- Custom JS -->
+<script src="/app/assets/admin/chart/script.js"></script>
+
+</body>
+</html>

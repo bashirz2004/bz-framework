@@ -16,9 +16,11 @@ public interface IPostService extends IGenericService<Post, Long> {
     @Transactional
     boolean checkAndDeleteByEntityId(Long id) throws Exception;
 
-    Map<String, Object> searchPost(String searchBox, Long categoryId, Boolean confirmed, int page, int size, String[] sort);
+    Map<String, Object> searchPost(String searchBox, Long categoryId, Boolean confirmedPost, Boolean confirmedComment, int page, int size, String[] sort);
 
     List<PostCategoryDto> getAllUsedPostCategories(String searchBox, Boolean confirmed);
 
     Integer confirmPost(long id) throws Exception;
+
+    Map<String, Object> get4RecentPosts(int page, int size, String[] sort);
 }

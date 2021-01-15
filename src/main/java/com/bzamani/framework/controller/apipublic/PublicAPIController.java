@@ -2,13 +2,18 @@ package com.bzamani.framework.controller.apipublic;
 
 import com.bzamani.framework.common.utility.SecurityUtility;
 import com.bzamani.framework.controller.core.BaseController;
+import com.bzamani.framework.dto.PostCategoryDto;
 import com.bzamani.framework.dto.SelfUserRegistrationDto;
 import com.bzamani.framework.model.core.baseinfo.BaseInfo;
 import com.bzamani.framework.model.core.user.User;
 import com.bzamani.framework.model.doctor.Doctor;
+import com.bzamani.framework.model.portal.Comment;
+import com.bzamani.framework.model.portal.Post;
 import com.bzamani.framework.service.core.baseinfo.IBaseInfoService;
 import com.bzamani.framework.service.core.user.IUserService;
 import com.bzamani.framework.service.doctor.IDoctorService;
+import com.bzamani.framework.service.portal.ICommentService;
+import com.bzamani.framework.service.portal.IPostService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +33,14 @@ public class PublicAPIController extends BaseController {
     @Autowired
     IBaseInfoService iBaseInfoService;
 
+    @Autowired
+    IPostService iPostService;
+
+    @Autowired
+    ICommentService iCommentService;
+
     @GetMapping("/doctor/load/{id}")
-    public Doctor load(@PathVariable("id") long id) {
+    public Doctor loadDoctor(@PathVariable("id") long id) {
         return iDoctorService.loadByEntityId(id);
     }
 
@@ -79,11 +90,61 @@ public class PublicAPIController extends BaseController {
 
     @PostMapping("/user/sendPasswordToUserEmail")
     public void sendPasswordToUserEmail(@RequestParam String email) throws Exception {
-         iUserService.sendPasswordToUserEmail(email);
+        iUserService.sendPasswordToUserEmail(email);
     }
 
     @GetMapping(value = "/user/getUserNewPassword", produces = "text/plain;charset=UTF-8")
     public String getUserNewPassword(@RequestParam String mobile) throws Exception {
         return iUserService.updatePasswordOfUserByMobile(mobile, RandomStringUtils.random(5, true, true));
     }
+
+    @GetMapping("/portal/post/searchPost")
+    public Map<String, Object> searchPost(@RequestParam(required = false) String searchBox,
+                                          @RequestParam(required = false) Long categoryId,
+                                          @RequestParam(required = false) Boolean confirmedPost,
+                                          @RequestParam(required = false) Boolean confirmedComment,
+                                          @RequestParam(defaultValue = "0") int page,
+                                          @RequestParam(defaultValue = "8") int size,
+                                          @RequestParam(defaultValue = "id,desc") String[] sort) {
+
+        return iPostService.searchPost(searchBox, categoryId, confirmedPost, confirmedComment, page, size, sort);
+    }
+
+    @GetMapping("/portal/post/get4RecentPosts")
+    public Map<String, Object> get4RecentPosts(@RequestParam(defaultValue = "0") int page,
+                                               @RequestParam(defaultValue = "4") int size,
+                                               @RequestParam(defaultValue = "id,desc") String[] sort) {
+
+        return iPostService.get4RecentPosts(page, size, sort);
+    }
+
+    @GetMapping("/portal/post/getAllUsedPostCategories")
+    public List<PostCategoryDto> getAllUsedCategories(@RequestParam(required = false) String searchBox,
+                                                      @RequestParam(required = false) Boolean confirmed) {
+        return iPostService.getAllUsedPostCategories(searchBox, confirmed);
+    }
+
+    @GetMapping("/portal/post/load/{id}")
+    public Post loadPost(@PathVariable("id") long id) {
+        return iPostService.loadByEntityId(id);
+    }
+
+    @PostMapping("/portal/comment/save")
+    public Comment save(@RequestBody Comment comment) throws Exception {
+        return iCommentService.save(comment);
+    }
+
+    @DeleteMapping("/portal/comment/delete/{id}")
+    public boolean delete(@PathVariable("id") long id) throws Exception {
+        return iCommentService.deleteByEntityId(id);
+    }
+
+    @GetMapping("/portal/comment/getAllConfirmedCommentsByPostId")
+    public Map<String, Object> getAllConfirmedCommentsByPostId(@RequestParam(required = false) Long postId,
+                                                               @RequestParam(defaultValue = "0") int page,
+                                                               @RequestParam(defaultValue = "8") int size,
+                                                               @RequestParam(defaultValue = "id,desc") String[] sort) {
+        return iCommentService.getAllConfirmedCommentsByPostId(postId, page, size, sort);
+    }
+
 }

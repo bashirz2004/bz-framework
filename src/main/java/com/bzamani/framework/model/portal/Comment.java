@@ -28,7 +28,7 @@ public class Comment extends BaseEntity {
 
     @NotNull
     @Column(name = "create_date_shamsi")
-    private String create_date_shamsi;
+    private String createDateShamsi;
 
     @NotNull
     @Column(name = "description", length = 255)
@@ -37,8 +37,4 @@ public class Comment extends BaseEntity {
     @NotNull
     @Column(name = "confirmed")
     private boolean confirmed;
-
-    @Formula(" (select count(*) from por_like b where b.comment_id = id) ")
-    private Long likesCount;
-
 }

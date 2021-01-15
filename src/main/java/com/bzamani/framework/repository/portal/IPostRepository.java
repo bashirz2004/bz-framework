@@ -15,14 +15,15 @@ import java.util.List;
 
 @Repository
 public interface IPostRepository extends JpaRepository<Post, Long> {
-    @Query("SELECT e FROM Post e where 1 = 1  " +
+    @Query("SELECT distinct e FROM Post e left join Comment c on c.post.id = e.id  where 1 = 1 " +
             " and (  e.title like '%' || coalesce(cast( :searchBox as text), e.title ) || '%'" +
             "      or e.body like '%' || coalesce(cast( :searchBox as text), e.body ) || '%'" +
             "     or e.tags like '%' || coalesce(cast( :searchBox as text), e.tags ) || '%'" +
             "     )" +
             " and e.category.id =  CASE WHEN :categoryId > 0L THEN :categoryId ELSE e.category.id END " +
-            " and e.confirmed = CASE WHEN :confirmed is null THEN e.confirmed ELSE :confirmed END  ")
-    Page<Post> searchPost(@Param("searchBox") String searchBox, @Param("categoryId") Long categoryId, @Param("confirmed") Boolean confirmed, Pageable pageable);
+            " and e.confirmed = CASE WHEN :confirmedPost is null THEN e.confirmed ELSE :confirmedPost END  " +
+            " and coalesce(c.confirmed,true) = CASE WHEN :confirmedComment is null THEN coalesce(c.confirmed,true) ELSE :confirmedComment END ")
+    Page<Post> searchPost(@Param("searchBox") String searchBox, @Param("categoryId") Long categoryId, @Param("confirmedPost") Boolean confirmedPost, @Param("confirmedComment") Boolean confirmedComment, Pageable pageable);
 
     @Query("select new com.bzamani.framework.dto.PostCategoryDto(e.id as id," +
             "                                                    e.title as title," +
@@ -47,6 +48,9 @@ public interface IPostRepository extends JpaRepository<Post, Long> {
     @Modifying
     @Query("update Post e set e.confirmed = true , e.lastUpdateDate = :now where e.id = :id ")
     Integer confirmPost(@Param("id") long id, @Param("now") Date now);
+
+    @Query("from Post e where e.confirmed = true")
+    Page<Post> get4RecentPosts(Pageable pageable);
 
 
 }

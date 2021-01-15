@@ -67,7 +67,7 @@ public class PostService extends GenericService<Post, Long> implements IPostServ
     }
 
     @Override
-    public Map<String, Object> searchPost(String searchBox, Long categoryId, Boolean confirmed, int page, int size, String[] sort) {
+    public Map<String, Object> searchPost(String searchBox, Long categoryId, Boolean confirmedPost, Boolean confirmedComment, int page, int size, String[] sort) {
         List<Sort.Order> orders = new ArrayList<Sort.Order>();
         if (sort[0].contains(",")) {
             for (String sortOrder : sort) {
@@ -79,7 +79,7 @@ public class PostService extends GenericService<Post, Long> implements IPostServ
         }
         List<Post> posts = new ArrayList<Post>();
         Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
-        Page<Post> pageTuts = iPostRepository.searchPost(searchBox, categoryId, confirmed, pagingSort);
+        Page<Post> pageTuts = iPostRepository.searchPost(searchBox, categoryId, confirmedPost, confirmedComment, pagingSort);
         posts = pageTuts.getContent();
         Map<String, Object> response = new HashMap<>();
         response.put("entityList", posts);
@@ -114,6 +114,29 @@ public class PostService extends GenericService<Post, Long> implements IPostServ
         long authorOrganizationId = loadByEntityId(postId).getAuthor().getOrganization().getId();
         if (iOrganizationService.userHaveAccessToOrganization(authenticatedUserId, authorOrganizationId) == false)
             throw new Exception("شما به واحد سازمانی کاربر ثبت کننده پست دسترسی ندارید.");
+    }
+
+    @Override
+    public Map<String, Object> get4RecentPosts(int page, int size, String[] sort) {
+        List<Sort.Order> orders = new ArrayList<Sort.Order>();
+        if (sort[0].contains(",")) {
+            for (String sortOrder : sort) {
+                String[] _sort = sortOrder.split(",");
+                orders.add(new Sort.Order(getSortDirection(_sort[1]), _sort[0]));
+            }
+        } else {
+            orders.add(new Sort.Order(getSortDirection(sort[1]), sort[0]));
+        }
+        List<Post> posts = new ArrayList<Post>();
+        Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
+        Page<Post> pageTuts = iPostRepository.get4RecentPosts(pagingSort);
+        posts = pageTuts.getContent();
+        Map<String, Object> response = new HashMap<>();
+        response.put("entityList", posts);
+        response.put("currentPage", pageTuts.getNumber());
+        response.put("totalRecords", pageTuts.getTotalElements());
+        response.put("totalPages", pageTuts.getTotalPages());
+        return response;
     }
 
 }

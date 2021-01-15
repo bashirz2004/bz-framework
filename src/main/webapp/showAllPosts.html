@@ -83,8 +83,7 @@
         var searchFilters = {
             "searchBox": '',
             "categoryId": -1,
-            "confirmedPost": null,
-            "confirmedComment": null,
+            "confirmed": null,
             "sort": "id,desc",
             "page": 0,
             "size": 8
@@ -104,19 +103,11 @@
                     searchPost();
             });
 
-            $('#cmbSearchConfirmedPost').change(function () {
+            $('#cmbSearchConfirmed').change(function () {
                 if ($(this).val() == -1)
-                    searchFilters.confirmedPost = null;
+                    searchFilters.confirmed = null;
                 else
-                    searchFilters.confirmedPost = $(this).val();
-                searchPost();
-            });
-
-            $('#cmbSearchConfirmedComment').change(function () {
-                if ($(this).val() == -1)
-                    searchFilters.confirmedComment = null;
-                else
-                    searchFilters.confirmedComment = $(this).val();
+                    searchFilters.confirmed = $(this).val();
                 searchPost();
             });
 
@@ -141,8 +132,7 @@
             searchFilters = {
                 "searchBox": '',
                 "categoryId": -1,
-                "confirmedPost": null,
-                "confirmedComment": null,
+                "confirmed": null,
                 "sort": "id,desc",
                 "page": 0,
                 "size": 8
@@ -166,25 +156,6 @@
         function goTo(pageNumber) {
             searchFilters.page = pageNumber;
             refreshGrid();
-        }
-
-        function deleteEntity() {
-            if ($('#hiddenFieldId').val() > 0)
-                $.ajax({
-                    url: contextPath + "/rest/portal/post/delete/" + $('#hiddenFieldId').val(),
-                    contentType: "application/json;charset=utf-8",
-                    dataType: "json",
-                    type: 'DELETE',
-                    success: function (res) {
-                        refreshGrid();
-                        showMessage("حذف با موفقیت انجام شد.", "", "success");
-                    },
-                    error: function (err) {
-                        showMessage("خطا در حذف اطلاعات", "", "error");
-                    }
-                });
-            else
-                showMessage("هیچ رکوردی انتخاب نشده است.", "", "error");
         }
 
         function refreshGrid() {
@@ -240,59 +211,14 @@
                 dataType: "json",
                 type: 'GET',
                 success: function (res) {
-                    setInputsByEntity(res);
+                    $("#hiddenFieldId").val(res.id);
+                    $("#postDetailDiv > div").remove();
+                    $("#postDetailTemplate").tmpl(res).appendTo("#postDetailDiv");
+                    loadAllComments($("#hiddenFieldId").val());
                 },
                 error: function (err) {
                 }
             });
-        }
-
-        function saveEntity() {
-            if (validateForm() == 'ok') {
-                setEntityFromInputs();
-                $.ajax({
-                    url: contextPath + "/rest/portal/post/save",
-                    contentType: "application/json;charset=utf-8",
-                    dataType: "json",
-                    data: JSON.stringify(entityData),
-                    type: 'POST',
-                    success: function (res) {
-                        $('#hiddenFieldId').val(res.id);
-                        showMessage("ثبت با موفقیت انجام شد.", "", "success");
-                        $('#btnCloseModal').click();
-                    },
-                    error: function (err) {
-
-                    }
-                });
-            } else showMessage(validateForm(), "", "warning");
-        }
-
-        function confirmPost(id) {
-            if (id > 0) {
-                $.ajax({
-                    url: contextPath + "/rest/portal/post/confirmPost/" + id,
-                    contentType: "application/json;charset=utf-8",
-                    dataType: "json",
-                    type: 'POST',
-                    success: function (res) {
-                        if (res > 0) {
-                            showMessage("تایید انتشار پست، با موفقیت انجام شد.", "", "success");
-                            refreshGrid();
-                        }
-                    },
-                    error: function (err) {
-                        showMessage("خطا", err.responseJSON.message, "error");
-
-                    }
-                });
-            } else showMessage("هیچ پستی انتخاب نشده است.", "", "warning");
-        }
-
-        function validateForm() {
-            if ($('#txtTitle').val() == '' || !$('#cmbCategory').val() > 0 || $('#txtBody').val() == '' || $('#hiddenFieldfileCode').val() == '')
-                return "پرکردن فیلدهای ستاره دار الزامی است.";
-            else return 'ok';
         }
 
         function clearEntity() {
@@ -307,56 +233,6 @@
             };
         }
 
-        function setInputsByEntity(entity) {
-            $("#hiddenFieldId").val(entity.id);
-            $("#txtTitle").val(entity.title);
-            $("#txtBody").val(entity.body);
-            $("#txtTags").val(entity.tags);
-            $("#cmbCategory").val(entity.category.id);
-            entity.allowLikeOrComment == true ? $('#enable_switch').prop("checked", "checked") : $('#enable_switch').prop("checked", "");
-            if (entity.fileCode != null && entity.fileCode.length > 0) {
-                $('#uploadedImage').prop("src", "/app/rest/core/file/download/" + entity.fileCode + "/false");
-                $("#hiddenFieldfileCode").val(entity.fileCode);
-            }
-        }
-
-        function setEntityFromInputs() {
-            clearEntity();
-            entityData = {
-                "id": $('#hiddenFieldId').val(),
-                "title": $('#txtTitle').val(),
-                "body": $('#txtBody').val(),
-                "category": {"id": $('#cmbCategory').val()},
-                "tags": $('#txtTags').val(),
-                "allowLikeOrComment": $('#enable_switch').prop("checked"),
-                "fileCode": $('#hiddenFieldfileCode').val()
-            }
-        }
-
-        function uploadFile() {
-            $.ajax({
-                url: contextPath + "/rest/core/file/upload",
-                type: "POST",
-                data: new FormData($("#upload-file-form")[0]),
-                enctype: 'multipart/form-data',
-                processData: false,
-                contentType: false,
-                cache: false,
-                dataType: "text",
-                success: function (fileCode) {
-                    if (fileCode != null && fileCode.length > 0) {
-                        $('#uploadedImage').prop("src", "/app/rest/core/file/download/" + fileCode + "/false");
-                        $('#hiddenFieldfileCode').val(fileCode);
-                        $('.submit-btn').show();
-                    }
-                },
-                error: function (err) {
-                    if (err.responseText && err.responseText.toLowerCase().includes('SizeLimitExceededException'.toLowerCase()))
-                        showMessage('خطا! حداکثر حجم تصویر شما می تواند ' + parseInt(err.responseText.substring(err.responseText.lastIndexOf('(') + 1, err.responseText.lastIndexOf(')'))) / 1048576 + ' مگابایت باشد.', "", "error");
-                }
-            });
-        }
-
         function selectCategory(id) {
             searchFilters.categoryId = id;
             refreshGrid();
@@ -369,6 +245,63 @@
             $("#category_" + id).css("fontWeight", "bold");
         }
 
+        function loadAllComments(postId) {
+            $.getJSON(contextPath + "/api/public/portal/comment/getAllConfirmedCommentsByPostId", {
+                "postId": postId,
+                "sort": "id,desc",
+                "page": 0,
+                "size": 1000
+            }, function (res) {
+                $("#commentsList > li").remove();
+                $("#commentsTemplate").tmpl(res.entityList).appendTo("#commentsList");
+            });
+        }
+
+        function saveComment() {
+            if ($('#txtComment').val() != '') {
+                $.ajax({
+                    url: contextPath + "/rest/portal/comment/save",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        id: '',
+                        post: {id: $("#hiddenFieldId").val()},
+                        description: $('#txtComment').val()
+                    }),
+                    type: 'POST',
+                    success: function (res) {
+                        showMessage("با تشکر", "نظر شما ثبت شد و پس از بررسی مدیریت، منتشر می گردد.", "success");
+                    },
+                    error: function (err) {
+
+                    }
+                });
+            } else showMessage("هنوز نظری نداده اید.", "", "warning");
+        }
+
+        function returnToHomePage() {
+            document.location = "index.html"
+        }
+
+        function likePost(postId) {
+            $.ajax({
+                url: contextPath + "/rest/portal/like/save",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify({
+                    id: '',
+                    post: {id: postId}
+                }),
+                type: 'POST',
+                success: function (res) {
+                    refreshGrid();
+                },
+                error: function (err) {
+                    if (err.responseText.includes("unq_liker_post"))
+                        showMessage("شما قبلا این پست را لایک کرده اید.", "", "warning");
+                }
+            });
+        }
 
     </script>
 </head>
@@ -403,28 +336,9 @@
                                     </button>
                                 </div>
                             </div>
-                            <div class="input-group pt-1">
-                                <select class="form-control searchFilter" id="cmbSearchConfirmedPost">
-                                    <option value="-1"> وضعیت پست ...</option>
-                                    <option value="true">تایید شده</option>
-                                    <option value="false">در انتظار تایید</option>
-                                </select>
-                            </div>
-                            <div class="input-group pt-1">
-                                <select class="form-control searchFilter" id="cmbSearchConfirmedComment">
-                                    <option value="-1"> وضعیت نظر ...</option>
-                                    <option value="true">تایید شده</option>
-                                    <option value="false">در انتظار تایید</option>
-                                </select>
-
-                            </div>
                         </div>
                     </div>
                     <!-- /Search -->
-
-                    <a href="#add_edit_modal" data-toggle="modal" title="افزودن پست جدید"
-                       onclick="clearEntity();clearInputs();"
-                       class="btn btn-info  btn-sm mb-4"><i class="fa fa-plus"></i></a>
 
                     <!-- Categories -->
                     <div class="card category-widget">
@@ -456,10 +370,14 @@
 
 
 
+
+
                                 </script>
                             </ul>
                         </div>
                     </div>
+                    <button class="btn btn-success submit-btn" onclick="returnToHomePage()"> بازگشت به صفحه اصلی
+                    </button>
                     <!-- /Categories -->
 
                 </div>
@@ -495,20 +413,38 @@
                                                     </li>
                                                     <li style="display:flex;white-space:nowrap;" class="col-md-4 col-sm-12 float-left"><i class="far fa-calendar"></i>${createDateShamsi}</li>
                                                     <li style="display:flex;white-space:nowrap;" class="col-md-3 col-sm-12 float-left">{{if allowLikeOrComment}}<i class="far fa-comments"></i>${commentsCount} نظر{{/if}}</li>
-                                                    <li style="display:flex;white-space:nowrap;" class="col-md-2 col-sm-12 float-left">{{if allowLikeOrComment}}<i class="fa fa-heart text-danger"></i>${likesCount}{{/if}}</li>
+                                                    <li style="display:flex;white-space:nowrap;" class="col-md-2 col-sm-12 float-left">{{if allowLikeOrComment}}<i class="fa fa-heart text-danger" style="cursor:pointer" onclick="likePost(${id})"></i>${likesCount}{{/if}}</li>
                                                     <li style="display:flex;white-space:nowrap;" class="col-md-12 col-sm-12 float-left"><i class="fa fa-tags"></i>${category.title}</li>
                                                 </ul>
                                             </div>
 									    </div>
                                     </ul>
-                                    <h3 class="blog-title"><a style="font-weight:bolder">${title}</a></h3>
+                                    <h3 class="blog-title"><a href="showPostDetail.html?postId=${id}" style="font-weight:bolder">${title}</a></h3>
                                     <p class="mb-0">${body.substring(0,40)} ... </p>
-                                    <a href="#delete_post_modal" onclick="rowSelected(${id})"  data-toggle="modal" class="btn btn-danger  btn-sm">حذف</a>
-                                    <a href="#add_edit_modal" onclick="loadEntity(${id})"  data-toggle="modal" class="btn btn-warning  btn-sm">ویرایش</a>
-                                    {{if !confirmed}}<button class="btn btn-success  btn-sm" onclick="confirmPost(${id})"><span style="color: black">تایید انتشار</span></button>{{/if}}
+                                    <a href="#add_edit_modal" onclick="loadEntity(${id})"  data-toggle="modal" class="btn btn-warning  btn-sm">مشاهده</a>
                                 </div>
                             </div>
                         </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -557,123 +493,143 @@
     </div>
     <!-- /Page Content -->
 
-    <!-- Add/Edit Modal -->
+    <!-- show full post Modal -->
     <div class="modal fade custom-modal" id="add_edit_modal" aria-hidden="true" role="dialog">
         <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title text-white">افزودن / ویرایش پست </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCloseModal"
-                            onclick="clearSearch()">
+                    <h5 class="modal-title text-white">مشاهده کامل پست </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCloseModal">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <!-- Add Post -->
+                    <!-- show Post -->
                     <input type="hidden" id="hiddenFieldId"/>
-                    <div class="service-fields mb-3">
-                        <div class="row">
-                            <div class="col-lg-4">
-                                <div class="form-group">
-                                    <label>عنوان پست <span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" id="txtTitle" required="">
-                                </div>
-                            </div>
-                            <div class="col-lg-2">
-                                <div class="form-group">
-                                    <label>دسته بندی<span class="text-danger">*</span></label>
-                                    <select id="cmbCategory" class="form-control"> </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="form-group">
-                                    <label>کلمات کلیدی</label>
-                                    <input class="form-control" type="text" id="txtTags">
-                                </div>
-                            </div>
-                            <div class="col-lg-2">
-                                <div class="form-group float-left">
-                                    <label>امکان نطردهی<span class="text-danger">*</span></label>
-                                    <div class="status-toggle">
-                                        <label class="switch" for="enable_switch">
-                                            <input type="checkbox" id="enable_switch">
-                                            <span class="slider round"></span>
-                                        </label>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <!-- Blog Details-->
+                            <div class="blog-view" id="postDetailDiv">
+                                <script id="postDetailTemplate" type="text/x-jquery-tmpl">
+                                <div class="blog blog-single-post">
+                                    <div class="text-center">
+                                        <a href="javascript:void(0);">
+                                        <img src={{if fileCode!=null}}"/app/rest/core/file/download/${fileCode}/false" style="max-width: 100%"
+                                                 {{else}}"/app/assets/img/3.png"
+                                                 {{/if}}
+                                             alt="post Image"></a>
+                                    </div>
+                                    <h3 class="blog-title">${title}</h3>
+                                    <div class="blog-info clearfix">
+                                        <div class="post-left">
+                                            <ul>
+                                                <li>
+                                                    <div class="post-author">
+                                                        <a href="javascript:void(0);"><img src= {{if author.male && author.fileCode==null}}"/app/assets/img/man.png"{{/if}}
+                                                              {{if !author.male && author.fileCode==null}}"/app/assets/img/woman.png"{{/if}}
+                                                              {{if author.fileCode!=null}}"/app/rest/core/file/download/${author.fileCode}/false"{{/if}}
+                                                               alt="Post Author"><span>${author.firstname} ${author.lastname}</span></a>
+                                                    </div>
+                                                </li>
+                                                <li><i class="far fa-calendar"></i>${createDateShamsi}</li>
+                                                <li><i class="far fa-comments"></i>${commentsCount} نظر</li>
+                                                <li><i class="fa fa-tags"></i>${category.title}</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="blog-content">
+                                        <p>${body}</p>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="service-fields mb-3">
-                            <div class="row">
-                                <div class="col-lg-12">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                </script>
+                            </div>
+                            <!-- /Blog Details-->
+
+                            <div class="card blog-comments clearfix">
+                                <div class="card-header">
+                                    <h4 class="card-title">نظرات کاربران</h4>
+                                </div>
+                                <div class="card-body pb-0">
+                                    <ul class="comments-list" id="commentsList">
+                                        <script id="commentsTemplate" type="text/x-jquery-tmpl">
+                                        <li>
+                                            <div class="comment">
+                                                <div class="comment-author">
+                                                    <img class="avatar" src= {{if commenter.male && commenter.fileCode==null}}"/app/assets/img/man.png"{{/if}}
+                                                         {{if !commenter.male && author.fileCode==null}}"/app/assets/img/woman.png"{{/if}}
+                                                         {{if commenter.fileCode!=null}}"/app/rest/core/file/download/${commenter.fileCode}/false"{{/if}}
+                                                         alt="commenter image">
+                                                </div>
+                                                <div class="comment-block">
+													<span class="comment-by">
+														<span class="blog-author-name">${commenter.firstname} ${commenter.lastname}</span>
+													</span>
+                                                    <p>${description}</p>
+                                                    <p class="blog-date">${createDateShamsi}</p>
+                                                </div>
+                                            </div>
+                                        </li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                        </script>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="card new-comment clearfix">
+                                <div class="card-header">
+                                    <h4 class="card-title">ارسال نظر</h4>
+                                </div>
+                                <div class="card-body">
                                     <div class="form-group">
-                                        <label>شرح پست<span class="text-danger">*</span></label>
-                                        <textarea type="text" id="txtBody" class="form-control service-desc"
-                                                  maxlength="4000"></textarea>
+                                        <label> نظر </label>
+                                        <textarea rows="4" class="form-control" id="txtComment"></textarea>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="service-fields mb-3">
-                            <div class="row">
-
-                            </div>
-                        </div>
-
-                        <div class="service-fields mb-3">
-                            <div class="row">
-                                <div class="col-lg-4">
                                     <div class="submit-section">
-                                        <button class="btn btn-primary submit-btn" onclick="saveEntity()"> ثبت
+                                        <button class="btn btn-primary submit-btn" onclick="saveComment()"> ارسال
                                         </button>
                                     </div>
                                 </div>
-                                <div class="col-lg-8">
-                                    <div class="service-upload">
-                                        <i class="fas fa-cloud-upload-alt"></i>
-                                        <span>بارگذاری تصویر<span class="text-danger">*</span></span>
-                                        <form id="upload-file-form">
-                                            <input id="upload-file-input" type="file" name="attachment"
-                                                   accept="image/*"
-                                                   onchange="uploadFile();$('.submit-btn').hide();"/>
-                                            <img id="uploadedImage"
-                                                 style="width: 8em;border: 1px solid;border-radius: 10px;box-shadow: 0px 0px 10px 1px;"/>
-                                            <input type="hidden" id="hiddenFieldfileCode"/>
-                                        </form>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
-                    <!-- /Add Post -->
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- /Add/Edit Modal -->
 
-    <!-- Delete Modal -->
-    <div class="modal fade" id="delete_post_modal" aria-hidden="true" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="form-content p-2">
-                        <h4 class="modal-title">تاییدیه حذف</h4>
-                        <p class="mb-4">آیا از حدف اطمینان کافی دارید؟</p>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal"
-                                onclick="deleteEntity()">بله
-                        </button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"
-                                onclick="rowDeselected()">خیر
-                        </button>
-                    </div>
+                    <!-- /show Post -->
                 </div>
             </div>
         </div>
     </div>
-    <!-- /Delete Modal -->
+    <!-- /show full post Modal -->
 
 </div>
 <!-- /Main Wrapper -->
