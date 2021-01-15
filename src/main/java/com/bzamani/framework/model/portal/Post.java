@@ -50,8 +50,8 @@ public class Post extends BaseEntity {
     private boolean confirmed;
 
     @NotNull
-    @Column(name = "allow_comments")
-    private boolean allowComments;
+    @Column(name = "allow_like_comment")
+    private boolean allowLikeOrComment;
 
     @Formula(" (select count(*) from por_comment b where b.confirmed = true and b.post_id = id) ")
     private Long commentsCount;

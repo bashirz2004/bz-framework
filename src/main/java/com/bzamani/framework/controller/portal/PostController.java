@@ -1,6 +1,8 @@
 package com.bzamani.framework.controller.portal;
 
 import com.bzamani.framework.controller.core.BaseController;
+import com.bzamani.framework.dto.PostCategoryDto;
+import com.bzamani.framework.model.core.baseinfo.BaseInfo;
 import com.bzamani.framework.model.portal.Post;
 import com.bzamani.framework.service.portal.IPostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +21,20 @@ public class PostController extends BaseController {
 
     @PreAuthorize("hasRole('17')")
     @PostMapping("/save")
-    public Post save(@RequestBody Post post) {
-        return iPostService.save(post);
+    public Post save(@RequestBody Post post) throws Exception {
+        return iPostService.checkAndSave(post);
+    }
+
+    @PreAuthorize("hasRole('18')")
+    @PostMapping("/confirmPost/{id}")
+    public Integer confirmPost(@PathVariable long id) throws Exception {
+        return iPostService.confirmPost(id);
     }
 
     @PreAuthorize("hasRole('17')")
     @DeleteMapping("/delete/{id}")
-    public boolean delete(@PathVariable("id") long id) {
-        return iPostService.deleteByEntityId(id);
+    public boolean delete(@PathVariable("id") long id) throws Exception {
+        return iPostService.checkAndDeleteByEntityId(id);
     }
 
     @GetMapping("/load/{id}")
@@ -48,5 +56,11 @@ public class PostController extends BaseController {
                                           @RequestParam(defaultValue = "id,desc") String[] sort) {
 
         return iPostService.searchPost(searchBox, categoryId, confirmed, page, size, sort);
+    }
+
+    @GetMapping("/getAllUsedPostCategories")
+    public List<PostCategoryDto> getAllUsedCategories(@RequestParam(required = false) String searchBox,
+                                                      @RequestParam(required = false) Boolean confirmed) {
+        return iPostService.getAllUsedPostCategories(searchBox, confirmed);
     }
 }

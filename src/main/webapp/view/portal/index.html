@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="/app/assets/plugins/fontawesome/css/all.min.css">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="/app/assets/bzamani/style-public.css">
+    <link rel="stylesheet" href="/app/assets/bzamani/style-admin.css">
 
     <!-- jQuery -->
     <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
@@ -76,7 +76,7 @@
             "category": {"id": ''},
             "body": '',
             "tags": '',
-            "allowComments": '',
+            "allowLikeOrComment": '',
             "fileCode": ''
         };
 
@@ -91,6 +91,7 @@
 
         $(function () {
             refreshGrid();
+            fillComboBaseInfo(4, "cmbCategory");
 
             $('#cmbPageSize').change(function () {
                 searchFilters.size = $(this).val();
@@ -110,22 +111,14 @@
                 searchPost();
             });
 
-            fillCategories();
+            reFillCategories();
 
         });
 
-        function fillCategories() {
-            $.ajax({
-                type: "GET",
-                url: contextPath + "/api/public/baseinfo/getAllByHeaderId/4",
-                contentType: "application/json;charset=utf-8",
-                dataType: "json",
-                success: function (res) {
-                    $("#categoryList > li").remove();
-                    $("#categoryTemplate").tmpl(res).appendTo("#categoryList");
-                },
-                error: function (err) {
-                }
+        function reFillCategories() {
+            $.getJSON(contextPath + "/rest/portal/post/getAllUsedPostCategories", searchFilters, function (res) {
+                $("#categoryList > li").remove();
+                $("#categoryTemplate").tmpl(res).appendTo("#categoryList");
             });
         }
 
@@ -185,6 +178,7 @@
         }
 
         function refreshGrid() {
+            reFillCategories();
             $.getJSON(contextPath + "/rest/portal/post/searchPost", searchFilters, function (entities) {
                 if (entities.entityList) {
                     $('#postList :not(script)').remove();
@@ -258,17 +252,35 @@
                         $('#btnCloseModal').click();
                     },
                     error: function (err) {
-                        /* if (err.responseText.includes("unq_personel_mobile"))
-                             showMessage("خطا. شماره موبایل تکراری است.", "", "error");
-                         if (err.responseText.includes("unq_personel_email"))
-                             showMessage("خطا. ایمیل تکراری است.", "", "error");*/
+
                     }
                 });
             } else showMessage(validateForm(), "", "warning");
         }
 
+        function confirmPost(id) {
+            if (id > 0) {
+                $.ajax({
+                    url: contextPath + "/rest/portal/post/confirmPost/" + id,
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    type: 'POST',
+                    success: function (res) {
+                        if (res > 0) {
+                            showMessage("تایید انتشار پست، با موفقیت انجام شد.", "", "success");
+                            refreshGrid();
+                        }
+                    },
+                    error: function (err) {
+                        showMessage("خطا", err.responseJSON.message, "error");
+
+                    }
+                });
+            } else showMessage("هیچ پستی انتخاب نشده است.", "", "warning");
+        }
+
         function validateForm() {
-            if ($('#txtTitle').val() == '' || $('#cmbCategory').val() > 0 || $('#body').val() == '')
+            if ($('#txtTitle').val() == '' || !$('#cmbCategory').val() > 0 || $('#txtBody').val() == '' || $('#hiddenFieldfileCode').val() == '')
                 return "پرکردن فیلدهای ستاره دار الزامی است.";
             else return 'ok';
         }
@@ -280,7 +292,7 @@
                 "category": {"id": ''},
                 "body": '',
                 "tags": '',
-                "allowComments": '',
+                "allowLikeOrComment": '',
                 "fileCode": ''
             };
         }
@@ -291,7 +303,7 @@
             $("#txtBody").val(entity.body);
             $("#txtTags").val(entity.tags);
             $("#cmbCategory").val(entity.category.id);
-            entity.allowComments == true ? $('#enable_switch').prop("checked", "checked") : $('#enable_switch').prop("checked", "");
+            entity.allowLikeOrComment == true ? $('#enable_switch').prop("checked", "checked") : $('#enable_switch').prop("checked", "");
             if (entity.fileCode != null && entity.fileCode.length > 0) {
                 $('#uploadedImage').prop("src", "/app/rest/core/file/download/" + entity.fileCode + "/false");
                 $("#hiddenFieldfileCode").val(entity.fileCode);
@@ -306,7 +318,7 @@
                 "body": $('#txtBody').val(),
                 "category": {"id": $('#cmbCategory').val()},
                 "tags": $('#txtTags').val(),
-                "allowComments": $('#enable_switch').prop("checked"),
+                "allowLikeOrComment": $('#enable_switch').prop("checked"),
                 "fileCode": $('#hiddenFieldfileCode').val()
             }
         }
@@ -356,8 +368,8 @@
 <div class="main-wrapper">
 
     <!-- Page Content -->
-    <div class="content">
-        <div style="margin-left: 1em;margin-right: 1em;">
+    <div class="content" style="margin-right: -.1em">
+        <div style="margin-left: 1em;margin-right: 1em;margin-top: 1em">
             <div class="row">
                 <!-- Blog Sidebar -->
                 <div class="col-lg-3 col-md-12 sidebar-right theiaStickySidebar">
@@ -365,23 +377,18 @@
                     <!-- Search -->
                     <div class="card search-widget">
                         <div class="card-body">
-                            <div class="input-group">
-                                <div class="input-group-append">
-                                    <button class="btn btn-info  btn-sm"> پست جدید
-                                    </button>
-                                </div>
-                            </div>
-
                             <div class="input-group pt-1">
                                 <div class="input-group-append">
-                                    <button onclick="clearSearch()" class="btn btn-secondary"><i
+                                    <button onclick="clearSearch()" class="btn btn-secondary"
+                                            style="border-radius: 0px 7px 7px 0px"><i
                                             class="fa fa-eraser"></i>
                                     </button>
                                 </div>
                                 <input type="text" placeholder="عبارت جستجو ... " class="form-control searchFilter"
                                        id="txtSearchBox">
                                 <div class="input-group-append">
-                                    <button onclick="searchPost()" class="btn btn-primary"><i
+                                    <button onclick="searchPost()" class="btn btn-primary"
+                                            style="border-radius: 7px 0px 0px 7px"><i
                                             class="fa fa-search"></i>
                                     </button>
                                 </div>
@@ -398,17 +405,32 @@
                     </div>
                     <!-- /Search -->
 
+                    <a href="#add_edit_modal" data-toggle="modal" title="افزودن پست جدید"
+                       onclick="clearEntity();clearInputs();"
+                       class="btn btn-info  btn-sm mb-4"><i class="fa fa-plus"></i></a>
+
                     <!-- Categories -->
                     <div class="card category-widget">
                         <div class="card-header">
-                            <h4 class="card-title"> دسته‌بندی پست ها </h4>
+                            <h5 class="card-title"> دسته‌بندی پست ها </h5>
                         </div>
                         <div class="card-body">
                             <ul class="categories" id="categoryList">
                                 <script id="categoryTemplate" type="text/x-jquery-tmpl">
                                 <li id="category_${id}" class="categoryElement" style="cursor:pointer" onclick="selectCategory(${id})">
-                                       <a> ${title} </a>
+                                       <a> ${title} (${numberOfPosts})</a>
                                 </li>
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -454,9 +476,9 @@
                                                             <span>${author.firstname} ${author.lastname}</span></a>
                                                         </div>
                                                     </li>
-                                                    <li class="col-md-4 col-sm-12 float-left"><i class="far fa-calendar"></i>${createDateShamsi}</li>
-                                                    <li class="col-md-3 col-sm-12 float-left"><i class="far fa-comments"></i>${commentsCount} نظر</li>
-                                                    <li class="col-md-2 col-sm-12 float-left"><i class="fa fa-heart text-danger"></i>${likesCount}</li>
+                                                    <li style="display:flex;white-space:nowrap;" class="col-md-4 col-sm-12 float-left"><i class="far fa-calendar"></i>${createDateShamsi}</li>
+                                                    <li style="display:flex;white-space:nowrap;" class="col-md-3 col-sm-12 float-left">{{if allowLikeOrComment}}<i class="far fa-comments"></i>${commentsCount} نظر{{/if}}</li>
+                                                    <li style="display:flex;white-space:nowrap;" class="col-md-2 col-sm-12 float-left">{{if allowLikeOrComment}}<i class="fa fa-heart text-danger"></i>${likesCount}{{/if}}</li>
                                                     <li style="display:flex;white-space:nowrap;" class="col-md-12 col-sm-12 float-left"><i class="fa fa-tags"></i>${category.title}</li>
                                                 </ul>
                                             </div>
@@ -464,12 +486,23 @@
                                     </ul>
                                     <h3 class="blog-title"><a href="blog-details.html" style="font-weight:bolder">${title}</a></h3>
                                     <p class="mb-0">${body.substring(0,40)} ... </p>
-                                    <button class="btn btn-danger  btn-sm" onclick="deleteEntity(${id})">حذف</button>
-                                    <button class="btn btn-warning  btn-sm" onclick="loadEntity(${id})">ویرایش</button>
-                                    {{if !confirmed}}<button class="btn btn-primary  btn-sm" onclick="confirmPublish(${id})"><span style="color: black">تایید انتشار</span></button>{{/if}}
+                                    <a href="#delete_post_modal" onclick="rowSelected(${id})"  data-toggle="modal" class="btn btn-danger  btn-sm">حذف</a>
+                                    <a href="#add_edit_modal" onclick="loadEntity(${id})"  data-toggle="modal" class="btn btn-warning  btn-sm">ویرایش</a>
+                                    {{if !confirmed}}<button class="btn btn-success  btn-sm" onclick="confirmPost(${id})"><span style="color: black">تایید انتشار</span></button>{{/if}}
                                 </div>
                             </div>
                         </div>
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -482,7 +515,7 @@
                 </div>
             </div>
             <!-- paging -->
-            <div class="row col-lg-12 col-md-12 card-body pl-5" style="text-align: center!important;">
+            <div class="row col-lg-12 col-md-12 card-body pl-5" style="text-align: center!important;color: white">
                 <span class="float-left pt-2"> صفحه &nbsp;</span>
                 <span class="float-left pt-2" id="currentPage"></span>
                 <span class="float-left pt-2">&nbsp;از &nbsp;</span>
@@ -506,6 +539,124 @@
         </div>
     </div>
     <!-- /Page Content -->
+
+    <!-- Add/Edit Modal -->
+    <div class="modal fade custom-modal" id="add_edit_modal" aria-hidden="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-white">افزودن / ویرایش پست </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCloseModal"
+                            onclick="clearSearch()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Add Post -->
+                    <input type="hidden" id="hiddenFieldId"/>
+                    <div class="service-fields mb-3">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label>عنوان پست <span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="txtTitle" required="">
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label>دسته بندی<span class="text-danger">*</span></label>
+                                    <select id="cmbCategory" class="form-control"> </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label>کلمات کلیدی</label>
+                                    <input class="form-control" type="text" id="txtTags">
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group float-left">
+                                    <label>امکان نطردهی<span class="text-danger">*</span></label>
+                                    <div class="status-toggle">
+                                        <label class="switch" for="enable_switch">
+                                            <input type="checkbox" id="enable_switch">
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="service-fields mb-3">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label>شرح پست<span class="text-danger">*</span></label>
+                                        <textarea type="text" id="txtBody" class="form-control service-desc"
+                                                  maxlength="4000"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="service-fields mb-3">
+                            <div class="row">
+
+                            </div>
+                        </div>
+
+                        <div class="service-fields mb-3">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="submit-section">
+                                        <button class="btn btn-primary submit-btn" onclick="saveEntity()"> ثبت
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-lg-8">
+                                    <div class="service-upload">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <span>بارگذاری تصویر<span class="text-danger">*</span></span>
+                                        <form id="upload-file-form">
+                                            <input id="upload-file-input" type="file" name="attachment"
+                                                   accept="image/*"
+                                                   onchange="uploadFile();$('.submit-btn').hide();"/>
+                                            <img id="uploadedImage"
+                                                 style="width: 8em;border: 1px solid;border-radius: 10px;box-shadow: 0px 0px 10px 1px;"/>
+                                            <input type="hidden" id="hiddenFieldfileCode"/>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Add Post -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Add/Edit Modal -->
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="delete_post_modal" aria-hidden="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="form-content p-2">
+                        <h4 class="modal-title">تاییدیه حذف</h4>
+                        <p class="mb-4">آیا از حدف اطمینان کافی دارید؟</p>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                onclick="deleteEntity()">بله
+                        </button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"
+                                onclick="rowDeselected()">خیر
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Delete Modal -->
 
 </div>
 <!-- /Main Wrapper -->

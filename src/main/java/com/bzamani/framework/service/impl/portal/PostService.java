@@ -1,8 +1,13 @@
 package com.bzamani.framework.service.impl.portal;
 
+import com.bzamani.framework.common.utility.DateUtility;
+import com.bzamani.framework.common.utility.SecurityUtility;
+import com.bzamani.framework.dto.PostCategoryDto;
 import com.bzamani.framework.model.portal.Post;
 import com.bzamani.framework.repository.portal.IPostRepository;
 import com.bzamani.framework.service.core.file.IFileAttachmentService;
+import com.bzamani.framework.service.core.organization.IOrganizationService;
+import com.bzamani.framework.service.core.user.IUserService;
 import com.bzamani.framework.service.impl.core.GenericService;
 import com.bzamani.framework.service.portal.IPostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +19,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class PostService extends GenericService<Post, Long> implements IPostService {
@@ -27,6 +29,12 @@ public class PostService extends GenericService<Post, Long> implements IPostServ
     @Autowired
     private IFileAttachmentService iFileAttachmentService;
 
+    @Autowired
+    private IUserService iUserService;
+
+    @Autowired
+    private IOrganizationService iOrganizationService;
+
     @Override
     protected JpaRepository<Post, Long> getGenericRepo() {
         return iPostRepository;
@@ -34,19 +42,25 @@ public class PostService extends GenericService<Post, Long> implements IPostServ
 
     @Override
     @Transactional
-    public Post save(Post post) {
+    public Post checkAndSave(Post post) throws Exception {
         post.setFileCode(post.getFileCode() == null || post.getFileCode().length() == 0 ? null : post.getFileCode());
         String oldFileCode = null;
         String newFileCode = post.getFileCode();
-        if (post.getId() != null && post.getId() > 0) //edit mode
+        if (post.getId() != null && post.getId() > 0) { //edit mode
             oldFileCode = loadByEntityId(post.getId()).getFileCode();
+            checkAccessToOrganization(post.getId());
+        }
         iFileAttachmentService.finalizeNewAndDeleteOldAttachment(newFileCode, oldFileCode);
+        post.setAuthor(iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getPersonel());
+        post.setCreateDateShamsi(DateUtility.todayShamsi());
+        post.setConfirmed(false); // pas az hargoone virayesh bayad dobare taeed shavad
         return super.save(post);
     }
 
     @Override
     @Transactional
-    public boolean deleteByEntityId(Long id) {
+    public boolean checkAndDeleteByEntityId(Long id) throws Exception {
+        checkAccessToOrganization(id);
         if (loadByEntityId(id).getFileCode() != null)
             iFileAttachmentService.finalizeNewAndDeleteOldAttachment(null, loadByEntityId(id).getFileCode());
         return super.deleteByEntityId(id);
@@ -81,6 +95,25 @@ public class PostService extends GenericService<Post, Long> implements IPostServ
         else if (direction.equals("desc"))
             return Sort.Direction.DESC;
         return Sort.Direction.ASC;
+    }
+
+    @Override
+    public List<PostCategoryDto> getAllUsedPostCategories(String searchBox, Boolean confirmed) {
+        return iPostRepository.getAllUsedPostCategories(searchBox, confirmed);
+    }
+
+    @Override
+    @Transactional
+    public Integer confirmPost(long id) throws Exception {
+        checkAccessToOrganization(id);
+        return iPostRepository.confirmPost(id, new Date());
+    }
+
+    public void checkAccessToOrganization(long postId) throws Exception {
+        long authenticatedUserId = iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getId();
+        long authorOrganizationId = loadByEntityId(postId).getAuthor().getOrganization().getId();
+        if (iOrganizationService.userHaveAccessToOrganization(authenticatedUserId, authorOrganizationId) == false)
+            throw new Exception("شما به واحد سازمانی کاربر ثبت کننده پست دسترسی ندارید.");
     }
 
 }
