@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>مشاهده کامل پست </title>
+    <title>بررسی نظرات ثبت شده روی پست</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
 
     <!-- Favicons -->
@@ -21,7 +21,6 @@
     <!-- jQuery -->
     <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
     <script src="/app/assets/bzamani/jquery.template.js"></script>
-    <script src="/app/assets/bzamani/grid-utility.js"></script>
     <script src="/app/assets/bzamani/general-utility.js"></script>
 
     <!-- pace mask -->
@@ -71,12 +70,27 @@
     <script>
         var contextPath = "/app";
         var postId = getUrlParameter("postId");
+        var searchFilters = {
+            "postId": postId,
+            "confirmed": false,
+            "sort": "id,desc",
+            "page": 0,
+            "size": 1000
+        }
 
         $(function () {
-            loadEntity(postId);
+            loadPost(postId);
+
+            $('#cmbCommentConfirmed').change(function () {
+                if ($(this).val() == -1)
+                    searchFilters.confirmed = null;
+                else
+                    searchFilters.confirmed = $(this).val();
+                getAllCommentsByPostId();
+            });
         });
 
-        function loadEntity(id) {
+        function loadPost(id) {
             $.ajax({
                 url: contextPath + "/api/public/portal/post/load/" + id,
                 contentType: "application/json;charset=utf-8",
@@ -86,7 +100,7 @@
                     $("#hiddenFieldId").val(res.id);
                     $("#postDetailDiv > div").remove();
                     $("#postDetailTemplate").tmpl(res).appendTo("#postDetailDiv");
-                    getAllConfirmedCommentsByPostId($("#hiddenFieldId").val());
+                    getAllCommentsByPostId();
                 },
                 error: function (err) {
                 }
@@ -94,72 +108,58 @@
         }
 
 
-        function getAllConfirmedCommentsByPostId(postId) {
-            $.getJSON(contextPath + "/api/public/portal/comment/getAllConfirmedCommentsByPostId", {
-                "postId": postId,
-                "sort": "id,desc",
-                "page": 0,
-                "size": 1000
-            }, function (res) {
+        function getAllCommentsByPostId() {
+            $.getJSON(contextPath + "/rest/portal/comment/getAllCommentsByPostId", searchFilters, function (res) {
+                $('#lblAllCommentsCount').html(res.totalRecords);
                 $("#commentsList > li").remove();
                 $("#commentsTemplate").tmpl(res.entityList).appendTo("#commentsList");
             });
         }
 
-        function saveComment() {
-            if ($('#txtComment').val() != '') {
-                $.ajax({
-                    url: contextPath + "/rest/portal/comment/save",
-                    contentType: "application/json;charset=utf-8",
-                    dataType: "json",
-                    data: JSON.stringify({
-                        id: '',
-                        post: {id: $("#hiddenFieldId").val()},
-                        description: $('#txtComment').val()
-                    }),
-                    type: 'POST',
-                    success: function (res) {
-                        showMessage("با تشکر", "نظر شما ثبت شد و پس از بررسی مدیریت، منتشر می گردد.", "success");
-                    },
-                    error: function (err) {
-                        if (err.responseText.includes("Full authentication is required")) {
-                            document.location = "login.html";
-                        }
-                    }
-                });
-            } else showMessage("هنوز نظری نداده اید.", "", "warning");
+        function confirmComment(id, status) {
+            $.ajax({
+                url: contextPath + "/rest/portal/comment/changeStatus/" + id + "/" + status,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                type: 'POST',
+                success: function (res) {
+                    getAllCommentsByPostId();
+                    if (res > 0 && status == true)
+                        showMessage("تایید موفق", "این نظر تایید شد و در پورتال قابل مشاهده خواهد بود.", "success");
+                    if (res > 0 && status == false)
+                        showMessage("عدم تایید موفق", "این نظر به حالت تایید نشده تغییر وضعیت داده شد و دیگر در پورتال قابل مشاهده نخواهد بود.", "success");
+                },
+                error: function (err) {
+                    showMessage("خطا", err.responseJSON.message, "error");
+                }
+            });
         }
 
-        function returnToHomePage() {
+        function returnToPosts() {
             document.location = "index.html"
         }
 
-        function likePost(postId) {
-            $.ajax({
-                url: contextPath + "/rest/portal/like/save",
-                contentType: "application/json;charset=utf-8",
-                dataType: "json",
-                data: JSON.stringify({
-                    id: '',
-                    post: {id: postId}
-                }),
-                type: 'POST',
-                success: function (res) {
-                    loadEntity(postId);
-                },
-                error: function (err) {
-                    if (err.responseText.includes("unq_liker_post"))
-                        showMessage("شما قبلا این پست را لایک کرده اید.", "", "warning");
-                    if (err.responseText.includes("Full authentication is required")) {
-                        document.location = "login.html";
+        function deleteComment(id) {
+            showConfirm('تاییدیه حذف نظر', 'آیا از این کار اطمینان دارید؟', function () {
+                $.ajax({
+                    url: contextPath + "/rest/portal/comment/delete/" + id,
+                    type: 'DELETE',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (res) {
+                        if (res == true)
+                            showMessage("نظر با موفقیت حذف شد.", "", "success");
+                        getAllCommentsByPostId();
+                    },
+                    error: function () {
+                        showMessage("خطا", err.responseJSON.message, "error");
                     }
-                }
+                });
             });
         }
 
     </script>
 </head>
-<body style="background-color: #00121e;">
+<body style="background-color: #00121e;margin-top: 1em">
 
 <!-- Main Wrapper -->
 <div class="main-wrapper">
@@ -178,7 +178,7 @@
                                                  {{/if}}
                                              alt="post Image"></a>
                                     </div>
-                                    <h3 class="blog-title">${title}</h3>
+                                    <h4 class="card-title">${title}</h4>
                                     <div class="blog-info clearfix">
                                         <div class="post-left">
                                             <ul>
@@ -190,10 +190,10 @@
                                                                alt="Post Author"><span>${author.firstname} ${author.lastname}</span></a>
                                                     </div>
                                                 </li>
-                                                <li><i class="far fa-calendar"></i>${createDateShamsi}</li>
-                                                <li><i class="far fa-comments"></i>${commentsCount} نظر</li>
-                                                <li><i class="fa fa-tags"></i>${category.title}</li>
-                                                <li><i class="fa fa-heart text-danger" style="cursor:pointer" onclick="likePost(${id})"></i>${likesCount}</li>
+                                                <li><i class="far fa-calendar text-success"></i>${createDateShamsi}</li>
+                                                <li><i class="far fa-comments"></i>${commentsCount} نظر تایید شده </li>
+                                                <li><i class="fa fa-tags text-warning"></i>${category.title}</li>
+                                                <li><i class="fa fa-heart text-danger" ></i>${likesCount}</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -201,6 +201,13 @@
                                         <p>${body}</p>
                                     </div>
                                 </div>
+
+
+
+
+
+
+
 
 
 
@@ -214,6 +221,15 @@
                 <div class="card-header">
                     <h4 class="card-title">نظرات کاربران</h4>
                 </div>
+                <div class="float-left">
+                    <select class="form-control searchFilter col-md-2 col-sm-12 float-left" id="cmbCommentConfirmed">
+                        <option value="-1"> همه نظرات</option>
+                        <option value="true">نظرات تایید شده</option>
+                        <option value="false" selected>نظرات در انتظار تایید</option>
+                    </select>
+                    <span id="lblAllCommentsCount" class="float-left">0</span>
+                    <span>نظر </span>
+                </div>
                 <div class="card-body pb-0">
                     <ul class="comments-list" id="commentsList">
                         <script id="commentsTemplate" type="text/x-jquery-tmpl">
@@ -225,12 +241,20 @@
                                                          {{if commenter.fileCode!=null}}"/app/rest/core/file/download/${commenter.fileCode}/false"{{/if}}
                                                          alt="commenter image">
                                                 </div>
-                                                <div class="comment-block">
+                                                <div class="comment-block float-left">
 													<span class="comment-by">
 														<span class="blog-author-name">${commenter.firstname} ${commenter.lastname}</span>
 													</span>
-                                                    <p>${description}</p>
                                                     <p class="blog-date">${createDateShamsi}</p>
+                                                    <p>${description}</p>
+                                                    <div style="display:flex;white-space:nowrap;">
+                                                        {{if confirmed==true}}<span class="badge badge-pill bg-info inv-badge" style="padding-top: 1em">تایید شده</span>{{/if}}
+                                                        {{if confirmed==false}}<span class="badge badge-pill bg-secondary inv-badge" style="padding-top: 1em">در انتظار تایید</span>{{/if}}
+                                                        <span class="col-md-1 col-sm-6"></span>
+                                                        {{if confirmed==false}}<a onclick="confirmComment(${id},true)"  class="btn btn-success  btn-sm mr-1">تایید نظر</a>{{/if}}
+                                                        {{if confirmed==true}}<a onclick="confirmComment(${id},false)"  class="btn btn-warning  btn-sm mr-1">رد نظر</a>{{/if}}
+                                                        <a onclick="deleteComment(${id})"  class="btn btn-danger  btn-sm mr-1">حذف</a>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </li>
@@ -250,28 +274,23 @@
 
 
 
+
+
+
+
+
+
+
                         </script>
                     </ul>
                 </div>
+                <div style="text-align: left">
+                    <button class="btn btn-secondary submit-btn col-md-2 col-sm-12" onclick="returnToPosts()">بازگشت
+                    </button>
+                </div>
             </div>
 
-            <div class="card new-comment clearfix">
-                <div class="card-header">
-                    <h4 class="card-title">ارسال نظر</h4>
-                </div>
-                <div class="card-body">
-                    <div class="form-group">
-                        <label> نظر </label>
-                        <textarea rows="4" class="form-control" id="txtComment" maxlength="255"></textarea>
-                    </div>
-                    <div class="submit-section">
-                        <button class="btn btn-primary submit-btn" onclick="saveComment()"> ارسال
-                        </button>
-                        <button class="btn btn-secondary submit-btn" onclick="returnToHomePage()"> بازگشت
-                        </button>
-                    </div>
-                </div>
-            </div>
+
         </div>
     </div>
 

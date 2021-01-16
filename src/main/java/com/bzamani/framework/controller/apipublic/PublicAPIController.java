@@ -129,16 +129,6 @@ public class PublicAPIController extends BaseController {
         return iPostService.loadByEntityId(id);
     }
 
-    @PostMapping("/portal/comment/save")
-    public Comment save(@RequestBody Comment comment) throws Exception {
-        return iCommentService.save(comment);
-    }
-
-    @DeleteMapping("/portal/comment/delete/{id}")
-    public boolean delete(@PathVariable("id") long id) throws Exception {
-        return iCommentService.deleteByEntityId(id);
-    }
-
     @GetMapping("/portal/comment/getAllConfirmedCommentsByPostId")
     public Map<String, Object> getAllConfirmedCommentsByPostId(@RequestParam(required = false) Long postId,
                                                                @RequestParam(defaultValue = "0") int page,

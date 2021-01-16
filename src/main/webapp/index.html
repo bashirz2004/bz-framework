@@ -168,13 +168,10 @@
                     <li class="has-submenu">
                         <a href="#">جستجوی پیشرفته<i class="fas fa-chevron-down"></i></a>
                         <ul class="submenu">
-                            <li><a href="public/search.html">جستجوی پزشک</a></li>
-                            <li><a href="pharmacy-search.html">جستجوی کلینیک</a></li>
-                            <li><a href="product-all.html">جستجوی محصولات</a></li>
+                            <li><a href="public/search.html">جستجوی پزشکان</a></li>
+                            <li><a href="public/search.html">جستجوی کلینیک ها</a></li>
+                            <li><a href="public/search.html">جستجوی محصولات</a></li>
                         </ul>
-                    </li>
-                    <li>
-                        <a href="cart.html">سبد خرید</a>
                     </li>
                     <li>
                         <a href="#blogFragment">‌وبلاگ</a>
@@ -473,7 +470,7 @@
                                                               {{if !author.male && author.fileCode==null}}"/app/assets/img/woman.png"{{/if}}
                                                               {{if author.fileCode!=null}}"/app/rest/core/file/download/${author.fileCode}/false"{{/if}}
                                                                alt="Post Author">
-                                            <span>${author.firstname} ${author.lastname}</span></a>
+                                            <span style="color:black">${author.firstname} ${author.lastname}</span></a>
                                     </div>
                                 </li>
                                 <li><i class="far fa-clock"></i>${createDateShamsi}</li>

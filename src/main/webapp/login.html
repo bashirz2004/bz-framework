@@ -69,7 +69,10 @@
                         if (res.personel.fileCode != null)
                             localStorage.setItem("authenticatedUserImageFileCode", res.personel.fileCode);
                         $.cookie('Authorization', "Bearer-" + res.token, {expires: 1, path: '/'});
-                        document.location.href = contextPath + "/index.html";
+                        if(document.referrer)
+                            document.location.href = document.referrer;
+                        else
+                            document.location.href = contextPath + "/index.html";
                     },
                     error: function (err) {
                         $('#g-recaptcha-response').val('');

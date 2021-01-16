@@ -215,6 +215,8 @@
                     $("#postDetailDiv > div").remove();
                     $("#postDetailTemplate").tmpl(res).appendTo("#postDetailDiv");
                     loadAllComments($("#hiddenFieldId").val());
+                    if (res.allowLikeOrComment == true)
+                        $('#addPostDiv').show();
                 },
                 error: function (err) {
                 }
@@ -377,11 +379,13 @@
 
 
 
+
+
                                 </script>
                             </ul>
                         </div>
                     </div>
-                    <button class="btn btn-success submit-btn" onclick="returnToHomePage()"> بازگشت به صفحه اصلی
+                    <button class="btn btn-secondary submit-btn" onclick="returnToHomePage()"> بازگشت
                     </button>
                     <!-- /Categories -->
 
@@ -395,7 +399,7 @@
                          <div class="col-md-6 col-sm-12" >
                             <div class="blog grid-blog">
                                 <div class="blog-image">
-                                    <a><img class="img-fluid" style="width: 25em;height:17em"
+                                    <a><img class="img-fluid" style="width: 30em;height:17em"
                                              src={{if fileCode!=null}}"/app/rest/core/file/download/${fileCode}/false"
                                                  {{else}}"/app/assets/img/3.png"
                                                  {{/if}}
@@ -426,10 +430,14 @@
                                     </ul>
                                     <h3 class="blog-title"><a href="showPostDetail.html?postId=${id}" style="font-weight:bolder">${title}</a></h3>
                                     <p class="mb-0">${body.substring(0,40)} ... </p>
-                                    <a href="#add_edit_modal" onclick="loadEntity(${id})"  data-toggle="modal" class="btn btn-warning  btn-sm">مشاهده</a>
+                                    <div class="text-center">
+                                        <a href="#add_edit_modal" onclick="loadEntity(${id})"  data-toggle="modal" class="btn btn-warning  btn-sm">مشاهده کامل و ثبت نظر</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+
 
 
 
@@ -563,6 +571,8 @@
 
 
 
+
+
                                 </script>
                             </div>
                             <!-- /Blog Details-->
@@ -606,12 +616,14 @@
 
 
 
+
+
                                         </script>
                                     </ul>
                                 </div>
                             </div>
 
-                            <div class="card new-comment clearfix">
+                            <div class="card new-comment clearfix" id="addPostDiv" style="display: none">
                                 <div class="card-header">
                                     <h4 class="card-title">ارسال نظر</h4>
                                 </div>
