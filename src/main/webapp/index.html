@@ -32,6 +32,7 @@
             loadDoctorsOrderByScore();
             load4RecentPosts();
             if (localStorage.getItem("authenticatedUserFullName")) {
+                $('#dashboardPage').show();
                 $('#btnLogin').hide();
                 $('#userInfo').html(localStorage.getItem("authenticatedUserFullName") + "&nbsp;");
                 $('#btnLogout').show();
@@ -140,19 +141,19 @@
     <!-- Header -->
     <header class="header">
         <nav class="navbar navbar-expand-lg header-nav">
-            <div class="navbar-header">
-                <a id="mobile_btn" href="javascript:void(0);">
+            <div class="navbar-header  col-md-2 col-sm-12">
+                <!--<a id="mobile_btn" href="javascript:void(0);">
 							<span class="bar-icon">
 								<span></span>
 								<span></span>
 								<span></span>
 							</span>
-                </a>
+                </a>-->
                 <a href="index.html" class="navbar-brand logo">
                     <img src="assets/img/logo.png" class="img-fluid" alt="Logo">
                 </a>
             </div>
-            <div class="main-menu-wrapper">
+            <div class="main-menu-wrapper  col-md-8 col-sm-12">
                 <div class="menu-header">
                     <a href="index.html" class="menu-logo">
                         <img src="assets/img/logo.png" class="img-fluid" alt="Logo">
@@ -176,21 +177,21 @@
                     <li>
                         <a href="#blogFragment">‌وبلاگ</a>
                     </li>
-                    <li>
+                    <li id="dashboardPage" style="display: none">
                         <a href="dashboard.html">داشبورد</a>
                     </li>
                 </ul>
             </div>
-            <ul class="nav header-navbar-rht">
-                <li class="nav-item">
+            <ul class="nav col-md-2 col-sm-12">
+                <li class="nav-item" style="display: flex;white-space: nowrap">
                     <button type="button" class="btn btn-primary btn-sm" id="btnLogin" onclick="navigateToLoginPage()">
                         ورود
                     </button>
-                    <span id="userInfo"></span>
                     <button type="button" class="btn btn-danger btn-sm" id="btnLogout" onclick="navigateToLoginPage()"
                             style="display: none">
                         خروج
                     </button>
+                    <span style="padding-right: 1em" id="userInfo"></span>
                 </li>
             </ul>
         </nav>
@@ -429,6 +430,7 @@
 
 
 
+
                             </script>
                             <!-- /Doctor Widget -->
                         </div>
@@ -481,6 +483,7 @@
                         </div>
                     </div>
                 </div>
+
 
                 </script>
                 <!-- /Blog Post -->

@@ -96,14 +96,15 @@ public class UserService extends GenericService<User, Long> implements IUserServ
     @Override
     @Transactional
     public User selfRegister(SelfUserRegistrationDto userDto) throws Exception {
-        checkInputData(userDto.getUsername());
+        checkInputData(userDto.getMobile());
 
         Personel p = new Personel();
-        p.setFirstname(userDto.getFirstname());
+        p.setFirstname(userDto.getFirstname().trim().length() == 0 ? userDto.getMobile().trim() : userDto.getFirstname().trim());
         p.setLastname(userDto.getLastname());
         p.setMale(userDto.getMale());
-        p.setNationalCode(userDto.getNationalCode().trim());
-        p.setEmail(userDto.getEmail().trim());
+        p.setNationalCode(userDto.getNationalCode().trim().length() == 0 ? null : userDto.getNationalCode().trim());
+        p.setMobile(userDto.getMobile().trim());
+        p.setEmail(userDto.getEmail().trim().length() == 0 ? null : userDto.getEmail().trim());
         Organization org = new Organization();
         org.setId(guestOrganizationId);
         p.setOrganization(org);
@@ -112,7 +113,7 @@ public class UserService extends GenericService<User, Long> implements IUserServ
         User newUser = new User();
         newUser.setPersonel(p);
         newUser.setPassword(userDto.getPassword().trim());
-        newUser.setUsername(userDto.getUsername().trim());
+        newUser.setUsername(userDto.getMobile().trim());
         newUser.setAccountNonExpired(true);
         newUser.setCredentialsNonExpired(true);
         newUser.setAccountNonLocked(true);
@@ -138,7 +139,7 @@ public class UserService extends GenericService<User, Long> implements IUserServ
             if (DateUtility.getDiffSeconds(usersCreatedByCurrentIP.get(0).getLastUpdateDate(), new Date()) < 60)
                 throw new Exception("کاربر گرامی حداقل فاصله زمانی بین ثبت دو کاربر، 1 دقیقه می باشد. ");
         if (findUserByUsernameEquals(username) != null)
-            throw new Exception("خطا در ثبت کاربر. با این نام کاربری قبلا ثبت نام انجام شده است!");
+            throw new Exception("خطا در ثبت کاربر. با این شماره موبایل قبلا ثبت نام انجام شده است!");
     }
 
     @Override

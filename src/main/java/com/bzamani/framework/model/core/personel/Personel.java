@@ -13,10 +13,14 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "core_personel",uniqueConstraints = {@UniqueConstraint(name = "unq_personel_mobile", columnNames = "mobile"),@UniqueConstraint(name = "unq_personel_email", columnNames = "email")})
+@Table(name = "core_personel",uniqueConstraints = {
+        @UniqueConstraint(name = "unq_personel_mobile", columnNames = "mobile"),
+        @UniqueConstraint(name = "unq_personel_email", columnNames = "email"),
+        @UniqueConstraint(name = "unq_personel_nationalCode", columnNames = "nationalCode")})
 @FilterDefs({@FilterDef(name = "organizationAuthorize", parameters = {@ParamDef(name = "username", type = "string")})})
-@Filters({@Filter(name = "organizationAuthorize", condition = " exists ( select 1 from core_organization_authorize oa" +
-        " join core_user u on u.id = oa.user_id and u.username = :username and oa.organization_id = organization_id ) ")})
+@Filters({@Filter(name = "organizationAuthorize",
+                  condition = " exists ( select 1 from core_organization_authorize oa" +
+                              " join core_user u on u.id = oa.user_id and u.username = :username and oa.organization_id = organization_id ) ")})
 @SequenceGenerator(name = "sequence_db", sequenceName = "seq_core_personel", allocationSize = 1)
 @Setter
 @Getter
@@ -46,7 +50,6 @@ public class Personel extends BaseEntity {
     @Column(name = "nationalCode")
     private String nationalCode;
 
-    @NotNull
     @Column(name = "email")
     private String email;
 

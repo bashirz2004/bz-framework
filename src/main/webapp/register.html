@@ -83,7 +83,7 @@
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
                     data: JSON.stringify({
-                        "username": $('#txtUsername').val(),
+                        "mobile": $('#txtMobile').val(),
                         "password": $('#txtPassword').val(),
                         "passwordRepeat": $('#txtRepeatPassword').val(),
                         "firstname": $('#txtFirstname').val(),
@@ -94,7 +94,8 @@
                     }),
                     type: 'POST',
                     success: function (res) {
-                        showConfirm(res.personel.firstname + " " + res.personel.lastname + " عزیز حساب کاربری شما با موفقیت ایجاد شد.", "آیا برای ورود به سامانه آماده هستید؟", function () {
+                        clearInputs();
+                        showConfirm("حساب کاربری شما با موفقیت ایجاد شد.", "آیا برای ورود به سامانه آماده هستید؟", function () {
                             document.location.href = contextPath + "/login.html";
                         });
                     },
@@ -107,21 +108,29 @@
                             showMessage("خطا در ثبت کاربر", " با این ایمیل قبلا ثبت نام انجام شده است.", "error");
                         else
                             showMessage(err.responseJSON.message, "", "error");
-
-
                     }
                 });
             } else showMessage(validateForm(), "", "warning");
         }
 
         function validateForm() {
-            if ($('#cmbGender').val() == '...' || $('#txtFirstname').val() == '' || $('#txtLastname').val() == '' || $('#txtUsername').val() == '' || $('#txtPassword').val() == '' || $('#txtRepeatPassword').val() == '' || $('#txtNationalCode').val() == '' || $('#txtEmail').val() == '')
-                return 'پرکردن همه فیلدها اجباری است.';
-            else if ($('#txtNationalCode').val().length != 10)
-                return 'کدملی باید 10 رقمی باشد.';
+            if ($('#txtMobile').val() == '' || $('#txtPassword').val() == '' || $('#txtRepeatPassword').val() == '')
+                return 'لطفا شماره موبایل، رمز و تکرار رمز را وارد کنید.';
             else if ($('#txtPassword').val() != $('#txtRepeatPassword').val())
                 return 'رمز عبور و تکرار آن یکسان نیستند.';
+            else if ($('#txtMobile').val().length != 11 || $('#txtMobile').val().substring(0,1) != '0')
+                return 'شماره موبایل باید با صفر شروع شود و 11 رقمی باشد.';
             else return 'ok';
+        }
+
+        function clearInputs() {
+            $('#txtMobile').val('');
+            $('#txtPassword').val('');
+            $('#txtRepeatPassword').val('');
+            $('#txtFirstname').val('');
+            $('#txtLastname').val('');
+            $('#txtNationalCode').val('');
+            $('#txtEmail').val('');
         }
 
     </script>
@@ -149,8 +158,24 @@
                                 <div class="login-header">
                                     <h3>ثبت نام کاربر جدید </h3>
                                 </div>
-
+                                <h6 class="badge badge-pill bg-info text-white">مشخصات اصلی(اجباری)</h6>
                                 <!-- Register Form -->
+                                <div class="form-group form-focus">
+                                    <input type="text" class="form-control floating" id="txtMobile" dir="ltr" maxlength="11">
+                                    <label class="focus-label"> شماره موبایل (مانند 09123843845) </label>
+                                </div>
+                                <div class="form-group form-focus">
+                                    <input type="password" class="form-control floating" id="txtPassword" dir="ltr" maxlength="69">
+                                    <label class="focus-label"> رمزعبور </label>
+                                </div>
+                                <div class="form-group form-focus">
+                                    <input type="password" class="form-control floating" id="txtRepeatPassword"  maxlength="69"
+                                           dir="ltr">
+                                    <label class="focus-label"> تکرار رمزعبور </label>
+                                </div>
+
+                                <h6 class="badge badge-pill bg-secondary text-white">مشخصات تکمیلی(اختیاری)</h6>
+
                                 <div class="form-group form-focus">
                                     <input type="text" class="form-control floating" id="txtFirstname">
                                     <label class="focus-label">نام</label>
@@ -166,7 +191,6 @@
                                 </div>
                                 <div class="form-group form-focus">
                                     <select id="cmbGender" class="form-control floating">
-                                        <option value="..."></option>
                                         <option value="true">مرد</option>
                                         <option value="false">زن</option>
                                     </select>
@@ -175,18 +199,6 @@
                                 <div class="form-group form-focus">
                                     <input type="email" dir="ltr" class="form-control floating" id="txtEmail">
                                     <label class="focus-label">پست الکترونیکی(جهت ارسال رمزعبور فراموش شده شما) </label>
-                                </div>
-                                <div class="form-group form-focus">
-                                    <input type="text" class="form-control floating" id="txtUsername">
-                                    <label class="focus-label">نام کاربری( مثلا شماره موبایل) </label>
-                                </div>
-                                <div class="form-group form-focus">
-                                    <input type="password" class="form-control floating" id="txtPassword">
-                                    <label class="focus-label"> رمزعبور </label>
-                                </div>
-                                <div class="form-group form-focus">
-                                    <input type="password" class="form-control floating" id="txtRepeatPassword">
-                                    <label class="focus-label"> تکرار رمزعبور </label>
                                 </div>
                                 <div class="text-right">
                                     <a class="forgot-link" href="login.html">حساب کاربری دارم</a>

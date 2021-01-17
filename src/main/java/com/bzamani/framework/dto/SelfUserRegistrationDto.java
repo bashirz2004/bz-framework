@@ -6,13 +6,14 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SelfUserRegistrationDto {
+    private String mobile;
+    private String password;
+    private String passwordRepeat;
+
+    private String oldPassword;
     private Long userId;
     private String firstname;
     private String lastname;
-    private String username;
-    private String oldPassword;
-    private String password;
-    private String passwordRepeat;
     private Boolean male;
     private String nationalCode;
     private String email;

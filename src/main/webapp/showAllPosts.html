@@ -117,7 +117,7 @@
 
         function reFillCategories() {
             $.getJSON(contextPath + "/api/public/portal/post/getAllUsedPostCategories", searchFilters, function (res) {
-                $("#categoryList > li").remove();
+                $('#categoryList :not(script)').remove();
                 $("#categoryTemplate").tmpl(res).appendTo("#categoryList");
             });
         }
@@ -191,7 +191,19 @@
                 else
                     $('#pagingList').append('<li class="page-item"><a class="page-link" style="cursor: pointer;color: black" onclick="next()"> بعدی </a></li>');
 
+                highlightSelectedCategory();
             });
+        }
+
+        function highlightSelectedCategory() {
+            if (searchFilters.categoryId > 0) {
+                $(".categoryElement").css("backgroundColor", "white");
+                $(".categoryElement").css("color", "black");
+                $("#category_" + searchFilters.categoryId).css("backgroundColor", "#00d0f1");
+                $("#category_" + searchFilters.categoryId).css("border-radius", "3px");
+                $("#category_" + searchFilters.categoryId).css("color", "white");
+                $("#category_" + searchFilters.categoryId).css("fontWeight", "bold");
+            }
         }
 
         function rowSelected(id) {
@@ -202,7 +214,7 @@
             $('#hiddenFieldId').val();
         }
 
-        function loadEntity(id) {
+        function loadPost(id) {
             clearInputs();
             clearEntity();
             $.ajax({
@@ -214,9 +226,13 @@
                     $("#hiddenFieldId").val(res.id);
                     $("#postDetailDiv > div").remove();
                     $("#postDetailTemplate").tmpl(res).appendTo("#postDetailDiv");
-                    loadAllComments($("#hiddenFieldId").val());
-                    if (res.allowLikeOrComment == true)
-                        $('#addPostDiv').show();
+                    if (res.allowLikeOrComment == true) {
+                        loadAllComments(id);
+                        $('.commentSection').show();
+                    } else {
+                        $("#commentsList > li").remove();
+                        $('.commentSection').hide();
+                    }
                 },
                 error: function (err) {
                 }
@@ -238,13 +254,6 @@
         function selectCategory(id) {
             searchFilters.categoryId = id;
             refreshGrid();
-
-            $(".categoryElement").css("backgroundColor", "white");
-            $(".categoryElement").css("color", "black");
-            $("#category_" + id).css("backgroundColor", "#00d0f1");
-            $("#category_" + id).css("border-radius", "3px");
-            $("#category_" + id).css("color", "white");
-            $("#category_" + id).css("fontWeight", "bold");
         }
 
         function loadAllComments(postId) {
@@ -275,9 +284,10 @@
                         showMessage("با تشکر", "نظر شما ثبت شد و پس از بررسی مدیریت، منتشر می گردد.", "success");
                     },
                     error: function (err) {
-                        if (err.responseText.includes("Full authentication is required")) {
+                        if (err.responseText.includes("Full authentication is required"))
                             document.location = "login.html";
-                        }
+                        else
+                            showMessage("خطا", err.responseJSON.message, "error");
                     }
                 });
             } else showMessage("هنوز نظری نداده اید.", "", "warning");
@@ -322,7 +332,7 @@
         <div style="margin-left: 1em;margin-right: 1em;margin-top: 1em">
             <div class="row">
                 <!-- Blog Sidebar -->
-                <div class="col-lg-3 col-md-12 sidebar-right theiaStickySidebar">
+                <div class="col-lg-2 col-md-3 col-md-12 sidebar-right theiaStickySidebar">
 
                     <!-- Search -->
                     <div class="card search-widget">
@@ -334,7 +344,8 @@
                                             class="fa fa-eraser"></i>
                                     </button>
                                 </div>
-                                <input type="text" placeholder="عبارت جستجو ... " class="form-control searchFilter"
+                                <input type="text" placeholder="جستجو" class="form-control searchFilter"
+                                       style="font-size: smaller"
                                        id="txtSearchBox">
                                 <div class="input-group-append">
                                     <button onclick="searchPost()" class="btn btn-primary"
@@ -350,40 +361,23 @@
                     <!-- Categories -->
                     <div class="card category-widget">
                         <div class="card-header">
-                            <h5 class="card-title"> دسته‌بندی پست ها </h5>
+                            <h5 class="card-title"> دسته‌بندی ها </h5>
                         </div>
-                        <div class="card-body">
-                            <ul class="categories" id="categoryList">
-                                <script id="categoryTemplate" type="text/x-jquery-tmpl">
-                                <li id="category_${id}" class="categoryElement" style="cursor:pointer" onclick="selectCategory(${id})">
-                                       <a> ${title} (${numberOfPosts})</a>
-                                </li>
+                        <table class="card-body" id="categoryList" style="width: 100%">
+                            <script id="categoryTemplate" type="text/x-jquery-tmpl">
+                            <tr class="categories" >
+                                <td id="category_${id}" class="categoryElement" style="cursor:pointer;display:flex;white-space:nowrap;width:80%" onclick="selectCategory(${id})">
+                                       <a>${title}</a>
+                                </td>
+                                <td style="width: 20%">
+                                    <span class="badge badge-pill bg-info text-white">${numberOfPosts}</span>
+                                </td>
+                            </tr>
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                </script>
-                            </ul>
-                        </div>
+                            </script>
+                        </table>
                     </div>
                     <button class="btn btn-secondary submit-btn" onclick="returnToHomePage()"> بازگشت
                     </button>
@@ -392,7 +386,7 @@
                 </div>
                 <!-- /Blog Sidebar -->
 
-                <div class="col-lg-9 col-md-12">
+                <div class="col-lg-10 col-md-9 col-md-12">
                     <div class="row blog-grid-row" id="postList">
                         <!-- Blog Post -->
                         <script id="postTemplate" type="text/x-jquery-tmpl">
@@ -412,7 +406,7 @@
                                                 <ul>
                                                     <li class="col-md-6 col-sm-12 float-left">
                                                         <div class="post-author">
-                                                            <a href="doctor-profile.html">
+                                                            <a>
                                                             <img src= {{if author.male && author.fileCode==null}}"/app/assets/img/man.png"{{/if}}
                                                               {{if !author.male && author.fileCode==null}}"/app/assets/img/woman.png"{{/if}}
                                                               {{if author.fileCode!=null}}"/app/rest/core/file/download/${author.fileCode}/false"{{/if}}
@@ -421,9 +415,9 @@
                                                         </div>
                                                     </li>
                                                     <li style="display:flex;white-space:nowrap;" class="col-md-4 col-sm-12 float-left"><i class="far fa-calendar"></i>${createDateShamsi}</li>
+                                                    <li style="display:flex;white-space:nowrap;" class="col-md-3 col-sm-12 float-left"><i class="fa fa-tags"></i>${category.title}</li>
                                                     <li style="display:flex;white-space:nowrap;" class="col-md-3 col-sm-12 float-left">{{if allowLikeOrComment}}<i class="far fa-comments"></i>${commentsCount} نظر{{/if}}</li>
                                                     <li style="display:flex;white-space:nowrap;" class="col-md-2 col-sm-12 float-left">{{if allowLikeOrComment}}<i class="fa fa-heart text-danger" style="cursor:pointer" onclick="likePost(${id})"></i>${likesCount}{{/if}}</li>
-                                                    <li style="display:flex;white-space:nowrap;" class="col-md-12 col-sm-12 float-left"><i class="fa fa-tags"></i>${category.title}</li>
                                                 </ul>
                                             </div>
 									    </div>
@@ -431,11 +425,16 @@
                                     <h3 class="blog-title"><a href="showPostDetail.html?postId=${id}" style="font-weight:bolder">${title}</a></h3>
                                     <p class="mb-0">${body.substring(0,40)} ... </p>
                                     <div class="text-center">
-                                        <a href="#add_edit_modal" onclick="loadEntity(${id})"  data-toggle="modal" class="btn btn-warning  btn-sm">مشاهده کامل و ثبت نظر</a>
+                                        <a href="#add_edit_modal" onclick="loadPost(${id})"  data-toggle="modal" class="btn btn-warning  btn-sm">بیشتر بخوانید ...</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+
+
+
+
 
 
 
@@ -545,8 +544,11 @@
                                                     </div>
                                                 </li>
                                                 <li><i class="far fa-calendar"></i>${createDateShamsi}</li>
-                                                <li><i class="far fa-comments"></i>${commentsCount} نظر</li>
                                                 <li><i class="fa fa-tags"></i>${category.title}</li>
+                                                {{if allowLikeOrComment}}
+                                                    <li><i class="far fa-comments"></i>${commentsCount} نظر</li>
+                                                    <li><i class="fa fa-heart text-danger" style="cursor:pointer" onclick="likePost(${id})"></i>${likesCount}</li>
+                                                {{/if}}
                                             </ul>
                                         </div>
                                     </div>
@@ -573,11 +575,16 @@
 
 
 
+
+
+
+
+
                                 </script>
                             </div>
                             <!-- /Blog Details-->
 
-                            <div class="card blog-comments clearfix">
+                            <div class="card blog-comments clearfix commentSection" style="display:none;">
                                 <div class="card-header">
                                     <h4 class="card-title">نظرات کاربران</h4>
                                 </div>
@@ -618,19 +625,25 @@
 
 
 
+
+
+
+
+
                                         </script>
                                     </ul>
                                 </div>
                             </div>
 
-                            <div class="card new-comment clearfix" id="addPostDiv" style="display: none">
+                            <div class="card new-comment clearfix commentSection" style="display: none">
                                 <div class="card-header">
                                     <h4 class="card-title">ارسال نظر</h4>
                                 </div>
                                 <div class="card-body">
                                     <div class="form-group">
                                         <label> نظر </label>
-                                        <textarea rows="4" class="form-control" id="txtComment"></textarea>
+                                        <textarea rows="4" class="form-control" id="txtComment"
+                                                  maxlength="255"></textarea>
                                     </div>
                                     <div class="submit-section">
                                         <button class="btn btn-primary submit-btn" onclick="saveComment()"> ارسال

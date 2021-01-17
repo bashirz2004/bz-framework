@@ -2,6 +2,7 @@ package com.bzamani.framework.service.impl.portal;
 
 import com.bzamani.framework.common.utility.DateUtility;
 import com.bzamani.framework.common.utility.SecurityUtility;
+import com.bzamani.framework.model.core.personel.Personel;
 import com.bzamani.framework.model.portal.Comment;
 import com.bzamani.framework.repository.portal.ICommentRepository;
 import com.bzamani.framework.service.core.organization.IOrganizationService;
@@ -97,9 +98,12 @@ public class CommentService extends GenericService<Comment, Long> implements ICo
     @Override
     @Transactional
     public Comment saveComment(Comment comment) throws Exception {
-        if(!iPostService.loadByEntityId(comment.getPost().getId()).isAllowLikeOrComment())
+        if (!iPostService.loadByEntityId(comment.getPost().getId()).isAllowLikeOrComment())
             throw new Exception("این پست قابلیت ثبت نظر یا لایک را ندارد.");
-        comment.setCommenter(iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getPersonel());
+        Personel commenter = iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getPersonel();
+        if (iCommentRepository.findAllByPostEqualsAndCommenterEqualsAndConfirmedEquals(comment.getPost(), commenter, false).size() >= 3)
+            throw new Exception("3با تشکر از شما کاربر گرامی، با توجه به اینکه 3 نظر قبلی شما روی این پست، هنوز تایید نشده است، امکان ثبت نظر جدید وجود ندارد.");
+        comment.setCommenter(commenter);
         comment.setCreateDateShamsi(DateUtility.todayShamsi());
         comment.setConfirmed(false);
         return super.save(comment);
