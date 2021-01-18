@@ -39,27 +39,16 @@ public class DoctorController extends BaseController {
         return iDoctorService.getAll(sort);
     }
 
-    @GetMapping("/searchDoctors")
+    @GetMapping("/searchDoctor")
     public Map<String, Object> searchDoctors(
             @RequestParam(required = false) String firstname,
             @RequestParam(required = false) String lastname,
-            @RequestParam(required = false) String medicalNationalNumber,
-            @RequestParam(required = false) Boolean male,
-            @RequestParam(required = false) Long stateId,
-            @RequestParam(required = false) Long cityId,
-            @RequestParam(required = false) Long regionId,
-            @RequestParam(required = false) Long specialityId,
             @RequestParam(required = false) String specialityTitle,
-            @RequestParam(required = false) String address,
-            @RequestParam(required = false) String telephone,
-            @RequestParam(required = false) String specialities,
-            @RequestParam(required = false) String genders,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "8") int size,
             @RequestParam(defaultValue = "id,desc") String[] sort) {
 
-        return iDoctorService.searchDoctors(firstname, lastname,
-                medicalNationalNumber, male, stateId, cityId,
-                regionId, specialityId, specialityTitle, address, telephone, specialities,genders, page, size, sort);
+        return iDoctorService.searchDoctors(firstname, lastname, null, null, null, null,
+                null, null, specialityTitle, null, null, null, null, page, size, sort);
     }
 }

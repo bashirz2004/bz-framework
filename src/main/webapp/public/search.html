@@ -29,7 +29,9 @@
     <![endif]-->
     <style>
         .card:hover {
-            background-color: #0de0fe;
+            border-color: silver;
+            background-color: gold;
+
         }
     </style>
     <!-- jQuery -->
@@ -190,7 +192,7 @@
 
 </head>
 
-<body>
+<body style="color: black;background-color: #f5f5f5">
 
 <!-- Main Wrapper -->
 <div class="main-wrapper">
@@ -237,7 +239,7 @@
                         </ol>
                     </nav>
                     <div class="row" style="padding-right:1em">
-                        <h5 style="color: #fff;">تعداد پزشک یافت شده بر اساس فیلترهای جستجو: </h5>&nbsp;&nbsp;
+                        <h5 style="color: #fff;">تعداد پزشک یافت شده بر اساس فیلترهای اعمال شده: </h5>&nbsp;&nbsp;
                         <h5 style="color: #fff;" id="lblTotalRecords"></h5>
                     </div>
                 </div>
@@ -267,8 +269,8 @@
                 <div class="col-md-12 col-lg-4 col-xl-3 theiaStickySidebar">
 
                     <!-- Search Filter -->
-                    <div class="search-filter">
-                        <div class="card-header">
+                    <div class="search-filter" style="border-radius: 15px;box-shadow:0px 0px 10px 1px silver">
+                        <div class="card-header" style="border-radius: 15px 15px 0px 0px;box-shadow:0px 0px 10px 1px silver">
                             <h4 class="card-title mb-0">فیلتر جستجو</h4>
                         </div>
                         <div class="card-body">
@@ -315,22 +317,22 @@
                 <!-- Doctor Widget -->
                 <div class="col-md-12 col-lg-8 col-xl-9" id="doctorList">
                     <script id="doctorTemplate" type="text/x-jquery-tmpl">
-                    <div class="card">
+                    <div class="card" style="border-radius: 15px;box-shadow:0px 0px 10px 1px silver">
                         <div class="card-body">
                             <div class="doctor-widget">
                                 <div class="doc-info-left">
                                     <div class="doctor-img">
                                         <a href="doctor-profile.html" >
                                             <img
-                                             src={{if male && fileCode==null}}"/app/assets/img/man.png"{{/if}}
-                                                            {{if !male && fileCode==null}}"/app/assets/img/woman.png"{{/if}}
-                                                            {{if fileCode!=null}}"/app/rest/core/file/download/${fileCode}/false"{{/if}}
+                                             src={{if personel.male && personel.fileCode==null}}"/app/assets/img/man.png"{{/if}}
+                                                            {{if !personel.male && personel.fileCode==null}}"/app/assets/img/woman.png"{{/if}}
+                                                            {{if personel.fileCode!=null}}"/app/rest/core/file/download/${personel.fileCode}/false"{{/if}}
                                             class="img-fluid"
                                             alt="User Image">
                                         </a>
                                     </div>
                                     <div class="doc-info-cont">
-                                        <h4 class="doc-name"><a href="doctor-profile.html">دکتر ${firstname} ${lastname}</a></h4>
+                                        <h4 class="doc-name">${personel.firstname} ${personel.lastname}</h4>
                                         <p class="doc-speciality">
                                             <i class="fa fa-stethoscope" aria-hidden="true"></i>
                                             ${speciality.title}
@@ -346,12 +348,12 @@
                                         </div>
                                         <div class="clinic-details">
                                             <p class="doc-location">
-                                                <i class="fas fa-map-marker-alt"></i> ${address}
+                                                <i class="fas fa-map-marker-alt"></i> ${personel.address}
                                             </p>
                                         </div>
                                         <div class="clinic-details">
                                             <p class="doc-location">
-                                                <i class="fas fa-phone"></i> ${telephone}
+                                                <i class="fas fa-phone"></i> ${personel.telephone}
                                             </p>
                                         </div>
                                     </div>
@@ -361,7 +363,7 @@
                                         <ul>
                                             <li><i class="far fa-thumbs-up"></i> 98% رضایتمندی بیماران</li>
                                             <li><i class="far fa-comment"></i> 17 نظر ثبت شده</li>
-                                            <li><i class="fas fa-map-marker-alt"></i>${state.title} - ${city.title} </li>
+                                            <li><i class="fas fa-map-marker-alt"></i>{{if personel.state != null }}${personel.state.title}{{/if}} - {{if personel.city != null }}${personel.city.title}{{/if}}</li>
                                             <!--<li><i class="far fa-money-bill-alt"></i>300 تومان - 1000 تومان<i
                                                     class="fas fa-info-circle"
                                                     data-toggle="tooltip" title="Lorem Ipsum"></i></li>-->
@@ -374,6 +376,7 @@
                             </div>
                         </div>
                     </div>
+
 
 
 

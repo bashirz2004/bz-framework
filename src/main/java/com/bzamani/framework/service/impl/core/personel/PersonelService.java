@@ -41,6 +41,8 @@ public class PersonelService extends GenericService<Personel, Long> implements I
         if (personel.getId() != null && personel.getId() > 0) //edit mode
             oldFileCode = loadByEntityId(personel.getId()).getFileCode();
         iFileAttachmentService.finalizeNewAndDeleteOldAttachment(newFileCode, oldFileCode);
+        personel.setNationalCode(personel.getNationalCode().trim().length() == 0 ? null : personel.getNationalCode().trim());
+        personel.setEmail(personel.getEmail().trim().length() == 0 ? null : personel.getEmail().trim());
         return super.save(personel);
     }
 
@@ -55,16 +57,6 @@ public class PersonelService extends GenericService<Personel, Long> implements I
     @Override
     public Map<String, Object> searchPersonel(String firstname,
                                               String lastname,
-                                              String birthCertificateNumber,
-                                              String nationalCode,
-                                              Boolean male,
-                                              String fatherName,
-                                              String motherName,
-                                              String birthPlace,
-                                              Long educationLevelId,
-                                              Long militaryServiceStatusId,
-                                              String address,
-                                              String telephone,
                                               String mobile,
                                               Long organizationId, int page, int size, String[] sort) {
         List<Sort.Order> orders = new ArrayList<Sort.Order>();
@@ -80,16 +72,6 @@ public class PersonelService extends GenericService<Personel, Long> implements I
         Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
         Page<Personel> pageTuts = iPersonelRepository.searchPersonel(firstname,
                 lastname,
-                birthCertificateNumber,
-                nationalCode,
-                male,
-                fatherName,
-                motherName,
-                birthPlace,
-                educationLevelId,
-                militaryServiceStatusId,
-                address,
-                telephone,
                 mobile,
                 organizationId, pagingSort);
         personels = pageTuts.getContent();

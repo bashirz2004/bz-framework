@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <title>لیست پزشکان</title>
+    <title>لیست کاربران</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/app/assets/img/favicon.png">
@@ -21,7 +21,6 @@
     <script src="/app/assets/js/html5shiv.min.js"></script>
     <script src="/app/assets/js/respond.min.js"></script>
     <![endif]-->
-
     <!-- jQuery -->
     <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
     <!-- fancybox -->
@@ -80,21 +79,14 @@
         var contextPath = "/app";
         var entityData = {
             "id": '',
-            "male": '',
-            "firstname": '',
-            "lastname": '',
             "medicalNationalNumber": '',
-            "speciality": {"id": ''},
-            "state": {"id": ''},
-            "city": {"id": ''},
-            "region": {"id": ''},
-            "address": '',
-            "telephone": '',
-            "organization": {"id": ''},
-            "fileCode": ''
+            "personel": {"id": ''},
+            "speciality": {"id": ''}
         };
 
         var searchFilters = {
+            "firstname": '',
+            "lastname": '',
             "specialityTitle": '',
             "sort": "id,desc",
             "page": 0,
@@ -103,7 +95,7 @@
 
         $(function () {
             refreshGrid();
-
+            fillComboBaseInfo(1000, "cmbSpeciality");
             $('.sort-grid').on("click", function () {
                 searchFilters.sort = $(this).attr("order");
                 refreshGrid();
@@ -114,32 +106,24 @@
                 refreshGrid();
             });
 
-            $('#txtSearchDoctor').keydown(function (e) {
+            $('.searchFilter').keydown(function (e) {
                 if (e.which == 13)  // the enter key code
                     searchDoctor();
-            });
-
-            fillComboBaseInfo(1000, "cmbSpeciality");
-            fillComboBaseInfo(1, "cmbState");
-
-            $("#cmbState").change(function () {
-                fillComboCity($(this).val());
-                $("#cmbRegion").html("<select class='select' id='cmbRegion'></select>");
-            });
-
-            $("#cmbCity").change(function () {
-                fillComboRegion($(this).val());
             });
         });
 
         function searchDoctor() {
-            searchFilters.specialityTitle = $("#txtSearchDoctor").val();
+            searchFilters.firstname = $("#txtSearchFirstname").val();
+            searchFilters.lastname = $("#txtSearchLastname").val();
+            searchFilters.specialityTitle = $("#txtSearchSpecialityTitle").val();
             refreshGrid();
         }
 
         function clearSearch() {
             $('#cmbPageSize').val(8);
             searchFilters = {
+                "firstname": '',
+                "lastname": '',
                 "specialityTitle": '',
                 "sort": "id,desc",
                 "page": 0,
@@ -177,17 +161,13 @@
                     },
                     error: function (err) {
                         if (err.responseJSON.message.includes("Forbidden"))
-                            showMessage("خطا در حذف", " شما مجوز انجام این کار را ندارید.", "error");
+                            showMessage("خطای سطح دسترسی", " شما مجوز انجام این کار را ندارید.", "error");
                         else
                             showMessage("خطا در حذف اطلاعات", "", "error");
                     }
                 });
             else
                 showMessage("هیچ رکوردی انتخاب نشده است.", "", "error");
-        }
-
-        function refreshGrid() {
-            fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctors", searchFilters);
         }
 
         function rowSelected(id) {
@@ -229,102 +209,49 @@
                         $('#btnCloseModal').click();
                     },
                     error: function (err) {
-                        if (err.responseJSON.message.includes("Forbidden"))
-                            showMessage("خطا در ثبت اطلاعات", " شما مجوز انجام این کار را ندارید.", "error");
-                        else
-                            showMessage("خطا در ثبت اطلاعات", "", "error");
+                        if (err.responseText.includes("unq_doctor_personel_"))
+                            showMessage("خطا. این پزشک قبلا ثبت شده است.", "", "error");
+                        else if (err.responseJSON.message.includes("Forbidden"))
+                            showMessage("خطای سطح دسترسی", " شما مجوز انجام این کار را ندارید.", "error");
+
                     }
                 });
-            } else showMessage("پرکردن فیلدهای ستاره دار الزامی است.", "", "warning");
+            }
         }
 
         function validateForm() {
-            if ($('#txtFirstname').val() == '' || $('#txtLastname').val() == '' || $('#txtAddress').val() == '' || $('#txtPhone').val() == ''
-                || !$('#cmbSpeciality').val() > 0 || !$('#cmbState').val() > 0 || !$('#cmbCity').val() > 0 || !$('#cmbRegion').val() > 0 || !$('#hiddenFieldOrganizationId').val() > 0 || $('#txtOrganizationTitle').val() == '')
+            if ($('#txtMedicalNationalNumber').val() == '' || !$('#hiddenFieldPersonelId').val() > 0 || !$('#cmbSpeciality').val() > 0) {
+                showMessage("پرکردن فیلدهای ستاره دار الزامی است.", "", "warning");
                 return;
-            else return 'ok';
-        }
-
-        function fillComboCity(stateId, callBackFunction) {
-            $.ajax({
-                type: "GET",
-                url: contextPath + "/api/public/baseinfo/getAllByParentId/" + stateId,
-                contentType: "application/json;charset=utf-8",
-                dataType: "json",
-                success: function (res) {
-                    $("#cmbCity").html("<select class='select' id='cmbCity'></select>");
-                    $("#cmbCity").append("<option value=-1>...</option>");
-                    $.each(res, function (index, value) {
-                        $("#cmbCity").append("<option value=" + value.id + ">" + value.title + "</option>");
-                    });
-                    if (callBackFunction != null && typeof callBackFunction == 'function')
-                        callBackFunction();
-                },
-                error: function (err) {
-                }
-            });
-        }
-
-        function fillComboRegion(cityId, callBackFunction) {
-            $.ajax({
-                type: "GET",
-                url: contextPath + "/api/public/baseinfo/getAllByParentId/" + cityId,
-                contentType: "application/json;charset=utf-8",
-                dataType: "json",
-                success: function (res) {
-                    $("#cmbRegion").html("<select class='select' id='cmbRegion'></select>");
-                    $("#cmbRegion").append("<option value=-1>...</option>");
-                    $.each(res, function (index, value) {
-                        $("#cmbRegion").append("<option value=" + value.id + ">" + value.title + "</option>");
-                    });
-                    if (callBackFunction != null && typeof callBackFunction == 'function')
-                        callBackFunction();
-                },
-                error: function (err) {
-                }
-            });
+            } else return 'ok';
         }
 
         function clearEntity() {
             entityData = {
                 "id": '',
-                "male": '',
-                "firstname": '',
-                "lastname": '',
                 "medicalNationalNumber": '',
-                "speciality": {"id": ''},
-                "state": {"id": ''},
-                "city": {"id": ''},
-                "region": {"id": ''},
-                "address": '',
-                "telephone": '',
-                "organization": {"id": ''},
-                "fileCode": ''
+                "personel": {"id": ''},
+                "speciality": {"id": ''}
             };
+        }
+
+        function clearInputs() {
+            $("#hiddenFieldId").val("");
+            $("#txtMedicalNationalNumber").val("");
+            $("#hiddenFieldPersonelId").val("");
+            $("#txtPersonelTitle").val("");
+            $("#cmbSpeciality").val("");
+            $('#uploadedImage').prop("src", "");
         }
 
         function setInputsByEntity(entity) {
             $("#hiddenFieldId").val(entity.id);
-            $("#txtFirstname").val(entity.firstname);
-            $("#txtLastname").val(entity.lastname);
-            $("#txtMedicalNationalNumber").val(entity.medicalNationalNumberl);
-            $("#cmbGender").val(entity.male.toString());
-            $("#cmbState").val(entity.state.id);
-            fillComboCity(entity.state.id, function () {
-                fillComboRegion(entity.city.id, function () {
-                    $("#cmbCity").val(entity.city.id);
-                    $("#cmbRegion").val(entity.region.id);
-                });
-            });
-            $("#hiddenFieldOrganizationId").val(entity.organization.id);
-            $("#txtOrganizationTitle").val(entity.organization.title);
+            $("#txtMedicalNationalNumber").val(entity.medicalNationalNumber);
+            $("#hiddenFieldPersonelId").val(entity.personel.id);
+            $("#txtPersonelTitle").val(entity.personel.firstname + " " + entity.personel.lastname);
             $("#cmbSpeciality").val(entity.speciality.id);
-            $("#txtAddress").val(entity.address);
-            $("#txtPhone").val(entity.telephone);
-
-            if (entity.fileCode != null && entity.fileCode.length > 0) {
-                $('#uploadedImage').prop("src", "/app/rest/core/file/download/" + entity.fileCode + "/false");
-                $("#hiddenFieldfileCode").val(entity.fileCode);
+            if (entity.personel.fileCode != null && entity.personel.fileCode.length > 0) {
+                $('#uploadedImage').prop("src", "/app/rest/core/file/download/" + entity.personel.fileCode + "/false");
             }
         }
 
@@ -332,52 +259,31 @@
             clearEntity();
             entityData = {
                 "id": $('#hiddenFieldId').val(),
-                "male": $('#cmbGender').val(),
-                "firstname": $('#txtFirstname').val(),
-                "lastname": $('#txtLastname').val(),
                 "medicalNationalNumber": $('#txtMedicalNationalNumber').val(),
-                "speciality": {"id": $('#cmbSpeciality').val()},
-                "state": {"id": $('#cmbState').val()},
-                "city": {"id": $('#cmbCity').val()},
-                "region": {"id": $('#cmbRegion').val()},
-                "address": $('#txtAddress').val(),
-                "telephone": $('#txtPhone').val(),
-                "organization": {"id": $('#hiddenFieldOrganizationId').val()},
-                "fileCode": $('#hiddenFieldfileCode').val()
+                "personel": {"id": $('#hiddenFieldPersonelId').val()},
+                "speciality": {"id": $('#cmbSpeciality').val()}
             }
         }
 
-        function uploadFile() {
-            $.ajax({
-                url: contextPath + "/rest/core/file/upload",
-                type: "POST",
-                data: new FormData($("#upload-file-form")[0]),
-                enctype: 'multipart/form-data',
-                processData: false,
-                contentType: false,
-                cache: false,
-                dataType: "text",
-                success: function (fileCode) {
-                    if (fileCode != null && fileCode.length > 0) {
-                        $('#uploadedImage').prop("src", "/app/rest/core/file/download/" + fileCode + "/false");
-                        $('#hiddenFieldfileCode').val(fileCode);
-                        $('.submit-btn').show();
-                    }
-                },
-                error: function (err) {
-                    if (err.responseText && err.responseText.toLowerCase().includes('SizeLimitExceededException'.toLowerCase()))
-                        showMessage('خطا! حداکثر حجم تصویر شما می تواند ' + parseInt(err.responseText.substring(err.responseText.lastIndexOf('(') + 1, err.responseText.lastIndexOf(')'))) / 1048576 + ' مگابایت باشد.', "", "error");
-                }
-            });
-        }
 
         function setImagePath(fileCode) {
-            $('#image_full_size').attr("src", "/app/rest/core/file/download/" + fileCode + "/false");
+            if (fileCode)
+                $('#image_full_size').attr("src", "/app/rest/core/file/download/" + fileCode + "/false");
+            else
+                $('#image_full_size').attr("src", "");
         }
 
-        function setOrganization(id, title) {
-            $('#hiddenFieldOrganizationId').val(id);
-            $('#txtOrganizationTitle').val(title);
+        function setPersonel(id, firstname, lastname, fileCode) {
+            $('#hiddenFieldPersonelId').val(id);
+            $('#txtPersonelTitle').val(firstname + " " + lastname);
+            if (fileCode)
+                $('#uploadedImage').attr("src", "/app/rest/core/file/download/" + fileCode + "/false");
+            else
+                $('#uploadedImage').prop("src", "");
+        }
+
+        function refreshGrid() {
+            fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctor", searchFilters);
         }
 
     </script>
@@ -387,27 +293,40 @@
     <div class="col-md-12 d-flex">
         <!-- Grid -->
         <div class="card card-table flex-fill">
-            <div class="col-sm-12">
+            <div class="col-sm-12" style="border-radius: 10px 10px 0px 0px">
                 <div class="float-left mt-1">
                     <h5>لیست پزشکان</h5>
                 </div>
-                <div class="float-left col-sm-3 col-md-5 col-lg-8 col-xl-8">
-                    <input type="text" id="txtSearchDoctor" class="form-control searchFilter"
-                           placeholder="جستجو براساس تخصص ...">
-                </div>
-                <div class="float-left">
-                    <a href="javascript:void(0)" onclick="searchDoctor();"
-                       class="btn btn-block btn-outline-info btn-rounded">جستجو</a>
-                </div>
-                <div class="float-left">
-                    <a href="javascript:void(0)" onclick="clearSearch();"
-                       class="btn btn-block btn-outline-danger btn-rounded">پاک
-                        کردن</a>
-                </div>
-                <div class="float-left">
-                    <a href="#add_edit_modal" data-toggle="modal"
+                <div class="float-right">
+                    <a href="#add_edit_modal" data-toggle="modal" title="جدید"
                        onclick="clearEntity();clearInputs();"
-                       class="btn btn-block btn-outline-success btn-rounded">جدید</a>
+                       class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-plus"></i></a>
+                </div>
+                <div class="float-right">
+                    <a href="javascript:void(0)" onclick="clearSearch();" data-toggle="tooltip" title="پاک کردن فیلترها"
+                       class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-eraser"></i></a>
+                </div>
+                <div class="float-right search-section" style="display: none">
+                    <a href="javascript:void(0)" onclick="searchDoctor();" data-toggle="tooltip" title="جستجو"
+                       class="btn btn-block btn-rounded btn-outline-secondary"><i class="fa fa-filter"></i></a>
+                </div>
+                <div class="float-right">
+                    <a href="javascript:void(0)" onclick="$('.search-section').slideToggle();"
+                       class="btn btn-block btn-rounded btn-outline-secondary"><i class="fa fa-search"></i></a>
+                </div>
+            </div>
+            <div class="col-sm-12 search-section" style="display: none">
+                <label class="float-left" style="padding-top: .5em">فیلتر کردن نتایج براساس : </label>
+                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                    <input type="text" id="txtSearchFirstname" class="form-control searchFilter" placeholder="نام ...">
+                </div>
+                <div class="float-left col-sm-2 col-md-3 col-lg-2 col-xl-2">
+                    <input type="text" id="txtSearchLastname" class="form-control searchFilter"
+                           placeholder="نام خانوادگی ...">
+                </div>
+                <div class="float-left col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                    <input type="text" id="txtSearchSpecialityTitle" class="form-control searchFilter"
+                           placeholder="تخصص ...">
                 </div>
             </div>
             <div class="card-body">
@@ -417,40 +336,24 @@
                         <tr>
                             <th class="text-center">ردیف</th>
                             <th>تصویر
-                                <i class="fa fa-sort-up sort-grid" order="fileCode,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="fileCode,desc"></i>
+                                <i class="fa fa-sort-up sort-grid" order="personel.fileCode,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="personel.fileCode,desc"></i>
                             </th>
                             <th>نام
-                                <i class="fa fa-sort-up sort-grid" order="firstname,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="firstname,desc"></i>
+                                <i class="fa fa-sort-up sort-grid" order="personel.firstname,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="personel.firstname,desc"></i>
                             </th>
                             <th>نام خانوادگی
-                                <i class="fa fa-sort-up sort-grid" order="lastname,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="lastname,desc"></i>
+                                <i class="fa fa-sort-up sort-grid" order="personel.lastname,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="personel.lastname,desc"></i>
                             </th>
                             <th>واحد سازمانی
-                                <i class="fa fa-sort-up sort-grid" order="organization.title,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="organization.title,desc"></i>
+                                <i class="fa fa-sort-up sort-grid" order="personel.organization.title,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="personel.organization.title,desc"></i>
                             </th>
                             <th>تخصص
                                 <i class="fa fa-sort-up sort-grid" order="speciality.title,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="speciality.title,desc"></i>
-                            </th>
-                            <th>استان
-                                <i class="fa fa-sort-up sort-grid" order="state.title,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="state.title,desc"></i>
-                            </th>
-                            <th>شهر
-                                <i class="fa fa-sort-up sort-grid" order="city.title,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="city.title,desc"></i>
-                            </th>
-                            <th>منطقه
-                                <i class="fa fa-sort-up sort-grid" order="region.title,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="region.title,desc"></i>
-                            </th>
-                            <th>تلفن
-                                <i class="fa fa-sort-up sort-grid" order="telephone,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="telephone,desc"></i>
                             </th>
                             <th>عملیات</th>
                         </tr>
@@ -461,39 +364,42 @@
                                         <td class="text-center"><span class="tmplRowIndex"></span></td>
                                         <td>
                                             <h2 class="table-avatar">
-                                                <a href="#image_modal" data-toggle="modal" class="avatar avatar-sm mr-2"><img onclick="setImagePath('${fileCode}')"
+                                                <a href="#image_modal" data-toggle="modal" class="avatar avatar-sm mr-2"><img onclick="setImagePath('${personel.fileCode}')"
                                                         class="avatar-img rounded-circle"
-                                                        src={{if male && fileCode==null}}"/app/assets/img/man.png"{{/if}}
-                                                            {{if !male && fileCode==null}}"/app/assets/img/woman.png"{{/if}}
-                                                            {{if fileCode!=null}}"/app/rest/core/file/download/${fileCode}/false"{{/if}}
-                                                        alt="User Image"></a>
+                                                        src={{if personel.male && personel.fileCode==null}}"/app/assets/img/man.png"{{/if}}
+                                                            {{if !personel.male && personel.fileCode==null}}"/app/assets/img/woman.png"{{/if}}
+                                                            {{if personel.fileCode!=null}}"/app/rest/core/file/download/${personel.fileCode}/false"{{/if}}
+                                                        alt="Personel Image"></a>
                                             </h2>
                                         </td>
                                         <td>
                                             <h2 class="table-avatar">
-                                                <a href="javascript:void(0)">${firstname}</a>
+                                                <a href="javascript:void(0)">${personel.firstname}</a>
                                             </h2>
                                         </td>
                                         <td>
                                             <h2 class="table-avatar">
-                                               <a href="javascript:void(0)">${lastname}</a>
+                                               <a href="javascript:void(0)">${personel.lastname}</a>
                                             </h2>
                                         </td>
-                                        <td>${organization.title}</td>
-                                        <td><span class="badge badge-secondary">${speciality.title}</span></td>
-                                        <td>${state.title}</td>
-                                        <td>${city.title}</td>
-                                        <td>${region.title}</td>
-                                        <td>${telephone}</td>
-                                        <td class="text-right">
-                                            <a class="btn btn-sm bg-success-light" data-toggle="modal" href="#add_edit_modal" onclick="loadEntity(${id})" >
-												<i class="fe fe-pencil"></i> ویرایش
-											</a>
-											<a  data-toggle="modal" href="#delete_doctor_modal" class="btn btn-sm bg-danger-light" onclick="rowSelected(${id})" >
-												<i class="fe fe-trash"></i> حذف
-											</a>
+                                        <td>${personel.organization.title}</td>
+                                         <td>${speciality.title}</td>
+                                        <td class="text-center">
+                                            <div class="float-right">
+                                                <div class="float-right">
+                                                     <a href="#delete_doctor_modal" onclick="rowSelected(${id})"  data-toggle="modal" title="حذف"
+                                                                    class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-trash"></i></a>
+                                                </div>
+                                                <div class="float-right">
+                                                     <a href="#add_edit_modal" onclick="loadEntity(${id})"  data-toggle="modal" title="ویرایش"
+                                                                    class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-pencil"></i></a>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
+
+
+
 
 
 
@@ -544,114 +450,46 @@
     </div>
     <!-- paging -->
 
-
     <!-- Add/Edit Modal -->
     <div class="modal fade custom-modal" id="add_edit_modal" aria-hidden="true" role="dialog">
-        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">افزودن / ویرایش پزشک </h5>
+                    <h5 class="modal-title text-white">افزودن / ویرایش پزشک </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCloseModal"
-                            onclick="fillGrid('doctorTemplate', 'doctorList', contextPath + '/rest/doctor/searchDoctors', searchFilters)">
+                            onclick="fillGrid('doctorTemplate', 'doctorList', contextPath + '/rest/doctor/searchDoctor', searchFilters)">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <!-- Add Doctor -->
+                    <!-- Add doctor -->
                     <input type="hidden" id="hiddenFieldId"/>
                     <div class="service-fields mb-3">
                         <div class="row">
-                            <div class="col-lg-3">
+                            <div class="col-lg-4">
                                 <div class="form-group">
-                                    <label>نام <span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" id="txtFirstname" required="">
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="form-group">
-                                    <label>نام خانوادگی <span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" id="txtLastname" required="">
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="form-group">
-                                    <label>نظام پزشکی </label>
-                                    <input class="form-control" type="text" id="txtMedicalNationalNumber">
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="form-group">
-                                    <label>جنسیت<span class="text-danger">*</span></label>
-                                    <select id="cmbGender" class="form-control">
-                                        <option value="..."></option>
-                                        <option value="true">مرد</option>
-                                        <option value="false">زن</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="service-fields mb-3">
-                            <div class="row">
-                                <div class="col-lg-3">
-                                    <div class="form-group">
-                                        <label>استان<span class="text-danger">*</span></label>
-                                        <select class="form-control" id="cmbState" required=""></select>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3">
-                                    <div class="form-group">
-                                        <label>شهر<span class="text-danger">*</span></label>
-                                        <select class="form-control" id="cmbCity" required=""></select>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3">
-                                    <div class="form-group">
-                                        <label>منطقه<span class="text-danger">*</span></label>
-                                        <select class="form-control" id="cmbRegion" required=""></select>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3">
-                                    <div class="form-group">
-                                        <label>تخصص<span class="text-danger">*</span></label>
-                                        <select class="form-control" id="cmbSpeciality"
-                                                required=""></select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="service-fields mb-3">
-                            <div class="row">
-                                <div class="col-lg-9">
-                                    <div class="form-group">
-                                        <label>آدرس<span class="text-danger">*</span></label>
-                                        <input type="text" id="txtAddress" class="form-control service-desc"/>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3">
-                                    <div class="form-group">
-                                        <label>تلفن<span class="text-danger">*</span></label>
-                                        <input type="text" id="txtPhone" class="form-control service-desc"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="service-fields mb-3">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="form-group col-lg-12">
-                                        <input type="hidden" id="hiddenFieldOrganizationId"/>
-                                        <label class="float-left col-lg-2">واحد سازمانی<span
-                                                class="text-danger">*</span></label>
-                                        <input class="form-control col-lg-7 col-sm-10 float-left" disabled type="text"
-                                               id="txtOrganizationTitle" required="">
-                                        <button class="btn btn-primary form-control col-lg-1 col-sm-1 float-left"
+                                    <input type="hidden" id="hiddenFieldPersonelId"/>
+                                    <label>انتخاب فرد<span class="text-danger">*</span></label>
+                                    <div style="display: flex;white-space: nowrap">
+                                        <input disabled type="text" class="form-control" id="txtPersonelTitle">
+                                        <button class="btn btn-primary form-control"
                                                 style="width: 3rem"
-                                                onclick="viewFancyBox('/app/view/core/organization/organizationSelectAuthorize.html','70%','90%')">
-                                            ...
+                                                onclick="viewFancyBox('/app/view/core/personel/personelSelect.html','90%','90%')">
+                                            000
                                         </button>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label>نظام پزشکی<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="txtMedicalNationalNumber" required="">
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label>تخصص<span class="text-danger">*</span></label>
+                                    <select class="form-control" id="cmbSpeciality"></select>
                                 </div>
                             </div>
                         </div>
@@ -664,24 +502,14 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="col-lg-8">
-                                    <div class="service-upload">
-                                        <i class="fas fa-cloud-upload-alt"></i>
-                                        <span>بارگذاری تصویر</span>
-                                        <form id="upload-file-form">
-                                            <input id="upload-file-input" type="file" name="attachment"
-                                                   accept="image/*"
-                                                   onchange="uploadFile();$('.submit-btn').hide();"/>
-                                            <img id="uploadedImage"
-                                                 style="width: 8em;border: 1px solid;border-radius: 10px;box-shadow: 0px 0px 10px 1px;"/>
-                                            <input type="hidden" id="hiddenFieldfileCode"/>
-                                        </form>
-                                    </div>
+                                <div class="col-lg-4 text-center">
+                                    <img id="uploadedImage"
+                                         style="width: 8em;border: 1px solid;border-radius: 10px;box-shadow: 0px 0px 10px 1px;"/>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- /Add Doctor -->
+                    <!-- /Add doctor -->
                 </div>
             </div>
         </div>
@@ -714,7 +542,7 @@
         <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">تصویر پزشک </h5>
+                    <h5 class="modal-title">تصویر کاربر </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

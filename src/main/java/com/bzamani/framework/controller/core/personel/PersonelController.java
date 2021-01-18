@@ -43,16 +43,6 @@ public class PersonelController extends BaseController {
     @GetMapping("/searchPersonels")
     public Map<String, Object> searchPersonels(@RequestParam(required = false) String firstname,
                                                @RequestParam(required = false) String lastname,
-                                               @RequestParam(required = false) String birthCertificateNumber,
-                                               @RequestParam(required = false) String nationalCode,
-                                               @RequestParam(required = false) Boolean male,
-                                               @RequestParam(required = false) String fatherName,
-                                               @RequestParam(required = false) String motherName,
-                                               @RequestParam(required = false) String birthPlace,
-                                               @RequestParam(required = false) Long educationLevelId,
-                                               @RequestParam(required = false) Long militaryServiceStatusId,
-                                               @RequestParam(required = false) String address,
-                                               @RequestParam(required = false) String telephone,
                                                @RequestParam(required = false) String mobile,
                                                @RequestParam(required = false) Long organizationId,
                                                @RequestParam(defaultValue = "0") int page,
@@ -61,16 +51,6 @@ public class PersonelController extends BaseController {
 
         return iPersonelService.searchPersonel(firstname,
                 lastname,
-                birthCertificateNumber,
-                nationalCode,
-                male,
-                fatherName,
-                motherName,
-                birthPlace,
-                educationLevelId,
-                militaryServiceStatusId,
-                address,
-                telephone,
                 mobile,
                 organizationId, page, size, sort);
     }

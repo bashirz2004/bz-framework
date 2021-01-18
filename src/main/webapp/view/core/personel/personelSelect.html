@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <title>انتخاب پرسنل</title>
+    <title>انتخاب فرد</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/app/assets/img/favicon.png">
@@ -147,6 +147,7 @@
         function setOrganization(id, title) {
             $('#hiddenFieldSearchOrganizationId').val(id);
             $('#txtSearchOrganizationTitle').val(title);
+            searchPersonel();
         }
 
         function selectPersonel(id, firstname, lastname, fileCode) {
@@ -163,7 +164,7 @@
         <div class="card card-table flex-fill">
             <div class="col-sm-12" style="background-color: darkslategray;border-radius: 10px 10px 0px 0px">
                 <div class="float-left mt-1">
-                    <h5 class="text-white">انتخاب پرسنل</h5>
+                    <h5 class="text-white">انتخاب فرد</h5>
                 </div>
                 <div class="float-right">
                     <a href="javascript:void(0)" onclick="clearSearch();" data-toggle="tooltip" title="پاک کردن فیلترها"
@@ -192,10 +193,15 @@
                 </div>
                 <div class="float-left col-sm-3 col-md-3 col-lg-3 col-xl-3">
                     <input type="hidden" id="hiddenFieldSearchOrganizationId" class="searchFilter"/>
-                    <span style="cursor: pointer" class="fa fa-search text-info col-sm-2 float-left"
-                          title="انتخاب واحد سازمانی"
-                          onclick="viewFancyBox('/app/view/core/organization/organizationSelectAuthorize.html','70%','90%')"></span>
-                    <input class="form-control searchFilter col-sm-10 float-left" disabled type="text" id="txtSearchOrganizationTitle" placeholder="واحد سازمانی..." />
+                    <div  style="display: flex;white-space: nowrap">
+                        <input disabled type="text" class="form-control searchFilter" id="txtSearchOrganizationTitle"
+                               placeholder="واحد سازمانی ...">
+                        <button class="btn btn-primary form-control"
+                                style="width: 3rem"
+                                onclick="viewFancyBox('/app/view/core/organization/organizationSelectAuthorize.html','70%','90%')">
+                            000
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="card-body">
@@ -302,7 +308,7 @@
         <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">تصویر پرسنل </h5>
+                    <h5 class="modal-title">تصویر فرد </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

@@ -385,9 +385,9 @@
                                         <img class="img-fluid"
                                              alt="User Image"
                                              style="width:4em"
-                                              src={{if male && fileCode==null}}"/app/assets/img/man.png"{{/if}}
-                                                            {{if !male && fileCode==null}}"/app/assets/img/woman.png"{{/if}}
-                                                            {{if fileCode!=null}}"/app/rest/core/file/download/${fileCode}/false"{{/if}}
+                                              src={{if personel.male && personel.fileCode==null}}"/app/assets/img/man.png"{{/if}}
+                                                            {{if !personel.male && personel.fileCode==null}}"/app/assets/img/woman.png"{{/if}}
+                                                            {{if personel.fileCode!=null}}"/app/rest/core/file/download/${personel.fileCode}/false"{{/if}}
                                              >
                                     </a>
                                     <a href="javascript:void(0)" class="fav-btn">
@@ -396,7 +396,7 @@
                                 </div>
                                 <div class="pro-content">
                                     <h3 class="title">
-                                        <a>${firstname} ${lastname}</a>
+                                        <a>${personel.firstname} ${personel.lastname}</a>
                                         <i class="fas fa-check-circle verified"></i>
                                     </h3>
                                     <p class="speciality"> ${speciality.title} </p>
@@ -410,17 +410,17 @@
                                     </div>
                                     <ul class="available-info">
                                         <li>
-                                            <i class="fas fa-map-marker-alt"></i>${region.title}
+                                            <i class="fas fa-map-marker-alt"></i>{{if personel.region != null}}}${personel.region.title}{{/if}}
                                         </li>
                                         <li>
                                             <i class="far fa-clock"></i>
-                                            {{if address}}
-                                                ${address.substring(0,25)}
+                                            {{if personel.address}}
+                                                ${personel.address.substring(0,25)}
                                             {{/if}}
                                         </li>
                                         <li>
-                                            <i class="fas fa-phone"></i>${telephone}
-                                            <i class="fas fa-info-circle" data-toggle="tooltip" title="${address}"></i>
+                                            <i class="fas fa-phone"></i>${personel.telephone}
+                                            <i class="fas fa-info-circle" data-toggle="tooltip" title="${personel.address}"></i>
                                         </li>
                                     </ul>
                                 </div>

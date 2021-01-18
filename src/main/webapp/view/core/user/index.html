@@ -223,7 +223,7 @@
                     },
                     error: function (err) {
                         if (err.responseText.includes("unq_user_personel_id"))
-                            showMessage("خطا. قبلا کاربری با این پرسنل ایجاد شده است.", "", "error");
+                            showMessage("خطا. قبلا کاربری با این فرد ایجاد شده است.", "", "error");
                         else if (err.responseText.includes("unq_username"))
                             showMessage("خطا. نام کاربری تکراری است.", "", "error");
                         else if (err.responseJSON.message.includes("Forbidden"))
@@ -318,6 +318,8 @@
             $('#txtPersonelTitle').val(firstname + " " + lastname);
             if (fileCode)
                 $('#uploadedImage').attr("src", "/app/rest/core/file/download/" + fileCode + "/false");
+            else
+                $('#uploadedImage').prop("src", "");
         }
 
         function refreshGrid() {
@@ -494,6 +496,7 @@
 
 
 
+
                         </script>
                         </tbody>
                     </table>
@@ -544,13 +547,14 @@
                             <div class="col-lg-4">
                                 <div class="form-group">
                                     <input type="hidden" id="hiddenFieldPersonelId"/>
-                                    <label>پرسنل<span class="text-danger">*</span><span
-                                            style="cursor: pointer" class="fa fa-search text-info"
-                                            title="انتخاب پرسنل"
-                                            onclick="viewFancyBox('/app/view/core/personel/personelSelect.html','90%','90%')"></span></label>
-                                    <div>
-                                        <input class="form-control" disabled type="text" id="txtPersonelTitle"
-                                               required="">
+                                    <label>انتخاب فرد<span class="text-danger">*</span></label>
+                                    <div style="display: flex;white-space: nowrap">
+                                        <input disabled type="text" class="form-control" id="txtPersonelTitle">
+                                        <button class="btn btn-primary form-control"
+                                                style="width: 3rem"
+                                                onclick="viewFancyBox('/app/view/core/personel/personelSelect.html','90%','90%')">
+                                            000
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -661,7 +665,7 @@
         <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">تصویر پرسنلی کاربر </h5>
+                    <h5 class="modal-title">تصویر کاربر </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

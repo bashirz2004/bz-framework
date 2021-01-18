@@ -99,8 +99,8 @@ public class UserService extends GenericService<User, Long> implements IUserServ
         checkInputData(userDto.getMobile());
 
         Personel p = new Personel();
-        p.setFirstname(userDto.getFirstname().trim().length() == 0 ? userDto.getMobile().trim() : userDto.getFirstname().trim());
-        p.setLastname(userDto.getLastname());
+        p.setFirstname(userDto.getFirstname().trim().length() == 0 ? "کاربر" : userDto.getFirstname().trim());
+        p.setLastname(userDto.getLastname().trim().length() == 0 ? userDto.getMobile().trim() : userDto.getLastname().trim());
         p.setMale(userDto.getMale());
         p.setNationalCode(userDto.getNationalCode().trim().length() == 0 ? null : userDto.getNationalCode().trim());
         p.setMobile(userDto.getMobile().trim());

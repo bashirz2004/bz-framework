@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <title>لیست پرسنل</title>
+    <title>لیست افراد</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/app/assets/img/favicon.png">
@@ -90,12 +90,16 @@
             "motherName": '',
             "birthPlace": '',
             "educationLevel": {"id": ''},
+            "ainRole": {"id": ''},
             "militaryServiceStatus": {"id": ''},
             "mobile": '',
             "address": '',
             "telephone": '',
             "organization": {"id": ''},
-            "fileCode": ''
+            "fileCode": '',
+            "state": {"id": ''},
+            "city": {"id": ''},
+            "region": {"id": ''}
         };
 
         var searchFilters = {
@@ -126,10 +130,61 @@
                     searchPersonel();
             });
 
-            fillComboBaseInfo(2, "cmbMilitaryServiceStatus");
+            fillComboBaseInfo(5, "cmbJob");
             fillComboBaseInfo(3, "cmbEducationLevel");
+            fillComboBaseInfo(2, "cmbMilitaryServiceStatus");
+            fillComboBaseInfo(1, "cmbState");
+
+            $("#cmbState").change(function () {
+                fillComboCity($(this).val());
+                $("#cmbRegion").html("<select class='select' id='cmbRegion'></select>");
+            });
+
+            $("#cmbCity").change(function () {
+                fillComboRegion($(this).val());
+            });
 
         });
+
+        function fillComboCity(stateId, callBackFunction) {
+            $.ajax({
+                type: "GET",
+                url: contextPath + "/api/public/baseinfo/getAllByParentId/" + stateId,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    $("#cmbCity").html("<select class='select' id='cmbCity'></select>");
+                    $("#cmbCity").append("<option value=-1>...</option>");
+                    $.each(res, function (index, value) {
+                        $("#cmbCity").append("<option value=" + value.id + ">" + value.title + "</option>");
+                    });
+                    if (callBackFunction != null && typeof callBackFunction == 'function')
+                        callBackFunction();
+                },
+                error: function (err) {
+                }
+            });
+        }
+
+        function fillComboRegion(cityId, callBackFunction) {
+            $.ajax({
+                type: "GET",
+                url: contextPath + "/api/public/baseinfo/getAllByParentId/" + cityId,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    $("#cmbRegion").html("<select class='select' id='cmbRegion'></select>");
+                    $("#cmbRegion").append("<option value=-1>...</option>");
+                    $.each(res, function (index, value) {
+                        $("#cmbRegion").append("<option value=" + value.id + ">" + value.title + "</option>");
+                    });
+                    if (callBackFunction != null && typeof callBackFunction == 'function')
+                        callBackFunction();
+                },
+                error: function (err) {
+                }
+            });
+        }
 
         function searchPersonel() {
             searchFilters.firstname = $("#txtSearchFirstname").val();
@@ -233,6 +288,8 @@
                     error: function (err) {
                         if (err.responseText.includes("unq_personel_mobile"))
                             showMessage("خطا. شماره موبایل تکراری است.", "", "error");
+                        if (err.responseText.includes("unq_personel_nationalCode"))
+                            showMessage("خطا. کدملی تکراری است.", "", "error");
                         if (err.responseText.includes("unq_personel_email"))
                             showMessage("خطا. ایمیل تکراری است.", "", "error");
                     }
@@ -241,7 +298,7 @@
         }
 
         function validateForm() {
-            if ($('#txtMobile').val() == '' || $('#txtFirstname').val() == '' || $('#txtLastname').val() == '' || !$('#hiddenFieldOrganizationId').val() > 0 || $('#txtOrganizationTitle').val() == '' || $('#txtEmail').val() == '')
+            if ($('#txtMobile').val() == '' || $('#txtFirstname').val() == '' || $('#txtLastname').val() == '' || !$('#hiddenFieldOrganizationId').val() > 0 || $('#txtOrganizationTitle').val() == '')
                 return "پرکردن فیلدهای ستاره دار الزامی است.";
             else return 'ok';
         }
@@ -259,12 +316,16 @@
                 "motherName": '',
                 "birthPlace": '',
                 "educationLevel": {"id": ''},
+                "job": {"id": ''},
                 "militaryServiceStatus": {"id": ''},
                 "mobile": '',
                 "address": '',
                 "telephone": '',
                 "organization": {"id": ''},
-                "fileCode": ''
+                "fileCode": '',
+                "state": {"id": ''},
+                "city": {"id": ''},
+                "region": {"id": ''}
             };
         }
 
@@ -280,6 +341,7 @@
             $("#txtMotherName").val(entity.motherName);
             $("#txtBirthPlace").val(entity.birthPlace);
             $("#cmbEducationLevel").val(entity.educationLevel != null ? entity.educationLevel.id : -1);
+            $("#cmbJob").val(entity.cmbJob != null ? entity.cmbJob.id : -1);
             $("#cmbMilitaryServiceStatus").val(entity.militaryServiceStatus != null ? entity.militaryServiceStatus.id : -1);
             $("#txtMobile").val(entity.mobile);
             $("#txtAddress").val(entity.address);
@@ -290,6 +352,20 @@
                 $('#uploadedImage').prop("src", "/app/rest/core/file/download/" + entity.fileCode + "/false");
                 $("#hiddenFieldfileCode").val(entity.fileCode);
             }
+            if (entity.state != null) {
+                $("#cmbState").val(entity.state.id);
+                fillComboCity(entity.state.id, function () {
+                    $("#cmbCity").val(entity.city != null ? entity.city.id : -1);
+                    if (entity.city != null) {
+                        fillComboRegion(entity.city.id, function () {
+                            $("#cmbRegion").val(entity.region != null ? entity.region.id : -1);
+                        });
+                    }
+                });
+
+            }
+
+
         }
 
         function setEntityFromInputs() {
@@ -306,12 +382,16 @@
                 "motherName": $('#txtMotherName').val(),
                 "birthPlace": $('#txtBirthPlace').val(),
                 "educationLevel": $('#cmbEducationLevel').val() > 0 ? {"id": $('#cmbEducationLevel').val()} : null,
+                "job": $('#cmbJob').val() > 0 ? {"id": $('#cmbJob').val()} : null,
                 "militaryServiceStatus": $('#cmbMilitaryServiceStatus').val() > 0 ? {"id": $('#cmbMilitaryServiceStatus').val()} : null,
                 "mobile": $('#txtMobile').val(),
                 "address": $('#txtAddress').val(),
                 "telephone": $('#txtTelephone').val(),
                 "organization": {"id": $('#hiddenFieldOrganizationId').val()},
-                "fileCode": $('#hiddenFieldfileCode').val()
+                "fileCode": $('#hiddenFieldfileCode').val(),
+                "state": $('#cmbState').val() > 0 ? {"id": $('#cmbState').val()} : null,
+                "city": $('#cmbCity').val() > 0 ? {"id": $('#cmbCity').val()} : null,
+                "region": $('#cmbRegion').val() > 0 ? {"id": $('#cmbRegion').val()} : null
             }
         }
 
@@ -351,6 +431,7 @@
         function setOrganizationInSearch(id, title) {
             $('#hiddenFieldSearchOrganizationId').val(id);
             $('#txtSearchOrganizationTitle').val(title);
+            searchPersonel();
         }
 
     </script>
@@ -362,7 +443,7 @@
         <div class="card card-table flex-fill">
             <div class="col-sm-12" style="border-radius: 10px 10px 0px 0px">
                 <div class="float-left mt-1">
-                    <h5>لیست پرسنل</h5>
+                    <h5>لیست افراد</h5>
                 </div>
                 <div class="float-right">
                     <a href="#add_edit_modal" data-toggle="modal" title="جدید"
@@ -397,10 +478,15 @@
                 </div>
                 <div class="float-left col-sm-3 col-md-3 col-lg-3 col-xl-3">
                     <input type="hidden" id="hiddenFieldSearchOrganizationId" class="searchFilter"/>
-                    <span style="cursor: pointer" class="fa fa-search text-info col-sm-2 float-left"
-                          title="انتخاب واحد سازمانی"
-                          onclick="viewFancyBox('/app/view/core/organization/organizationSelectAuthorize.html?isSearch=true','70%','90%')"></span>
-                    <input class="form-control searchFilter col-sm-10 float-left" disabled type="text" id="txtSearchOrganizationTitle" placeholder="واحد سازمانی..." />
+                    <div  style="display: flex;white-space: nowrap">
+                        <input disabled type="text" class="form-control searchFilter" id="txtSearchOrganizationTitle"
+                              placeholder="واحد سازمانی ...">
+                        <button class="btn btn-primary form-control"
+                                style="width: 3rem"
+                                onclick="viewFancyBox('/app/view/core/organization/organizationSelectAuthorize.html?isSearch=true','70%','90%')">
+                            000
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="card-body">
@@ -425,17 +511,17 @@
                                 <i class="fa fa-sort-up sort-grid" order="organization.title,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="organization.title,desc"></i>
                             </th>
-                            <th>مدرک نحصیلی
-                                <i class="fa fa-sort-up sort-grid" order="educationLevel.title,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="educationLevel.title,desc"></i>
+                            <th>استان
+                                <i class="fa fa-sort-up sort-grid" order="state.title,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="state.title,desc"></i>
                             </th>
-                            <th>وضعیت نظام وظیفه
-                                <i class="fa fa-sort-up sort-grid" order="militaryServiceStatus.title,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="militaryServiceStatus.title,desc"></i>
+                            <th>شهر
+                                <i class="fa fa-sort-up sort-grid" order="city.title,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="city.title,desc"></i>
                             </th>
-                            <th>کدملی
-                                <i class="fa fa-sort-up sort-grid" order="nationalCode,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="nationalCode,desc"></i>
+                            <th>منظقه / محله
+                                <i class="fa fa-sort-up sort-grid" order="region.title,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="region.title,desc"></i>
                             </th>
                             <th>موبایل
                                 <i class="fa fa-sort-up sort-grid" order="mobile,asc"></i>
@@ -474,16 +560,20 @@
                                         </td>
                                         <td>${organization.title}</td>
                                         <td>
-                                            {{if educationLevel}}
-                                                ${educationLevel.title}
+                                            {{if state}}
+                                                ${state.title}
                                             {{/if}}
                                         </td>
                                         <td>
-                                            {{if militaryServiceStatus}}
-                                                ${militaryServiceStatus.title}
+                                            {{if city}}
+                                                ${city.title}
                                             {{/if}}
                                         </td>
-                                        <td>${nationalCode}</td>
+                                        <td>
+                                            {{if region}}
+                                                ${region.title}
+                                            {{/if}}
+                                        </td>
                                         <td>${mobile}</td>
                                         <td>${telephone}</td>
                                         <td class="text-right">
@@ -499,6 +589,13 @@
                                             </div>
                                         </td>
                                     </tr>
+
+
+
+
+
+
+
 
 
 
@@ -566,7 +663,7 @@
         <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title text-white">افزودن / ویرایش پرسنل </h5>
+                    <h5 class="modal-title text-white">افزودن / ویرایش فرد </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCloseModal"
                             onclick="fillGrid('personelTemplate', 'personelList', contextPath + '/rest/core/personel/searchPersonels', searchFilters)">
                         <span aria-hidden="true">&times;</span>
@@ -591,9 +688,9 @@
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label>کدملی <span class="text-danger">*</span></label>
-                                    <input class="form-control" maxlength="10" minlength="10" type="text"
-                                           id="txtNationalCode">
+                                    <label>موبایل<span class="text-danger">*</span></label>
+                                    <input type="text" maxlength="11" minlength="11" id="txtMobile"
+                                           class="form-control service-desc"/>
                                 </div>
                             </div>
                             <div class="col-lg-2">
@@ -608,16 +705,18 @@
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label>مدرک تحصیلی</label>
-                                    <select class="form-control" id="cmbEducationLevel"></select>
+                                    <label>شغل</label>
+                                    <select class="form-control" id="cmbJob"></select>
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label>وضعیت نظام وظیفه</label>
-                                    <select class="form-control" id="cmbMilitaryServiceStatus"></select>
+                                    <label>مدرک تحصیلی</label>
+                                    <select class="form-control" id="cmbEducationLevel"></select>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-lg-2">
                                 <div class="form-group">
                                     <label>محل تولد</label>
@@ -644,8 +743,9 @@
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label>موبایل</label>
-                                    <input type="text" id="txtMobile" class="form-control service-desc"/>
+                                    <label>کدملی </label>
+                                    <input class="form-control" maxlength="10" minlength="10" type="text"
+                                           id="txtNationalCode">
                                 </div>
                             </div>
                             <div class="col-lg-2">
@@ -655,31 +755,44 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="service-fields mb-3">
                             <div class="row">
-                                <div class="col-lg-4">
+                                <div class="col-lg-2">
                                     <div class="form-group">
-                                        <label>آدرس</label>
-                                        <input type="text" id="txtAddress" class="form-control service-desc"/>
+                                        <label>استان</label>
+                                        <select class="form-control" id="cmbState" required=""></select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label>شهر</label>
+                                        <select class="form-control" id="cmbCity" required=""></select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label>منطقه/محله</label>
+                                        <select class="form-control" id="cmbRegion" required=""></select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label>وضعیت نظام وظیفه</label>
+                                        <select class="form-control" id="cmbMilitaryServiceStatus"></select>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
-                                    <div class="form-group">
-                                        <label>ایمیل <span class="text-danger">*</span></label>
-                                        <input class="form-control" type="text" dir="ltr" id="txtEmail">
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="form-group">
+                                    <div class="form-group col-lg-12">
                                         <input type="hidden" id="hiddenFieldOrganizationId"/>
-                                        <label>واحد سازمانی<span class="text-danger">*</span><span
-                                                style="cursor: pointer" class="fa fa-search text-info"
-                                                title="انتخاب واحد سازمانی"
-                                                onclick="viewFancyBox('/app/view/core/organization/organizationSelectAuthorize.html','70%','90%')"></span></label>
-                                        <div>
-                                            <input class="form-control" disabled type="text" id="txtOrganizationTitle"
+                                        <label>واحد سازمانی<span class="text-danger">*</span></label>
+                                        <div  style="display: flex;white-space: nowrap">
+                                            <input disabled type="text" class="form-control" id="txtOrganizationTitle"
                                                    required="">
+                                            <button class="btn btn-primary form-control"
+                                                    style="width: 3rem"
+                                                    onclick="viewFancyBox('/app/view/core/organization/organizationSelectAuthorize.html','70%','90%')">
+                                                000
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -688,7 +801,18 @@
 
                         <div class="service-fields mb-3">
                             <div class="row">
-
+                                <div class="col-lg-8">
+                                    <div class="form-group">
+                                        <label>آدرس</label>
+                                        <input type="text" id="txtAddress" class="form-control service-desc"/>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label>ایمیل </label>
+                                        <input class="form-control" type="text" dir="ltr" id="txtEmail">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -750,7 +874,7 @@
         <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">تصویر پرسنل </h5>
+                    <h5 class="modal-title">تصویر افراد </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
