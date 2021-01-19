@@ -1,4 +1,4 @@
-package com.bzamani.framework.model.clinic;
+package com.bzamani.framework.model.refer;
 
 public enum ReferStatus {
     initialSaved(0, "initialSaved", "ثبت اولیه"),

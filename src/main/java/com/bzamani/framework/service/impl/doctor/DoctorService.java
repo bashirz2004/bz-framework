@@ -1,8 +1,9 @@
-package com.bzamani.framework.service.doctor;
+package com.bzamani.framework.service.impl.doctor;
 
 import com.bzamani.framework.model.doctor.Doctor;
 import com.bzamani.framework.repository.doctor.IDoctorRepository;
 import com.bzamani.framework.service.core.file.IFileAttachmentService;
+import com.bzamani.framework.service.doctor.IDoctorService;
 import com.bzamani.framework.service.impl.core.GenericService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

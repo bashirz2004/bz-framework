@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>لیست کلینیک ها</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/app/assets/img/favicon.png">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/app/assets/bzamani/bootstrap.css">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="/app/assets/admin/css/font-awesome.min.css">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/app/assets/bzamani/style-admin.css">
+
+    <!--[if lt IE 9]>
+    <script src="/app/assets/js/html5shiv.min.js"></script>
+    <script src="/app/assets/js/respond.min.js"></script>
+    <![endif]-->
+    <!-- jQuery -->
+    <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
+    <!-- fancybox -->
+    <script src="/app/assets/bzamani/components/fancybox/jquery.fancybox.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/fancybox/jquery.fancybox.css"/>
+
+    <!-- pace mask -->
+    <script>
+        paceOptions = {
+            elements: false,
+            document: true, // disabled
+            eventLag: false, // disabled
+            ajax: {
+                trackMethods: ['GET', 'POST', 'DELETE', 'PUT'],
+                trackWebSockets: false
+            },
+            restartOnPushState: true,
+            restartOnRequestAfter: true
+        };
+        $(function () {
+            $("body").prepend("<div class='pace-cover' style='display: none;'></div>");
+            Pace.on("start", function () {
+                $(".pace-cover").fadeIn();
+            });
+            Pace.on("done", function () {
+                $(".pace-cover").fadeOut();
+            });
+        });
+    </script>
+    <script type="text/javascript" src="/app/assets/bzamani/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
+    <style>
+        .pace-cover {
+            position: fixed;
+            left: 0px;
+            top: 1px;
+            width: 100%;
+            height: 100%;
+            z-index: 99999;
+            background: rgba(0, 0, 0, 0.4);
+        }
+    </style>
+    <!-- /pace mask -->
+
+    <!-- sweet alert -->
+    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/sweetalert/sweetalert2.min.css">
+    <!-- /sweet alert -->
+
+    <script src="/app/assets/bzamani/jquery.template.js"></script>
+    <script src="/app/assets/bzamani/grid-utility.js"></script>
+    <script src="/app/assets/bzamani/general-utility.js"></script>
+
+    <script>
+        var contextPath = "/app";
+        var emptyEntityData = {
+            "id": '',
+            "percent": '',
+            "discount": '',
+            "organization": {"id": ''},
+        };
+        var entityData;
+
+        var searchFilters = {
+            "organizationTitle": '',
+            "sort": "id,desc",
+            "page": 0,
+            "size": 8
+        };
+
+        $(function () {
+            refreshGrid();
+            $('.sort-grid').on("click", function () {
+                searchFilters.sort = $(this).attr("order");
+                refreshGrid();
+            });
+
+            $('#cmbPageSize').change(function () {
+                searchFilters.size = $(this).val();
+                refreshGrid();
+            });
+
+            $('.searchFilter').keydown(function (e) {
+                if (e.which == 13)  // the enter key code
+                    searchClinic();
+            });
+        });
+
+        function searchClinic() {
+            searchFilters.organizationTitle = $("#txtSearchOrganizationTitle").val();
+            refreshGrid();
+        }
+
+        function clearSearch() {
+            $('#cmbPageSize').val(8);
+            searchFilters = {
+                "organizationTitle": '',
+                "sort": "id,desc",
+                "page": 0,
+                "size": 8
+            };
+            $('.searchFilter').val('');
+            refreshGrid();
+        }
+
+        function next() {
+            searchFilters.page = searchFilters.page + 1;
+            refreshGrid();
+        }
+
+        function previous() {
+            searchFilters.page = searchFilters.page - 1;
+            refreshGrid();
+        }
+
+        function goTo(pageNumber) {
+            searchFilters.page = pageNumber;
+            refreshGrid();
+        }
+
+        function deleteEntity() {
+            if ($('#hiddenFieldId').val() > 0)
+                $.ajax({
+                    url: contextPath + "/rest/clinic/delete/" + $('#hiddenFieldId').val(),
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    type: 'DELETE',
+                    success: function (res) {
+                        refreshGrid();
+                        showMessage("حذف با موفقیت انجام شد.", "", "success");
+                    },
+                    error: function (err) {
+                        if (err.responseJSON.message.includes("Forbidden"))
+                            showMessage("خطای سطح دسترسی", " شما مجوز انجام این کار را ندارید.", "error");
+                        else
+                            showMessage("خطا در حذف اطلاعات", "", "error");
+                    }
+                });
+            else
+                showMessage("هیچ رکوردی انتخاب نشده است.", "", "error");
+        }
+
+        function rowSelected(id) {
+            $('#hiddenFieldId').val(id);
+        }
+
+        function rowDeselected() {
+            $('#hiddenFieldId').val();
+        }
+
+        function loadEntity(id) {
+            clearEntity();
+            $.ajax({
+                url: contextPath + "/rest/clinic/load/" + id,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                type: 'GET',
+                success: function (res) {
+                    setInputsByEntity(res);
+                },
+                error: function (err) {
+                }
+            });
+        }
+
+        function saveEntity() {
+            if (validateForm() == 'ok') {
+                setEntityFromInputs();
+                $.ajax({
+                    url: contextPath + "/rest/clinic/save",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify(entityData),
+                    type: 'POST',
+                    success: function (res) {
+                        $('#hiddenFieldId').val(res.id);
+                        showMessage("ثبت با موفقیت انجام شد.", "", "success");
+                        $('#btnCloseModal').click();
+                    },
+                    error: function (err) {
+                        if (err.responseText.includes("unq_clinic_organization"))
+                            showMessage("خطا. این کلینیک قبلا ثبت شده است.", "", "error");
+                    }
+                });
+            }
+        }
+
+        function validateForm() {
+            if ($('#txtPercent').val() == '' || $('#txtDiscount').val() == '') {
+                showMessage("پرکردن فیلدهای ستاره دار الزامی است.", "", "warning");
+                return;
+            } else return 'ok';
+        }
+
+        function clearEntity() {
+            entityData = emptyEntityData;
+            setInputsByEntity(emptyEntityData);
+        }
+
+        function setInputsByEntity(entity) {
+            $("#hiddenFieldId").val(entity.id);
+            $("#txtPercent").val(entity.percent);
+            $("#txtDiscount").val(entity.discount);
+            $("#hiddenFieldOrganizationId").val(entity.organization.id);
+            $("#txtOrganizationTitle").val(entity.organization.title);
+        }
+
+        function setEntityFromInputs() {
+            entityData = {
+                "id": $('#hiddenFieldId').val(),
+                "percent": $('#txtPercent').val(),
+                "discount": $('#txtDiscount').val(),
+                "organization": {"id": $('#hiddenFieldOrganizationId').val()}
+            }
+        }
+
+        function setOrganization(id, title) {
+            $('#hiddenFieldOrganizationId').val(id);
+            $('#txtOrganizationTitle').val(title);
+        }
+
+        function refreshGrid() {
+            fillGrid('clinicTemplate', 'clinicList', contextPath + "/rest/clinic/searchClinic", searchFilters);
+        }
+
+        function setImagePath(fileCode) {
+            if (fileCode)
+                $('#image_full_size').attr("src", "/app/rest/core/file/download/" + fileCode + "/false");
+            else
+                $('#image_full_size').attr("src", "");
+        }
+
+    </script>
+
+<body>
+<div class="row">
+    <div class="col-md-12 d-flex">
+        <!-- Grid -->
+        <div class="card card-table flex-fill">
+            <div class="col-sm-12" style="border-radius: 10px 10px 0px 0px">
+                <div class="float-left mt-1">
+                    <h5>لیست کلینیک ها</h5>
+                </div>
+                <div class="float-right">
+                    <a href="#add_edit_modal" data-toggle="modal" title="جدید"
+                       onclick="clearEntity();"
+                       class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-plus"></i></a>
+                </div>
+                <div class="float-right">
+                    <a href="javascript:void(0)" onclick="clearSearch();" data-toggle="tooltip" title="پاک کردن فیلترها"
+                       class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-eraser"></i></a>
+                </div>
+                <div class="float-right search-section" style="display: none">
+                    <a href="javascript:void(0)" onclick="searchClinic();" data-toggle="tooltip" title="جستجو"
+                       class="btn btn-block btn-rounded btn-outline-secondary"><i class="fa fa-filter"></i></a>
+                </div>
+                <div class="float-right">
+                    <a href="javascript:void(0)" onclick="$('.search-section').slideToggle();"
+                       class="btn btn-block btn-rounded btn-outline-secondary"><i class="fa fa-search"></i></a>
+                </div>
+            </div>
+            <div class="col-sm-12 search-section" style="display: none">
+                <label class="float-left" style="padding-top: .5em">فیلتر کردن نتایج براساس : </label>
+                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                    <input type="text" id="txtSearchOrganizationTitle" class="form-control searchFilter" placeholder="نام ...">
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-center mb-0">
+                        <thead>
+                        <tr>
+                            <th class="text-center">ردیف</th>
+                            <th>تصویر
+                                <i class="fa fa-sort-up sort-grid" order="organization.fileCode,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="organization.fileCode,desc"></i>
+                            </th>
+                            <th>نام
+                                <i class="fa fa-sort-up sort-grid" order="organization.title,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="organization.title,desc"></i>
+                            </th>
+                            <th>استان
+                                <i class="fa fa-sort-up sort-grid" order="organization.state.title,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="organization.state.title,desc"></i>
+                            </th>
+                            <th>شهر
+                                <i class="fa fa-sort-up sort-grid" order="organization.city.title,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="organization.city.title,desc"></i>
+                            </th>
+                            <th>منطقه/محله
+                                <i class="fa fa-sort-up sort-grid" order="organization.region.title,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="organization.region.title,desc"></i>
+                            </th>
+                            <th>درصد تخفیف
+                                <i class="fa fa-sort-up sort-grid" order="discount,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="discount,desc"></i>
+                            </th>
+                            <th>درصد پورسانت
+                                <i class="fa fa-sort-up sort-grid" order="percent,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="percent,desc"></i>
+                            </th>
+                            <th>عملیات</th>
+                        </tr>
+                        </thead>
+                        <tbody id="clinicList">
+                        <script id="clinicTemplate" type="text/x-jquery-tmpl">
+                                    <tr>
+                                        <td class="text-center"><span class="tmplRowIndex"></span></td>
+                                        <td>
+                                            <h2 class="table-avatar">
+                                                <a href="#image_modal" data-toggle="modal" class="avatar avatar-sm mr-2"><img onclick="setImagePath('${organization.fileCode}')"
+                                                        class="avatar-img rounded-circle"
+                                                        src={{if organization.fileCode!=null}}"/app/rest/core/file/download/${organization.fileCode}/false"{{/if}}
+                                                        alt="organization Image"></a>
+                                            </h2>
+                                        </td>
+                                        <td>
+                                            ${organization.title}
+                                        </td>
+                                        <td>
+                                            {{if organization.state}}
+                                                ${organization.state.title}
+                                            {{/if}}
+                                        </td>
+                                        <td>
+                                            {{if organization.city}}
+                                                ${organization.city.title}
+                                            {{/if}}
+                                        </td>
+                                        <td>
+                                            {{if organization.region}}
+                                                ${organization.region.title}
+                                            {{/if}}
+                                        </td>
+                                        <td>
+                                            ${discount}
+                                        </td>
+                                        <td>
+                                            ${percent}
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="float-right">
+                                                <div class="float-right">
+                                                     <a href="#delete_clinic_modal" onclick="rowSelected(${id})"  data-toggle="modal" title="حذف"
+                                                                    class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-trash"></i></a>
+                                                </div>
+                                                <div class="float-right">
+                                                     <a href="#add_edit_modal" onclick="loadEntity(${id})"  data-toggle="modal" title="ویرایش"
+                                                                    class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-pencil"></i></a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        </script>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- /Grid -->
+    </div>
+
+    <!-- paging -->
+    <div class="row col-md-12 card-body pl-5" style="text-align: center!important;">
+        <span class="float-left pt-2"> صفحه &nbsp;</span>
+        <span class="float-left pt-2" id="currentPage"></span>
+        <span class="float-left pt-2">&nbsp;از &nbsp;</span>
+        <span class="float-left pt-2" id="totalPages"></span>&nbsp;
+
+        <ul class="pagination float-left" id="pagingList"></ul>&nbsp;
+
+        <span class="float-left pt-2" id="totalRecords"></span>
+        <span class="float-left pt-2"> مورد &nbsp;</span>
+
+        <select id="cmbPageSize" class="float-left" style="height: 35px;border-radius: 8px;cursor: pointer">
+            <option value="5">5</option>
+            <option value="8" selected>8</option>
+            <option value="10">10</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+        </select>
+    </div>
+    <!-- paging -->
+
+    <!-- Add/Edit Modal -->
+    <div class="modal fade custom-modal" id="add_edit_modal" aria-hidden="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-white">افزودن / ویرایش کلینیک </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCloseModal"
+                            onclick="fillGrid('clinicTemplate', 'clinicList', contextPath + '/rest/clinic/searchClinic', searchFilters)">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Add clinic -->
+                    <input type="hidden" id="hiddenFieldId"/>
+                    <div class="service-fields mb-3">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <input type="hidden" id="hiddenFieldOrganizationId"/>
+                                    <label>انتخاب واحدسازمانی<span class="text-danger">*</span></label>
+                                    <div style="display: flex;white-space: nowrap">
+                                        <input disabled type="text" class="form-control" id="txtOrganizationTitle">
+                                        <button class="btn btn-primary form-control"
+                                                style="width: 3rem"
+                                                onclick="viewFancyBox('/app/view/core/organization/organizationSelectAuthorize.html','90%','90%')">
+                                            000
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label>درصد تخفیف<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="txtDiscount" required="" maxlength="3">
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label>درصد پورسانت<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="txtPercent" required="" maxlength="3">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="service-fields mb-3">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="submit-section">
+                                        <button class="btn btn-primary submit-btn" onclick="saveEntity()"> ثبت
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 text-center">
+                                    <img id="uploadedImage"
+                                         style="width: 8em;border: 1px solid;border-radius: 10px;box-shadow: 0px 0px 10px 1px;"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Add clinic -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Add/Edit Modal -->
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="delete_clinic_modal" aria-hidden="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="form-content p-2">
+                        <h4 class="modal-title">تاییدیه حذف</h4>
+                        <p class="mb-4">آیا از حدف اطمینان کافی دارید؟</p>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                onclick="deleteEntity()">بله
+                        </button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"
+                                onclick="rowDeselected()">خیر
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Delete Modal -->
+
+    <!-- image_modal -->
+    <div class="modal fade custom-modal" id="image_modal" aria-hidden="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تصویر کلینیک </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <img src="" class="img-fluid" alt="هنوز تصویری برای این واحد سازمانی آپلود نشده است." id="image_full_size">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /image_modal -->
+
+</div>
+<!-- /Page Wrapper -->
+
+<!-- Bootstrap Core JS -->
+<script src="/app/assets/bzamani/bootstrap.min.js"></script>
+
+</body>
+</html>

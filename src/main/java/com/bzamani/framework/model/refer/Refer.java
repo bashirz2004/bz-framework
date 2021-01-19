@@ -1,7 +1,6 @@
 package com.bzamani.framework.model.refer;
 
 import com.bzamani.framework.model.clinic.Clinic;
-import com.bzamani.framework.model.clinic.ReferStatus;
 import com.bzamani.framework.model.core.BaseEntity;
 import com.bzamani.framework.model.core.baseinfo.BaseInfo;
 import com.bzamani.framework.model.core.personel.Personel;
