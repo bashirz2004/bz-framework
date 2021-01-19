@@ -83,17 +83,17 @@
 
     <script>
         var contextPath = "/app";
-        var entityData = {
+        var emptyEntityData = {
             "id": '',
             "username": '',
             "password": '',
-            "personel": {"id": ''},
+            "personel": {"id": '', "firstname": '', "lastname": ''},
             "enabled": true,
             "accountNonLocked": true,
             "userExpireDateShamsi": '',
             "passwordExpireDateShamsi": ''
         };
-
+        var entityData;
         var searchFilters = {
             "firstname": '',
             "lastname": '',
@@ -192,7 +192,6 @@
         }
 
         function loadEntity(id) {
-            clearInputs();
             clearEntity();
             $.ajax({
                 url: contextPath + "/rest/core/user/load/" + id,
@@ -251,40 +250,22 @@
         }
 
         function clearEntity() {
-            entityData = {
-                "id": '',
-                "username": '',
-                "password": '',
-                "personel": {"id": ''},
-                "enabled": true,
-                "accountNonLocked": true,
-                "userExpireDateShamsi": '',
-                "passwordExpireDateShamsi": ''
-            };
-        }
-
-        function clearInputs() {
+            entityData = emptyEntityData;
+            setInputsByEntity(emptyEntityData);
             $(".password-related").removeProp("disabled");
-            $("#hiddenFieldId").val("");
-            $("#txtUsername").val("");
-            $("#hiddenFieldPersonelId").val("");
-            $("#txtPersonelTitle").val("");
-            $('#uploadedImage').prop("src", "");
-            $('#txtUserExpireDateShamsi').val("");
-            $('#txtPasswordExpireDateShamsi').val("");
-            $('#enable_switch').prop("checked", "checked");
-            $('#lock_switch').prop("checked", "");
         }
 
         function setInputsByEntity(entity) {
             $(".password-related").prop("disabled", "disabled");
+            $(".password-related").val("");
             $("#hiddenFieldId").val(entity.id);
             $("#txtUsername").val(entity.username);
             $("#hiddenFieldPersonelId").val(entity.personel.id);
             $("#txtPersonelTitle").val(entity.personel.firstname + " " + entity.personel.lastname);
-            if (entity.personel.fileCode != null && entity.personel.fileCode.length > 0) {
+            if (entity.personel.fileCode != null && entity.personel.fileCode.length > 0)
                 $('#uploadedImage').prop("src", "/app/rest/core/file/download/" + entity.personel.fileCode + "/false");
-            }
+            else
+                $('#uploadedImage').prop("src", "");
             $('#txtUserExpireDateShamsi').val(entity.userExpireDateShamsi);
             $('#txtPasswordExpireDateShamsi').val(entity.passwordExpireDateShamsi);
             entity.enabled == true ? $('#enable_switch').prop("checked", "checked") : $('#enable_switch').prop("checked", "");
@@ -292,7 +273,6 @@
         }
 
         function setEntityFromInputs() {
-            clearEntity();
             entityData = {
                 "id": $('#hiddenFieldId').val(),
                 "personel": {"id": $('#hiddenFieldPersonelId').val()},
@@ -351,7 +331,7 @@
                 </div>
                 <div class="float-right">
                     <a href="#add_edit_modal" data-toggle="modal" title="جدید"
-                       onclick="clearEntity();clearInputs();"
+                       onclick="clearEntity();"
                        class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-plus"></i></a>
                 </div>
                 <div class="float-right">
@@ -480,6 +460,7 @@
                                             </div>
                                         </td>
                                     </tr>
+
 
 
 

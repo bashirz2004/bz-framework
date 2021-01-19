@@ -5,9 +5,11 @@ import com.bzamani.framework.common.utility.TreeNode;
 import com.bzamani.framework.dto.HierarchicalObjectDto;
 import com.bzamani.framework.model.core.organization.Organization;
 import com.bzamani.framework.repository.core.organization.IOrganizationRepository;
+import com.bzamani.framework.service.core.file.IFileAttachmentService;
 import com.bzamani.framework.service.core.organization.IOrganizationService;
 import com.bzamani.framework.service.core.user.IUserService;
 import com.bzamani.framework.service.impl.core.GenericService;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +32,9 @@ public class OrganizationService extends GenericService<Organization, Long> impl
 
     @Autowired
     IUserService iUserService;
+
+    @Autowired
+    IFileAttachmentService iFileAttachmentService;
 
     @Override
     protected JpaRepository<Organization, Long> getGenericRepo() {
@@ -109,6 +114,18 @@ public class OrganizationService extends GenericService<Organization, Long> impl
     @Override
     public boolean userHaveAccessToOrganization(long userId, long organizationId) {
         return iOrganizationRepository.userHaveAccessToOrganization(userId, organizationId) > 0 ? true : false;
+    }
+
+    @Override
+    @Transactional
+    public Organization saveOrganization(Organization organization) {
+        organization.setFileCode(organization.getFileCode() == null || organization.getFileCode().length() == 0 ? null : organization.getFileCode());
+        String oldFileCode = null;
+        String newFileCode = organization.getFileCode();
+        if (organization.getId() != null && organization.getId() > 0) //edit mode
+            oldFileCode = loadByEntityId(organization.getId()).getFileCode();
+        iFileAttachmentService.finalizeNewAndDeleteOldAttachment(newFileCode, oldFileCode);
+        return super.save(organization);
     }
 
 }

@@ -89,13 +89,15 @@
         var FirstData = '<?xml version="1.0" encoding="utf-8"?><tree id="0">';
         var XMLData = FirstData;
         var parentsText = "";
-        var entityData = {
+        var emptyEntityData = {
             "id": '',
             "title": '',
             "code": '',
             "header": {"id": ''},
             "parent": {"id": ''}
         };
+
+        var entityData;
 
         var contextPath = "/app";
 
@@ -238,7 +240,6 @@
 
         function openAddModal() {
             clearEntity();
-            clearInputs();
             if (nodeHeaderId == '-1') {
                 $('#hiddenFieldHeaderId').val(nodeId.substring(1));
                 $('#hiddenFieldParentId').val(null);
@@ -295,22 +296,9 @@
             initTree();
         }
 
-        function clearInputs() {
-            $('#hiddenFieldId').val('');
-            $('#hiddenFieldHeaderId').val();
-            $('#hiddenFieldParentId').val();
-            $('#txtTitle').val('');
-            $('#txtCode').val(null);
-        }
-
         function clearEntity() {
-            entityData = {
-                "id": '',
-                "title": '',
-                "code": null,
-                "header": {"id": ''},
-                "parent": null
-            };
+            entityData = emptyEntityData;
+            setInputsByEntity(emptyEntityData);
         }
 
         function setInputsByEntity(entity) {

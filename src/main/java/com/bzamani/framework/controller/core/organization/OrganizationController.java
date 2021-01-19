@@ -28,7 +28,7 @@ public class OrganizationController extends BaseController {
     @PreAuthorize("hasRole('7')")
     @PostMapping("/save")
     public Organization save(@RequestBody Organization organization) {
-        return iOrganizationService.save(organization);
+        return iOrganizationService.saveOrganization(organization);
     }
 
     @GetMapping("/load/{id}")

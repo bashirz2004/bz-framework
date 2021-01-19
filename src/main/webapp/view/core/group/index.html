@@ -78,10 +78,12 @@
 
     <script>
         var contextPath = "/app";
-        var entityData = {
+        var emptyEntityData = {
             "id": '',
             "title": ''
         };
+
+        var entityData;
 
         var searchFilters = {
             "title": '',
@@ -174,7 +176,6 @@
         }
 
         function loadEntity(id) {
-            clearInputs();
             clearEntity();
             $.ajax({
                 url: contextPath + "/rest/core/group/load/" + id,
@@ -217,10 +218,8 @@
         }
 
         function clearEntity() {
-            entityData = {
-                "id": '',
-                "title": ''
-            };
+            entityData = emptyEntityData;
+            setInputsByEntity(emptyEntityData);
         }
 
         function setInputsByEntity(entity) {
@@ -229,7 +228,6 @@
         }
 
         function setEntityFromInputs() {
-            clearEntity();
             entityData = {
                 "id": $('#hiddenFieldId').val(),
                 "title": $('#txtTitle').val()
@@ -253,7 +251,7 @@
                 </div>
                 <div class="float-right">
                     <a href="#add_edit_modal" data-toggle="modal" title="جدید"
-                       onclick="clearEntity();clearInputs();"
+                       onclick="clearEntity();"
                        class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-plus"></i></a>
                 </div>
                 <div class="float-right">

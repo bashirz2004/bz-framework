@@ -132,14 +132,12 @@
                 actionIds: []
             };
             if (checkedItems.length == 0 || (checkedItems.length == 1 && checkedItems[0] == '')) {
-                showMessage("هیچ عملیاتی انتخاب نشده است.", "", "warning");
-                return;
-            } else {
-                $.each(checkedItems, function (i) {
-                    data.actionIds.push(checkedItems[i]);
-                });
-                saveAll(data);
+                checkedItems = [];
             }
+            $.each(checkedItems, function (i) {
+                data.actionIds.push(checkedItems[i]);
+            });
+            saveAll(data);
         }
 
         function saveAll(data) {

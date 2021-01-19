@@ -77,6 +77,8 @@
     <script src="/app/assets/bzamani/components/autocomplete/jquery-ui-1.8.17.custom.min.js"></script>
     <link rel="stylesheet" href="/app/assets/bzamani/components/autocomplete/jquery-ui-1.8.17.custom.css"/>
 
+    <script src="/app/assets/bzamani/general-utility.js"></script>
+
     <script type="text/javascript">
         var im0 = "leaf.gif";
         var im1 = "folderOpen.gif";
@@ -85,12 +87,21 @@
         var nodeId = -1;
         var organizationTitle = "";
         var scroll;
-        var entityData = {
+        var emptyEntityData = {
             "id": '',
             "title": '',
             "active": '',
-            "parent": {"id": ''}
+            "parent": {"id": ''},
+            "mobile": '',
+            "address": '',
+            "telephone": '',
+            "fileCode": '',
+            "state": {"id": ''},
+            "city": {"id": ''},
+            "region": {"id": ''}
         };
+        var entityData;
+
         var contextPath = "/app";
 
         var FirstData = '<?xml version="1.0" encoding="utf-8"?><tree id="0">' +
@@ -105,6 +116,15 @@
         $(function () {
             initTree();
             configAutoComplete();
+            fillComboBaseInfo(1, "cmbState");
+            $("#cmbState").change(function () {
+                fillComboCity($(this).val());
+                $("#cmbRegion").html("<select class='select' id='cmbRegion'></select>");
+            });
+
+            $("#cmbCity").change(function () {
+                fillComboRegion($(this).val());
+            });
         });
 
         function configAutoComplete() {
@@ -272,18 +292,9 @@
             initTree();
         }
 
-        function clearInputs() {
-            $('#hiddenFieldId').val('');
-            $('#txtTitle').val('');
-            $('#cmbActive').val('true');
-        }
-
         function clearEntity() {
-            entityData = {
-                "id": '',
-                "title": '',
-                "enabled": ''
-            };
+            entityData = emptyEntityData;
+            setInputsByEntity(emptyEntityData);
         }
 
         function setInputsByEntity(entity) {
@@ -291,15 +302,48 @@
             $("#hiddenFieldParentId").val(entity.parent.id);
             $("#txtTitle").val(entity.title);
             $("#cmbActive").val(entity.active.toString());
+            $("#txtMobile").val(entity.mobile);
+            $("#txtAddress").val(entity.address);
+            $("#txtTelephone").val(entity.telephone);
+            if (entity.fileCode != null && entity.fileCode.length > 0) {
+                $('#uploadedImage').prop("src", "/app/rest/core/file/download/" + entity.fileCode + "/false");
+                $("#hiddenFieldFileCode").val(entity.fileCode);
+            } else {
+                $('#uploadedImage').prop("src", "");
+                $("#hiddenFieldFileCode").val(null);
+            }
+
+            if (entity.state != null) {
+                $("#cmbState").val(entity.state.id);
+                fillComboCity(entity.state.id, function () {
+                    $("#cmbCity").val(entity.city != null ? entity.city.id : -1);
+                    if (entity.city != null) {
+                        fillComboRegion(entity.city.id, function () {
+                            $("#cmbRegion").val(entity.region != null ? entity.region.id : -1);
+                        });
+                    }
+                });
+            }
+            else{
+                $("#cmbState").val(-1);
+                $("#cmbCity").val(-1);
+                $("#cmbRegion").val(-1);
+            }
         }
 
         function setEntityFromInputs() {
-            clearEntity();
             entityData = {
                 "id": $('#hiddenFieldId').val(),
                 "title": $('#txtTitle').val(),
                 "active": $('#cmbActive').val(),
-                "parent": {"id": $('#hiddenFieldParentId').val()}
+                "parent": {"id": $('#hiddenFieldParentId').val()},
+                "mobile": $('#txtMobile').val(),
+                "address": $('#txtAddress').val(),
+                "telephone": $('#txtTelephone').val(),
+                "fileCode": $('#hiddenFieldFileCode').val(),
+                "state": $('#cmbState').val() > 0 ? {"id": $('#cmbState').val()} : null,
+                "city": $('#cmbCity').val() > 0 ? {"id": $('#cmbCity').val()} : null,
+                "region": $('#cmbRegion').val() > 0 ? {"id": $('#cmbRegion').val()} : null
             }
         }
 
@@ -330,7 +374,8 @@
         }
 
         function validateForm() {
-            if (!$('#hiddenFieldParentId').val() > 0 || $('#txtTitle').val() == '' || !$('#cmbActive').val() > 0)
+            if (!$('#hiddenFieldParentId').val() > 0 || $('#txtTitle').val() == '' || !$('#cmbActive').val() > 0 || $('#txtAddress').val() == ''
+                || $('#txtTelephone').val() == '' || !$('#cmbState').val() > 0 || !$('#cmbCity').val() > 0 || !$('#cmbRegion').val() > 0)
                 return;
             else return 'ok';
         }
@@ -355,11 +400,75 @@
             });
         }
 
+        function fillComboCity(stateId, callBackFunction) {
+            $.ajax({
+                type: "GET",
+                url: contextPath + "/api/public/baseinfo/getAllByParentId/" + stateId,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    $("#cmbCity").html("<select class='select' id='cmbCity'></select>");
+                    $("#cmbCity").append("<option value=-1>...</option>");
+                    $.each(res, function (index, value) {
+                        $("#cmbCity").append("<option value=" + value.id + ">" + value.title + "</option>");
+                    });
+                    if (callBackFunction != null && typeof callBackFunction == 'function')
+                        callBackFunction();
+                },
+                error: function (err) {
+                }
+            });
+        }
+
+        function fillComboRegion(cityId, callBackFunction) {
+            $.ajax({
+                type: "GET",
+                url: contextPath + "/api/public/baseinfo/getAllByParentId/" + cityId,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    $("#cmbRegion").html("<select class='select' id='cmbRegion'></select>");
+                    $("#cmbRegion").append("<option value=-1>...</option>");
+                    $.each(res, function (index, value) {
+                        $("#cmbRegion").append("<option value=" + value.id + ">" + value.title + "</option>");
+                    });
+                    if (callBackFunction != null && typeof callBackFunction == 'function')
+                        callBackFunction();
+                },
+                error: function (err) {
+                }
+            });
+        }
+
+        function uploadFile() {
+            $.ajax({
+                url: contextPath + "/rest/core/file/upload",
+                type: "POST",
+                data: new FormData($("#upload-file-form")[0]),
+                enctype: 'multipart/form-data',
+                processData: false,
+                contentType: false,
+                cache: false,
+                dataType: "text",
+                success: function (fileCode) {
+                    if (fileCode != null && fileCode.length > 0) {
+                        $('#uploadedImage').prop("src", "/app/rest/core/file/download/" + fileCode + "/false");
+                        $('#hiddenFieldFileCode').val(fileCode);
+                        $('.submit-btn').show();
+                    }
+                },
+                error: function (err) {
+                    if (err.responseText && err.responseText.toLowerCase().includes('SizeLimitExceededException'.toLowerCase()))
+                        showMessage('خطا! حداکثر حجم تصویر شما می تواند ' + parseInt(err.responseText.substring(err.responseText.lastIndexOf('(') + 1, err.responseText.lastIndexOf(')'))) / 1048576 + ' مگابایت باشد.', "", "error");
+                }
+            });
+        }
+
 
     </script>
 <body style="overflow: hidden">
 
-<a id="modal_link" href="#add_edit_modal" data-toggle="modal" onclick="clearEntity();clearInputs();"></a>
+<a id="modal_link" href="#add_edit_modal" data-toggle="modal" onclick="clearEntity();"></a>
 <h5 class="m-1">مدیریت ساختار سازمان</h5>
 <div class="row m-1">
     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
@@ -398,7 +507,7 @@
                                 <input class="form-control" type="text" id="txtTitle" required="">
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-3">
                             <div class="form-group">
                                 <label>وضعیت<span class="text-danger">*</span></label>
                                 <select id="cmbActive" class="form-control">
@@ -406,6 +515,56 @@
                                     <option value="true" selected>فعال</option>
                                     <option value="false">غیرفعال</option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label>تلفن<span class="text-danger">*</span></label>
+                                <input type="text" id="txtTelephone" class="form-control service-desc"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label>استان<span class="text-danger">*</span></label>
+                                <select class="form-control" id="cmbState" required=""></select>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label>شهر<span class="text-danger">*</span></label>
+                                <select class="form-control" id="cmbCity" required=""></select>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label>منطقه/محله<span class="text-danger">*</span></label>
+                                <select class="form-control" id="cmbRegion" required=""></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>آدرس<span class="text-danger">*</span></label>
+                                <input type="text" id="txtAddress" class="form-control service-desc"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-9">
+                            <div class="service-upload">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>بارگذاری تصویر</span>
+                                <form id="upload-file-form">
+                                    <input id="upload-file-input" type="file" name="attachment"
+                                           accept="image/*"
+                                           onchange="uploadFile();$('.submit-btn').hide();"/>
+                                    <img id="uploadedImage"
+                                         style="width: 8em;border: 1px solid;border-radius: 10px;box-shadow: 0px 0px 10px 1px;"/>
+                                    <input type="hidden" id="hiddenFieldFileCode"/>
+                                </form>
                             </div>
                         </div>
                     </div>

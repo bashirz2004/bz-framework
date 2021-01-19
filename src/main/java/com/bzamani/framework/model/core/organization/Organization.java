@@ -2,6 +2,7 @@ package com.bzamani.framework.model.core.organization;
 
 import com.bzamani.framework.common.config.mycustomannotation.MyLengthValidator;
 import com.bzamani.framework.model.core.BaseEntity;
+import com.bzamani.framework.model.core.baseinfo.BaseInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,6 +35,27 @@ public class Organization extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
     @OrderBy("title")
     private Set<Organization> children;
+
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "telephone")
+    private String telephone;
+
+    @Column(name = "fileCode")
+    private String fileCode;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "state_id")
+    private BaseInfo state;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "city_id")
+    private BaseInfo city;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "region_id")
+    private BaseInfo region;
 
 
 }

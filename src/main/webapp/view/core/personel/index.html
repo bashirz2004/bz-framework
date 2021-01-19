@@ -78,7 +78,7 @@
 
     <script>
         var contextPath = "/app";
-        var entityData = {
+        var emptyEntityData = {
             "id": '',
             "male": '',
             "firstname": '',
@@ -101,6 +101,7 @@
             "city": {"id": ''},
             "region": {"id": ''}
         };
+        var entityData;
 
         var searchFilters = {
             "firstname": '',
@@ -256,7 +257,6 @@
         }
 
         function loadEntity(id) {
-            clearInputs();
             clearEntity();
             $.ajax({
                 url: contextPath + "/rest/core/personel/load/" + id,
@@ -304,29 +304,8 @@
         }
 
         function clearEntity() {
-            entityData = {
-                "id": '',
-                "male": '',
-                "firstname": '',
-                "lastname": '',
-                "birthCertificateNumber": '',
-                "nationalCode": '',
-                "email": '',
-                "fatherName": '',
-                "motherName": '',
-                "birthPlace": '',
-                "educationLevel": {"id": ''},
-                "job": {"id": ''},
-                "militaryServiceStatus": {"id": ''},
-                "mobile": '',
-                "address": '',
-                "telephone": '',
-                "organization": {"id": ''},
-                "fileCode": '',
-                "state": {"id": ''},
-                "city": {"id": ''},
-                "region": {"id": ''}
-            };
+            entityData = emptyEntityData;
+            setInputsByEntity(emptyEntityData);
         }
 
         function setInputsByEntity(entity) {
@@ -350,7 +329,10 @@
             $("#txtOrganizationTitle").val(entity.organization.title);
             if (entity.fileCode != null && entity.fileCode.length > 0) {
                 $('#uploadedImage').prop("src", "/app/rest/core/file/download/" + entity.fileCode + "/false");
-                $("#hiddenFieldfileCode").val(entity.fileCode);
+                $("#hiddenFieldFileCode").val(entity.fileCode);
+            } else {
+                $('#uploadedImage').prop("src", "");
+                $("#hiddenFieldFileCode").val(null);
             }
             if (entity.state != null) {
                 $("#cmbState").val(entity.state.id);
@@ -362,14 +344,14 @@
                         });
                     }
                 });
-
+            }else{
+                $("#cmbState").val(-1);
+                $("#cmbCity").val(-1);
+                $("#cmbRegion").val(-1);
             }
-
-
         }
 
         function setEntityFromInputs() {
-            clearEntity();
             entityData = {
                 "id": $('#hiddenFieldId').val(),
                 "male": $('#cmbGender').val(),
@@ -388,7 +370,7 @@
                 "address": $('#txtAddress').val(),
                 "telephone": $('#txtTelephone').val(),
                 "organization": {"id": $('#hiddenFieldOrganizationId').val()},
-                "fileCode": $('#hiddenFieldfileCode').val(),
+                "fileCode": $('#hiddenFieldFileCode').val(),
                 "state": $('#cmbState').val() > 0 ? {"id": $('#cmbState').val()} : null,
                 "city": $('#cmbCity').val() > 0 ? {"id": $('#cmbCity').val()} : null,
                 "region": $('#cmbRegion').val() > 0 ? {"id": $('#cmbRegion').val()} : null
@@ -408,7 +390,7 @@
                 success: function (fileCode) {
                     if (fileCode != null && fileCode.length > 0) {
                         $('#uploadedImage').prop("src", "/app/rest/core/file/download/" + fileCode + "/false");
-                        $('#hiddenFieldfileCode').val(fileCode);
+                        $('#hiddenFieldFileCode').val(fileCode);
                         $('.submit-btn').show();
                     }
                 },
@@ -447,7 +429,7 @@
                 </div>
                 <div class="float-right">
                     <a href="#add_edit_modal" data-toggle="modal" title="جدید"
-                       onclick="clearEntity();clearInputs();"
+                       onclick="clearEntity();"
                        class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-plus"></i></a>
                 </div>
                 <div class="float-right">
@@ -478,9 +460,9 @@
                 </div>
                 <div class="float-left col-sm-3 col-md-3 col-lg-3 col-xl-3">
                     <input type="hidden" id="hiddenFieldSearchOrganizationId" class="searchFilter"/>
-                    <div  style="display: flex;white-space: nowrap">
+                    <div style="display: flex;white-space: nowrap">
                         <input disabled type="text" class="form-control searchFilter" id="txtSearchOrganizationTitle"
-                              placeholder="واحد سازمانی ...">
+                               placeholder="واحد سازمانی ...">
                         <button class="btn btn-primary form-control"
                                 style="width: 3rem"
                                 onclick="viewFancyBox('/app/view/core/organization/organizationSelectAuthorize.html?isSearch=true','70%','90%')">
@@ -589,6 +571,8 @@
                                             </div>
                                         </td>
                                     </tr>
+
+
 
 
 
@@ -785,7 +769,7 @@
                                     <div class="form-group col-lg-12">
                                         <input type="hidden" id="hiddenFieldOrganizationId"/>
                                         <label>واحد سازمانی<span class="text-danger">*</span></label>
-                                        <div  style="display: flex;white-space: nowrap">
+                                        <div style="display: flex;white-space: nowrap">
                                             <input disabled type="text" class="form-control" id="txtOrganizationTitle"
                                                    required="">
                                             <button class="btn btn-primary form-control"
@@ -834,7 +818,7 @@
                                                    onchange="uploadFile();$('.submit-btn').hide();"/>
                                             <img id="uploadedImage"
                                                  style="width: 8em;border: 1px solid;border-radius: 10px;box-shadow: 0px 0px 10px 1px;"/>
-                                            <input type="hidden" id="hiddenFieldfileCode"/>
+                                            <input type="hidden" id="hiddenFieldFileCode"/>
                                         </form>
                                     </div>
                                 </div>

@@ -70,7 +70,7 @@
 
     <script>
         var contextPath = "/app";
-        var entityData = {
+        var emptyEntityData = {
             "id": '',
             "title": '',
             "category": {"id": ''},
@@ -79,6 +79,7 @@
             "allowLikeOrComment": '',
             "fileCode": ''
         };
+        var entityData;
 
         var searchFilters = {
             "searchBox": '',
@@ -232,7 +233,6 @@
         }
 
         function loadEntity(id) {
-            clearInputs();
             clearEntity();
             $.ajax({
                 url: contextPath + "/api/public/portal/post/load/" + id,
@@ -296,15 +296,8 @@
         }
 
         function clearEntity() {
-            entityData = {
-                "id": '',
-                "title": '',
-                "category": {"id": ''},
-                "body": '',
-                "tags": '',
-                "allowLikeOrComment": '',
-                "fileCode": ''
-            };
+            entityData = emptyEntityData;
+            setInputsByEntity(emptyEntityData);
         }
 
         function setInputsByEntity(entity) {
@@ -318,10 +311,13 @@
                 $('#uploadedImage').prop("src", "/app/rest/core/file/download/" + entity.fileCode + "/false");
                 $("#hiddenFieldfileCode").val(entity.fileCode);
             }
+            else{
+                $('#uploadedImage').prop("src", "");
+                $("#hiddenFieldfileCode").val('');
+            }
         }
 
         function setEntityFromInputs() {
-            clearEntity();
             entityData = {
                 "id": $('#hiddenFieldId').val(),
                 "title": $('#txtTitle').val(),
@@ -372,7 +368,6 @@
         function showComments(postId) {
             document.location = "showPostCommentsToAdmin.html?postId=" + postId;
         }
-
 
     </script>
 </head>
@@ -427,7 +422,7 @@
                     <!-- /Search -->
 
                     <a href="#add_edit_modal" data-toggle="modal" title="افزودن پست جدید"
-                       onclick="clearEntity();clearInputs();"
+                       onclick="clearEntity();"
                        class="btn btn-info  btn-sm mb-4"><i class="fa fa-plus"></i></a>
 
                     <!-- Categories -->

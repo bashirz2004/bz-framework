@@ -77,12 +77,13 @@
 
     <script>
         var contextPath = "/app";
-        var entityData = {
+        var emptyEntityData = {
             "id": '',
             "medicalNationalNumber": '',
-            "personel": {"id": ''},
+            "personel": {"id": '', "firstname": '', "lastname": ''},
             "speciality": {"id": ''}
         };
+        var entityData;
 
         var searchFilters = {
             "firstname": '',
@@ -179,7 +180,6 @@
         }
 
         function loadEntity(id) {
-            clearInputs();
             clearEntity();
             $.ajax({
                 url: contextPath + "/rest/doctor/load/" + id,
@@ -227,21 +227,8 @@
         }
 
         function clearEntity() {
-            entityData = {
-                "id": '',
-                "medicalNationalNumber": '',
-                "personel": {"id": ''},
-                "speciality": {"id": ''}
-            };
-        }
-
-        function clearInputs() {
-            $("#hiddenFieldId").val("");
-            $("#txtMedicalNationalNumber").val("");
-            $("#hiddenFieldPersonelId").val("");
-            $("#txtPersonelTitle").val("");
-            $("#cmbSpeciality").val("");
-            $('#uploadedImage').prop("src", "");
+            entityData = emptyEntityData;
+            setInputsByEntity(emptyEntityData);
         }
 
         function setInputsByEntity(entity) {
@@ -250,13 +237,13 @@
             $("#hiddenFieldPersonelId").val(entity.personel.id);
             $("#txtPersonelTitle").val(entity.personel.firstname + " " + entity.personel.lastname);
             $("#cmbSpeciality").val(entity.speciality.id);
-            if (entity.personel.fileCode != null && entity.personel.fileCode.length > 0) {
+            if (entity.personel.fileCode != null && entity.personel.fileCode.length > 0)
                 $('#uploadedImage').prop("src", "/app/rest/core/file/download/" + entity.personel.fileCode + "/false");
-            }
+            else
+                $('#uploadedImage').prop("src", "");
         }
 
         function setEntityFromInputs() {
-            clearEntity();
             entityData = {
                 "id": $('#hiddenFieldId').val(),
                 "medicalNationalNumber": $('#txtMedicalNationalNumber').val(),
@@ -299,7 +286,7 @@
                 </div>
                 <div class="float-right">
                     <a href="#add_edit_modal" data-toggle="modal" title="جدید"
-                       onclick="clearEntity();clearInputs();"
+                       onclick="clearEntity();"
                        class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-plus"></i></a>
                 </div>
                 <div class="float-right">
@@ -397,6 +384,8 @@
                                             </div>
                                         </td>
                                     </tr>
+
+
 
 
 
