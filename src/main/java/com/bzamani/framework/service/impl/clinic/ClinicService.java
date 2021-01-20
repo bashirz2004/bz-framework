@@ -28,7 +28,7 @@ public class ClinicService extends GenericService<Clinic, Long> implements IClin
     }
 
     @Override
-    public Map<String, Object> searchClinic(String organizationTitle, int page, int size, String[] sort) {
+    public Map<String, Object> searchClinic(String organizationTitle, String organizationAddress, Long stateId, Long cityId, Long regionId, int page, int size, String[] sort) {
         List<Sort.Order> orders = new ArrayList<Sort.Order>();
         if (sort[0].contains(",")) {
             for (String sortOrder : sort) {
@@ -40,7 +40,7 @@ public class ClinicService extends GenericService<Clinic, Long> implements IClin
         }
         List<Clinic> clinics = new ArrayList<>();
         Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
-        Page<Clinic> pageTuts = iClinicRepository.searchClinic(organizationTitle, pagingSort);
+        Page<Clinic> pageTuts = iClinicRepository.searchClinic(organizationTitle, organizationAddress, stateId, cityId, regionId, pagingSort);
         clinics = pageTuts.getContent();
         Map<String, Object> response = new HashMap<>();
         response.put("entityList", clinics);

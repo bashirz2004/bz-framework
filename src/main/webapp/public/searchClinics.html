@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>مدیک</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+
+    <!-- Favicons -->
+    <link href="../assets/img/favicon.png" rel="icon">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../assets/bzamani/bootstrap.css">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="../assets/plugins/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="../assets/plugins/fontawesome/css/all.min.css">
+
+    <!-- Select2 CSS -->
+    <link rel="stylesheet" href="../assets/bzamani/select2.min.css">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="../assets/bzamani/style-public.css">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="assets/js/html5shiv.min.js"></script>
+    <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        .card:hover {
+            border-color: silver;
+            background-color: gold;
+
+        }
+    </style>
+    <!-- jQuery -->
+    <script src="../assets/bzamani/jquery-1.10.2.min.js"></script>
+    <script src="../assets/bzamani/jquery.template.js"></script>
+    <script>
+        contextPath = "/app";
+        searchFilters = {
+            "stateId": -1,
+            "cityId": -1,
+            "regionId": -1,
+            "organizationTitle": '',
+            "organizationAddress": '',
+            "sort": "id,desc",
+            "size": 50
+        };
+
+        $(function () {
+            fillComboState();
+            searchClinic();
+
+            $("#btnMore").click(function () {
+                searchFilters.size += 5;
+                searchClinic();
+            });
+
+            $("#cmbSerachOrder").change(function () {
+                searchFilters.sort = $(this).val();
+                searchClinic();
+            });
+
+            $("#cmbState").change(function () {
+                searchFilters.stateId = $(this).val();
+                searchClinic();
+                fillComboCity($(this).val());
+                $("#cmbRegion").html("<select class='select' id='cmbRegion'></select>");
+            });
+
+            $("#cmbCity").change(function () {
+                searchFilters.cityId = $(this).val();
+                searchClinic();
+                fillComboRegion($(this).val());
+            });
+
+            $("#cmbRegion").change(function () {
+                searchFilters.regionId = $(this).val();
+                searchClinic();
+            });
+
+        });
+
+        function fillComboState() {
+            $.ajax({
+                type: "GET",
+                url: contextPath + "/api/public/baseinfo/getAllByHeaderId/1",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    $("#cmbState").append("<option value=-1>...</option>");
+                    $.each(res, function (index, value) {
+                        $("#cmbState").append("<option value=" + value.id + ">" + value.title + "</option>");
+                    });
+                },
+                error: function (err) {
+                    console.log("error ---- " + err);
+                }
+            });
+        }
+
+        function fillComboCity(stateId) {
+            $.ajax({
+                type: "GET",
+                url: contextPath + "/api/public/baseinfo/getAllByParentId/" + stateId,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    $("#cmbCity").html("<select class='select' id='cmbCity'></select>");
+                    $("#cmbCity").append("<option value=-1>...</option>");
+                    $.each(res, function (index, value) {
+                        $("#cmbCity").append("<option value=" + value.id + ">" + value.title + "</option>");
+                    });
+                },
+                error: function (err) {
+                    console.log("error ---- " + err);
+                }
+            });
+        }
+
+        function fillComboRegion(cityId) {
+            $.ajax({
+                type: "GET",
+                url: contextPath + "/api/public/baseinfo/getAllByParentId/" + cityId,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    $("#cmbRegion").html("<select class='select' id='cmbRegion'></select>");
+                    $("#cmbRegion").append("<option value=-1>...</option>");
+                    $.each(res, function (index, value) {
+                        $("#cmbRegion").append("<option value=" + value.id + ">" + value.title + "</option>");
+                    });
+                },
+                error: function (err) {
+                    console.log("error ---- " + err);
+                }
+            });
+        }
+
+
+        function searchClinic() {
+            searchFilters.organizationAddress = $("#txtSearchAddress").val();
+            searchFilters.organizationTitle = $("#txtSearchTitle").val();
+            $.ajax({
+                type: "GET",
+                url: contextPath + "/api/public/clinic/searchClinic",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                data: searchFilters,
+                success: function (res) {
+                    $("#clinicList > div").remove();
+                    $("#clinicTemplate").tmpl(res.entityList).appendTo("#clinicList");
+                    $("#lblTotalRecords").html(res.totalRecords);
+                },
+                error: function (err) {
+                    console.log("error ---- " + err);
+                }
+            });
+        }
+    </script>
+
+</head>
+
+<body style="color: black;background-color: #f5f5f5">
+
+<!-- Main Wrapper -->
+<div class="main-wrapper">
+
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar navbar-expand-lg header-nav">
+            <div class="navbar-header  col-md-2 col-sm-12">
+                <a href="../index.html" class="navbar-brand logo">
+                    <img src="../assets/img/logo.png" class="img-fluid" alt="Logo">
+                </a>
+            </div>
+            <div class="main-menu-wrapper  col-md-7 col-sm-12">
+                <div class="menu-header">
+                    <a href="../index.html" class="menu-logo">
+                        <img src="../assets/img/logo.png" class="img-fluid" alt="Logo">
+                    </a>
+                    <a id="menu_close" class="menu-close" href="javascript:void(0);">
+                        <i class="fas fa-times"></i>
+                    </a>
+                </div>
+                <ul class="main-nav">
+                    <li class="active">
+                        <a href="../index.html">خانه</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <div class="sort-by">
+                    <span class="sort-title">مرتب سازی</span>
+                    <span class="sortby-fliter">
+                            <select class="select" id="cmbSerachOrder">
+                                <option value="id,desc" class="sorting">امتیاز</option>
+                                <option value="discount,desc" class="sorting">درصد تخفیف</option>
+                                <option value="organization.address,asc" class="sorting">آدرس</option>
+                            </select>
+                        </span>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- /Header -->
+
+    <!-- Page Content -->
+    <div class="content" >
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-md-12 col-lg-4 col-xl-3 theiaStickySidebar">
+
+                    <!-- Search Filter -->
+                    <div class="search-filter" style="border-radius: 15px;box-shadow:0px 0px 10px 1px silver">
+                        <div class="card-header"
+                             style="border-radius: 15px 15px 0px 0px;box-shadow:0px 0px 10px 1px silver">
+                            <h4 class="card-title mb-0">  جستجوی کلینیک ها (<span id="lblTotalRecords"></span>)</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="filter-widget">
+                                <h4>استان</h4>
+                                <select class="select" id="cmbState">
+                                </select>
+                            </div>
+                            <div class="filter-widget">
+                                <h4>شهر</h4>
+                                <select class="select" id="cmbCity">
+                                </select>
+                            </div>
+                            <div class="filter-widget">
+                                <h4>منطقه شهرداری / نام محله</h4>
+                                <select class="select" id="cmbRegion">
+                                </select>
+                            </div>
+                            <div class="filter-widget">
+                                <h4>نام کلینیک</h4>
+                                <input type="text" class="form-control" id="txtSearchTitle"/>
+                            </div>
+                            <div class="filter-widget">
+                                <h4>آدرس</h4>
+                                <input type="text" class="form-control" id="txtSearchAddress"/>
+                            </div>
+                            <div class="btn-search">
+                                <button type="button" class="btn btn-block" onclick="searchClinic()">جستجو</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Search Filter -->
+
+                </div>
+                <!-- clinic Widget -->
+                <div class="col-md-12 col-lg-8 col-xl-9" id="clinicList">
+                    <script id="clinicTemplate" type="text/x-jquery-tmpl">
+                    <div class="card" style="border-radius: 15px;box-shadow:0px 0px 10px 1px silver">
+                        <div class="card-body">
+                            <div class="doctor-widget">
+                                <div class="doc-info-left">
+                                    <div class="doctor-img">
+                                        <a>
+                                            <img src= {{if organization.fileCode!=null}}"/app/rest/core/file/download/${organization.fileCode}/false"{{/if}}
+                                            class="img-fluid"
+                                            alt="Clinic Image">
+                                        </a>
+                                    </div>
+                                    <div class="doc-info-cont">
+                                        <h4 class="doc-name">${organization.title}</h4>
+                                        <p class="doc-speciality">
+                                            <i class="fa fa-stethoscope" aria-hidden="true"></i>
+                                            ${organization.state.title}
+                                        </p>
+                                        <h5 class="doc-department"> تخفیف: ${discount} %</h5>
+                                        <div class="rating">
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star"></i>
+                                            <span class="d-inline-block average-rating">(${id})</span>
+                                        </div>
+                                        <div class="clinic-details">
+                                            <p class="doc-location">
+                                                <i class="fas fa-map-marker-alt"></i> ${organization.address}
+                                            </p>
+                                        </div>
+                                        <div class="clinic-details">
+                                            <p class="doc-location">
+                                                <i class="fas fa-phone"></i> ${organization.telephone}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="doc-info-right">
+                                    <div class="clini-infos">
+                                        <ul>
+                                            <li><i class="far fa-thumbs-up"></i> 95% رضایتمندی بیماران</li>
+                                            <li><i class="far fa-comment"></i> 17 نظر ثبت شده</li>
+                                            <li><i class="fas fa-map-marker-alt"></i>{{if organization.city != null }}${organization.city.title}{{/if}} - {{if organization.region != null }}${organization.region.title}{{/if}}</li>
+                                            <li><i class="far fa-money-bill-alt"></i>${discount} %<i
+                                                    class="fas fa-info-circle"
+                                                    data-toggle="tooltip" title="Lorem Ipsum"></i></li>
+                                        </ul>
+                                    </div>
+                                    <div class="clinic-booking">
+                                        <a class="view-pro-btn" href="javascript:void()">اطلاعات بیشتر...</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </script>
+                </div>
+                <!-- /clinic Widget -->
+                <div class="text-center col-sm-12">
+                    <a class="btn btn-primary btn-md" href="javascript:void(0);" id="btnMore">بارگذاری بیشتر</a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <!-- /Page Content -->
+
+</div>
+<!-- /Main Wrapper -->
+
+<!-- Bootstrap Core JS -->
+<script src="../assets/admin/chart/popper.min.js"></script>
+<script src="../assets/bzamani/bootstrap.min.js"></script>
+
+<!-- Sticky Sidebar JS -->
+
+
+<!-- Select2 JS -->
+<script src="../assets/bzamani/select2.min.js"></script>
+
+
+<!-- Custom JS -->
+<script src="../assets/admin/chart/script.js"></script>
+
+
+</body>
+
+</html>

@@ -168,9 +168,8 @@
                     <li class="has-submenu">
                         <a href="#">جستجوی پیشرفته<i class="fas fa-chevron-down"></i></a>
                         <ul class="submenu">
-                            <li><a href="public/search.html">جستجوی پزشکان</a></li>
-                            <li><a href="public/search.html">جستجوی کلینیک ها</a></li>
-                            <li><a href="public/search.html">جستجوی محصولات</a></li>
+                            <li><a href="public/searchDoctors.html">جستجوی پزشکان</a></li>
+                            <li><a href="public/searchClinics.html">جستجوی کلینیک ها</a></li>
                         </ul>
                     </li>
                     <li>
@@ -361,7 +360,7 @@
                             <script id="doctors-template" type="text/x-jquery-tmpl">
                             <div class="profile-widget carousel-item" style="width: 30em">
                                 <div class="doc-img">
-                                    <a href="doctor-profile.html">
+                                    <a >
                                         <img class="img-fluid"
                                              alt="User Image"
                                              style="width:4em"
@@ -455,7 +454,7 @@
                             <ul class="entry-meta meta-item">
                                 <li>
                                     <div class="post-author">
-                                        <a href="doctor-profile.html"><img src= {{if author.male && author.fileCode==null}}"/app/assets/img/man.png"{{/if}}
+                                        <a ><img src= {{if author.male && author.fileCode==null}}"/app/assets/img/man.png"{{/if}}
                                                               {{if !author.male && author.fileCode==null}}"/app/assets/img/woman.png"{{/if}}
                                                               {{if author.fileCode!=null}}"/app/rest/core/file/download/${author.fileCode}/false"{{/if}}
                                                                alt="Post Author">
@@ -535,8 +534,8 @@
                         <div class="footer-widget footer-menu">
                             <h2 class="footer-title">برای مراجعه‌کنندگان</h2>
                             <ul>
-                                <li><a href="public/search.html">جستجوی پزشکان</a></li>
-                                <li><a href="public/search.html">جستجوی کلینیک ها</a></li>
+                                <li><a href="public/searchDoctors.html">جستجوی پزشکان</a></li>
+                                <li><a href="public/searchClinics.html">جستجوی کلینیک ها</a></li>
                                 <li><a href="login.html">‌ورود</a></li>
                                 <li><a href="register.html">‌ثبت‌نام</a></li>
                             </ul>

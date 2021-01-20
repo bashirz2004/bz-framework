@@ -40,6 +40,6 @@ public class ClinicController extends BaseController {
             @RequestParam(defaultValue = "8") int size,
             @RequestParam(defaultValue = "id,desc") String[] sort) {
 
-        return iClinicService.searchClinic(organizationTitle, page, size, sort);
+        return iClinicService.searchClinic(organizationTitle, null, -1L, -1L, -1L, page, size, sort);
     }
 }

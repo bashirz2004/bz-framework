@@ -9,6 +9,7 @@ import com.bzamani.framework.model.core.user.User;
 import com.bzamani.framework.model.doctor.Doctor;
 import com.bzamani.framework.model.portal.Comment;
 import com.bzamani.framework.model.portal.Post;
+import com.bzamani.framework.service.clinic.IClinicService;
 import com.bzamani.framework.service.core.baseinfo.IBaseInfoService;
 import com.bzamani.framework.service.core.user.IUserService;
 import com.bzamani.framework.service.doctor.IDoctorService;
@@ -39,6 +40,9 @@ public class PublicAPIController extends BaseController {
     @Autowired
     ICommentService iCommentService;
 
+    @Autowired
+    IClinicService iClinicService;
+
     @GetMapping("/doctor/load/{id}")
     public Doctor loadDoctor(@PathVariable("id") long id) {
         return iDoctorService.loadByEntityId(id);
@@ -60,7 +64,7 @@ public class PublicAPIController extends BaseController {
             @RequestParam(required = false) String specialities,
             @RequestParam(required = false) String genders,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "50") int size,
             @RequestParam(defaultValue = "id,desc") String[] sort) {
 
         return iDoctorService.searchDoctors(firstname, lastname,
@@ -135,6 +139,20 @@ public class PublicAPIController extends BaseController {
                                                                @RequestParam(defaultValue = "8") int size,
                                                                @RequestParam(defaultValue = "id,desc") String[] sort) {
         return iCommentService.getAllConfirmedCommentsByPostId(postId, page, size, sort);
+    }
+
+    @GetMapping("clinic/searchClinic")
+    public Map<String, Object> searchClinic(
+            @RequestParam(required = false) String organizationTitle,
+            @RequestParam(required = false) String organizationAddress,
+            @RequestParam(required = false) Long stateId,
+            @RequestParam(required = false) Long cityId,
+            @RequestParam(required = false) Long regionId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "50") int size,
+            @RequestParam(defaultValue = "id,desc") String[] sort) {
+
+        return iClinicService.searchClinic(organizationTitle, organizationAddress, stateId, cityId, regionId, page, size, sort);
     }
 
 }

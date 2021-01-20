@@ -45,7 +45,7 @@
             "regionId": -1,
             "address": '',
             "sort": "id,desc",
-            "size": 5
+            "size": 50
         };
 
         $(function () {
@@ -198,21 +198,14 @@
 <div class="main-wrapper">
 
     <!-- Header -->
-    <header class="header" style="display: none">
+    <header class="header">
         <nav class="navbar navbar-expand-lg header-nav">
-            <div class="navbar-header">
-                <a id="mobile_btn" href="javascript:void(0);">
-						<span class="bar-icon">
-							<span></span>
-							<span></span>
-							<span></span>
-						</span>
-                </a>
+            <div class="navbar-header  col-md-2 col-sm-12">
                 <a href="../index.html" class="navbar-brand logo">
                     <img src="../assets/img/logo.png" class="img-fluid" alt="Logo">
                 </a>
             </div>
-            <div class="main-menu-wrapper">
+            <div class="main-menu-wrapper  col-md-7 col-sm-12">
                 <div class="menu-header">
                     <a href="../index.html" class="menu-logo">
                         <img src="../assets/img/logo.png" class="img-fluid" alt="Logo">
@@ -221,48 +214,30 @@
                         <i class="fas fa-times"></i>
                     </a>
                 </div>
-
+                <ul class="main-nav">
+                    <li class="active">
+                        <a href="../index.html">خانه</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <div class="sort-by">
+                    <span class="sort-title">مرتب سازی</span>
+                    <span class="sortby-fliter">
+                            <select class="select" id="cmbSerachOrder">
+                                <option value="id,desc" class="sorting">امتیاز</option>
+                                <option value="speciality.title,asc" class="sorting">تخصص</option>
+                                <option value="organization.address,asc" class="sorting">آدرس</option>
+                            </select>
+                        </span>
+                </div>
             </div>
         </nav>
     </header>
     <!-- /Header -->
 
-    <!-- Breadcrumb -->
-    <div class="breadcrumb-bar" style="position: fixed;width: 100%;z-index: 50">
-        <div class="container-fluid">
-            <div class="row align-items-center">
-                <div class="col-md-8 col-12">
-                    <nav aria-label="breadcrumb" class="page-breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="../index.html">خانه</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">جستجوی پزشک</li>
-                        </ol>
-                    </nav>
-                    <div class="row" style="padding-right:1em">
-                        <h5 style="color: #fff;">تعداد پزشک یافت شده بر اساس فیلترهای اعمال شده: </h5>&nbsp;&nbsp;
-                        <h5 style="color: #fff;" id="lblTotalRecords"></h5>
-                    </div>
-                </div>
-                <div class="col-md-4 col-12 d-md-block d-none">
-                    <div class="sort-by">
-                        <span class="sort-title">مرتب سازی</span>
-                        <span class="sortby-fliter">
-                            <select class="select" id="cmbSerachOrder">
-                                <option value="id,desc" class="sorting">امتیاز</option>
-                                <option value="speciality.title,asc" class="sorting">تخصص</option>
-                                <option value="address,asc" class="sorting">آدرس</option>
-                            </select>
-                        </span>
-                        <a class="fa fa-reply-all sort-title" href="../index.html" style="font-family: iransans-ulight">&nbsp;بازگشت</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- /Breadcrumb -->
-
     <!-- Page Content -->
-    <div class="content" style="padding-top: 6em">
+    <div class="content" >
         <div class="container-fluid">
 
             <div class="row">
@@ -271,7 +246,7 @@
                     <!-- Search Filter -->
                     <div class="search-filter" style="border-radius: 15px;box-shadow:0px 0px 10px 1px silver">
                         <div class="card-header" style="border-radius: 15px 15px 0px 0px;box-shadow:0px 0px 10px 1px silver">
-                            <h4 class="card-title mb-0">فیلتر جستجو</h4>
+                            <h4 class="card-title mb-0">  جستجوی پزشکان (<span id="lblTotalRecords"></span>)</h4>
                         </div>
                         <div class="card-body">
                             <div class="filter-widget">
@@ -322,7 +297,7 @@
                             <div class="doctor-widget">
                                 <div class="doc-info-left">
                                     <div class="doctor-img">
-                                        <a href="doctor-profile.html" >
+                                        <a >
                                             <img
                                              src={{if personel.male && personel.fileCode==null}}"/app/assets/img/man.png"{{/if}}
                                                             {{if !personel.male && personel.fileCode==null}}"/app/assets/img/woman.png"{{/if}}
@@ -363,7 +338,7 @@
                                         <ul>
                                             <li><i class="far fa-thumbs-up"></i> 98% رضایتمندی بیماران</li>
                                             <li><i class="far fa-comment"></i> 17 نظر ثبت شده</li>
-                                            <li><i class="fas fa-map-marker-alt"></i>{{if personel.state != null }}${personel.state.title}{{/if}} - {{if personel.city != null }}${personel.city.title}{{/if}}</li>
+                                            <li><i class="fas fa-map-marker-alt"></i>{{if personel.city != null }}${personel.city.title}{{/if}} - {{if personel.region != null }}${personel.region.title}{{/if}}</li>
                                             <!--<li><i class="far fa-money-bill-alt"></i>300 تومان - 1000 تومان<i
                                                     class="fas fa-info-circle"
                                                     data-toggle="tooltip" title="Lorem Ipsum"></i></li>-->
@@ -408,147 +383,6 @@
 
     </div>
     <!-- /Page Content -->
-
-    <!-- Footer -->
-    <footer class="footer">
-
-        <!-- Footer Top -->
-        <div class="footer-top">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-3 col-md-6">
-
-                        <!-- Footer Widget -->
-                        <div class="footer-widget footer-about">
-                            <div class="footer-logo">
-                                <img src="../assets/img/footer-logo.png" alt="logo">
-                            </div>
-                            <div class="footer-about-content">
-                                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان
-                                    گرافیک است.
-                                    چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است</p>
-                                <div class="social-icon">
-                                    <ul>
-                                        <li>
-                                            <a href="#" target="_blank"><i class="fab fa-facebook-f"></i> </a>
-                                        </li>
-                                        <li>
-                                            <a href="#" target="_blank"><i class="fab fa-twitter"></i> </a>
-                                        </li>
-                                        <li>
-                                            <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-                                        </li>
-                                        <li>
-                                            <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
-                                        </li>
-                                        <li>
-                                            <a href="#" target="_blank"><i class="fab fa-dribbble"></i> </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- /Footer Widget -->
-
-                    </div>
-
-                    <div class="col-lg-3 col-md-6">
-
-                        <!-- Footer Widget -->
-                        <div class="footer-widget footer-menu">
-                            <h2 class="footer-title">برای مراجعه‌کنندگان</h2>
-                            <ul>
-                                <li><a href="search.html">جستجو پزشکان</a></li>
-                                <li><a href="../login.html">‌ورود</a></li>
-                                <li><a href="../register.html">‌ثبت‌نام</a></li>
-                                <li><a href="booking.html">رزرو نوبت</a></li>
-                                <li><a href="patient-dashboard.html">داشبورد مراجعه‌کننده</a></li>
-                            </ul>
-                        </div>
-                        <!-- /Footer Widget -->
-
-                    </div>
-
-                    <div class="col-lg-3 col-md-6">
-
-                        <!-- Footer Widget -->
-                        <div class="footer-widget footer-menu">
-                            <h2 class="footer-title">برای پزشکان</h2>
-                            <ul>
-                                <li><a href="appointments.html">نوبت‌دهی</a></li>
-                                <li><a href="chat.html">چت</a></li>
-                                <li><a href="../login.html">‌ورود</a></li>
-                                <li><a href="doctor-register.html">‌ثبت‌نام</a></li>
-                                <li><a href="doctor-dashboard.html">داشبورد پزشک</a></li>
-                            </ul>
-                        </div>
-                        <!-- /Footer Widget -->
-
-                    </div>
-
-                    <div class="col-lg-3 col-md-6">
-
-                        <!-- Footer Widget -->
-                        <div class="footer-widget footer-contact">
-                            <h2 class="footer-title">ارتباط با ما</h2>
-                            <div class="footer-contact-info">
-                                <div class="footer-address">
-                                    <span><i class="fas fa-map-marker-alt"></i></span>
-                                    <p> خیابان ارم، سانفرانسیسکو<br> کالیفرنیا خیابان 94108 </p>
-                                </div>
-                                <p>
-                                    <i class="fas fa-phone-alt"></i>
-                                    09122851473
-                                </p>
-                                <p class="mb-0">
-                                    <i class="fas fa-envelope"></i>
-                                    doccure@example.com
-                                </p>
-                            </div>
-                        </div>
-                        <!-- /Footer Widget -->
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        <!-- /Footer Top -->
-
-        <!-- Footer Bottom -->
-        <div class="footer-bottom">
-            <div class="container-fluid">
-
-                <!-- Copyright -->
-                <div class="copyright">
-                    <div class="row">
-                        <div class="col-md-6 col-lg-6">
-                            <div class="copyright-text">
-                                <p class="mb-0">&copy; 1399 مدیک، تمامی حقوق محفوظ است.</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-6">
-
-                            <!-- Copyright Menu -->
-                            <div class="copyright-menu">
-                                <ul class="policy-menu">
-                                    <li><a href="term-condition.html">شرایط و مقررات</a></li>
-                                    <li><a href="privacy-policy.html">حریم شخصی</a></li>
-                                </ul>
-                            </div>
-                            <!-- /Copyright Menu -->
-
-                        </div>
-                    </div>
-                </div>
-                <!-- /Copyright -->
-
-            </div>
-        </div>
-        <!-- /Footer Bottom -->
-
-    </footer>
-    <!-- /Footer -->
 
 </div>
 <!-- /Main Wrapper -->
