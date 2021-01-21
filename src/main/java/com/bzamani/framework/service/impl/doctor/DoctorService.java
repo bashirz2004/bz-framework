@@ -1,8 +1,12 @@
 package com.bzamani.framework.service.impl.doctor;
 
+import com.bzamani.framework.common.utility.SecurityUtility;
+import com.bzamani.framework.model.core.user.User;
 import com.bzamani.framework.model.doctor.Doctor;
+import com.bzamani.framework.repository.core.user.IUserRepository;
 import com.bzamani.framework.repository.doctor.IDoctorRepository;
 import com.bzamani.framework.service.core.file.IFileAttachmentService;
+import com.bzamani.framework.service.core.user.IUserService;
 import com.bzamani.framework.service.doctor.IDoctorService;
 import com.bzamani.framework.service.impl.core.GenericService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +27,9 @@ import java.util.Map;
 public class DoctorService extends GenericService<Doctor, Long> implements IDoctorService {
     @Autowired
     private IDoctorRepository iDoctorRepository;
+
+    @Autowired
+    private IUserService iUserService;
 
     @Override
     protected JpaRepository<Doctor, Long> getGenericRepo() {
@@ -61,5 +68,11 @@ public class DoctorService extends GenericService<Doctor, Long> implements IDoct
         else if (direction.equals("desc"))
             return Sort.Direction.DESC;
         return Sort.Direction.ASC;
+    }
+
+    @Override
+    public Doctor getAuthenticatedDoctor() {
+        User authenticatedUser = iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername());
+        return iDoctorRepository.findByPersonel(authenticatedUser.getPersonel());
     }
 }

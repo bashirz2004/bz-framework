@@ -11,7 +11,6 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="assets/bzamani/bootstrap.css">
-    <link rel="stylesheet" href="assets/bzamani/carousel.css">
 
     <!-- Fontawesome CSS -->
     <link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
@@ -31,6 +30,7 @@
     <script>
         var contextPath = "/app";
         $(function () {
+            loadClinicsOrderByScore();
             loadDoctorsOrderByScore();
             load4RecentPosts();
             if (localStorage.getItem("authenticatedUserFullName")) {
@@ -39,85 +39,31 @@
                 $('#userInfo').html(localStorage.getItem("authenticatedUserFullName") + "&nbsp;");
                 $('#btnLogout').show();
             }
-
-            $('#txtSpecialityTitle').keydown(function (e) {
-                if (e.which == 13)  // the enter key code
-                {
-                    quickSearchDoctor();
-                } /*else {
-                    $("#resultCount").html("");
-                    $("#resultContainer").html("<span class=\"form-text\" id=\"resultContainer\"></span>");
-                }*/
-            });
-
-            $('#txtAddress').keydown(function (e) {
-                if (e.which == 13)  // the enter key code
-                {
-                    quickSearchDoctor();
-                } /*else {
-                    $("#resultCount").html("");
-                    $("#resultContainer").html("<span class=\"form-text\" id=\"resultContainer\"></span>");
-                }*/
-            });
         });
-
-        /* function clearSearchFilter() {
-             $('#txtSpecialityTitle').val('');
-             $('#txtAddress').val('');
-         }*/
-
-        function quickSearchDoctor() {
-            if ($('#txtSpecialityTitle').val().length > 0 || $('#txtAddress').val().length > 0) {
-                $.ajax({
-                    type: "GET",
-                    url: contextPath + "/api/public/doctor/searchDoctors",
-                    contentType: "application/json;charset=utf-8",
-                    dataType: "json",
-                    data: {
-                        "specialityTitle": $('#txtSpecialityTitle').val(),
-                        "address": $('#txtAddress').val(),
-                        "size": 1000
-                    },
-                    success: function (res) {
-                        $("#resultCount").html("تعداد نتایج: " + res.totalRecords);
-                        $("#resultContainer").html("<span class=\"form-text\" id=\"resultContainer\"></span>");
-                        $.each(res.entityList, function (index, value) {
-                            let region="";
-                            if(value.personel.region != null)
-                                region = value.personel.region.title;
-                            $("#resultContainer").append("<li class=result id=res_" + index + " onmouseover=highlightRow(" + index + ")>" + parseInt(parseInt(index) + 1) + "- دکتر " + value.personel.firstname + "  " + value.personel.lastname + " - " + region + " - " + value.speciality.title + " - " + value.personel.address + " - " + value.personel.telephone + "</li>");
-                        });
-                    },
-                    error: function (err) {
-                        console.log("error ---- " + err);
-                    }
-                });
-            }
-        }
-
-        function highlightRow(index) {
-            $(".result").css("background-color", "#f9f9f9");
-            $(".result").css("font-weight", "normal");
-            $("#res_" + index).css("cursor", "pointer");
-            $("#res_" + index).css("font-weight", "bold");
-            $("#res_" + index).css("background-color", "#09e5ab");
-            $("#res_" + index).css("border-radius", "5px");
-        }
 
         function navigateToLoginPage() {
             document.location = "login.html";
+        }
+
+        function loadClinicsOrderByScore() {
+            let searchFilter = {
+                "sort": "id,desc",
+                "page": 0,
+                "size": 6
+            };
+            $.getJSON(contextPath + "/api/public/clinic/searchClinic", searchFilter, function (entities) {
+                $('#clinics-template').tmpl(entities.entityList).prependTo('#clinics-list');
+            });
         }
 
         function loadDoctorsOrderByScore() {
             let searchFilter = {
                 "sort": "id,desc",
                 "page": 0,
-                "size": 10
+                "size": 6
             };
             $.getJSON(contextPath + "/api/public/doctor/searchDoctors", searchFilter, function (entities) {
                 $('#doctors-template').tmpl(entities.entityList).prependTo('#doctors-list');
-                $('.profile-widget').first().addClass("active");
-
             });
         }
 
@@ -132,7 +78,7 @@
         }
     </script>
 </head>
-<body>
+<body style="font-family: iransans-medium;color: #222222">
 
 <!-- Main Wrapper -->
 <div class="main-wrapper">
@@ -162,9 +108,6 @@
                     </a>
                 </div>
                 <ul class="main-nav">
-                    <li class="active">
-                        <a href="index.html">خانه</a>
-                    </li>
                     <li class="has-submenu">
                         <a href="#">جستجوی پیشرفته<i class="fas fa-chevron-down"></i></a>
                         <ul class="submenu">
@@ -175,6 +118,12 @@
                     <li>
                         <a href="#blogFragment">‌وبلاگ</a>
                     </li>
+                    <li>
+                        <a href="aboutUs.html">درباره ما</a>
+                    </li>
+                    <li>
+                        <a href="contactUs.html">تماس با ما</a>
+                    </li>
                     <li id="dashboardPage" style="display: none">
                         <a href="dashboard.html">داشبورد</a>
                     </li>
@@ -182,72 +131,34 @@
             </div>
             <ul class="nav col-md-2 col-sm-12">
                 <li class="nav-item" style="display: flex;white-space: nowrap">
-                    <button type="button" class="btn btn-primary btn-sm" id="btnLogin" onclick="navigateToLoginPage()">
+                    <button type="button" class="btn btn-primary btn-sm" style="color: black" id="btnLogin"
+                            onclick="navigateToLoginPage()">
                         ورود
                     </button>
                     <button type="button" class="btn btn-danger btn-sm" id="btnLogout" onclick="navigateToLoginPage()"
                             style="display: none">
                         خروج
                     </button>
-                    <span style="padding-right: 1em" id="userInfo"></span>
+                    <span style="padding-right: 1em;color: white" id="userInfo"></span>
                 </li>
             </ul>
         </nav>
     </header>
     <!-- /Header -->
 
-    <!-- Home quick search doctor -->
-    <section class="section section-search">
-        <div class="container-fluid">
-            <div class="banner-wrapper">
-                <div class="banner-header text-center">
-                    <h1>جستجوی سریع </h1>
-                    <p>جستجو و کشف بهترین پزشکان، کلینیک‌ها، بیمارستان‌ها و داروخانه‌های نزدیک شما</p>
-                </div>
-
-                <!-- Search -->
-                <div class="search-box row">
-
-                    <div class="form-group search-location">
-                        <input type="text" class="form-control" id="txtAddress" placeholder="آدرس ...">
-                        <span class="form-text" id="resultCount"></span>
-                    </div>
-                    <div class="form-group search-info">
-                        <input type="text" class="form-control" id="txtSpecialityTitle"
-                               placeholder="فعلا فقط جستجوی پزشکان بر اساس تخصص">
-                    </div>
-                    <button onclick="quickSearchDoctor()" class="btn btn-primary search-btn"><i
-                            class="fas fa-search"></i>
-                    </button>
-                    <!--<button onclick="clearSearchFilter()" class="btn btn-dark search-btn" ><i
-                            class="fas fa-eraser"></i>
-                    </button>-->
-                </div>
-                <div>
-                    <ul>
-                            <span class="form-text" style="color: #0e0e0e"
-                                  id="resultContainer">مثال: ارتوپدی یا روانشناس یا...</span>
-                    </ul>
-                </div>
-                <!-- /Search -->
-
-            </div>
-        </div>
-    </section>
-    <!-- /Home quick search doctor -->
-
-    <section class="section home-tile-section">
+    <!-- medik services -->
+    <section>
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-9 m-auto">
-                    <div class="section-header text-center">
+                <div class="m-auto">
+                    <div class="text-center mt-5">
                         <h2>خدمات مدیک</h2>
                         <p class="sub-title">ارانه خدمات کاربردی و مورد نیاز شما در حوزه بهداشت و سلامت </p>
                     </div>
                     <div class="row">
-                        <div class="col-lg-4 mb-3">
+                        <div class="col-lg-3 col-md-6 col-sm-12 mb-3 p-1">
                             <div class="card text-center doctor-book-card">
-                                <img src="assets/img/doctors/doctor-07.jpg" alt="" class="img-fluid">
+                                <img src="assets/img/consultant.jpg" alt="" class="img-fluid">
                                 <div class="doctor-book-card-content tile-card-content-1">
                                     <div>
                                         <h3 class="card-title mb-0">مشاوره تلفنی</h3>
@@ -257,9 +168,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4 mb-3">
+                        <div class="col-lg-3 col-md-6 col-sm-12 mb-3 p-1">
                             <div class="card text-center doctor-book-card">
-                                <img src="assets/img/img-pharmacy1.jpg" alt="" class="img-fluid">
+                                <img src="assets/img/orto.jpg" alt="" class="img-fluid">
                                 <div class="doctor-book-card-content tile-card-content-1">
                                     <div>
                                         <h3 class="card-title mb-0">فروش تجهیزات ارتوپدی</h3>
@@ -269,12 +180,24 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4 mb-3">
+                        <div class="col-lg-3 col-md-6 col-sm-12 mb-3 p-1">
                             <div class="card text-center doctor-book-card">
-                                <img src="assets/img/lab-image.jpg" alt="" class="img-fluid">
+                                <img src="assets/img/home-visit.jpg" alt="" class="img-fluid">
                                 <div class="doctor-book-card-content tile-card-content-1">
                                     <div>
                                         <h3 class="card-title mb-0">هوم ویزیت</h3>
+                                        <a href="javascript:void(0);" class="btn book-btn1 px-3 py-2 mt-3" tabindex="0">به
+                                            زودی</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-12 mb-3 p-1">
+                            <div class="card text-center doctor-book-card">
+                                <img src="assets/img/lab.jpg" alt="" class="img-fluid">
+                                <div class="doctor-book-card-content tile-card-content-1">
+                                    <div>
+                                        <h3 class="card-title mb-0">تحویل آزمایش</h3>
                                         <a href="javascript:void(0);" class="btn book-btn1 px-3 py-2 mt-3" tabindex="0">به
                                             زودی</a>
                                     </div>
@@ -286,60 +209,35 @@
             </div>
         </div>
     </section>
+    <!-- /medik services -->
 
     <!-- slider of clinics intro -->
-    <section class="section">
+    <section>
         <div class="container-fluid">
             <div class="row">
                 <div>
-                    <div class="section-header text-center">
+                    <div class="text-center mt-5">
                         <h2>معرفی کلینیک ها</h2>
-                        <p class="sub-title">معرفی خدمات به روزترین و مجهزترین کلینیک های کشور </p>
+                        <p class="sub-title">محبوب ترین و مجهزترین کلینیک ها </p>
                     </div>
-                    <div id="clinicsIntroductionSlider" class="carousel w-100" data-ride="carousel">
-                        <div class="carousel-inner w-100" role="listbox">
-                            <div class="carousel-item active">
-                                <div class="col-lg-4 col-md-6">
-                                    <img class="img-fluid" src="assets/img/clinics/1.jpg">
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <div class="col-lg-4 col-md-6">
-                                    <img class="img-fluid" src="assets/img/clinics/3.jpg">
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <div class="col-lg-4 col-md-6">
-                                    <img class="img-fluid" src="assets/img/clinics/4.jpg">
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <div class="col-lg-4 col-md-6">
-                                    <img class="img-fluid" src="assets/img/clinics/5.jpg">
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <div class="col-lg-4 col-md-6">
-                                    <img class="img-fluid" src="assets/img/clinics/7.jpg">
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <div class="col-lg-4 col-md-6">
-                                    <img class="img-fluid" src="assets/img/clinics/8.jpg">
-                                </div>
-                            </div>
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" id="clinics-list">
+                        <script id="clinics-template" type="text/x-jquery-tmpl">
+                        <div class="col-lg-2 col-md-4 col-sm-12 float-left">
+                                 <img class="col-lg-12 col-md-12 col-sm-12 float-left img-fluid"
+                                             alt="Clinic Image"
+                                             style="border-radius:30px;padding:20px;max-width:100%;max-height:100%"
+                                              src={{if organization.fileCode!=null}}"/app/rest/core/file/download/${organization.fileCode}/false"{{/if}}
+                                             />
+                                        <span class="col-lg-12 col-md-12 col-sm-12 float-left">
+                                            ${organization.title}
+                                        </span>
+                                         <span class="col-lg-12 col-md-12 col-sm-12 float-left badge-pill bg-info text-white">
+                                            ${organization.region.title}
+                                        </span>
                         </div>
-                        <a class="carousel-control-prev bg-dark w-auto" href="#clinicsIntroductionSlider" role="button"
-                           data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next bg-dark w-auto" href="#clinicsIntroductionSlider" role="button"
-                           data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
+                        </script>
                     </div>
+                    <a class="sub-title" href="public/searchClinics.html" style="color: deeppink" >مشاهده همه ... </a>
                 </div>
             </div>
         </div>
@@ -347,92 +245,75 @@
     <!-- /slider of clinics intro -->
 
     <!-- slider of doctors intro -->
-    <section class="section">
+    <section>
         <div class="container-fluid">
             <div class="row">
                 <div>
-                    <div class="section-header text-center" style="margin-top: 4em">
+                    <div class="text-center mt-5">
                         <h2>معرفی پزشکان</h2>
-                        <p class="sub-title">10 پزشک برتر از دید مخاطبان </p>
+                        <p class="sub-title">پزشکان برتر از دید مخاطبان </p>
                     </div>
-                    <div id="doctorsIntroductionSlider" class="carousel w-100" data-ride="carousel">
-                        <div class="carousel-inner w-100" style="width: 100%" role="listbox" id="doctors-list">
-                            <script id="doctors-template" type="text/x-jquery-tmpl">
-                            <div class="profile-widget carousel-item" style="width: 30em">
-                                <div class="doc-img">
-                                    <a >
-                                        <img class="img-fluid"
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" id="doctors-list">
+                        <script id="doctors-template" type="text/x-jquery-tmpl">
+                        <div class="col-lg-2 col-md-4 col-sm-12 float-left text-center">
+                                 <img class="col-lg-12 col-md-12 col-sm-12 float-left"
                                              alt="User Image"
-                                             style="width:4em"
+                                             style="border-radius: 2em;padding:1em;max-width:100%;max-height:100%"
                                               src={{if personel.male && personel.fileCode==null}}"/app/assets/img/man.png"{{/if}}
                                                             {{if !personel.male && personel.fileCode==null}}"/app/assets/img/woman.png"{{/if}}
                                                             {{if personel.fileCode!=null}}"/app/rest/core/file/download/${personel.fileCode}/false"{{/if}}
-                                             >
-                                    </a>
-                                </div>
-                                <div class="pro-content">
-                                    <h3 class="title">
-                                        <a>${personel.firstname} ${personel.lastname}</a>
-                                        <i class="fas fa-check-circle verified"></i>
-                                    </h3>
-                                    <p class="speciality"> ${speciality.title} </p>
-                                    <div class="rating">
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <i class="fas fa-star filled"></i>
-                                        <span class="d-inline-block average-rating">${id}</span>
-                                    </div>
-                                    <ul class="available-info">
-                                        <li>
-                                            <i class="fas fa-map-marker-alt"></i>{{if personel.region != null}}}${personel.region.title}{{/if}}
-                                        </li>
-                                        <li>
-                                            <i class="far fa-clock"></i>
-                                            {{if personel.address}}
-                                                ${personel.address.substring(0,25)}
-                                            {{/if}}
-                                        </li>
-                                        <li>
-                                            <i class="fas fa-phone"></i>${personel.telephone}
-                                            <i class="fas fa-info-circle" data-toggle="tooltip" title="${personel.address}"></i>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-
-
-                            </script>
-                            <!--<div class="carousel-item active">
-                                <div class="col-lg-4 col-md-6">
-                                    <img class="img-fluid" src="assets/img/features/1.jpg">
-                                </div>
-                            </div>-->
+                                             />
+                                        <span class="col-lg-12 col-md-12 col-sm-12 float-left">
+                                            ${personel.firstname} ${personel.lastname}
+                                        </span>
+                                         <span class="col-lg-12 col-md-12 col-sm-12 float-left badge-pill bg-info text-white">
+                                            ${speciality.title}
+                                        </span>
                         </div>
-                        <a class="carousel-control-prev bg-dark w-auto" href="#doctorsIntroductionSlider" role="button"
-                           data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next bg-dark w-auto" href="#doctorsIntroductionSlider" role="button"
-                           data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
+                        </script>
                     </div>
+                    <a class="sub-title" href="public/searchDoctors.html" style="color: deeppink" >مشاهده همه ... </a>
                 </div>
             </div>
         </div>
     </section>
     <!-- /slider of doctors intro -->
 
-    <!-- Blog Section -->
-    <section class="section section-blogs">
+    <!-- aparat tutorial videoes -->
+    <section>
         <div class="container-fluid">
+            <div class="text-center mt-5">
+                <h2>فیلم های آموزشی</h2>
+                <p class="sub-title">آموزش های مفید و کاربردی فیزیوتراپی در منزل </p>
+            </div>
+            <div class="row">
+                <div id="9534647634" class="col-sm-12 col-md-6 col-lg-3 float-left p-2">
+                    <script type="text/JavaScript"
+                            src="https://www.aparat.com/embed/nzI0E?data[rnddiv]=9534647634&data[responsive]=yes&startTime=20&recom=none"></script>
+                </div>
+                <div id="2490757874" class="col-sm-12 col-md-6 col-lg-3 float-left p-2">
+                    <script type="text/JavaScript"
+                            src="https://www.aparat.com/embed/OZLYU?data[rnddiv]=2490757874&data[responsive]=yes&startTime=20&recom=none"></script>
+                </div>
+                <div id="8747368553" class="col-sm-12 col-md-6 col-lg-3 float-left p-2">
+                    <script type="text/JavaScript"
+                            src="https://www.aparat.com/embed/teqBN?data[rnddiv]=8747368553&data[responsive]=yes&startTime=20&recom=none"></script>
+                </div>
+                <div id="1362617753" class="col-sm-12 col-md-6 col-lg-3 float-left p-2">
+                    <script type="text/JavaScript"
+                            src="https://www.aparat.com/embed/fo3jv?data[rnddiv]=1362617753&data[responsive]=yes&startTime=20&recom=none"></script>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- /aparat tutorial videoes -->
 
+
+    <!-- Blog Section -->
+    <section>
+        <div class="container-fluid">
             <!-- Section Header -->
-            <div class="section-header text-center" id="blogFragment">
+            <div class="text-center mt-5" id="blogFragment">
                 <h2>وبلاگ</h2>
                 <p class="sub-title">جدیدترین پست ها، مقالات، اخبار و اطلاعات مفید در حوزه بهداشت و سلامت </p>
             </div>
@@ -476,11 +357,26 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 </script>
                 <!-- /Blog Post -->
             </div>
-            <div class="view-all text-center">
-                <a href="showAllPosts.html" class="btn btn-primary">مشاهده همه پست ها</a>
+            <div class="view-all text-center mb-4">
+                <a href="showAllPosts.html" class="btn btn-info">مشاهده همه پست ها</a>
             </div>
         </div>
     </section>
@@ -536,8 +432,9 @@
                             <ul>
                                 <li><a href="public/searchDoctors.html">جستجوی پزشکان</a></li>
                                 <li><a href="public/searchClinics.html">جستجوی کلینیک ها</a></li>
-                                <li><a href="login.html">‌ورود</a></li>
                                 <li><a href="register.html">‌ثبت‌نام</a></li>
+                                <li><a href="login.html">‌ورود</a></li>
+                                <li><a href="dashboard.html">داشبورد</a></li>
                             </ul>
                         </div>
                         <!-- /Footer Widget -->
@@ -550,7 +447,8 @@
                         <div class="footer-widget footer-menu">
                             <h2 class="footer-title">برای پزشکان</h2>
                             <ul>
-                                <!-- <li><a href="login.html">‌ورود</a></li>-->
+                                <li><a href="login.html">‌ورود</a></li>
+                                <li><a href="dashboard.html">داشبورد</a></li>
                             </ul>
                         </div>
                         <!-- /Footer Widget -->
@@ -563,7 +461,8 @@
                         <div class="footer-widget footer-menu">
                             <h2 class="footer-title">برای کلینیک ها</h2>
                             <ul>
-                                <!-- <li><a href="login.html">‌ورود</a></li>-->
+                                <li><a href="login.html">‌ورود</a></li>
+                                <li><a href="dashboard.html">داشبورد</a></li>
                             </ul>
                         </div>
                         <!-- /Footer Widget -->
@@ -573,7 +472,7 @@
                     <div class="col-lg-2 col-md-6">
 
                         <!-- Footer Widget -->
-                        <div class="footer-widget footer-contact">
+                        <div class="footer-widget footer-contact" style="color: white">
                             <h2 class="footer-title">ارتباط با ما</h2>
                             <div class="footer-contact-inincludesfo">
                                 <div class="footer-address">
@@ -616,8 +515,8 @@
                             <!-- Copyright Menu -->
                             <div class="copyright-menu">
                                 <ul class="policy-menu">
-                                    <li><a href="term-condition.html">شرایط و مقررات</a></li>
-                                    <li><a href="privacy-policy.html">حریم خصوصی</a></li>
+                                    <li><a>شرایط و مقررات</a></li>
+                                    <li><a>حریم خصوصی</a></li>
                                 </ul>
                             </div>
                             <!-- /Copyright Menu -->
@@ -641,8 +540,6 @@
 <!-- Bootstrap Core JS -->
 
 <script src="assets/bzamani/bootstrap.min.js"></script>
-
-<script src="assets/bzamani/carousel.js"></script>
 
 
 </body>

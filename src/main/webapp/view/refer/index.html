@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>لیست ارجاعات</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/app/assets/img/favicon.png">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/app/assets/bzamani/bootstrap.css">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="/app/assets/admin/css/font-awesome.min.css">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/app/assets/bzamani/style-admin.css">
+
+    <!--[if lt IE 9]>
+    <script src="/app/assets/js/html5shiv.min.js"></script>
+    <script src="/app/assets/js/respond.min.js"></script>
+    <![endif]-->
+    <!-- jQuery -->
+    <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
+    <!-- fancybox -->
+    <script src="/app/assets/bzamani/components/fancybox/jquery.fancybox.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/fancybox/jquery.fancybox.css"/>
+
+    <!-- pace mask -->
+    <script>
+        paceOptions = {
+            elements: false,
+            document: true, // disabled
+            eventLag: false, // disabled
+            ajax: {
+                trackMethods: ['GET', 'POST', 'DELETE', 'PUT'],
+                trackWebSockets: false
+            },
+            restartOnPushState: true,
+            restartOnRequestAfter: true
+        };
+        $(function () {
+            $("body").prepend("<div class='pace-cover' style='display: none;'></div>");
+            Pace.on("start", function () {
+                $(".pace-cover").fadeIn();
+            });
+            Pace.on("done", function () {
+                $(".pace-cover").fadeOut();
+            });
+        });
+    </script>
+    <script type="text/javascript" src="/app/assets/bzamani/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
+    <style>
+        .pace-cover {
+            position: fixed;
+            left: 0px;
+            top: 1px;
+            width: 100%;
+            height: 100%;
+            z-index: 99999;
+            background: rgba(0, 0, 0, 0.4);
+        }
+    </style>
+    <!-- /pace mask -->
+
+    <!-- sweet alert -->
+    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/sweetalert/sweetalert2.min.css">
+    <!-- /sweet alert -->
+
+    <!-- datepicker  -->
+    <script src="/app/assets/bzamani/components/datepicker/persian-date.js"></script>
+    <script src="/app/assets/bzamani/components/datepicker/persian-datepicker.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/datepicker/persian-datepicker.css">
+    <!-- /datepicker  -->
+
+    <script src="/app/assets/bzamani/jquery.template.js"></script>
+    <script src="/app/assets/bzamani/grid-utility.js"></script>
+    <script src="/app/assets/bzamani/general-utility.js"></script>
+
+    <script>
+        var contextPath = "/app";
+        var emptyEntityData = {
+            "id": '',
+            "referDateShamsi": '',
+            "doctor": {"id": -1, "personel": {"firstname": '', "lastname": ''}},
+            "patient": {"id": -1, "firstname": '', "lastname": ''},
+            "clinic": {"id": -1, "organization": {"title": ''}},
+            "sickness": {"id": -1},
+            "treatment": {"id": -1},
+            "unit": {"id": -1},
+            "sessionCountToDo": ''
+        };
+        var entityData;
+
+        var searchFilters = {
+            "referDateShamsiFrom": '',
+            "referDateShamsiTo": '',
+            "doctorId": -1,
+            "patientId": -1,
+            "clinicId": -1,
+            "sicknessId": -1,
+            "treatmentId": -1,
+            "receptionDateShamsiFrom": '',
+            "receptionDateShamsiTo": '',
+            "finishDateShamsiFrom": '',
+            "finishDateShamsiTo": '',
+            "settlementDateShamsiFrom": '',
+            "settlementDateShamsiTo": '',
+            "status": '',
+            "sort": "id,desc",
+            "page": 0,
+            "size": 8
+        };
+
+        $(function () {
+            initializeDatePicker();
+            refreshGrid();
+            fillComboBaseInfo(1001, "cmbSickness");
+            fillComboBaseInfo(1002, "cmbTreatment");
+            fillComboBaseInfo(1003, "cmbUnit");
+
+            $('.sort-grid').on("click", function () {
+                searchFilters.sort = $(this).attr("order");
+                refreshGrid();
+            });
+
+            $('#cmbPageSize').change(function () {
+                searchFilters.size = $(this).val();
+                refreshGrid();
+            });
+
+            $('.searchFilter').keydown(function (e) {
+                if (e.which == 13)  // the enter key code
+                    searchRefer();
+            });
+        });
+
+        function searchRefer() {
+            searchFilters.referDateShamsiFrom = $("#txtReferDateShamsiFrom").val();
+            searchFilters.referDateShamsiTo = $("#txtReferDateShamsiTo").val();
+            searchFilters.doctorId = $("#hiddenFieldDoctorIdSearch").val();
+            searchFilters.patientId = $("#hiddenFieldPatientIdSearch").val();
+            searchFilters.doctorId = $("#hiddenFieldDoctorIdSearch").val();
+            searchFilters.clinicId = $("#hiddenFieldClinicIdSearch").val();
+            searchFilters.sicknessId = $("#hiddenFieldSicknessIdSearch").val();
+            searchFilters.treatmentId = $("#hiddenFieldTreatmentIdSearch").val();
+            searchFilters.receptionDateShamsiFrom = $("#txtReceptionDateShamsiFrom").val();
+            searchFilters.receptionDateShamsiTo = $("#txtReceptionDateShamsiTo").val();
+            searchFilters.finishDateShamsiFrom = $("#txtFinishDateShamsiFrom").val();
+            searchFilters.finishDateShamsiTo = $("#txtFinishDateShamsiTo").val();
+            searchFilters.settlementDateShamsiFrom = $("#txtSettlementDateShamsiFrom").val();
+            searchFilters.settlementDateShamsiTo = $("#txtSettlementDateShamsiTo").val();
+            searchFilters.status = $("#cmbStatus").val();
+            refreshGrid();
+        }
+
+        function clearSearch() {
+            $('#cmbPageSize').val(8);
+            searchFilters = {
+                "referDateShamsiFrom": '',
+                "referDateShamsiTo": '',
+                "doctorId": -1,
+                "patientId": -1,
+                "clinicId": -1,
+                "sicknessId": -1,
+                "treatmentId": -1,
+                "receptionDateShamsiFrom": '',
+                "receptionDateShamsiTo": '',
+                "finishDateShamsiFrom": '',
+                "finishDateShamsiTo": '',
+                "settlementDateShamsiFrom": '',
+                "settlementDateShamsiTo": '',
+                "status": '',
+                "sort": "id,desc",
+                "page": 0,
+                "size": 8
+            };
+            $('.searchFilter').val('');
+            refreshGrid();
+        }
+
+        function next() {
+            searchFilters.page = searchFilters.page + 1;
+            refreshGrid();
+        }
+
+        function previous() {
+            searchFilters.page = searchFilters.page - 1;
+            refreshGrid();
+        }
+
+        function goTo(pageNumber) {
+            searchFilters.page = pageNumber;
+            refreshGrid();
+        }
+
+        function deleteEntity() {
+            if ($('#hiddenFieldId').val() > 0)
+                $.ajax({
+                    url: contextPath + "/rest/refer/delete/" + $('#hiddenFieldId').val(),
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    type: 'DELETE',
+                    success: function (res) {
+                        refreshGrid();
+                        showMessage("حذف با موفقیت انجام شد.", "", "success");
+                    },
+                    error: function (err) {
+                        if (err.responseJSON.message.includes("Forbidden"))
+                            showMessage("خطای سطح دسترسی", " شما مجوز انجام این کار را ندارید.", "error");
+                        else
+                            showMessage("خطا در حذف اطلاعات", "", "error");
+                    }
+                });
+            else
+                showMessage("هیچ رکوردی انتخاب نشده است.", "", "error");
+        }
+
+        function rowSelected(id) {
+            $('#hiddenFieldId').val(id);
+        }
+
+        function rowDeselected() {
+            $('#hiddenFieldId').val();
+        }
+
+        function loadEntity(id) {
+            clearEntity();
+            $.ajax({
+                url: contextPath + "/rest/refer/load/" + id,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                type: 'GET',
+                success: function (res) {
+                    setInputsByEntity(res);
+                },
+                error: function (err) {
+                }
+            });
+        }
+
+        function saveEntity() {
+            if (validateForm() == 'ok') {
+                setEntityFromInputs();
+                $.ajax({
+                    url: contextPath + "/rest/refer/save",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify(entityData),
+                    type: 'POST',
+                    success: function (res) {
+                        $('#hiddenFieldId').val(res.id);
+                        showMessage("ثبت با موفقیت انجام شد.", "", "success");
+                        $('#btnCloseModal').click();
+                    },
+                    error: function (err) {
+
+                    }
+                });
+            }
+        }
+
+        function validateForm() {
+            if ($('#txtReferDateShamsi').val() == '' || !$('#hiddenFieldDoctorId').val() > 0
+                || !$('#hiddenFieldPatientId').val() > 0 || !$('#hiddenFieldClinicId').val() > 0
+                || !$('#cmbSickness').val() > 0 || !$('#cmbTreatment').val() > 0 || !$('#cmbUnit').val() > 0
+                || $('#txtSessionCountToDo').val() == '') {
+                showMessage("پرکردن فیلدهای ستاره دار الزامی است.", "", "warning");
+                return;
+            } else return 'ok';
+        }
+
+        function clearEntity() {
+            entityData = emptyEntityData;
+            setInputsByEntity(emptyEntityData);
+        }
+
+        function setInputsByEntity(entity) {
+            $("#hiddenFieldId").val(entity.id);
+            $("#hiddenFieldPatientId").val(entity.patient.id);
+            $("#txtPatientTitle").val(entity.patient.firstname + " " + entity.patient.lastname);
+            $("#hiddenFieldClinicId").val(entity.clinic.id);
+            $("#txtClinicTitle").val(entity.clinic.organization.title);
+            $('#cmbSickness').val(entity.sickness.id);
+            $('#cmbTreatment').val(entity.treatment.id);
+            $("#txtSessionCountToDo").val(entity.sessionCountToDo);
+            $("#cmbUnit").val(entity.unit.id);
+
+            if (entity.id > 0) {
+                $("#hiddenFieldDoctorId").val(entity.doctor.id);
+                $("#txtDoctorTitle").val(entity.doctor.personel.firstname + " " + entity.doctor.personel.lastname);
+                $("#txtReferDateShamsi").val(entity.referDateShamsi);
+            } else {
+                getAuthenticatedDoctor();
+                getCurrentDateShamsi();
+            }
+        }
+
+        function getAuthenticatedDoctor() {
+            $.ajax({
+                url: contextPath + "/rest/refer/getAuthenticatedDoctor",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                type: 'GET',
+                success: function (res) {
+                    if (res != null) {
+                        $('#hiddenFieldDoctorId').val(res.id);
+                        $('#txtDoctorTitle').val(res.personel.firstname + " " + res.personel.lastname);
+                    }
+                },
+                error: function (err) {
+                }
+            });
+        }
+
+        function getCurrentDateShamsi() {
+            $.ajax({
+                url: contextPath + "/api/public/getCurrentDateShamsi",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                type: 'GET',
+                success: function (res) {
+                    if (res != null) {
+                        $('#txtReferDateShamsi').val(res);
+                    }
+                },
+                error: function (err) {
+                }
+            });
+        }
+
+        function setEntityFromInputs() {
+            entityData = {
+                "id": $('#hiddenFieldId').val(),
+                "referDateShamsi": $('#txtReferDateShamsi').val(),
+                "doctor": {"id": $('#hiddenFieldDoctorId').val()},
+                "patient": {"id": $('#hiddenFieldPatientId').val()},
+                "clinic": {"id": $('#hiddenFieldClinicId').val()},
+                "sickness": {"id": $('#cmbSickness').val()},
+                "treatment": {"id": $('#cmbTreatment').val()},
+                "unit": {"id": $('#cmbUnit').val()},
+                "sessionCountToDo": $('#txtSessionCountToDo').val()
+            }
+        }
+
+        function setDoctor(id, firstname, lastname, fileCode) {
+            $('#hiddenFieldDoctorId').val(id);
+            $('#txtDoctorTitle').val(firstname + " " + lastname);
+        }
+
+        function setPersonel(id, firstname, lastname) {
+            $('#hiddenFieldPatientId').val(id);
+            $('#txtPatientTitle').val(firstname + " " + lastname);
+        }
+
+        function setClinic(id, title) {
+            $('#hiddenFieldClinicId').val(id);
+            $('#txtClinicTitle').val(title);
+        }
+
+        function refreshGrid() {
+            fillGrid('referTemplate', 'referList', contextPath + "/rest/refer/searchRefer", searchFilters);
+        }
+
+    </script>
+
+<body>
+<div class="row">
+    <div class="col-md-12 d-flex">
+        <!-- Grid -->
+        <div class="card card-table flex-fill">
+            <div class="col-sm-12" style="border-radius: 10px 10px 0px 0px">
+                <div class="float-left mt-1">
+                    <h5>لیست ارجاعات</h5>
+                </div>
+                <div class="float-right">
+                    <a href="#add_edit_modal" data-toggle="modal" title="جدید"
+                       onclick="clearEntity();"
+                       class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-plus"></i></a>
+                </div>
+                <div class="float-right">
+                    <a href="javascript:void(0)" onclick="clearSearch();" data-toggle="tooltip" title="پاک کردن فیلترها"
+                       class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-eraser"></i></a>
+                </div>
+                <div class="float-right search-section" style="display: none">
+                    <a href="javascript:void(0)" onclick="searchRefer();" data-toggle="tooltip" title="جستجو"
+                       class="btn btn-block btn-rounded btn-outline-secondary"><i class="fa fa-filter"></i></a>
+                </div>
+                <div class="float-right">
+                    <a href="javascript:void(0)" onclick="$('.search-section').slideToggle();"
+                       class="btn btn-block btn-rounded btn-outline-secondary"><i class="fa fa-search"></i></a>
+                </div>
+            </div>
+            <div class="col-sm-12 search-section" style="display: none">
+                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                    <input type="text" id="txtReferDateShamsiFrom" class="form-control searchFilter"
+                           placeholder="ارجاع از تاریخ ...">
+                </div>
+                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                    <input type="text" id="txtReferDateShamsiTo" class="form-control searchFilter"
+                           placeholder="تا تاریخ ...">
+                </div>
+                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                    <input type="text" id="txtReceptionDateShamsiFrom" class="form-control searchFilter"
+                           placeholder="پذیرش از تاریخ ...">
+                </div>
+                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                    <input type="text" id="txtReceptionDateShamsiTo" class="form-control searchFilter"
+                           placeholder="تا تاریخ ...">
+                </div>
+                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                    <input type="text" id="txtFinishDateShamsiFrom" class="form-control searchFilter"
+                           placeholder="پایان کار از تاریخ ...">
+                </div>
+                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                    <input type="text" id="txtFinishDateShamsiTo" class="form-control searchFilter"
+                           placeholder="تا تاریخ ...">
+                </div>
+                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                    <input type="text" id="txtSettlementDateShamsiFrom" class="form-control searchFilter"
+                           placeholder="تسویه از تاریخ ...">
+                </div>
+                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                    <input type="text" id="txtSettlementDateShamsiTo" class="form-control searchFilter"
+                           placeholder="تا تاریخ ...">
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-center mb-0">
+                        <thead>
+                        <tr>
+                            <th class="text-center">ردیف</th>
+                            <th>کد رهگیری
+                                <i class="fa fa-sort-up sort-grid" order="id,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="id,desc"></i>
+                            </th>
+                            <th>تاریخ ارجاع
+                                <i class="fa fa-sort-up sort-grid" order="referDateShamsi,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="referDateShamsi,desc"></i>
+                            </th>
+                            <th>پزشک
+                                <i class="fa fa-sort-up sort-grid" order="doctor.personel.lastname,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="doctor.personel.lastname,desc"></i>
+                            </th>
+                            <th>کلینیک
+                                <i class="fa fa-sort-up sort-grid" order="clinic.organization.title,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="clinic.organization.title,desc"></i>
+                            </th>
+                            <th>وضعیت
+                                <i class="fa fa-sort-up sort-grid" order="status,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="status,desc"></i>
+                            </th>
+                            <th>عملیات</th>
+                        </tr>
+                        </thead>
+                        <tbody id="referList">
+                        <script id="referTemplate" type="text/x-jquery-tmpl">
+                                    <tr>
+                                        <td class="text-center"><span class="tmplRowIndex"></span></td>
+                                        <td>
+                                            ${id}
+                                        </td>
+                                        <td>
+                                            ${referDateShamsi}
+                                        </td>
+                                        <td>
+                                            ${doctor.personel.firstname}  ${doctor.personel.lastname}
+                                        </td>
+                                        <td>
+                                            ${clinic.organization.title}
+                                        </td>
+                                        <td>
+                                            ${statusPersianTitle}
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="float-right">
+                                                <div class="float-right">
+                                                     <a href="#delete_refer_modal" onclick="rowSelected(${id})"  data-toggle="modal" title="حذف"
+                                                                    class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-trash"></i></a>
+                                                </div>
+                                                <div class="float-right">
+                                                     <a href="#add_edit_modal" onclick="loadEntity(${id})"  data-toggle="modal" title="ویرایش"
+                                                                    class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-pencil"></i></a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        </script>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- /Grid -->
+    </div>
+
+    <!-- paging -->
+    <div class="row col-md-12 card-body pl-5" style="text-align: center!important;">
+        <span class="float-left pt-2"> صفحه &nbsp;</span>
+        <span class="float-left pt-2" id="currentPage"></span>
+        <span class="float-left pt-2">&nbsp;از &nbsp;</span>
+        <span class="float-left pt-2" id="totalPages"></span>&nbsp;
+
+        <ul class="pagination float-left" id="pagingList"></ul>&nbsp;
+
+        <span class="float-left pt-2" id="totalRecords"></span>
+        <span class="float-left pt-2"> مورد &nbsp;</span>
+
+        <select id="cmbPageSize" class="float-left" style="height: 35px;border-radius: 8px;cursor: pointer">
+            <option value="5">5</option>
+            <option value="8" selected>8</option>
+            <option value="10">10</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+        </select>
+    </div>
+    <!-- paging -->
+
+    <!-- Add/Edit Modal -->
+    <div class="modal fade custom-modal" id="add_edit_modal" aria-hidden="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-white">ثبت ارجاع </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCloseModal"
+                            onclick="fillGrid('referTemplate', 'referList', contextPath + '/rest/refer/searchRefer', searchFilters)">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Add refer -->
+                    <input type="hidden" id="hiddenFieldId"/>
+                    <div class="service-fields mb-3">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <input type="hidden" id="hiddenFieldDoctorId"/>
+                                    <label>پزشک<span class="text-danger">*</span></label>
+                                    <div style="display: flex;white-space: nowrap">
+                                        <input disabled type="text" class="form-control" id="txtDoctorTitle">
+                                        <button class="btn btn-primary form-control"
+                                                style="width: 3rem"
+                                                onclick="viewFancyBox('/app/view/doctor/doctorSelect.html','90%','90%')">
+                                            000
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <input type="hidden" id="hiddenFieldPatientId"/>
+                                    <label>بیمار<span class="text-danger">*</span></label>
+                                    <div style="display: flex;white-space: nowrap">
+                                        <input disabled type="text" class="form-control" id="txtPatientTitle">
+                                        <button class="btn btn-primary form-control"
+                                                style="width: 3rem"
+                                                onclick="viewFancyBox('/app/view/core/personel/personelSelect.html','90%','90%')">
+                                            000
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <input type="hidden" id="hiddenFieldClinicId"/>
+                                    <label>کلینیک<span class="text-danger">*</span></label>
+                                    <div style="display: flex;white-space: nowrap">
+                                        <input disabled type="text" class="form-control" id="txtClinicTitle">
+                                        <button class="btn btn-primary form-control"
+                                                style="width: 3rem"
+                                                onclick="viewFancyBox('/app/view/clinic/clinicSelect.html?patientId='+$('#hiddenFieldPatientId').val(),'90%','90%')">
+                                            000
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label>تاریخ ارجاع<span class="text-danger">*</span></label>
+                                    <input class="form-control mydatepicker" type="text" id="txtReferDateShamsi"
+                                           required="">
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label>بیماری<span class="text-danger">*</span></label>
+                                    <select class="form-control" id="cmbSickness"></select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label>درمان<span class="text-danger">*</span></label>
+                                    <select class="form-control" id="cmbTreatment"></select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label>تعداد جلسه<span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="txtSessionCountToDo"></input>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label>واحد<span class="text-danger">*</span></label>
+                                    <select class="form-control" id="cmbUnit"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="service-fields mb-3">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="submit-section">
+                                        <button class="btn btn-primary submit-btn" onclick="saveEntity()"> ثبت
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Add refer -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Add/Edit Modal -->
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="delete_refer_modal" aria-hidden="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="form-content p-2">
+                        <h4 class="modal-title">تاییدیه حذف</h4>
+                        <p class="mb-4">آیا از حدف اطمینان کافی دارید؟</p>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                onclick="deleteEntity()">بله
+                        </button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"
+                                onclick="rowDeselected()">خیر
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Delete Modal -->
+
+
+</div>
+<!-- /Page Wrapper -->
+
+<!-- Bootstrap Core JS -->
+<script src="/app/assets/bzamani/bootstrap.min.js"></script>
+
+</body>
+</html>

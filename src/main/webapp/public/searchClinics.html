@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>مدیک</title>
+    <title>جستجوی کلینیک</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
 
     <!-- Favicons -->
@@ -27,6 +27,50 @@
     <script src="assets/js/html5shiv.min.js"></script>
     <script src="assets/js/respond.min.js"></script>
     <![endif]-->
+
+    <!-- jQuery -->
+    <script src="../assets/bzamani/jquery-1.10.2.min.js"></script>
+    <script src="../assets/bzamani/jquery.template.js"></script>
+
+    <!-- pace mask -->
+    <script>
+        paceOptions = {
+            elements: false,
+            document: true, // disabled
+            eventLag: false, // disabled
+            ajax: {
+                trackMethods: ['GET', 'POST', 'DELETE', 'PUT'],
+                trackWebSockets: false
+            },
+            restartOnPushState: true,
+            restartOnRequestAfter: true
+        };
+        $(function () {
+            $("body").prepend("<div class='pace-cover' style='display: none;'></div>");
+            Pace.on("start", function () {
+                $(".pace-cover").fadeIn();
+            });
+            Pace.on("done", function () {
+                $(".pace-cover").fadeOut();
+            });
+        });
+    </script>
+    <script type="text/javascript" src="/app/assets/bzamani/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
+    <style>
+        .pace-cover {
+            position: fixed;
+            left: 0px;
+            top: 1px;
+            width: 100%;
+            height: 100%;
+            z-index: 99999;
+            background: rgba(0, 0, 0, 0.4);
+        }
+    </style>
+    <!-- /pace mask -->
+
+
     <style>
         .card:hover {
             border-color: silver;
@@ -34,9 +78,7 @@
 
         }
     </style>
-    <!-- jQuery -->
-    <script src="../assets/bzamani/jquery-1.10.2.min.js"></script>
-    <script src="../assets/bzamani/jquery.template.js"></script>
+
     <script>
         contextPath = "/app";
         searchFilters = {
@@ -53,13 +95,16 @@
             fillComboState();
             searchClinic();
 
+
             $("#btnMore").click(function () {
-                searchFilters.size += 5;
+                searchFilters.size += 10;
                 searchClinic();
             });
 
-            $("#cmbSerachOrder").change(function () {
-                searchFilters.sort = $(this).val();
+            $(".sort-btn").click(function () {
+                searchFilters.sort = $(this).attr("sort-order");
+                $(".sort-btn").removeClass("bg-primary");
+                $(this).addClass("bg-primary");
                 searchClinic();
             });
 
@@ -185,30 +230,13 @@
                         <i class="fas fa-times"></i>
                     </a>
                 </div>
-                <ul class="main-nav">
-                    <li class="active">
-                        <a href="../index.html">خانه</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="col-md-3">
-                <div class="sort-by">
-                    <span class="sort-title">مرتب سازی</span>
-                    <span class="sortby-fliter">
-                            <select class="select" id="cmbSerachOrder">
-                                <option value="id,desc" class="sorting">امتیاز</option>
-                                <option value="discount,desc" class="sorting">درصد تخفیف</option>
-                                <option value="organization.address,asc" class="sorting">آدرس</option>
-                            </select>
-                        </span>
-                </div>
             </div>
         </nav>
     </header>
     <!-- /Header -->
 
     <!-- Page Content -->
-    <div class="content" >
+    <div class="content">
         <div class="container-fluid">
 
             <div class="row">
@@ -217,8 +245,8 @@
                     <!-- Search Filter -->
                     <div class="search-filter" style="border-radius: 15px;box-shadow:0px 0px 10px 1px silver">
                         <div class="card-header"
-                             style="border-radius: 15px 15px 0px 0px;box-shadow:0px 0px 10px 1px silver">
-                            <h4 class="card-title mb-0">  جستجوی کلینیک ها (<span id="lblTotalRecords"></span>)</h4>
+                             style="border-radius: 15px 15px 0px 0px;box-shadow:0px 0px 10px 1px silver;display: flex;white-space: nowrap">
+                            <h4 class="card-title mb-0"> جستجوی کلینیک ها</h4>&nbsp;
                         </div>
                         <div class="card-body">
                             <div class="filter-widget">
@@ -253,8 +281,22 @@
 
                 </div>
                 <!-- clinic Widget -->
-                <div class="col-md-12 col-lg-8 col-xl-9" id="clinicList">
-                    <script id="clinicTemplate" type="text/x-jquery-tmpl">
+                <div class="col-md-12 col-lg-8 col-xl-9">
+                    <div class="col-md-12 col-lg-12 col-xl-12">
+                        <div style="display: flex;white-space: nowrap;margin-bottom:1em">
+                            <div style="font-weight: bolder">مرتب سازی بر اساس:</div>
+                            <div><a class="badge-pill  mr-1  sort-btn bg-primary" sort-order="id,desc">امتیاز</a></div>
+                            <div><a class="badge-pill mr-1 sort-btn" sort-order="discount,desc">درصد تخفیف</a>
+                            </div>
+                            <div><a class="badge-pill mr-1 sort-btn" sort-order="organization.address,asc">آدرس</a>
+                            </div>
+                            &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+                            <div style="font-weight: bolder">تعداد نتایج:</div>
+                            <span class="badge-pill bg-info text-white" id="lblTotalRecords"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-12 col-xl-12" id="clinicList">
+                        <script id="clinicTemplate" type="text/x-jquery-tmpl">
                     <div class="card" style="border-radius: 15px;box-shadow:0px 0px 10px 1px silver">
                         <div class="card-body">
                             <div class="doctor-widget">
@@ -333,7 +375,14 @@
 
 
 
-                    </script>
+
+
+
+
+
+
+                        </script>
+                    </div>
                 </div>
                 <!-- /clinic Widget -->
                 <div class="text-center col-sm-12">

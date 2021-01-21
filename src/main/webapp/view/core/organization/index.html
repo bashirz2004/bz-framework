@@ -299,7 +299,7 @@
 
         function setInputsByEntity(entity) {
             $("#hiddenFieldId").val(entity.id);
-            $("#hiddenFieldParentId").val(entity.parent.id);
+            $("#hiddenFieldParentId").val(entity.parent.id > 0 ? entity.parent.id :  $("#hiddenFieldParentId").val());
             $("#txtTitle").val(entity.title);
             $("#cmbActive").val(entity.active.toString());
             $("#txtMobile").val(entity.mobile);
@@ -323,8 +323,7 @@
                         });
                     }
                 });
-            }
-            else{
+            } else {
                 $("#cmbState").val(-1);
                 $("#cmbCity").val(-1);
                 $("#cmbRegion").val(-1);
@@ -401,43 +400,45 @@
         }
 
         function fillComboCity(stateId, callBackFunction) {
-            $.ajax({
-                type: "GET",
-                url: contextPath + "/api/public/baseinfo/getAllByParentId/" + stateId,
-                contentType: "application/json;charset=utf-8",
-                dataType: "json",
-                success: function (res) {
-                    $("#cmbCity").html("<select class='select' id='cmbCity'></select>");
-                    $("#cmbCity").append("<option value=-1>...</option>");
-                    $.each(res, function (index, value) {
-                        $("#cmbCity").append("<option value=" + value.id + ">" + value.title + "</option>");
-                    });
-                    if (callBackFunction != null && typeof callBackFunction == 'function')
-                        callBackFunction();
-                },
-                error: function (err) {
-                }
-            });
+            if (stateId > 0)
+                $.ajax({
+                    type: "GET",
+                    url: contextPath + "/api/public/baseinfo/getAllByParentId/" + stateId,
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: function (res) {
+                        $("#cmbCity").html("<select class='select' id='cmbCity'></select>");
+                        $("#cmbCity").append("<option value=-1>...</option>");
+                        $.each(res, function (index, value) {
+                            $("#cmbCity").append("<option value=" + value.id + ">" + value.title + "</option>");
+                        });
+                        if (callBackFunction != null && typeof callBackFunction == 'function')
+                            callBackFunction();
+                    },
+                    error: function (err) {
+                    }
+                });
         }
 
         function fillComboRegion(cityId, callBackFunction) {
-            $.ajax({
-                type: "GET",
-                url: contextPath + "/api/public/baseinfo/getAllByParentId/" + cityId,
-                contentType: "application/json;charset=utf-8",
-                dataType: "json",
-                success: function (res) {
-                    $("#cmbRegion").html("<select class='select' id='cmbRegion'></select>");
-                    $("#cmbRegion").append("<option value=-1>...</option>");
-                    $.each(res, function (index, value) {
-                        $("#cmbRegion").append("<option value=" + value.id + ">" + value.title + "</option>");
-                    });
-                    if (callBackFunction != null && typeof callBackFunction == 'function')
-                        callBackFunction();
-                },
-                error: function (err) {
-                }
-            });
+            if (cityId > 0)
+                $.ajax({
+                    type: "GET",
+                    url: contextPath + "/api/public/baseinfo/getAllByParentId/" + cityId,
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: function (res) {
+                        $("#cmbRegion").html("<select class='select' id='cmbRegion'></select>");
+                        $("#cmbRegion").append("<option value=-1>...</option>");
+                        $.each(res, function (index, value) {
+                            $("#cmbRegion").append("<option value=" + value.id + ">" + value.title + "</option>");
+                        });
+                        if (callBackFunction != null && typeof callBackFunction == 'function')
+                            callBackFunction();
+                    },
+                    error: function (err) {
+                    }
+                });
         }
 
         function uploadFile() {

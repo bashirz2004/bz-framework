@@ -1,5 +1,6 @@
 package com.bzamani.framework.repository.doctor;
 
+import com.bzamani.framework.model.core.personel.Personel;
 import com.bzamani.framework.model.doctor.Doctor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +38,8 @@ public interface IDoctorRepository extends JpaRepository<Doctor, Long> {
                                @Param("specialities") String specialities,
                                @Param("genders") String genders,
                                Pageable pageable);
+
+    Doctor findByPersonel(Personel personel);
 
 
 }

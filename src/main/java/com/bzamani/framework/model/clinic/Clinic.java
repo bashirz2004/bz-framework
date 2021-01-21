@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "med_clinic",uniqueConstraints = {@UniqueConstraint(name = "unq_clinic_organization", columnNames = {"organization_id"})})
@@ -14,8 +15,9 @@ import javax.persistence.*;
 @Getter
 public class Clinic extends BaseEntity {
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organization_id")
+    @JoinColumn(name = "organization_id",nullable = false)
     private Organization organization;
 
     @Column(name = "percent")

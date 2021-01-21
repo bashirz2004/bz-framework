@@ -75,4 +75,11 @@ public class Refer extends BaseEntity {
     @Column(name = "STATUS", nullable = false)
     @Enumerated(EnumType.ORDINAL)
     private ReferStatus status;
+
+    @Transient
+    private String statusPersianTitle;
+
+    public String getStatusPersianTitle() {
+        return this.status.getPersianTitle();
+    }
 }

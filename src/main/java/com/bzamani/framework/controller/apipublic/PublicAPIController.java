@@ -1,5 +1,6 @@
 package com.bzamani.framework.controller.apipublic;
 
+import com.bzamani.framework.common.utility.DateUtility;
 import com.bzamani.framework.common.utility.SecurityUtility;
 import com.bzamani.framework.controller.core.BaseController;
 import com.bzamani.framework.dto.PostCategoryDto;
@@ -42,6 +43,11 @@ public class PublicAPIController extends BaseController {
 
     @Autowired
     IClinicService iClinicService;
+
+    @GetMapping(value = "/getCurrentDateShamsi", produces = "text/plain;charset=UTF-8")
+    public String getCurrentDateShamsi() {
+        return DateUtility.todayShamsi();
+    }
 
     @GetMapping("/doctor/load/{id}")
     public Doctor loadDoctor(@PathVariable("id") long id) {

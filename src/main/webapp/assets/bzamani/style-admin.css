@@ -506,7 +506,7 @@ a.bg-primary:focus,
 a.bg-primary:hover,
 button.bg-primary:focus,
 button.bg-primary:hover {
-    background-color: #19c1dc !important;
+    background-color: #00d0f1 !important;
 }
 
 .bg-success,
@@ -2081,7 +2081,7 @@ html.menu-opened body {
 }
 
 .sidebar-menu > ul > li > a:hover {
-    background-color: #19c1dc;
+    background-color: #00d0f1;
     color: #fff;
 }
 
