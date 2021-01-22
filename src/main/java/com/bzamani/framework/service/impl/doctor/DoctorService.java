@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +54,30 @@ public class DoctorService extends GenericService<Doctor, Long> implements IDoct
         Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
         Page<Doctor> pageTuts = iDoctorRepository.searchDoctors(firstname, lastname, medicalNationalNumber, male,
                 stateId, cityId, regionId, specialityId, specialityTitle, address, telephone, specialities, genders, pagingSort);
+        doctors = pageTuts.getContent();
+        Map<String, Object> response = new HashMap<>();
+        response.put("entityList", doctors);
+        response.put("currentPage", pageTuts.getNumber());
+        response.put("totalRecords", pageTuts.getTotalElements());
+        response.put("totalPages", pageTuts.getTotalPages());
+        return response;
+    }
+
+    @Override
+    public Map<String, Object> searchDoctorAuthorize(String firstname, String lastname, int page, int size, String[] sort) {
+        List<Sort.Order> orders = new ArrayList<Sort.Order>();
+        if (sort[0].contains(",")) {
+            for (String sortOrder : sort) {
+                String[] _sort = sortOrder.split(",");
+                orders.add(new Sort.Order(getSortDirection(_sort[1]), _sort[0]));
+            }
+        } else {
+            orders.add(new Sort.Order(getSortDirection(sort[1]), sort[0]));
+        }
+        List<Doctor> doctors = new ArrayList<Doctor>();
+        Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
+        Page<Doctor> pageTuts = iDoctorRepository.searchDoctorAuthorize(firstname, lastname,
+                iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getId(), pagingSort);
         doctors = pageTuts.getContent();
         Map<String, Object> response = new HashMap<>();
         response.put("entityList", doctors);

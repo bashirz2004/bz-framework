@@ -237,7 +237,7 @@
                         showMessage("حذف با موفقیت انجام شد.", "", "success");
                     },
                     error: function (err) {
-                        showMessage("خطا در حذف اطلاعات", "", "error");
+                        showMessage("خطا", err.responseJSON.message, "error");
                     }
                 });
             else
@@ -292,6 +292,8 @@
                             showMessage("خطا. کدملی تکراری است.", "", "error");
                         if (err.responseText.includes("unq_personel_email"))
                             showMessage("خطا. ایمیل تکراری است.", "", "error");
+                        else
+                            showMessage("خطا", err.responseJSON.message, "error");
                     }
                 });
             } else showMessage(validateForm(), "", "warning");
@@ -344,7 +346,7 @@
                         });
                     }
                 });
-            }else{
+            } else {
                 $("#cmbState").val(-1);
                 $("#cmbCity").val(-1);
                 $("#cmbRegion").val(-1);
@@ -571,6 +573,7 @@
                                             </div>
                                         </td>
                                     </tr>
+
 
 
 

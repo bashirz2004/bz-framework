@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@PreAuthorize("hasRole('1000')")
+
 @RestController
 @RequestMapping(value = "/rest/doctor", produces = "application/json;charset=UTF-8")
 public class DoctorController extends BaseController {
@@ -50,5 +50,16 @@ public class DoctorController extends BaseController {
 
         return iDoctorService.searchDoctors(firstname, lastname, null, null, null, null,
                 null, null, specialityTitle, null, null, null, null, page, size, sort);
+    }
+
+    @GetMapping("/searchDoctorAuthorize")
+    public Map<String, Object> searchDoctorAuthorize(
+            @RequestParam(required = false) String firstname,
+            @RequestParam(required = false) String lastname,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "8") int size,
+            @RequestParam(defaultValue = "id,desc") String[] sort) {
+
+        return iDoctorService.searchDoctorAuthorize(firstname, lastname, page, size, sort);
     }
 }

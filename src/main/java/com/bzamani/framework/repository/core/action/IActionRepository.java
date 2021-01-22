@@ -30,5 +30,5 @@ public interface IActionRepository extends JpaRepository<Action, Long> {
     )
     List<HierarchicalObjectDto> getAuthorizeActionsForUserId(@Param("userId") long userId, @Param("parentId") Long parentId);*/
 
-    List<Action> findActionsByParent(Action parent);
+    List<Action> findActionsByParentOrderBySortOrder(Action parent);
 }

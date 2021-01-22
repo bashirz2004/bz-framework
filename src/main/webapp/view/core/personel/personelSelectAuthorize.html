@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>انتخاب فرد</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/app/assets/img/favicon.png">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/app/assets/bzamani/bootstrap.css">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="/app/assets/admin/css/font-awesome.min.css">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/app/assets/bzamani/style-admin.css">
+
+    <!--[if lt IE 9]>
+    <script src="/app/assets/js/html5shiv.min.js"></script>
+    <script src="/app/assets/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery -->
+    <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
+
+    <!-- fancybox -->
+    <script src="/app/assets/bzamani/components/fancybox/jquery.fancybox.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/fancybox/jquery.fancybox.css"/>
+
+    <!-- pace mask -->
+    <script>
+        paceOptions = {
+            elements: false,
+            document: true, // disabled
+            eventLag: false, // disabled
+            ajax: {
+                trackMethods: ['GET', 'POST', 'DELETE', 'PUT'],
+                trackWebSockets: false
+            },
+            restartOnPushState: true,
+            restartOnRequestAfter: true
+        };
+        $(function () {
+            $("body").prepend("<div class='pace-cover' style='display: none;'></div>");
+            Pace.on("start", function () {
+                $(".pace-cover").fadeIn();
+            });
+            Pace.on("done", function () {
+                $(".pace-cover").fadeOut();
+            });
+        });
+    </script>
+    <script type="text/javascript" src="/app/assets/bzamani/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
+    <style>
+        .pace-cover {
+            position: fixed;
+            left: 0px;
+            top: 1px;
+            width: 100%;
+            height: 100%;
+            z-index: 99999;
+            background: rgba(0, 0, 0, 0.4);
+        }
+    </style>
+    <!-- /pace mask -->
+
+    <script src="/app/assets/bzamani/jquery.template.js"></script>
+    <script src="/app/assets/bzamani/grid-utility.js"></script>
+    <script src="/app/assets/bzamani/general-utility.js"></script>
+
+    <script>
+        var contextPath = "/app";
+        var searchFilters = {
+            "firstname": '',
+            "lastname": '',
+            "mobile": '',
+            "organizationId": -1,
+            "sort": "id,desc",
+            "page": 0,
+            "size": 5
+        };
+
+        $(function () {
+            refreshGrid();
+
+            $('.sort-grid').on("click", function () {
+                searchFilters.sort = $(this).attr("order");
+                refreshGrid();
+            });
+
+            $('#cmbPageSize').change(function () {
+                searchFilters.size = $(this).val();
+                refreshGrid();
+            });
+
+            $('.searchFilter').keydown(function (e) {
+                if (e.which == 13)  // the enter key code
+                    searchPersonel();
+            });
+        });
+
+        function searchPersonel() {
+            searchFilters.firstname = $("#txtSearchFirstname").val();
+            searchFilters.lastname = $("#txtSearchLastname").val();
+            searchFilters.mobile = $("#txtSearchMobile").val();
+            searchFilters.organizationId = $("#hiddenFieldSearchOrganizationId").val();
+            refreshGrid();
+        }
+
+        function refreshGrid() {
+            fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonelAuthorize", searchFilters);
+        }
+
+        function clearSearch() {
+            $('#cmbPageSize').val(5);
+            searchFilters = {
+                "firstname": '',
+                "lastname": '',
+                "mobile": '',
+                "organizationId": -1,
+                "sort": "id,desc",
+                "page": 0,
+                "size": 5
+            };
+            $('.searchFilter').val('');
+            refreshGrid();
+        }
+
+        function next() {
+            searchFilters.page = searchFilters.page + 1;
+            refreshGrid();
+        }
+
+        function previous() {
+            searchFilters.page = searchFilters.page - 1;
+            refreshGrid();
+        }
+
+        function goTo(pageNumber) {
+            searchFilters.page = pageNumber;
+            refreshGrid();
+        }
+
+        function setOrganization(id, title) {
+            $('#hiddenFieldSearchOrganizationId').val(id);
+            $('#txtSearchOrganizationTitle').val(title);
+            searchPersonel();
+        }
+
+        function selectPersonel(id, firstname, lastname, fileCode) {
+            parent.setPersonel(id, firstname, lastname, fileCode);
+            parent.$.fancybox.close();
+        }
+
+    </script>
+
+<body>
+<div class="row">
+    <div class="col-md-12 d-flex">
+        <!-- Grid -->
+        <div class="card card-table flex-fill">
+            <div class="col-sm-12" style="background-color: darkslategray;border-radius: 10px 10px 0px 0px">
+                <div class="float-left mt-1">
+                    <h5 class="text-white">انتخاب فرد</h5>
+                </div>
+                <div class="float-right">
+                    <a href="javascript:void(0)" onclick="clearSearch();" data-toggle="tooltip" title="پاک کردن فیلترها"
+                       class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-eraser"></i></a>
+                </div>
+                <div class="float-right search-section">
+                    <a href="javascript:void(0)" onclick="searchPersonel();" data-toggle="tooltip" title="جستجو"
+                       class="btn btn-block btn-rounded btn-outline-secondary"><i class="fa fa-filter"></i></a>
+                </div>
+                <div class="float-right">
+                    <a href="javascript:void(0)" onclick="$('.search-section').slideToggle();"
+                       class="btn btn-block btn-rounded btn-outline-secondary"><i class="fa fa-search"></i></a>
+                </div>
+            </div>
+            <div class="col-sm-12 search-section">
+                <label class="float-left" style="padding-top: .5em">فیلتر کردن : </label>
+                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                    <input type="text" id="txtSearchFirstname" class="form-control searchFilter" placeholder="نام ...">
+                </div>
+                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                    <input type="text" id="txtSearchLastname" class="form-control searchFilter"
+                           placeholder="نام خانوادگی ...">
+                </div>
+                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                    <input type="text" id="txtSearchMobile" class="form-control searchFilter" placeholder="موبایل ...">
+                </div>
+                <div class="float-left col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                    <input type="hidden" id="hiddenFieldSearchOrganizationId" class="searchFilter"/>
+                    <div  style="display: flex;white-space: nowrap">
+                        <input disabled type="text" class="form-control searchFilter" id="txtSearchOrganizationTitle"
+                               placeholder="واحد سازمانی ...">
+                        <button class="btn btn-primary form-control"
+                                style="width: 3rem"
+                                onclick="viewFancyBox('/app/view/core/organization/organizationSelectAuthorize.html','70%','90%')">
+                            000
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-center mb-0">
+                        <thead>
+                        <tr>
+                            <th class="text-center">ردیف</th>
+                            <th>تصویر
+                                <i class="fa fa-sort-up sort-grid" order="fileCode,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="fileCode,desc"></i>
+                            </th>
+                            <th>نام
+                                <i class="fa fa-sort-up sort-grid" order="firstname,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="firstname,desc"></i>
+                            </th>
+                            <th>نام خانوادگی
+                                <i class="fa fa-sort-up sort-grid" order="lastname,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="lastname,desc"></i>
+                            </th>
+                            <th>واحد سازمانی
+                                <i class="fa fa-sort-up sort-grid" order="organization.title,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="organization.title,desc"></i>
+                            </th>
+                            <th>موبایل
+                                <i class="fa fa-sort-up sort-grid" order="mobile,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="mobile,desc"></i>
+                            </th>
+                            <th>تلفن
+                                <i class="fa fa-sort-up sort-grid" order="telephone,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="telephone,desc"></i>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody id="personelList">
+                        <script id="personelTemplate" type="text/x-jquery-tmpl">
+                                    <tr ondblclick="selectPersonel(${id},'${firstname}','${lastname}','${fileCode}')">
+                                        <td class="text-center"><span class="tmplRowIndex"></span></td>
+                                        <td>
+                                            <h2 class="table-avatar">
+                                                <a href="#image_modal" data-toggle="modal" class="avatar avatar-sm mr-2"><img onclick="setImagePath('${fileCode}')"
+                                                        class="avatar-img rounded-circle"
+                                                        src={{if male && fileCode==null}}"/app/assets/img/man.png"{{/if}}
+                                                            {{if !male && fileCode==null}}"/app/assets/img/woman.png"{{/if}}
+                                                            {{if fileCode!=null}}"/app/rest/core/file/download/${fileCode}/false"{{/if}}
+                                                        alt="User Image"></a>
+                                            </h2>
+                                        </td>
+                                        <td>
+                                            <h2 class="table-avatar">
+                                                <a href="javascript:void(0)">${firstname}</a>
+                                            </h2>
+                                        </td>
+                                        <td>
+                                            <h2 class="table-avatar">
+                                               <a href="javascript:void(0)">${lastname}</a>
+                                            </h2>
+                                        </td>
+                                        <td>${organization.title}</td>
+                                        <td>${mobile}</td>
+                                        <td>${telephone}</td>
+                                    </tr>
+
+
+
+
+
+
+
+
+
+                        </script>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- /Grid -->
+    </div>
+
+    <!-- paging -->
+    <div class="row col-md-12 card-body pl-5" style="text-align: center!important;">
+        <span class="float-left pt-2"> صفحه &nbsp;</span>
+        <span class="float-left pt-2" id="currentPage"></span>
+        <span class="float-left pt-2">&nbsp;از &nbsp;</span>
+        <span class="float-left pt-2" id="totalPages"></span>&nbsp;
+
+        <ul class="pagination float-left" id="pagingList"></ul>&nbsp;
+
+        <span class="float-left pt-2" id="totalRecords"></span>
+        <span class="float-left pt-2"> مورد &nbsp;</span>
+
+        <select id="cmbPageSize" class="float-left" style="height: 35px;border-radius: 8px;cursor: pointer">
+            <option value="5" selected>5</option>
+            <option value="10">10</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+        </select>
+    </div>
+    <!-- paging -->
+
+    <!-- image_modal -->
+    <div class="modal fade custom-modal" id="image_modal" aria-hidden="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تصویر فرد </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <img src="" class="img-fluid" alt="هنوز تصویری برای این شخص آپلود نشده است." id="image_full_size">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /image_modal -->
+
+</div>
+<!-- /Page Wrapper -->
+
+<!-- Bootstrap Core JS -->
+<script src="/app/assets/bzamani/bootstrap.min.js"></script>
+
+</body>
+</html>

@@ -2,10 +2,11 @@ package com.bzamani.framework.model.refer;
 
 public enum ReferStatus {
     initialSaved(0, "initialSaved", "ثبت اولیه"),
-    referred(1, "referred", "ارجاع شده"),
+    referred(1, "referred", "ارجاع شده(در انتظار پذیرش)"),
     initialReception(2, "initialReception", "پذیرش اولیه"),
     finishedWork(3, "finishedWork", "پایان کار بیمار"),
-    settlementDone(4, "settlementDone", "تسویه حساب شده");
+    settlementDone(4, "settlementDone", "تسویه حساب شده"),
+    revoked(5, "revoked", "ابطال شده");
 
     private final Integer index;
     private final String title;

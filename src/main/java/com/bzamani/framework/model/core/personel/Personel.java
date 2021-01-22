@@ -17,10 +17,11 @@ import javax.validation.constraints.NotNull;
         @UniqueConstraint(name = "unq_personel_mobile", columnNames = "mobile"),
         @UniqueConstraint(name = "unq_personel_email", columnNames = "email"),
         @UniqueConstraint(name = "unq_personel_nationalCode", columnNames = "nationalCode")})
-@FilterDefs({@FilterDef(name = "organizationAuthorize", parameters = {@ParamDef(name = "username", type = "string")})})
+// به خاطر انتخاب بدون دسترسی بیمار ئر ارجاع مجبور شدم فیلتر را بردارم ولی در گرید تعریف پرسنل منطق دسترسی رو اضافه کردم
+/*@FilterDefs({@FilterDef(name = "organizationAuthorize", parameters = {@ParamDef(name = "username", type = "string")})})
 @Filters({@Filter(name = "organizationAuthorize",
         condition = " exists ( select 1 from core_organization_authorize oa" +
-                " join core_user u on u.id = oa.user_id and u.username = :username and oa.organization_id = organization_id ) ")})
+                " join core_user u on u.id = oa.user_id and u.username = :username and oa.organization_id = organization_id ) ")})*/
 @SequenceGenerator(name = "sequence_db", sequenceName = "seq_core_personel", allocationSize = 1)
 @Setter
 @Getter

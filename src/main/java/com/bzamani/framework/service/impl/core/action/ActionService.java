@@ -58,7 +58,7 @@ public class ActionService extends GenericService<Action, Long> implements IActi
     public TreeNode loadWholeTreeWithoutAuthorization(long actionId, Set<Action> groupActions) {
         Action action = loadByEntityId(actionId);
         TreeNode treeNode = new TreeNode(action.getId().toString(), action.getTitle());
-        List<Action> children = iActionRepository.findActionsByParent(action);
+        List<Action> children = iActionRepository.findActionsByParentOrderBySortOrder(action);
         treeNode.setChildCount(children.size());
 
         if (groupActions.stream().filter(e -> e.getId() == action.getId()).count() == 1)

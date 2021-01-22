@@ -25,4 +25,10 @@ public interface IReferService extends IGenericService<Refer, Long> {
 
     @Transactional
     Refer saveRefer(Refer refer);
+
+    @Transactional
+    long changeStatus(long id, ReferStatus newStatus);
+
+    @Transactional
+    boolean deleteWithLogs(long id) throws Exception;
 }

@@ -1,4 +1,4 @@
-package com.bzamani.framework.controller.doctor;
+package com.bzamani.framework.controller.refer;
 
 import com.bzamani.framework.common.utility.DateUtility;
 import com.bzamani.framework.controller.core.BaseController;
@@ -32,8 +32,8 @@ public class ReferController extends BaseController {
 
     @PreAuthorize("hasRole('1005')")
     @DeleteMapping("/delete/{id}")
-    public boolean delete(@PathVariable("id") long id) {
-        return iReferService.deleteByEntityId(id);
+    public boolean delete(@PathVariable("id") long id) throws Exception {
+        return iReferService.deleteWithLogs(id);
     }
 
     @GetMapping("/load/{id}")
@@ -85,5 +85,11 @@ public class ReferController extends BaseController {
     @GetMapping("/getAuthenticatedDoctor")
     public Doctor getAuthenticatedDoctor() {
         return iDoctorService.getAuthenticatedDoctor();
+    }
+
+    @PreAuthorize("hasRole('1005')")
+    @PostMapping("/changeStatus/{id}/{newStatus}")
+    public Long changeStatus(@PathVariable long id, @PathVariable ReferStatus newStatus) {
+        return iReferService.changeStatus(id, newStatus);
     }
 }

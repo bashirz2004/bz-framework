@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <title>لیست ارجاعات</title>
+    <title>مدیریت ارجاعات</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/app/assets/img/favicon.png">
@@ -92,7 +92,8 @@
             "sickness": {"id": -1},
             "treatment": {"id": -1},
             "unit": {"id": -1},
-            "sessionCountToDo": ''
+            "sessionCountToDo": '',
+            "fileCode": ''
         };
         var entityData;
 
@@ -113,7 +114,7 @@
             "status": '',
             "sort": "id,desc",
             "page": 0,
-            "size": 8
+            "size": 10
         };
 
         $(function () {
@@ -159,7 +160,7 @@
         }
 
         function clearSearch() {
-            $('#cmbPageSize').val(8);
+            $('#cmbPageSize').val(10);
             searchFilters = {
                 "referDateShamsiFrom": '',
                 "referDateShamsiTo": '',
@@ -177,7 +178,7 @@
                 "status": '',
                 "sort": "id,desc",
                 "page": 0,
-                "size": 8
+                "size": 10
             };
             $('.searchFilter').val('');
             refreshGrid();
@@ -213,7 +214,7 @@
                         if (err.responseJSON.message.includes("Forbidden"))
                             showMessage("خطای سطح دسترسی", " شما مجوز انجام این کار را ندارید.", "error");
                         else
-                            showMessage("خطا در حذف اطلاعات", "", "error");
+                            showMessage("خطا در حذف اطلاعات", err.responseJSON.message, "error");
                     }
                 });
             else
@@ -267,7 +268,7 @@
         function validateForm() {
             if ($('#txtReferDateShamsi').val() == '' || !$('#hiddenFieldDoctorId').val() > 0
                 || !$('#hiddenFieldPatientId').val() > 0 || !$('#hiddenFieldClinicId').val() > 0
-                || !$('#cmbSickness').val() > 0 || !$('#cmbTreatment').val() > 0 || !$('#cmbUnit').val() > 0
+                || !($('#cmbSickness').val() > 0) || !($('#cmbTreatment').val() > 0) || !($('#cmbUnit').val() > 0)
                 || $('#txtSessionCountToDo').val() == '') {
                 showMessage("پرکردن فیلدهای ستاره دار الزامی است.", "", "warning");
                 return;
@@ -297,6 +298,12 @@
             } else {
                 getAuthenticatedDoctor();
                 getCurrentDateShamsi();
+            }
+
+            if (entity.fileCode != null && entity.fileCode.length > 0) {
+                $("#hiddenFieldFileCode").val(entity.fileCode);
+            } else {
+                $("#hiddenFieldFileCode").val(null);
             }
         }
 
@@ -343,7 +350,8 @@
                 "sickness": {"id": $('#cmbSickness').val()},
                 "treatment": {"id": $('#cmbTreatment').val()},
                 "unit": {"id": $('#cmbUnit').val()},
-                "sessionCountToDo": $('#txtSessionCountToDo').val()
+                "sessionCountToDo": $('#txtSessionCountToDo').val(),
+                "fileCode": $('#hiddenFieldFileCode').val()
             }
         }
 
@@ -366,6 +374,72 @@
             fillGrid('referTemplate', 'referList', contextPath + "/rest/refer/searchRefer", searchFilters);
         }
 
+        function changeStatus(id, newStatus, newStatusPersianTitle) {
+            showConfirm('تاییدیه تغییر وضعیت به ' + newStatusPersianTitle, 'آیا از انجام این کار اطمینان دارید؟', function () {
+                $.ajax({
+                    url: contextPath + "/rest/refer/changeStatus/" + id + "/" + newStatus,
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    type: 'POST',
+                    success: function (res) {
+                        showMessage("تغییر وضعیت با موفقیت انجام شد.", "", "success");
+                        fillGrid('referTemplate', 'referList', contextPath + '/rest/refer/searchRefer', searchFilters);
+                    },
+                    error: function (err) {
+
+                    }
+                });
+            });
+        }
+
+        function showHistory(id) {
+            viewFancyBox('/app/view/refer/showHistory.html?referId=' + id, '90%', '90%')
+        }
+
+        function uploadFile() {
+            $.ajax({
+                url: contextPath + "/rest/core/file/upload",
+                type: "POST",
+                data: new FormData($("#upload-file-form")[0]),
+                enctype: 'multipart/form-data',
+                processData: false,
+                contentType: false,
+                cache: false,
+                dataType: "text",
+                success: function (fileCode) {
+                    if (fileCode != null && fileCode.length > 0) {
+                        $('#hiddenFieldFileCode').val(fileCode);
+                        $('.submit-btn').show();
+                    }
+                },
+                error: function (err) {
+                    if (err.responseText && err.responseText.toLowerCase().includes('SizeLimitExceededException'.toLowerCase()))
+                        showMessage('خطا! حداکثر حجم تصویر شما می تواند ' + parseInt(err.responseText.substring(err.responseText.lastIndexOf('(') + 1, err.responseText.lastIndexOf(')'))) / 1048576 + ' مگابایت باشد.', "", "error");
+                }
+            });
+        }
+
+        function downloadFile(fileCode) {
+            document.location.href = "/app/rest/core/file/download/" + fileCode + "/true"
+        }
+
+        function showOperation(id) {
+            document.getElementById("operationButton_" + id).classList.toggle("show");
+        }
+
+        window.onclick = function (event) {
+            if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+
     </script>
 
 <body>
@@ -375,7 +449,7 @@
         <div class="card card-table flex-fill">
             <div class="col-sm-12" style="border-radius: 10px 10px 0px 0px">
                 <div class="float-left mt-1">
-                    <h5>لیست ارجاعات</h5>
+                    <h5>مدیریت ارجاعات</h5>
                 </div>
                 <div class="float-right">
                     <a href="#add_edit_modal" data-toggle="modal" title="جدید"
@@ -430,30 +504,46 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
+                <div class="table-responsive" style="min-height: 400px">
                     <table class="table table-hover table-center mb-0">
                         <thead>
                         <tr>
                             <th class="text-center">ردیف</th>
-                            <th>کد رهگیری
-                                <i class="fa fa-sort-up sort-grid" order="id,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="id,desc"></i>
-                            </th>
                             <th>تاریخ ارجاع
                                 <i class="fa fa-sort-up sort-grid" order="referDateShamsi,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="referDateShamsi,desc"></i>
+                            </th>
+                            <th>کد رهگیری
+                                <i class="fa fa-sort-up sort-grid" order="id,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="id,desc"></i>
                             </th>
                             <th>پزشک
                                 <i class="fa fa-sort-up sort-grid" order="doctor.personel.lastname,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="doctor.personel.lastname,desc"></i>
                             </th>
+                            <th>بیمار
+                                <i class="fa fa-sort-up sort-grid" order="patient.lastname,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="patient.lastname,desc"></i>
+                            </th>
                             <th>کلینیک
                                 <i class="fa fa-sort-up sort-grid" order="clinic.organization.title,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="clinic.organization.title,desc"></i>
                             </th>
+                            <th>بیماری
+                                <i class="fa fa-sort-up sort-grid" order="sickness.title,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="sickness.title,desc"></i>
+                            </th>
+                            <th>درمان
+                                <i class="fa fa-sort-up sort-grid" order="treatment.title,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="treatment.title,desc"></i>
+                            </th>
                             <th>وضعیت
                                 <i class="fa fa-sort-up sort-grid" order="status,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="status,desc"></i>
+                            </th>
+                            <th>نسخه
+                                <i class="fa fa-sort-up sort-grid" order="fileCode,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="fileCode,desc"></i>
                             </th>
                             <th>عملیات</th>
                         </tr>
@@ -463,33 +553,78 @@
                                     <tr>
                                         <td class="text-center"><span class="tmplRowIndex"></span></td>
                                         <td>
-                                            ${id}
+                                            ${referDateShamsi}
                                         </td>
                                         <td>
-                                            ${referDateShamsi}
+                                            ${id}
                                         </td>
                                         <td>
                                             ${doctor.personel.firstname}  ${doctor.personel.lastname}
                                         </td>
                                         <td>
+                                            ${patient.firstname}  ${patient.lastname}
+                                        </td>
+                                        <td style="font-family: iransans-medium">
                                             ${clinic.organization.title}
                                         </td>
                                         <td>
-                                            ${statusPersianTitle}
+                                            ${sickness.title}
                                         </td>
-                                        <td class="text-center">
-                                            <div class="float-right">
-                                                <div class="float-right">
-                                                     <a href="#delete_refer_modal" onclick="rowSelected(${id})"  data-toggle="modal" title="حذف"
-                                                                    class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-trash"></i></a>
-                                                </div>
-                                                <div class="float-right">
-                                                     <a href="#add_edit_modal" onclick="loadEntity(${id})"  data-toggle="modal" title="ویرایش"
-                                                                    class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-pencil"></i></a>
-                                                </div>
+                                        <td>
+                                            ${treatment.title}
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-pill
+                                            {{if status=='initialSaved'}}bg-primary
+                                            {{else status=='referred'}}bg-info text-white
+                                            {{else status=='initialReception'}}bg-warning
+                                            {{else status=='finishedWork'}}bg-secondary text-white
+                                            {{else status=='settlementDone'}}bg-success text-white
+                                            {{else status=='revoked'}}bg-danger text-white
+                                            {{/if}}">
+                                                ${statusPersianTitle}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {{if fileCode}}
+                                            <span class="fa fa-file-archive-o" style="cursor:pointer" onclick="downloadFile('${fileCode}')" />
+                                            {{/if}}
+                                        </td>
+                                        <td>
+                                            <div class="dropdown">
+                                              <button onclick="showOperation(${id})" class="dropbtn"> . . . <i class="fa fa-sort-down"></i></button>
+                                              <div id="operationButton_${id}" class="dropdown-content">
+                                              {{if status=='initialSaved'}}
+                                                <a href="#add_edit_modal" onclick="loadEntity(${id})"  data-toggle="modal" ><i class="fa fa-pencil"></i>&nbsp;ویرایش</a>
+                                                <a href="#delete_refer_modal" onclick="rowSelected(${id})"  data-toggle="modal" ><i class="fa fa-remove"></i>&nbsp;حذف</a>
+                                                <a onclick="changeStatus(${id},'referred','ارجاع به کلینیک')" ><i class="fa fa-reply"></i>&nbsp;ارجاع به کلینیک</a>
+                                              {{/if}}
+                                              {{if status=='referred'}}
+                                                <a onclick="changeStatus(${id},'initialReception','پذیرش اولیه')" ><i class="fa fa-ambulance"></i>&nbsp;پذیرش اولیه</a>
+                                              {{/if}}
+                                              {{if status=='initialReception'}}
+                                                <a onclick="changeStatus(${id},'finishedWork','پایان کار بیمار در کلینیک')" ><i class="fa fa-wheelchair-alt"></i>&nbsp;پایان کار</a>
+                                              {{/if}}
+                                              <!--{{if status=='finishedWork'}}
+                                                <a onclick="changeStatus(${id},'settlementDone','تسویه حساب')" ><i class="fa fa-money"></i>&nbsp;تسویه حساب</a>
+                                              {{/if}}-->
+                                              {{if status!='initialSaved'}}
+                                                <a onclick="changeStatus(${id},'revoked','ابطال')" ><i class="fa fa-minus-circle"></i>&nbsp;ابطال</a>
+                                              {{/if}}
+                                                <a onclick="showHistory(${id})" ><i class="fa fa-history"></i>&nbsp;مشاهده لاگ ها</a>
+                                              </div>
                                             </div>
                                         </td>
                                     </tr>
+
+
+
+
+
+
+
+
+
 
 
 
@@ -532,8 +667,7 @@
 
         <select id="cmbPageSize" class="float-left" style="height: 35px;border-radius: 8px;cursor: pointer">
             <option value="5">5</option>
-            <option value="8" selected>8</option>
-            <option value="10">10</option>
+            <option value="10" selected>10</option>
             <option value="50">50</option>
             <option value="100">100</option>
         </select>
@@ -564,7 +698,7 @@
                                         <input disabled type="text" class="form-control" id="txtDoctorTitle">
                                         <button class="btn btn-primary form-control"
                                                 style="width: 3rem"
-                                                onclick="viewFancyBox('/app/view/doctor/doctorSelect.html','90%','90%')">
+                                                onclick="viewFancyBox('/app/view/doctor/doctorSelectAuthorize.html','90%','90%')">
                                             000
                                         </button>
                                     </div>
@@ -628,6 +762,17 @@
                                     <label>واحد<span class="text-danger">*</span></label>
                                     <select class="form-control" id="cmbUnit"></select>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="service-upload">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>بارگذاری نسخه</span>
+                                <form id="upload-file-form">
+                                    <input id="upload-file-input" type="file" name="attachment"
+                                           onchange="uploadFile();$('.submit-btn').hide();"/>
+                                    <input type="hidden" id="hiddenFieldFileCode"/>
+                                </form>
                             </div>
                         </div>
                         <div class="service-fields mb-3">

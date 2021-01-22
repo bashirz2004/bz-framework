@@ -96,18 +96,18 @@
 
             $('.searchFilter').keydown(function (e) {
                 if (e.which == 13)  // the enter key code
-                    searchPersonel();
+                    searchDoctor();
             });
         });
 
-        function searchPersonel() {
+        function searchDoctor() {
             searchFilters.firstname = $("#txtSearchFirstname").val();
             searchFilters.lastname = $("#txtSearchLastname").val();
             refreshGrid();
         }
 
         function refreshGrid() {
-            fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctor", searchFilters);
+            fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctorAuthorize", searchFilters);
         }
 
         function clearSearch() {

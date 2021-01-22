@@ -62,19 +62,33 @@ public class Refer extends BaseEntity {
     @Column(name = "session_Count_Done")
     private Integer sessionCountDone;
 
-    @Column(name = "count")
-    private Long payment;
+    @Column(name = "payment")
+    private Long payment;  //پرداخت بیمار به کلینیک
+
 
     @Column(name = "finish_date_shamsi")
     private String finishDateShamsi;
 
-    @Column(name = "settlement_date_shamsi")
+    @Column(name = "medik_earn")
+    private Long medikEarn;  //سهم مدیک =  پورسانت کلینیک ضربدر پرداخت بیمار
+
+    // تسویه تکی معنی نداره و باید صورتجلسه تسویه ثبت شود و چند ارجاع یکجا با هم تسویه شوند.
+   /* @Column(name = "settlement_date_shamsi")
     private String settlementDateShamsi;
+
+    @Column(name = "medik_earn_final")
+    private Long medikEarnFinal;  //مبلغی نهایی که واقعا از کلینیک به مدیک بابت این ارجاع پرداخت شده است.
+
+    @Column(name = "medik_earn_final_shamsi_date")
+    private String medikEarnFinalShamsiDate;  //تاریخ و ساعت واریز مبلغ نهایی*/
 
     @NotNull
     @Column(name = "STATUS", nullable = false)
     @Enumerated(EnumType.ORDINAL)
     private ReferStatus status;
+
+    @Column(name = "fileCode")
+    private String fileCode;
 
     @Transient
     private String statusPersianTitle;

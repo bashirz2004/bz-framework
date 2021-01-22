@@ -41,5 +41,11 @@ public interface IDoctorRepository extends JpaRepository<Doctor, Long> {
 
     Doctor findByPersonel(Personel personel);
 
+    @Query("SELECT e FROM Doctor e where 1 = 1  " +
+            " and e.personel.firstname like COALESCE(cast('%'||:firstname||'%' AS text), '%'||e.personel.firstname)||'%'  " +
+            " and e.personel.lastname like COALESCE(cast('%'||:lastname||'%' AS text), '%'||e.personel.lastname)||'%' " +
+            " and exists (from UserOrganizationAuthorize uoa where uoa.userId = :userId and uoa.organizationId = e.personel.organization.id)")
+    Page<Doctor> searchDoctorAuthorize(@Param("firstname") String firstname, @Param("lastname") String lastname, @Param("userId") long userId, Pageable pageable);
+
 
 }
