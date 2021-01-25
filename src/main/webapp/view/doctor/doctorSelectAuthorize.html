@@ -139,7 +139,10 @@
         }
 
         function selectDoctor(id, firstname, lastname, fileCode) {
-            parent.setDoctor(id, firstname, lastname, fileCode);
+            if (getUrlParameter("isSearch") != null && getUrlParameter("isSearch") == 'true')
+                parent.setDoctorInSearch(id, firstname, lastname, fileCode);
+            else
+                parent.setDoctor(id, firstname, lastname, fileCode);
             parent.$.fancybox.close();
         }
 
@@ -237,6 +240,9 @@
                                         <td>${speciality.title}</td>
                                         <td>${medicalNationalNumber}</td>
                                     </tr>
+
+
+
 
 
 

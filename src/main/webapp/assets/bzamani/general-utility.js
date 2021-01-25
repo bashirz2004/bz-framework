@@ -56,11 +56,11 @@ function getUrlParameter(sParam) {
 }
 
 function initializeDatePicker() {
-    $(".mydatepicker").persianDatepicker({
+    $(".myDatepicker").persianDatepicker({
         "inline": false,
         "format": "YYYY/MM/DD",
         "viewMode": "day",
-        "initialValue": true,
+        "initialValue": false,
         //"minDate": 1609085457485,
         //"maxDate": 1610035857493,
         "autoClose": true,
@@ -148,4 +148,44 @@ function initializeDatePicker() {
         },
         "responsive": true
     });
+}
+
+function initializeThousandSeparatorOnKeyup() {
+    $('.money').simpleMoneyFormat();
+}
+
+function toMoneyFormat(inputString) {
+    var result = '';
+    var valueArray = inputString.toString().split('');
+    var resultArray = [];
+    var counter = 0;
+    var temp = '';
+    for (var i = valueArray.length - 1; i >= 0; i--) {
+        temp += valueArray[i];
+        counter++
+        if (counter == 3) {
+            resultArray.push(temp);
+            counter = 0;
+            temp = '';
+        }
+    }
+    ;
+    if (counter > 0) {
+        resultArray.push(temp);
+    }
+    for (var i = resultArray.length - 1; i >= 0; i--) {
+        var resTemp = resultArray[i].split('');
+        for (var j = resTemp.length - 1; j >= 0; j--) {
+            result += resTemp[j];
+        }
+        ;
+        if (i > 0) {
+            result += ','
+        }
+    }
+    return result;
+}
+
+function removeMoneyFormat(inputString) {
+    return inputString.toString().replaceAll(',', '')
 }

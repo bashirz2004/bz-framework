@@ -1,5 +1,6 @@
 package com.bzamani.framework.common.utility;
 
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,5 +19,14 @@ public class SecurityUtility {
 
     public static String getRequestIp() {
         return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest().getRemoteAddr();
+    }
+
+    public static boolean isInRole(int actionCode) {
+        UserDetails userDetails = getAuthenticatedUser();
+        for (GrantedAuthority grantedAuthority : userDetails.getAuthorities()) {
+            if (grantedAuthority.getAuthority().equalsIgnoreCase("role_" + actionCode))
+                return true;
+        }
+        return false;
     }
 }

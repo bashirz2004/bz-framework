@@ -10,25 +10,27 @@ import java.util.Map;
 public interface IReferService extends IGenericService<Refer, Long> {
     Map<String, Object> searchRefer(String referDateShamsiFrom,
                                     String referDateShamsiTo,
-                                    Long doctorId,
-                                    Long patientId,
-                                    Long clinicId,
-                                    Long sicknessId,
-                                    Long treatmentId,
                                     String receptionDateShamsiFrom,
                                     String receptionDateShamsiTo,
                                     String finishDateShamsiFrom,
                                     String finishDateShamsiTo,
-                                    String settlementDateShamsiFrom,
-                                    String settlementDateShamsiTo,
-                                    ReferStatus status, int page, int size, String[] sort);
+                                    Long doctorId,
+                                    Long clinicId,
+                                    Long id,
+                                    Integer status,
+                                    int page,
+                                    int size,
+                                    String[] sort);
 
     @Transactional
     Refer saveRefer(Refer refer);
 
     @Transactional
-    long changeStatus(long id, ReferStatus newStatus);
+    long changeStatus(long id, ReferStatus newStatus) throws Exception;
 
     @Transactional
     boolean deleteWithLogs(long id) throws Exception;
+
+    @Transactional
+    Refer finishWork(Refer refer) throws Exception;
 }

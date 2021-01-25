@@ -252,8 +252,11 @@
             }
         }
 
-        function selectClinic(id,title){
-            parent.setClinic(id, title);
+        function selectClinic(id, title) {
+            if (getUrlParameter("isSearch") != null && getUrlParameter("isSearch") == 'true')
+                parent.setClinicInSearch(id, title);
+            else
+                parent.setClinic(id, title);
             parent.$.fancybox.close();
         }
     </script>
@@ -374,6 +377,8 @@
                             </div>
                         </div>
                     </div>
+
+
 
 
 

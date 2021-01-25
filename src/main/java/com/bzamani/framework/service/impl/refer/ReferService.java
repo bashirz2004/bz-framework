@@ -3,11 +3,11 @@ package com.bzamani.framework.service.impl.refer;
 import com.bzamani.framework.common.utility.DateUtility;
 import com.bzamani.framework.common.utility.SecurityUtility;
 import com.bzamani.framework.model.core.personel.Personel;
-import com.bzamani.framework.model.core.user.User;
 import com.bzamani.framework.model.refer.Refer;
 import com.bzamani.framework.model.refer.ReferLog;
 import com.bzamani.framework.model.refer.ReferStatus;
 import com.bzamani.framework.repository.refer.IReferRepository;
+import com.bzamani.framework.service.clinic.IClinicService;
 import com.bzamani.framework.service.core.file.IFileAttachmentService;
 import com.bzamani.framework.service.core.user.IUserService;
 import com.bzamani.framework.service.impl.core.GenericService;
@@ -42,6 +42,9 @@ public class ReferService extends GenericService<Refer, Long> implements IReferS
     @Autowired
     private IFileAttachmentService iFileAttachmentService;
 
+    @Autowired
+    private IClinicService iClinicService;
+
     @Override
     protected JpaRepository<Refer, Long> getGenericRepo() {
         return iReferRepository;
@@ -50,18 +53,15 @@ public class ReferService extends GenericService<Refer, Long> implements IReferS
     @Override
     public Map<String, Object> searchRefer(String referDateShamsiFrom,
                                            String referDateShamsiTo,
-                                           Long doctorId,
-                                           Long patientId,
-                                           Long clinicId,
-                                           Long sicknessId,
-                                           Long treatmentId,
                                            String receptionDateShamsiFrom,
                                            String receptionDateShamsiTo,
                                            String finishDateShamsiFrom,
                                            String finishDateShamsiTo,
-                                           String settlementDateShamsiFrom,
-                                           String settlementDateShamsiTo,
-                                           ReferStatus status, int page, int size, String[] sort) {
+                                           Long doctorId,
+                                           Long clinicId,
+                                           Long id,
+                                           Integer status,
+                                           int page, int size, String[] sort) {
         List<Sort.Order> orders = new ArrayList<Sort.Order>();
         if (sort[0].contains(",")) {
             for (String sortOrder : sort) {
@@ -75,18 +75,15 @@ public class ReferService extends GenericService<Refer, Long> implements IReferS
         Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
         Page<Refer> pageTuts = iReferRepository.searchRefer(referDateShamsiFrom,
                 referDateShamsiTo,
-                doctorId,
-                patientId,
-                clinicId,
-                sicknessId,
-                treatmentId,
                 receptionDateShamsiFrom,
                 receptionDateShamsiTo,
                 finishDateShamsiFrom,
                 finishDateShamsiTo,
-                settlementDateShamsiFrom,
-                settlementDateShamsiTo,
-                status, pagingSort);
+                doctorId,
+                clinicId,
+                id,
+                status,
+                pagingSort);
         refers = pageTuts.getContent();
         Map<String, Object> response = new HashMap<>();
         response.put("entityList", refers);
@@ -126,7 +123,7 @@ public class ReferService extends GenericService<Refer, Long> implements IReferS
 
     @Override
     @Transactional
-    public long changeStatus(long id, ReferStatus newStatus) {
+    public long changeStatus(long id, ReferStatus newStatus) throws Exception {
         Refer refer = loadByEntityId(id);
         ReferStatus oldStatus = refer.getStatus();
         UserDetails authenticatedUser = SecurityUtility.getAuthenticatedUser();
@@ -136,6 +133,8 @@ public class ReferService extends GenericService<Refer, Long> implements IReferS
 
         switch (newStatus) {
             case referred:
+                if (!SecurityUtility.isInRole(1006))
+                    throw new Exception("شما به این عملیات دسترسی ندارید.");
                 if (oldStatus == ReferStatus.initialSaved) {
                     refer.setStatus(ReferStatus.referred);
                     iReferLogService.save(new ReferLog(null, refer, currentDateShamsi, currentTime, authenticatedPersonel,
@@ -143,6 +142,8 @@ public class ReferService extends GenericService<Refer, Long> implements IReferS
                 }
                 break;
             case initialReception:
+                if (!SecurityUtility.isInRole(1007))
+                    throw new Exception("شما به این عملیات دسترسی ندارید.");
                 if (oldStatus == ReferStatus.referred) {
                     refer.setStatus(ReferStatus.initialReception);
                     refer.setReceptionDateShamsi(currentDateShamsi);
@@ -150,22 +151,9 @@ public class ReferService extends GenericService<Refer, Long> implements IReferS
                             "پذیرش اولیه بیمار", oldStatus.getPersianTitle(), ReferStatus.initialReception.getPersianTitle()));
                 }
                 break;
-            case finishedWork:
-                if (oldStatus == ReferStatus.initialReception) {
-                    refer.setStatus(ReferStatus.finishedWork);
-                    refer.setFinishDateShamsi(currentDateShamsi);
-                    iReferLogService.save(new ReferLog(null, refer, currentDateShamsi, currentTime, authenticatedPersonel,
-                            "اعلام پایان کار بیمار", oldStatus.getPersianTitle(), ReferStatus.finishedWork.getPersianTitle()));
-                }
-                break;
-            /*case settlementDone:
-                if (oldStatus == ReferStatus.finishedWork) {
-                    refer.setStatus(ReferStatus.settlementDone);
-                    iReferLogService.save(new ReferLog(null, refer, currentDateShamsi, currentTime, authenticatedPersonel,
-                            "تسویه حساب با کلینیک", oldStatus.getPersianTitle(), ReferStatus.settlementDone.getPersianTitle()));
-                }
-                break;*/
             case revoked:
+                if (!SecurityUtility.isInRole(1012))
+                    throw new Exception("شما به این عملیات دسترسی ندارید.");
                 if (oldStatus != ReferStatus.initialSaved) {
                     refer.setStatus(ReferStatus.revoked);
                     iReferLogService.save(new ReferLog(null, refer, currentDateShamsi, currentTime, authenticatedPersonel,
@@ -190,6 +178,25 @@ public class ReferService extends GenericService<Refer, Long> implements IReferS
         } else
             throw new
                     Exception("در این وضعیت، امکان حذف ارجاع وجود ندارد. در صورت داشتن مجوز، می توانید ارجاع را ابطال کنید.");
+    }
+
+    @Override
+    @Transactional
+    public Refer finishWork(Refer updatedRefer) throws Exception {
+        UserDetails authenticatedUser = SecurityUtility.getAuthenticatedUser();
+        Personel authenticatedPersonel = iUserService.findUserByUsernameEquals(authenticatedUser.getUsername()).getPersonel();
+        Refer mainRefer = loadByEntityId(updatedRefer.getId());
+        if (mainRefer.getStatus() == ReferStatus.initialReception) {
+            iReferLogService.save(new ReferLog(null, mainRefer, updatedRefer.getFinishDateShamsi(), DateUtility.currentTime(), authenticatedPersonel,
+                    "اعلام پایان کار بیمار", mainRefer.getStatus().getPersianTitle(), ReferStatus.finishedWork.getPersianTitle()));
+            mainRefer.setStatus(ReferStatus.finishedWork);
+        } else
+            throw new Exception("وضعیت فعلی ارجاع باید پذیرش اولیه باشد.");
+        mainRefer.setFinishDateShamsi(updatedRefer.getFinishDateShamsi());
+        mainRefer.setPayment(updatedRefer.getPayment());
+        mainRefer.setSessionCountDone(updatedRefer.getSessionCountDone());
+        mainRefer.setMedikEarn((iClinicService.loadByEntityId(loadByEntityId(updatedRefer.getId()).getClinic().getId()).getPercent() * updatedRefer.getPayment()) / 100);
+        return super.save(mainRefer);
     }
 
 }

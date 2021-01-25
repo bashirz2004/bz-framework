@@ -77,12 +77,18 @@
     <link rel="stylesheet" href="/app/assets/bzamani/components/datepicker/persian-datepicker.css">
     <!-- /datepicker  -->
 
+    <!-- thousand separator onKeyup of text box and textArea  -->
+    <script src="/app/assets/bzamani/simple.money.format.js"></script>
+    <!-- /thousand separator onKeyup of text box and textArea  -->
+
     <script src="/app/assets/bzamani/jquery.template.js"></script>
     <script src="/app/assets/bzamani/grid-utility.js"></script>
     <script src="/app/assets/bzamani/general-utility.js"></script>
 
     <script>
         var contextPath = "/app";
+        var form = getUrlParameter("form");
+
         var emptyEntityData = {
             "id": '',
             "referDateShamsi": '',
@@ -91,7 +97,6 @@
             "clinic": {"id": -1, "organization": {"title": ''}},
             "sickness": {"id": -1},
             "treatment": {"id": -1},
-            "unit": {"id": -1},
             "sessionCountToDo": '',
             "fileCode": ''
         };
@@ -100,18 +105,14 @@
         var searchFilters = {
             "referDateShamsiFrom": '',
             "referDateShamsiTo": '',
-            "doctorId": -1,
-            "patientId": -1,
-            "clinicId": -1,
-            "sicknessId": -1,
-            "treatmentId": -1,
             "receptionDateShamsiFrom": '',
             "receptionDateShamsiTo": '',
             "finishDateShamsiFrom": '',
             "finishDateShamsiTo": '',
-            "settlementDateShamsiFrom": '',
-            "settlementDateShamsiTo": '',
-            "status": '',
+            "doctorId": -1,
+            "clinicId": -1,
+            "id": -1,
+            "status": -1,
             "sort": "id,desc",
             "page": 0,
             "size": 10
@@ -122,7 +123,6 @@
             refreshGrid();
             fillComboBaseInfo(1001, "cmbSickness");
             fillComboBaseInfo(1002, "cmbTreatment");
-            fillComboBaseInfo(1003, "cmbUnit");
 
             $('.sort-grid').on("click", function () {
                 searchFilters.sort = $(this).attr("order");
@@ -143,19 +143,14 @@
         function searchRefer() {
             searchFilters.referDateShamsiFrom = $("#txtReferDateShamsiFrom").val();
             searchFilters.referDateShamsiTo = $("#txtReferDateShamsiTo").val();
-            searchFilters.doctorId = $("#hiddenFieldDoctorIdSearch").val();
-            searchFilters.patientId = $("#hiddenFieldPatientIdSearch").val();
-            searchFilters.doctorId = $("#hiddenFieldDoctorIdSearch").val();
-            searchFilters.clinicId = $("#hiddenFieldClinicIdSearch").val();
-            searchFilters.sicknessId = $("#hiddenFieldSicknessIdSearch").val();
-            searchFilters.treatmentId = $("#hiddenFieldTreatmentIdSearch").val();
             searchFilters.receptionDateShamsiFrom = $("#txtReceptionDateShamsiFrom").val();
             searchFilters.receptionDateShamsiTo = $("#txtReceptionDateShamsiTo").val();
             searchFilters.finishDateShamsiFrom = $("#txtFinishDateShamsiFrom").val();
             searchFilters.finishDateShamsiTo = $("#txtFinishDateShamsiTo").val();
-            searchFilters.settlementDateShamsiFrom = $("#txtSettlementDateShamsiFrom").val();
-            searchFilters.settlementDateShamsiTo = $("#txtSettlementDateShamsiTo").val();
-            searchFilters.status = $("#cmbStatus").val();
+            searchFilters.doctorId = $("#hiddenFieldDoctorIdInSearch").val();
+            searchFilters.clinicId = $("#hiddenFieldClinicIdInSearch").val();
+            searchFilters.id = parseInt($("#txtId").val());
+            searchFilters.status = $("#cmbStatusInSearch").val();
             refreshGrid();
         }
 
@@ -167,20 +162,21 @@
                 "doctorId": -1,
                 "patientId": -1,
                 "clinicId": -1,
-                "sicknessId": -1,
-                "treatmentId": -1,
                 "receptionDateShamsiFrom": '',
                 "receptionDateShamsiTo": '',
                 "finishDateShamsiFrom": '',
                 "finishDateShamsiTo": '',
-                "settlementDateShamsiFrom": '',
-                "settlementDateShamsiTo": '',
+                "id": -1,
                 "status": '',
                 "sort": "id,desc",
                 "page": 0,
                 "size": 10
             };
             $('.searchFilter').val('');
+            $('#hiddenFieldClinicIdInSearch').val(-1);
+            $('#hiddenFieldDoctorIdInSearch').val(-1);
+            $('#cmbStatusInSearch').val(-1);
+            $('#txtId').val("");
             refreshGrid();
         }
 
@@ -268,8 +264,7 @@
         function validateForm() {
             if ($('#txtReferDateShamsi').val() == '' || !$('#hiddenFieldDoctorId').val() > 0
                 || !$('#hiddenFieldPatientId').val() > 0 || !$('#hiddenFieldClinicId').val() > 0
-                || !($('#cmbSickness').val() > 0) || !($('#cmbTreatment').val() > 0) || !($('#cmbUnit').val() > 0)
-                || $('#txtSessionCountToDo').val() == '') {
+                || !($('#cmbSickness').val() > 0) || !($('#cmbTreatment').val() > 0) || $('#txtSessionCountToDo').val() == '') {
                 showMessage("پرکردن فیلدهای ستاره دار الزامی است.", "", "warning");
                 return;
             } else return 'ok';
@@ -289,7 +284,6 @@
             $('#cmbSickness').val(entity.sickness.id);
             $('#cmbTreatment').val(entity.treatment.id);
             $("#txtSessionCountToDo").val(entity.sessionCountToDo);
-            $("#cmbUnit").val(entity.unit.id);
 
             if (entity.id > 0) {
                 $("#hiddenFieldDoctorId").val(entity.doctor.id);
@@ -349,7 +343,6 @@
                 "clinic": {"id": $('#hiddenFieldClinicId').val()},
                 "sickness": {"id": $('#cmbSickness').val()},
                 "treatment": {"id": $('#cmbTreatment').val()},
-                "unit": {"id": $('#cmbUnit').val()},
                 "sessionCountToDo": $('#txtSessionCountToDo').val(),
                 "fileCode": $('#hiddenFieldFileCode').val()
             }
@@ -358,6 +351,11 @@
         function setDoctor(id, firstname, lastname, fileCode) {
             $('#hiddenFieldDoctorId').val(id);
             $('#txtDoctorTitle').val(firstname + " " + lastname);
+        }
+
+        function setDoctorInSearch(id, firstname, lastname, fileCode) {
+            $('#hiddenFieldDoctorIdInSearch').val(id);
+            $('#txtDoctorTitleInSearch').val(firstname + " " + lastname);
         }
 
         function setPersonel(id, firstname, lastname) {
@@ -370,8 +368,21 @@
             $('#txtClinicTitle').val(title);
         }
 
+        function setClinicInSearch(id, title) {
+            $('#hiddenFieldClinicIdInSearch').val(id);
+            $('#txtClinicTitleInSearch').val(title);
+        }
+
         function refreshGrid() {
-            fillGrid('referTemplate', 'referList', contextPath + "/rest/refer/searchRefer", searchFilters);
+            fillGrid('referTemplate', 'referList', contextPath + "/rest/refer/searchRefer", searchFilters, function () {
+                if (form == 'inbox') {
+                    $('.outbox').hide();
+                    $('#pageTitle').html("لیست ارجاعات وارده");
+                } else if (form == 'outbox') {
+                    $('.inbox').hide();
+                    $('#pageTitle').html("لیست ارجاعات صادره");
+                } else $('#pageTitle').html("مدیریت ارجاعات");
+            });
         }
 
         function changeStatus(id, newStatus, newStatusPersianTitle) {
@@ -386,14 +397,21 @@
                         fillGrid('referTemplate', 'referList', contextPath + '/rest/refer/searchRefer', searchFilters);
                     },
                     error: function (err) {
-
+                        showMessage("خطا در تغییر وضعیت", err.responseJSON.message, "error");
                     }
                 });
             });
         }
 
         function showHistory(id) {
-            viewFancyBox('/app/view/refer/showHistory.html?referId=' + id, '90%', '90%')
+            viewFancyBox('/app/view/refer/showHistory.html?referId=' + id, '90%', '90%');
+        }
+
+        function showFinishWork(id, doctor, patient, clinic, sessionCountToDo, treatment, referShamsiDate) {
+            viewFancyBox('/app/view/refer/showFinishWork.html?referId=' + id + "&clinic=" + clinic + "&patient=" + patient
+                + "&referShamsiDate=" + referShamsiDate + "&sessionCountToDo=" + sessionCountToDo + "&doctor=" + doctor + "&treatment=" + treatment, '70%', '90%', function () {
+                refreshGrid();
+            });
         }
 
         function uploadFile() {
@@ -423,6 +441,32 @@
             document.location.href = "/app/rest/core/file/download/" + fileCode + "/true"
         }
 
+        function showFullEntity(id) {
+            $.ajax({
+                url: contextPath + "/rest/refer/load/" + id,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                type: 'GET',
+                success: function (refer) {
+                    $('#modalFull').html("مشاهده اطلاعات کامل ارجاع با کد رهگیری " + refer.id);
+                    $('#txtDoctorTitleFull').val(refer.doctor.personel.firstname + " " + refer.doctor.personel.lastname);
+                    $('#txtPatientTitleFull').val(refer.patient.firstname + " " + refer.patient.lastname);
+                    $('#txtClinicTitleFull').val(refer.clinic.organization.title);
+                    $('#txtReferDateShamsiFull').val(refer.referDateShamsi);
+                    $('#txtSessionCountToDoFull').val(refer.sessionCountToDo);
+                    $('#txtTreatmentFull').val(refer.treatment.title);
+                    $('#txtSicknessFull').val(refer.sickness.title);
+                    $('#txtSessionCountDoneFull').val(refer.sessionCountDone);
+                    $('#txtReceptionDateShamsiFull').val(refer.receptionDateShamsi);
+                    $('#txtFinishDateShamsiFull').val(refer.finishDateShamsi);
+                    $('#txtMedikEarnFull').val(toMoneyFormat(refer.medikEarn));
+                    $('#txtPaymentFull').val(toMoneyFormat(refer.payment));
+                },
+                error: function (err) {
+                }
+            });
+        }
+
         function showOperation(id) {
             document.getElementById("operationButton_" + id).classList.toggle("show");
         }
@@ -449,9 +493,9 @@
         <div class="card card-table flex-fill">
             <div class="col-sm-12" style="border-radius: 10px 10px 0px 0px">
                 <div class="float-left mt-1">
-                    <h5>مدیریت ارجاعات</h5>
+                    <h5><span id="pageTitle"></span></h5>
                 </div>
-                <div class="float-right">
+                <div class="float-right outbox">
                     <a href="#add_edit_modal" data-toggle="modal" title="جدید"
                        onclick="clearEntity();"
                        class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-plus"></i></a>
@@ -471,36 +515,59 @@
             </div>
             <div class="col-sm-12 search-section" style="display: none">
                 <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
-                    <input type="text" id="txtReferDateShamsiFrom" class="form-control searchFilter"
+                    <input type="text" id="txtReferDateShamsiFrom" class="form-control searchFilter myDatepicker"
                            placeholder="ارجاع از تاریخ ...">
                 </div>
                 <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
-                    <input type="text" id="txtReferDateShamsiTo" class="form-control searchFilter"
+                    <input type="text" id="txtReferDateShamsiTo" class="form-control searchFilter myDatepicker"
                            placeholder="تا تاریخ ...">
                 </div>
                 <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
-                    <input type="text" id="txtReceptionDateShamsiFrom" class="form-control searchFilter"
+                    <input type="text" id="txtReceptionDateShamsiFrom" class="form-control searchFilter myDatepicker"
                            placeholder="پذیرش از تاریخ ...">
                 </div>
                 <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
-                    <input type="text" id="txtReceptionDateShamsiTo" class="form-control searchFilter"
+                    <input type="text" id="txtReceptionDateShamsiTo" class="form-control searchFilter myDatepicker"
                            placeholder="تا تاریخ ...">
                 </div>
                 <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
-                    <input type="text" id="txtFinishDateShamsiFrom" class="form-control searchFilter"
+                    <input type="text" id="txtFinishDateShamsiFrom" class="form-control searchFilter myDatepicker"
                            placeholder="پایان کار از تاریخ ...">
                 </div>
                 <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
-                    <input type="text" id="txtFinishDateShamsiTo" class="form-control searchFilter"
+                    <input type="text" id="txtFinishDateShamsiTo" class="form-control searchFilter myDatepicker"
                            placeholder="تا تاریخ ...">
                 </div>
-                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
-                    <input type="text" id="txtSettlementDateShamsiFrom" class="form-control searchFilter"
-                           placeholder="تسویه از تاریخ ...">
+                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2 mt-1 mb-1">
+                    <input type="hidden" id="hiddenFieldDoctorIdInSearch" value="-1"/>
+                    <div style="display: flex;white-space: nowrap">
+                        <input type="text" class="form-control searchFilter" id="txtDoctorTitleInSearch"
+                               placeholder="انتخاب پزشک ..."
+                               onclick="viewFancyBox('/app/view/doctor/doctorSelectAuthorize.html?isSearch=true','90%','90%')">
+                    </div>
                 </div>
-                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
-                    <input type="text" id="txtSettlementDateShamsiTo" class="form-control searchFilter"
-                           placeholder="تا تاریخ ...">
+                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2 mt-1 mb-1">
+                    <input type="hidden" id="hiddenFieldClinicIdInSearch" value="-1"/>
+                    <div style="display: flex;white-space: nowrap">
+                        <input type="text" class="form-control searchFilter" id="txtClinicTitleInSearch"
+                               placeholder="انتخاب کلینیک ..."
+                               onclick="viewFancyBox('/app/view/clinic/clinicSelect.html?isSearch=true','90%','90%')">
+                    </div>
+                </div>
+                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2 mt-1 mb-1">
+                    <input type="text" id="txtId" class="form-control"
+                           placeholder="کد رهگیری ...">
+                </div>
+                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2 mt-1 mb-1">
+                    <select class="form-control" id="cmbStatusInSearch">
+                        <option value="-1">...</option>
+                        <option value="0">ثبت اولیه</option>
+                        <option value="1">ارجاع شده</option>
+                        <option value="2">پذیرش اولیه</option>
+                        <option value="3">پایان کار</option>
+                        <option value="4">تسویه شده</option>
+                        <option value="5">ابطال شده</option>
+                    </select>
                 </div>
             </div>
             <div class="card-body">
@@ -533,7 +600,7 @@
                                 <i class="fa fa-sort-up sort-grid" order="sickness.title,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="sickness.title,desc"></i>
                             </th>
-                            <th>درمان
+                            <th>تجویز
                                 <i class="fa fa-sort-up sort-grid" order="treatment.title,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="treatment.title,desc"></i>
                             </th>
@@ -595,27 +662,73 @@
                                               <button onclick="showOperation(${id})" class="dropbtn"> . . . <i class="fa fa-sort-down"></i></button>
                                               <div id="operationButton_${id}" class="dropdown-content">
                                               {{if status=='initialSaved'}}
-                                                <a href="#add_edit_modal" onclick="loadEntity(${id})"  data-toggle="modal" ><i class="fa fa-pencil"></i>&nbsp;ویرایش</a>
-                                                <a href="#delete_refer_modal" onclick="rowSelected(${id})"  data-toggle="modal" ><i class="fa fa-remove"></i>&nbsp;حذف</a>
-                                                <a onclick="changeStatus(${id},'referred','ارجاع به کلینیک')" ><i class="fa fa-reply"></i>&nbsp;ارجاع به کلینیک</a>
+                                                <a href="#add_edit_modal" onclick="loadEntity(${id})"  class="outbox" data-toggle="modal" ><i class="fa fa-pencil"></i>&nbsp;ویرایش</a>
+                                                <a href="#delete_refer_modal" onclick="rowSelected(${id})"  class="outbox"  data-toggle="modal" ><i class="fa fa-remove"></i>&nbsp;حذف</a>
+                                                <a onclick="changeStatus(${id},'referred','ارجاع به کلینیک')" class="outbox"><i class="fa fa-reply"></i>&nbsp;ارجاع به کلینیک</a>
                                               {{/if}}
                                               {{if status=='referred'}}
-                                                <a onclick="changeStatus(${id},'initialReception','پذیرش اولیه')" ><i class="fa fa-ambulance"></i>&nbsp;پذیرش اولیه</a>
+                                                <a onclick="changeStatus(${id},'initialReception','پذیرش اولیه')"  class="inbox"><i class="fa fa-ambulance"></i>&nbsp;پذیرش اولیه</a>
                                               {{/if}}
                                               {{if status=='initialReception'}}
-                                                <a onclick="changeStatus(${id},'finishedWork','پایان کار بیمار در کلینیک')" ><i class="fa fa-wheelchair-alt"></i>&nbsp;پایان کار</a>
+                                                <a onclick="showFinishWork(${id},'${doctor.personel.firstname} ${doctor.personel.lastname}', '${patient.firstname} ${patient.lastname}','${clinic.organization.title}', ${sessionCountToDo}, '${treatment.title}','${referDateShamsi}')" class="inbox" ><i class="fa fa-wheelchair-alt"></i>&nbsp;پایان کار</a>
                                               {{/if}}
                                               <!--{{if status=='finishedWork'}}
                                                 <a onclick="changeStatus(${id},'settlementDone','تسویه حساب')" ><i class="fa fa-money"></i>&nbsp;تسویه حساب</a>
                                               {{/if}}-->
-                                              {{if status!='initialSaved'}}
+                                              {{if status!='initialSaved' &&  status!='settlementDone'}}
                                                 <a onclick="changeStatus(${id},'revoked','ابطال')" ><i class="fa fa-minus-circle"></i>&nbsp;ابطال</a>
                                               {{/if}}
-                                                <a onclick="showHistory(${id})" ><i class="fa fa-history"></i>&nbsp;مشاهده لاگ ها</a>
+                                                <a onclick="showHistory(${id})" ><i class="fa fa-history"></i>&nbsp;تاریخچه اقدامات</a>
+                                                <a data-toggle="modal" href="#show_full_modal" onclick="showFullEntity(${id})" ><i class="fa fa-history"></i>&nbsp;مشاهده</a>
                                               </div>
                                             </div>
                                         </td>
                                     </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -690,7 +803,7 @@
                     <input type="hidden" id="hiddenFieldId"/>
                     <div class="service-fields mb-3">
                         <div class="row">
-                            <div class="col-lg-4">
+                            <div class="col-lg-3">
                                 <div class="form-group">
                                     <input type="hidden" id="hiddenFieldDoctorId"/>
                                     <label>پزشک<span class="text-danger">*</span></label>
@@ -704,7 +817,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-3">
                                 <div class="form-group">
                                     <input type="hidden" id="hiddenFieldPatientId"/>
                                     <label>بیمار<span class="text-danger">*</span></label>
@@ -718,7 +831,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-3">
                                 <div class="form-group">
                                     <input type="hidden" id="hiddenFieldClinicId"/>
                                     <label>کلینیک<span class="text-danger">*</span></label>
@@ -732,56 +845,46 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-3">
                                 <div class="form-group">
                                     <label>تاریخ ارجاع<span class="text-danger">*</span></label>
-                                    <input class="form-control mydatepicker" type="text" id="txtReferDateShamsi"
+                                    <input class="form-control myDatepicker" type="text" id="txtReferDateShamsi"
                                            required="">
                                 </div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-3">
                                 <div class="form-group">
                                     <label>بیماری<span class="text-danger">*</span></label>
                                     <select class="form-control" id="cmbSickness"></select>
                                 </div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label>درمان<span class="text-danger">*</span></label>
+                                    <label>تجویز<span class="text-danger">*</span></label>
                                     <select class="form-control" id="cmbTreatment"></select>
                                 </div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-3">
                                 <div class="form-group">
                                     <label>تعداد جلسه<span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="txtSessionCountToDo"></input>
                                 </div>
                             </div>
-                            <div class="col-lg-4">
-                                <div class="form-group">
-                                    <label>واحد<span class="text-danger">*</span></label>
-                                    <select class="form-control" id="cmbUnit"></select>
+                            <div class="col-lg-3">
+                                <div class="service-upload">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <span>بارگذاری نسخه</span>
+                                    <form id="upload-file-form">
+                                        <input id="upload-file-input" type="file" name="attachment"
+                                               onchange="uploadFile();$('.submit-btn').hide();"/>
+                                        <input type="hidden" id="hiddenFieldFileCode"/>
+                                    </form>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="service-upload">
-                                <i class="fas fa-cloud-upload-alt"></i>
-                                <span>بارگذاری نسخه</span>
-                                <form id="upload-file-form">
-                                    <input id="upload-file-input" type="file" name="attachment"
-                                           onchange="uploadFile();$('.submit-btn').hide();"/>
-                                    <input type="hidden" id="hiddenFieldFileCode"/>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="service-fields mb-3">
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <div class="submit-section">
-                                        <button class="btn btn-primary submit-btn" onclick="saveEntity()"> ثبت
-                                        </button>
-                                    </div>
+                            <div class="col-lg-12">
+                                <div class="submit-section text-center">
+                                    <button class="btn btn-primary submit-btn" onclick="saveEntity()"> ثبت
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -813,6 +916,118 @@
         </div>
     </div>
     <!-- /Delete Modal -->
+
+    <!-- show full Modal -->
+    <div class="modal fade custom-modal" id="show_full_modal" aria-hidden="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-white"><span id="modalFull"></span></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCloseFullModal"
+                            onclick="refreshGrid()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="service-fields mb-3">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>پزشک</label>
+                                    <div>
+                                        <input type="text" class="form-control" id="txtDoctorTitleFull"
+                                               style="box-shadow: 0px 0px 5px 2px darkcyan">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>بیمار</label>
+                                    <div>
+                                        <input type="text" class="form-control" id="txtPatientTitleFull"
+                                               style="box-shadow: 0px 0px 5px 2px darkcyan">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>کلینیک</label>
+                                    <div>
+                                        <input type="text" class="form-control" id="txtClinicTitleFull"
+                                               style="box-shadow: 0px 0px 5px 2px darkcyan">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>تاریخ ارجاع</label>
+                                    <input class="form-control" type="text" id="txtReferDateShamsiFull"
+                                           style="box-shadow: 0px 0px 5px 2px darkcyan">
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>بیماری</label>
+                                    <input type="text" class="form-control" id="txtSicknessFull"
+                                           style="box-shadow: 0px 0px 5px 2px darkcyan">
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>تجویز</label>
+                                    <input type="text" class="form-control" id="txtTreatmentFull"
+                                           style="box-shadow: 0px 0px 5px 2px darkcyan">
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>تعداد جلسه تجویز شده</label>
+                                    <input type="text" class="form-control" id="txtSessionCountToDoFull"
+                                           style="box-shadow: 0px 0px 5px 2px darkcyan">
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>تاریخ پذیرش</label>
+                                    <input class="form-control" type="text" id="txtReceptionDateShamsiFull"
+                                           style="box-shadow: 0px 0px 5px 2px darkcyan">
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>تاریخ پایان کار</label>
+                                    <input class="form-control" type="text" id="txtFinishDateShamsiFull"
+                                           style="box-shadow: 0px 0px 5px 2px darkcyan">
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>تعداد جلسات انجام شده</label>
+                                    <input type="text" class="form-control" id="txtSessionCountDoneFull"
+                                           style="box-shadow: 0px 0px 5px 2px darkcyan"></input>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>پرداخت بیمار(ریال)</label>
+                                    <input type="text" class="form-control" id="txtPaymentFull"
+                                           style="box-shadow: 0px 0px 5px 2px darkcyan"></input>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>سهم مدیک(ریال)</label>
+                                    <input type="text" class="form-control" id="txtMedikEarnFull"
+                                           style="box-shadow: 0px 0px 5px 2px darkcyan"></input>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /show full Modal -->
 
 
 </div>

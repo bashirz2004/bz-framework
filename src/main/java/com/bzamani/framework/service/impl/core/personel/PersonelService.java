@@ -44,9 +44,11 @@ public class PersonelService extends GenericService<Personel, Long> implements I
     @Override
     @Transactional
     public Personel checkAndSave(Personel personel) throws Exception {
-        if (!iOrganizationService.userHaveAccessToOrganization(
-                iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getId(), personel.getOrganization().getId()))
-            throw new Exception("امکان ویرایش اطلاعات این فرد برای شما که به واحد سازمانی آن دسترسی ندارید وجود ندارد.");
+        if (personel.getId() != null && personel.getId() > 0) {//edit mode
+            if (!iOrganizationService.userHaveAccessToOrganization(
+                    iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getId(), loadByEntityId(personel.getId()).getOrganization().getId()))
+                throw new Exception("امکان ویرایش اطلاعات این فرد برای شما که به واحد سازمانی آن دسترسی ندارید وجود ندارد.");
+        }
 
         personel.setFileCode(personel.getFileCode() == null || personel.getFileCode().length() == 0 ? null : personel.getFileCode());
         String oldFileCode = null;
