@@ -81,6 +81,7 @@
     <!-- /autocomplete -->
 
     <script type="text/javascript">
+        var tree;
         var im0 = "leaf.gif";
         var im1 = "folderOpen.gif";
         var im2 = "folderClosed.gif";
@@ -119,7 +120,7 @@
                     $.getJSON(contextPath + "/rest/core/baseinfo/searchBaseInfo", searchFilter, function (data) {
                         resp($.map(data.entityList, function (result) {
                             return {
-                                label: result.parent != null ? result.parent.title : result.header.title + " > " + result.title,
+                                label: result.title,
                                 value: result.id
                             };
                         }));
@@ -143,7 +144,6 @@
                 configTree();
                 tree.loadXMLString(XMLData);
                 tree.selectItem("B" + id);
-                tree.focusItem("B" + id);
             });
         }
 
@@ -367,7 +367,7 @@
 
 
     </script>
-<body style="overflow: hidden">
+<body>
 
 <a id="modal_link" href="#add_edit_modal" data-toggle="modal"></a>
 <h5 class="m-1">مدیریت اطلاعات پایه</h5>

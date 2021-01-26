@@ -177,6 +177,7 @@
                     $.each(res, function (index, value) {
                         $("#cmbRegion").append("<option value=" + value.id + ">" + value.title + "</option>");
                     });
+                    $('#cmbRegion').select2();
                 },
                 error: function (err) {
                     console.log("error ---- " + err);

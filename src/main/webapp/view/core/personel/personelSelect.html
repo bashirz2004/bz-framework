@@ -151,7 +151,10 @@
         }
 
         function selectPersonel(id, firstname, lastname, fileCode) {
-            parent.setPersonel(id, firstname, lastname, fileCode);
+            if (getUrlParameter("isSearch") != null && getUrlParameter("isSearch") == 'true')
+                parent.setPersonelInSearch(id, firstname, lastname, fileCode);
+            else
+                parent.setPersonel(id, firstname, lastname, fileCode);
             parent.$.fancybox.close();
         }
 
@@ -193,7 +196,7 @@
                 </div>
                 <div class="float-left col-sm-3 col-md-3 col-lg-3 col-xl-3">
                     <input type="hidden" id="hiddenFieldSearchOrganizationId" class="searchFilter"/>
-                    <div  style="display: flex;white-space: nowrap">
+                    <div style="display: flex;white-space: nowrap">
                         <input disabled type="text" class="form-control searchFilter" id="txtSearchOrganizationTitle"
                                placeholder="واحد سازمانی ...">
                         <button class="btn btn-primary form-control"
@@ -264,6 +267,7 @@
                                         <td>${mobile}</td>
                                         <td>${telephone}</td>
                                     </tr>
+
 
 
 

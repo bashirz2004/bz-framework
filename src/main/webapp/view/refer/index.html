@@ -110,6 +110,7 @@
             "finishDateShamsiFrom": '',
             "finishDateShamsiTo": '',
             "doctorId": -1,
+            "patientId": -1,
             "clinicId": -1,
             "id": -1,
             "status": -1,
@@ -148,8 +149,9 @@
             searchFilters.finishDateShamsiFrom = $("#txtFinishDateShamsiFrom").val();
             searchFilters.finishDateShamsiTo = $("#txtFinishDateShamsiTo").val();
             searchFilters.doctorId = $("#hiddenFieldDoctorIdInSearch").val();
+            searchFilters.patientId = $("#hiddenFieldPatientIdInSearch").val();
             searchFilters.clinicId = $("#hiddenFieldClinicIdInSearch").val();
-            searchFilters.id = parseInt($("#txtId").val());
+            searchFilters.id = $("#txtId").val();
             searchFilters.status = $("#cmbStatusInSearch").val();
             refreshGrid();
         }
@@ -175,6 +177,7 @@
             $('.searchFilter').val('');
             $('#hiddenFieldClinicIdInSearch').val(-1);
             $('#hiddenFieldDoctorIdInSearch').val(-1);
+            $('#hiddenFieldPatientIdInSearch').val(-1);
             $('#cmbStatusInSearch').val(-1);
             $('#txtId').val("");
             refreshGrid();
@@ -363,6 +366,11 @@
             $('#txtPatientTitle').val(firstname + " " + lastname);
         }
 
+        function setPersonelInSearch(id, firstname, lastname) {
+            $('#hiddenFieldPatientIdInSearch').val(id);
+            $('#txtPatientTitleInSearch').val(firstname + " " + lastname);
+        }
+
         function setClinic(id, title) {
             $('#hiddenFieldClinicId').val(id);
             $('#txtClinicTitle').val(title);
@@ -394,7 +402,7 @@
                     type: 'POST',
                     success: function (res) {
                         showMessage("تغییر وضعیت با موفقیت انجام شد.", "", "success");
-                        fillGrid('referTemplate', 'referList', contextPath + '/rest/refer/searchRefer', searchFilters);
+                        refreshGrid();
                     },
                     error: function (err) {
                         showMessage("خطا در تغییر وضعیت", err.responseJSON.message, "error");
@@ -542,15 +550,23 @@
                     <input type="hidden" id="hiddenFieldDoctorIdInSearch" value="-1"/>
                     <div style="display: flex;white-space: nowrap">
                         <input type="text" class="form-control searchFilter" id="txtDoctorTitleInSearch"
-                               placeholder="انتخاب پزشک ..."
+                               placeholder="فیلتر براساس پزشک ..."
                                onclick="viewFancyBox('/app/view/doctor/doctorSelectAuthorize.html?isSearch=true','90%','90%')">
+                    </div>
+                </div>
+                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2 mt-1 mb-1">
+                    <input type="hidden" id="hiddenFieldPatientIdInSearch" value="-1"/>
+                    <div style="display: flex;white-space: nowrap">
+                        <input type="text" class="form-control searchFilter" id="txtPatientTitleInSearch"
+                               placeholder="فیلتر براساس بیمار ..."
+                               onclick="viewFancyBox('/app/view/core/personel/personelSelect.html?isSearch=true','90%','90%')">
                     </div>
                 </div>
                 <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2 mt-1 mb-1">
                     <input type="hidden" id="hiddenFieldClinicIdInSearch" value="-1"/>
                     <div style="display: flex;white-space: nowrap">
                         <input type="text" class="form-control searchFilter" id="txtClinicTitleInSearch"
-                               placeholder="انتخاب کلینیک ..."
+                               placeholder="فیلتر براساس کلینیک ..."
                                onclick="viewFancyBox('/app/view/clinic/clinicSelect.html?isSearch=true','90%','90%')">
                     </div>
                 </div>
@@ -757,6 +773,7 @@
 
 
 
+
                         </script>
                         </tbody>
                     </table>
@@ -794,7 +811,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title text-white">ثبت ارجاع </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCloseModal"
-                            onclick="fillGrid('referTemplate', 'referList', contextPath + '/rest/refer/searchRefer', searchFilters)">
+                            onclick="refreshGrid()">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>

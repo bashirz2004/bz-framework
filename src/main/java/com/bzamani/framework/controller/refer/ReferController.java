@@ -55,6 +55,7 @@ public class ReferController extends BaseController {
             @RequestParam(required = false) String finishDateShamsiFrom,
             @RequestParam(required = false) String finishDateShamsiTo,
             @RequestParam(required = false) Long doctorId,
+            @RequestParam(required = false) Long patientId,
             @RequestParam(required = false) Long clinicId,
             @RequestParam(required = false) Long id,
             @RequestParam(required = false) Integer status,
@@ -63,7 +64,7 @@ public class ReferController extends BaseController {
             @RequestParam(defaultValue = "id,desc") String[] sort) {
 
         return iReferService.searchRefer(referDateShamsiFrom, referDateShamsiTo, receptionDateShamsiFrom, receptionDateShamsiTo, finishDateShamsiFrom,
-                finishDateShamsiTo, doctorId, clinicId, id, status, page, size, sort);
+                finishDateShamsiTo, doctorId,patientId, clinicId, id, status, page, size, sort);
     }
 
     @GetMapping("/getAuthenticatedDoctor")

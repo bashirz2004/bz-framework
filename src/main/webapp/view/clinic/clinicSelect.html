@@ -185,6 +185,7 @@
                     $.each(res, function (index, value) {
                         $("#cmbRegion").append("<option value=" + value.id + ">" + value.title + "</option>");
                     });
+                    $('#cmbRegion').select2();
                     if (callBackFunction != null && typeof callBackFunction == 'function')
                         callBackFunction();
                 },
@@ -237,6 +238,7 @@
                                     if (patient.city != null) {
                                         fillComboRegion(patient.city.id, function () {
                                             $("#cmbRegion").val(patient.region != null ? patient.region.id : -1);
+                                            $('#cmbRegion').trigger('change');
                                             searchFilters.regionId = $("#cmbRegion").val();
                                             searchClinic();
                                         });

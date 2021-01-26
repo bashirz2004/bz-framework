@@ -18,7 +18,7 @@ import java.util.Set;
 public class Group extends BaseEntity {
 
     @NotNull
-    @Column(name = "title", length = 30, nullable = false)
+    @Column(name = "title", length = 60, nullable = false)
     private String title;
 
     @ManyToMany(fetch = FetchType.LAZY)

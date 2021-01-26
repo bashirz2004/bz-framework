@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@PreAuthorize("hasRole('1004')")
 @RestController
 @RequestMapping(value = "/rest/refer/referLog", produces = "application/json;charset=UTF-8")
 public class ReferLogController extends BaseController {

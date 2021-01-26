@@ -14,6 +14,9 @@
     <!-- Fontawesome CSS -->
     <link rel="stylesheet" href="/app/assets/admin/css/font-awesome.min.css">
 
+    <!-- Select2 CSS -->
+    <link rel="stylesheet" href="/app/assets/bzamani/select2.min.css">
+
     <!-- Main CSS -->
     <link rel="stylesheet" href="/app/assets/bzamani/style-admin.css">
 
@@ -179,6 +182,7 @@
                     $.each(res, function (index, value) {
                         $("#cmbRegion").append("<option value=" + value.id + ">" + value.title + "</option>");
                     });
+                    $('#cmbRegion').select2();
                     if (callBackFunction != null && typeof callBackFunction == 'function')
                         callBackFunction();
                 },
@@ -237,7 +241,10 @@
                         showMessage("حذف با موفقیت انجام شد.", "", "success");
                     },
                     error: function (err) {
-                        showMessage("خطا", err.responseJSON.message, "error");
+                        if (err.responseJSON.message.includes("fk4s2t2tdk6h1o26ilyk552k2xx")) {
+                            showMessage("خطا", "به دلیل تعریف حساب کاربری برای این شخص، امکان حذف وجود ندارد.", "error");
+                        } else
+                            showMessage("خطا", err.responseJSON.message, "error");
                     }
                 });
             else
@@ -336,13 +343,14 @@
                 $('#uploadedImage').prop("src", "");
                 $("#hiddenFieldFileCode").val(null);
             }
-            if (entity.state != null) {
+            if (entity.state != null && entity.state.id > 0) {
                 $("#cmbState").val(entity.state.id);
                 fillComboCity(entity.state.id, function () {
                     $("#cmbCity").val(entity.city != null ? entity.city.id : -1);
                     if (entity.city != null) {
                         fillComboRegion(entity.city.id, function () {
                             $("#cmbRegion").val(entity.region != null ? entity.region.id : -1);
+                            $('#cmbRegion').trigger('change');
                         });
                     }
                 });
@@ -350,6 +358,7 @@
                 $("#cmbState").val(-1);
                 $("#cmbCity").val(-1);
                 $("#cmbRegion").val(-1);
+                $('#cmbRegion').trigger('change');
             }
         }
 
@@ -614,6 +623,11 @@
 
 
 
+
+
+
+
+
                         </script>
                         </tbody>
                     </table>
@@ -737,8 +751,8 @@
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label>تلفن</label>
-                                    <input type="text" id="txtTelephone" class="form-control service-desc"/>
+                                    <label>وضعیت نظام وظیفه</label>
+                                    <select class="form-control" id="cmbMilitaryServiceStatus"></select>
                                 </div>
                             </div>
                         </div>
@@ -756,16 +770,11 @@
                                         <select class="form-control" id="cmbCity" required=""></select>
                                     </div>
                                 </div>
-                                <div class="col-lg-2">
+                                <div class="col-lg-4">
                                     <div class="form-group">
                                         <label>منطقه/محله</label>
-                                        <select class="form-control" id="cmbRegion" required=""></select>
-                                    </div>
-                                </div>
-                                <div class="col-lg-2">
-                                    <div class="form-group">
-                                        <label>وضعیت نظام وظیفه</label>
-                                        <select class="form-control" id="cmbMilitaryServiceStatus"></select>
+                                        <select class="form-control" id="cmbRegion" required=""
+                                                style="width: 100%"></select>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -788,10 +797,16 @@
 
                         <div class="service-fields mb-3">
                             <div class="row">
-                                <div class="col-lg-8">
+                                <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>آدرس</label>
                                         <input type="text" id="txtAddress" class="form-control service-desc"/>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label>تلفن</label>
+                                        <input type="text" id="txtTelephone" class="form-control service-desc"/>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -879,6 +894,9 @@
 
 <!-- Bootstrap Core JS -->
 <script src="/app/assets/bzamani/bootstrap.min.js"></script>
+
+<!-- Select2 JS -->
+<script src="/app/assets/bzamani/select2.min.js"></script>
 
 </body>
 </html>

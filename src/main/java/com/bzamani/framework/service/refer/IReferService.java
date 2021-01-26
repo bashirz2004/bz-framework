@@ -15,6 +15,7 @@ public interface IReferService extends IGenericService<Refer, Long> {
                                     String finishDateShamsiFrom,
                                     String finishDateShamsiTo,
                                     Long doctorId,
+                                    Long patientId,
                                     Long clinicId,
                                     Long id,
                                     Integer status,

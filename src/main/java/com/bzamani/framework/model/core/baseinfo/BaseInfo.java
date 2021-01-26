@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "core_baseinfo", uniqueConstraints = {@UniqueConstraint(name = "unq_baseinfo", columnNames = {"header_id","parent_id", "title"})})
-@SequenceGenerator(name = "sequence_db", sequenceName = "seq_core_baseinfo_header", allocationSize = 1)
+@SequenceGenerator(name = "sequence_db", sequenceName = "seq_core_baseinfo", allocationSize = 1)
 @Setter
 @Getter
 public class BaseInfo extends BaseEntity {

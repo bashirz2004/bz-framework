@@ -17,6 +17,7 @@ public interface IReferRepository extends JpaRepository<Refer, Long> {
             " and coalesce(e.finishDateShamsi , '') >=  case when :finishDateShamsiFrom = '' then coalesce(e.finishDateShamsi , '') else :finishDateShamsiFrom end " +
             " and coalesce(e.finishDateShamsi , '') <=  case when :finishDateShamsiTo = '' then coalesce(e.finishDateShamsi , '') else :finishDateShamsiTo end " +
             " and e.doctor.id =  CASE WHEN :doctorId > 0L THEN :doctorId ELSE e.doctor.id END " +
+            " and e.patient.id =  CASE WHEN :patientId > 0L THEN :patientId ELSE e.patient.id END " +
             " and e.clinic.id =  CASE WHEN :clinicId > 0L THEN :clinicId ELSE e.clinic.id END  " +
             " and e.id =  CASE WHEN :id > 0L THEN :id ELSE e.id END "+
             " and e.status =  CASE WHEN :status >= 0 THEN :status ELSE e.status END "
@@ -29,6 +30,7 @@ public interface IReferRepository extends JpaRepository<Refer, Long> {
                             @Param("finishDateShamsiFrom") String finishDateShamsiFrom,
                             @Param("finishDateShamsiTo") String finishDateShamsiTo,
                             @Param("doctorId") Long doctorId,
+                            @Param("patientId") Long patientId,
                             @Param("clinicId") Long clinicId,
                             @Param("id") Long id,
                             @Param("status") Integer status,

@@ -14,6 +14,8 @@
     <!-- Fontawesome CSS -->
     <link rel="stylesheet" href="/app/assets/admin/css/font-awesome.min.css">
 
+    <!-- Select2 CSS -->
+    <link rel="stylesheet" href="/app/assets/bzamani/select2.min.css">
 
     <!-- Main CSS -->
     <link rel="stylesheet" href="/app/assets/bzamani/style-admin.css">
@@ -96,9 +98,9 @@
             "address": '',
             "telephone": '',
             "fileCode": '',
-            "state": {"id": ''},
-            "city": {"id": ''},
-            "region": {"id": ''}
+            "state": {"id": -1},
+            "city": {"id": -1},
+            "region": {"id": -1}
         };
         var entityData;
 
@@ -118,12 +120,16 @@
             configAutoComplete();
             fillComboBaseInfo(1, "cmbState");
             $("#cmbState").change(function () {
-                fillComboCity($(this).val());
-                $("#cmbRegion").html("<select class='select' id='cmbRegion'></select>");
+                if ($(this).val() > 0) {
+                    fillComboCity($(this).val());
+                    $("#cmbRegion").html("<select class='select' id='cmbRegion'></select>");
+                }
             });
 
             $("#cmbCity").change(function () {
-                fillComboRegion($(this).val());
+                if ($(this).val() > 0) {
+                    fillComboRegion($(this).val());
+                }
             });
         });
 
@@ -299,7 +305,7 @@
 
         function setInputsByEntity(entity) {
             $("#hiddenFieldId").val(entity.id);
-            $("#hiddenFieldParentId").val(entity.parent.id > 0 ? entity.parent.id :  $("#hiddenFieldParentId").val());
+            $("#hiddenFieldParentId").val(entity.parent.id > 0 ? entity.parent.id : $("#hiddenFieldParentId").val());
             $("#txtTitle").val(entity.title);
             $("#cmbActive").val(entity.active.toString());
             $("#txtMobile").val(entity.mobile);
@@ -313,20 +319,22 @@
                 $("#hiddenFieldFileCode").val(null);
             }
 
-            if (entity.state != null) {
+            if (entity.state != null && entity.state.id > 0) {
                 $("#cmbState").val(entity.state.id);
                 fillComboCity(entity.state.id, function () {
                     $("#cmbCity").val(entity.city != null ? entity.city.id : -1);
                     if (entity.city != null) {
                         fillComboRegion(entity.city.id, function () {
                             $("#cmbRegion").val(entity.region != null ? entity.region.id : -1);
+                            $('#cmbRegion').trigger('change');
                         });
                     }
                 });
             } else {
-                $("#cmbState").val(-1);
-                $("#cmbCity").val(-1);
-                $("#cmbRegion").val(-1);
+                $('#cmbState').val(-1);
+                $('#cmbCity').val(-1)
+                $('#cmbRegion').val(-1);
+                $('#cmbRegion').trigger('change');
             }
         }
 
@@ -433,6 +441,7 @@
                         $.each(res, function (index, value) {
                             $("#cmbRegion").append("<option value=" + value.id + ">" + value.title + "</option>");
                         });
+                        $('#cmbRegion').select2();
                         if (callBackFunction != null && typeof callBackFunction == 'function')
                             callBackFunction();
                     },
@@ -467,7 +476,7 @@
 
 
     </script>
-<body style="overflow: hidden">
+<body>
 
 <a id="modal_link" href="#add_edit_modal" data-toggle="modal" onclick="clearEntity();"></a>
 <h5 class="m-1">مدیریت ساختار سازمان</h5>
@@ -488,7 +497,7 @@
 
 <!-- Add/Edit Modal -->
 <div class="modal fade custom-modal" id="add_edit_modal" aria-hidden="true" role="dialog">
-    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">افزودن / ویرایش سازمان </h5>
@@ -541,7 +550,7 @@
                         <div class="col-lg-4">
                             <div class="form-group">
                                 <label>منطقه/محله<span class="text-danger">*</span></label>
-                                <select class="form-control" id="cmbRegion" required=""></select>
+                                <select class="form-control" id="cmbRegion" required="" style="width: 100%"></select>
                             </div>
                         </div>
                     </div>
@@ -590,5 +599,7 @@
 
 <!-- Bootstrap Core JS -->
 <script src="/app/assets/bzamani/bootstrap.min.js"></script>
+<!-- Select2 JS -->
+<script src="/app/assets/bzamani/select2.min.js"></script>
 </body>
 </html>
