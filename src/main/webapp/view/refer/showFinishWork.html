@@ -98,6 +98,7 @@
             initializeThousandSeparatorOnKeyup();
             getClinicPercent();
             $('#txtSessionCountDone').focus();
+            getCurrentDateShamsi();
 
             $('#txtPayment').keyup(function () {
                 if (removeMoneyFormat($(this).val()) > 0)
@@ -162,6 +163,12 @@
         function getClinicPercent() {
             $.getJSON(contextPath + "/rest/refer/getClinicPercent/" + referId, function (percent) {
                 $('#txtPercent').val(percent);
+            });
+        }
+
+        function getCurrentDateShamsi() {
+            $.get(contextPath + "/api/public/getCurrentDateShamsi", function (res) {
+                $('#txtFinishDateShamsi').val(res);
             });
         }
 

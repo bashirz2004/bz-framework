@@ -541,35 +541,33 @@
                                                         alt="User Image"></a>
                                             </h2>
                                         </td>
-                                        <td>
-                                            <h2 class="table-avatar">
-                                                <a href="javascript:void(0)">${firstname}</a>
-                                            </h2>
+                                        <td style="white-space: initial">
+                                               ${firstname}
                                         </td>
-                                        <td>
-                                            <h2 class="table-avatar">
-                                               <a href="javascript:void(0)">${lastname}</a>
-                                            </h2>
+                                        <td style="white-space: initial">
+                                               ${lastname}
                                         </td>
-                                        <td>${organization.title}</td>
-                                        <td>
+                                        <td style="white-space: initial">
+                                            ${organization.title}
+                                        </td>
+                                        <td style="white-space: initial">
                                             {{if state}}
                                                 ${state.title}
                                             {{/if}}
                                         </td>
-                                        <td>
+                                        <td style="white-space: initial">
                                             {{if city}}
                                                 ${city.title}
                                             {{/if}}
                                         </td>
-                                        <td>
+                                        <td style="white-space: initial">
                                             {{if region}}
                                                 ${region.title}
                                             {{/if}}
                                         </td>
-                                        <td>${mobile}</td>
-                                        <td>${telephone}</td>
-                                        <td class="text-right">
+                                        <td style="white-space: initial">${mobile}</td>
+                                        <td style="white-space: initial">${telephone}</td>
+                                        <td style="display: flex;white-space: nowrap" class="text-right">
                                             <div class="float-right">
                                                 <div class="float-right">
                                                      <a href="#delete_personel_modal" onclick="rowSelected(${id})"  data-toggle="modal" title="حذف"

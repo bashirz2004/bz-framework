@@ -68,7 +68,7 @@ public class UserController extends BaseController {
     }
 
     @PostMapping("/changeAuthenticatedUserPassword")
-    public boolean changeAuthenticatedUserPassword(@RequestBody SelfUserRegistrationDto dto) throws Exception {
+    public boolean changeAuthenticatedUserPassword(@RequestBody SelfUserRegistrationDto dto)  {
         iUserService.changeAuthenticatedUserPassword(dto.getOldPassword(), dto.getPassword());
         return true;
     }
@@ -86,13 +86,13 @@ public class UserController extends BaseController {
 
     @PreAuthorize("hasRole('11')")
     @DeleteMapping("/deleteUserOrganization/{userId}/{organizationId}")
-    public boolean deleteUserOrganization(@PathVariable("userId") long userId, @PathVariable("organizationId") long organizationId) throws Exception {
+    public boolean deleteUserOrganization(@PathVariable("userId") long userId, @PathVariable("organizationId") long organizationId)  {
         return iUserService.deleteUserOrganization(userId, organizationId);
     }
 
     @PreAuthorize("hasRole('11')")
     @PostMapping(value = "/addUserOrganizations")
-    public boolean addUserOrganizations(@RequestBody UserOrganizationDto dto) throws Exception {
+    public boolean addUserOrganizations(@RequestBody UserOrganizationDto dto)  {
         return iUserService.addUserOrganizations(dto.getUserId(), dto.getOrganizationIds());
     }
 
@@ -109,13 +109,13 @@ public class UserController extends BaseController {
 
     @PreAuthorize("hasRole('12')")
     @DeleteMapping("/deleteUserGroup/{userId}/{groupId}")
-    public boolean deleteUserGroup(@PathVariable("userId") long userId, @PathVariable("groupId") long groupId) throws Exception {
+    public boolean deleteUserGroup(@PathVariable("userId") long userId, @PathVariable("groupId") long groupId)  {
         return iUserService.deleteUserGroup(userId, groupId);
     }
 
     @PreAuthorize("hasRole('12')")
     @PostMapping(value = "/addUserGroups")
-    public boolean addUserGroups(@RequestBody UserGroupDto dto) throws Exception {
+    public boolean addUserGroups(@RequestBody UserGroupDto dto)  {
         return iUserService.addUserGroups(dto.getUserId(), dto.getGroupIds());
     }
 }

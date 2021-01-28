@@ -31,11 +31,11 @@ public class LikeService extends GenericService<Like, Long> implements ILikeServ
 
     @Override
     @Transactional
-    public Like saveLike(Like like) throws Exception {
+    public Like saveLike(Like like)  {
         if(iPostService.loadByEntityId(like.getPost().getId()).isAllowLikeOrComment())
             like.setLiker(iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getPersonel());
         else
-            throw new Exception("این پست قابلیت ثبت نظر یا لایک را تدارد.");
+            throw new  RuntimeException("این پست قابلیت ثبت نظر یا لایک را تدارد.");
         return super.save(like);
     }
 }

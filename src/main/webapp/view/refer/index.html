@@ -139,6 +139,11 @@
                 if (e.which == 13)  // the enter key code
                     searchRefer();
             });
+
+            $('#txtId').keydown(function (e) {
+                if (e.which == 13)  // the enter key code
+                    searchRefer();
+            });
         });
 
         function searchRefer() {
@@ -314,6 +319,9 @@
                     if (res != null) {
                         $('#hiddenFieldDoctorId').val(res.id);
                         $('#txtDoctorTitle').val(res.personel.firstname + " " + res.personel.lastname);
+                    } else {
+                        $('#hiddenFieldDoctorId').val(-1);
+                        $('#txtDoctorTitle').val('');
                     }
                 },
                 error: function (err) {
@@ -322,18 +330,8 @@
         }
 
         function getCurrentDateShamsi() {
-            $.ajax({
-                url: contextPath + "/api/public/getCurrentDateShamsi",
-                contentType: "application/json;charset=utf-8",
-                dataType: "json",
-                type: 'GET',
-                success: function (res) {
-                    if (res != null) {
-                        $('#txtReferDateShamsi').val(res);
-                    }
-                },
-                error: function (err) {
-                }
+            $.get(contextPath + "/api/public/getCurrentDateShamsi", function (res) {
+                $('#txtReferDateShamsi').val(res);
             });
         }
 
@@ -469,6 +467,7 @@
                     $('#txtFinishDateShamsiFull').val(refer.finishDateShamsi);
                     $('#txtMedikEarnFull').val(toMoneyFormat(refer.medikEarn));
                     $('#txtPaymentFull').val(toMoneyFormat(refer.payment));
+                    $('#txtSettlementDateShamsiFull').val(refer.settlement.settlementDateShamsi);
                 },
                 error: function (err) {
                 }
@@ -596,7 +595,7 @@
                                 <i class="fa fa-sort-up sort-grid" order="referDateShamsi,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="referDateShamsi,desc"></i>
                             </th>
-                            <th>کد رهگیری
+                            <th>کد
                                 <i class="fa fa-sort-up sort-grid" order="id,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="id,desc"></i>
                             </th>
@@ -641,19 +640,19 @@
                                         <td>
                                             ${id}
                                         </td>
-                                        <td>
+                                        <td style="white-space: initial">
                                             ${doctor.personel.firstname}  ${doctor.personel.lastname}
                                         </td>
-                                        <td>
+                                        <td style="white-space: initial">
                                             ${patient.firstname}  ${patient.lastname}
                                         </td>
-                                        <td style="font-family: iransans-medium">
+                                        <td style="font-family: iransans-medium;white-space: initial">
                                             ${clinic.organization.title}
                                         </td>
-                                        <td>
+                                        <td style="white-space: initial">
                                             ${sickness.title}
                                         </td>
-                                        <td>
+                                        <td style="white-space: initial">
                                             ${treatment.title}
                                         </td>
                                         <td>
@@ -695,11 +694,14 @@
                                                 <a onclick="changeStatus(${id},'revoked','ابطال')" ><i class="fa fa-minus-circle"></i>&nbsp;ابطال</a>
                                               {{/if}}
                                                 <a onclick="showHistory(${id})" ><i class="fa fa-history"></i>&nbsp;تاریخچه اقدامات</a>
-                                                <a data-toggle="modal" href="#show_full_modal" onclick="showFullEntity(${id})" ><i class="fa fa-history"></i>&nbsp;مشاهده</a>
+                                                <a data-toggle="modal" href="#show_full_modal" onclick="showFullEntity(${id})" ><i class="fa fa-history"></i>&nbsp;مشاهده کامل</a>
                                               </div>
                                             </div>
                                         </td>
                                     </tr>
+
+
+
 
 
 
@@ -820,7 +822,7 @@
                     <input type="hidden" id="hiddenFieldId"/>
                     <div class="service-fields mb-3">
                         <div class="row">
-                            <div class="col-lg-3">
+                            <div class="col-lg-4">
                                 <div class="form-group">
                                     <input type="hidden" id="hiddenFieldDoctorId"/>
                                     <label>پزشک<span class="text-danger">*</span></label>
@@ -834,7 +836,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-4">
                                 <div class="form-group">
                                     <input type="hidden" id="hiddenFieldPatientId"/>
                                     <label>بیمار<span class="text-danger">*</span></label>
@@ -848,7 +850,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-4">
                                 <div class="form-group">
                                     <input type="hidden" id="hiddenFieldClinicId"/>
                                     <label>کلینیک<span class="text-danger">*</span></label>
@@ -862,32 +864,32 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-2">
                                 <div class="form-group">
                                     <label>تاریخ ارجاع<span class="text-danger">*</span></label>
                                     <input class="form-control myDatepicker" type="text" id="txtReferDateShamsi"
                                            required="">
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-2">
                                 <div class="form-group">
                                     <label>بیماری<span class="text-danger">*</span></label>
                                     <select class="form-control" id="cmbSickness"></select>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-2">
                                 <div class="form-group">
                                     <label>تجویز<span class="text-danger">*</span></label>
                                     <select class="form-control" id="cmbTreatment"></select>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-2">
                                 <div class="form-group">
                                     <label>تعداد جلسه<span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="txtSessionCountToDo"></input>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-4">
                                 <div class="service-upload">
                                     <i class="fas fa-cloud-upload-alt"></i>
                                     <span>بارگذاری نسخه</span>
@@ -1012,13 +1014,6 @@
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label>تاریخ پایان کار</label>
-                                    <input class="form-control" type="text" id="txtFinishDateShamsiFull"
-                                           style="box-shadow: 0px 0px 5px 2px darkcyan">
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="form-group">
                                     <label>تعداد جلسات انجام شده</label>
                                     <input type="text" class="form-control" id="txtSessionCountDoneFull"
                                            style="box-shadow: 0px 0px 5px 2px darkcyan"></input>
@@ -1035,6 +1030,20 @@
                                 <div class="form-group">
                                     <label>سهم مدیک(ریال)</label>
                                     <input type="text" class="form-control" id="txtMedikEarnFull"
+                                           style="box-shadow: 0px 0px 5px 2px darkcyan"></input>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>تاریخ پایان کار</label>
+                                    <input class="form-control" type="text" id="txtFinishDateShamsiFull"
+                                           style="box-shadow: 0px 0px 5px 2px darkcyan">
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>تاریخ تسویه حساب</label>
+                                    <input type="text" class="form-control" id="txtSettlementDateShamsiFull"
                                            style="box-shadow: 0px 0px 5px 2px darkcyan"></input>
                                 </div>
                             </div>

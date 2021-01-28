@@ -19,13 +19,13 @@ public class PersonelController extends BaseController {
 
     @PreAuthorize("hasRole('9')")
     @PostMapping("/save")
-    public Personel save(@RequestBody Personel personel) throws Exception {
+    public Personel save(@RequestBody Personel personel)  {
         return iPersonelService.checkAndSave(personel);
     }
 
     @PreAuthorize("hasRole('9')")
     @DeleteMapping("/delete/{id}")
-    public boolean delete(@PathVariable("id") long id) throws Exception {
+    public boolean delete(@PathVariable("id") long id)  {
         return iPersonelService.checkAndDelete(id);
     }
 

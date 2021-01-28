@@ -99,6 +99,10 @@ public class Refer extends BaseEntity {
     @Column(name = "fileCode")
     private String fileCode;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "settlement_id")
+    private Settlement settlement;
+
     @Transient
     private String statusPersianTitle;
 

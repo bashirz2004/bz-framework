@@ -1,11 +1,9 @@
 package com.bzamani.framework.controller.refer;
 
-import com.bzamani.framework.common.utility.DateUtility;
 import com.bzamani.framework.controller.core.BaseController;
 import com.bzamani.framework.model.doctor.Doctor;
 import com.bzamani.framework.model.refer.Refer;
 import com.bzamani.framework.model.refer.ReferStatus;
-import com.bzamani.framework.service.clinic.IClinicService;
 import com.bzamani.framework.service.doctor.IDoctorService;
 import com.bzamani.framework.service.refer.IReferService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +30,7 @@ public class ReferController extends BaseController {
 
     @PreAuthorize("hasRole('1005')")
     @DeleteMapping("/delete/{id}")
-    public boolean delete(@PathVariable("id") long id) throws Exception {
+    public boolean delete(@PathVariable("id") long id)  {
         return iReferService.deleteWithLogs(id);
     }
 
@@ -64,7 +62,7 @@ public class ReferController extends BaseController {
             @RequestParam(defaultValue = "id,desc") String[] sort) {
 
         return iReferService.searchRefer(referDateShamsiFrom, referDateShamsiTo, receptionDateShamsiFrom, receptionDateShamsiTo, finishDateShamsiFrom,
-                finishDateShamsiTo, doctorId,patientId, clinicId, id, status, page, size, sort);
+                finishDateShamsiTo, doctorId, patientId, clinicId, id, status, page, size, sort);
     }
 
     @GetMapping("/getAuthenticatedDoctor")
@@ -73,13 +71,13 @@ public class ReferController extends BaseController {
     }
 
     @PostMapping("/changeStatus/{id}/{newStatus}")
-    public Long changeStatus(@PathVariable long id, @PathVariable ReferStatus newStatus) throws Exception {
+    public Long changeStatus(@PathVariable long id, @PathVariable ReferStatus newStatus)  {
         return iReferService.changeStatus(id, newStatus);
     }
 
     @PreAuthorize("hasRole('1008')")
     @PostMapping("/finishWork")
-    public Refer finishWork(@RequestBody Refer refer) throws Exception {
+    public Refer finishWork(@RequestBody Refer refer)  {
         return iReferService.finishWork(refer);
     }
 
@@ -87,4 +85,24 @@ public class ReferController extends BaseController {
     public Integer getClinicPercent(@PathVariable long referId) {
         return load(referId).getClinic().getPercent();
     }
+
+    @GetMapping("/getAllBySettlementId")
+    public Map<String, Object> getAllBySettlementId(
+            @RequestParam() long settlementId,
+            @RequestParam(required = false) Long doctorId,
+            @RequestParam(required = false) Long patientId,
+            @RequestParam(required = false) Long id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10000") int size,
+            @RequestParam(defaultValue = "id,desc") String[] sort) {
+
+        return iReferService.getAllBySettlementId(settlementId, doctorId, patientId, id, page, size, sort);
+    }
+
+    @PreAuthorize("hasRole('1009')")
+    @PostMapping("/updateReferSettlementToNull/{referId}")
+    public Refer updateReferSettlementToNull(@PathVariable long referId) {
+        return iReferService.updateReferSettlementToNull(referId);
+    }
+
 }

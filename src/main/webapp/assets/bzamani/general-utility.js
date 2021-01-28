@@ -155,6 +155,8 @@ function initializeThousandSeparatorOnKeyup() {
 }
 
 function toMoneyFormat(inputString) {
+    if (inputString == null || inputString.toString().trim().length == 0)
+        return;
     var result = '';
     var valueArray = inputString.toString().split('');
     var resultArray = [];
@@ -187,5 +189,9 @@ function toMoneyFormat(inputString) {
 }
 
 function removeMoneyFormat(inputString) {
-    return inputString.toString().replaceAll(',', '')
+    if (inputString == null)
+        return;
+    else
+        return inputString.toString().replaceAll(',', '')
 }
+

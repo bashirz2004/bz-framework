@@ -24,7 +24,7 @@ public class MyCustomAnnotaionHandler implements ConstraintValidator<MyLengthVal
             return true;
     }
 
-   /* public static void checkLength(Object object) throws Exception {
+   /* public static void checkLength(Object object)  {
         String exceptinMessage = "";
         Class<?> clazz = object.getClass();
         for (Field field : clazz.getDeclaredFields()) {

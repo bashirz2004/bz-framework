@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>نمودارها</title>
+    <!-- jQuery -->
+    <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
+
+    <script src="/app/view/core/charts/js/highcharts.js"></script>
+    <script src="/app/view/core/charts/js/exporting.js"></script>
+    <script src="/app/view/core/charts/js/export-data.js"></script>
+    <script src="/app/view/core/charts/js/accessibility.js"></script>
+
+    <style>
+        .highcharts-figure, .highcharts-data-table table {
+            min-width: 320px;
+            max-width: 100%;
+            margin: 1em auto;
+        }
+    </style>
+    <script>
+        $(function () {
+            Highcharts.chart('container1', {
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: 'نمودار ارجاعات به تفکیک وضعیت'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.0f}</b>'
+                },
+                accessibility: {
+                    point: {
+                        valueSuffix: '%'
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.0f}'
+                        }
+                    }
+                },
+                series: [{
+                    name: 'تعداد',
+                    colorByPoint: true,
+                    data: [{
+                        name: 'ثبت اولیه',
+                        y: 30,
+                        sliced: true,
+                        selected: true
+                    }, {
+                        name: 'ارجاع شده',
+                        y: 20
+                    }, {
+                        name: 'پذیرش اولیه',
+                        y: 10
+                    }, {
+                        name: 'پایان کار',
+                        y: 25
+                    }, {
+                        name: 'تسویه شده',
+                        y: 5
+                    }, {
+                        name: 'ابطال شده',
+                        y: 10
+                    },
+                    ]
+                }]
+            });
+
+            Highcharts.chart('container2', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'نمودار رتبه بندی پزشکان از لحاظ تعداد ارجاعات'
+                },
+                subtitle: {
+                    text: 'medik'
+                },
+                xAxis: {
+                    categories: [
+                        'تعداد ارجاعات'
+                    ],
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'تعداد ارجاعات'
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        '<td style="padding:0"><b>{point.y:.0f}</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: [{
+                    name: 'دکتر علی احمدی',
+                    data: [212]
+
+                }, {
+                    name: 'دکتر سوسن محمود زاده',
+                    data: [158]
+
+                }, {
+                    name: 'دکتر هدایت مقبلی',
+                    data: [130]
+
+                }, {
+                    name: 'دکتر لاله صدرالمتالهین',
+                    data: [100]
+                }, {
+                    name: 'دکتر هدایت مقبلی',
+                    data: [71]
+
+                }, {
+                    name: 'دکتر حسام مهدوی فرد',
+                    data: [65]
+
+                }, {
+                    name: 'دکتر حسن قاسمی',
+                    data: [60]
+
+                }, {
+                    name: 'دکتر هستی هاشمی',
+                    data: [53]
+
+                }, {
+                    name: 'دکتر محمود حجتی',
+                    data: [20]
+
+                }]
+            });
+
+            Highcharts.chart('container3', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'نمودار رتبه بندی کلینیک ها از لحاظ تعداد پذیرش'
+                },
+                subtitle: {
+                    text: 'medik'
+                },
+                xAxis: {
+                    categories: [
+                        'تعداد پذیرش'
+                    ],
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'تعداد پذیرش'
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        '<td style="padding:0"><b>{point.y:.0f}</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: [{
+                    name: 'کلینیک حضرت ابوالفضل',
+                    data: [212]
+
+                }, {
+                    name: 'کلینیک تهرانپارس',
+                    data: [158]
+
+                }, {
+                    name: 'کلینیک شهدای غزه',
+                    data: [130]
+
+                }, {
+                    name: 'کلینیک ستاره شرق',
+                    data: [100]
+                }, {
+                    name: 'کلینیک تخصصی شهران',
+                    data: [71]
+
+                }]
+            });
+        });
+    </script>
+</head>
+<body dir="rtl">
+<figure class="highcharts-figure">
+    <div id="container1"></div>
+</figure>
+
+<figure class="highcharts-figure">
+    <div id="container2"></div>
+</figure>
+
+<figure class="highcharts-figure">
+    <div id="container3"></div>
+</figure>
+
+</body>
+</html>
+
+
+
+

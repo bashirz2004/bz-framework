@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>تسویه حساب با کلینیک ها</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/app/assets/img/favicon.png">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/app/assets/bzamani/bootstrap.css">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="/app/assets/admin/css/font-awesome.min.css">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/app/assets/bzamani/style-admin.css">
+
+    <!--[if lt IE 9]>
+    <script src="/app/assets/js/html5shiv.min.js"></script>
+    <script src="/app/assets/js/respond.min.js"></script>
+    <![endif]-->
+    <!-- jQuery -->
+    <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
+    <!-- fancybox -->
+    <script src="/app/assets/bzamani/components/fancybox/jquery.fancybox.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/fancybox/jquery.fancybox.css"/>
+
+    <!-- pace mask -->
+    <script>
+        paceOptions = {
+            elements: false,
+            document: true, // disabled
+            eventLag: false, // disabled
+            ajax: {
+                trackMethods: ['GET', 'POST', 'DELETE', 'PUT'],
+                trackWebSockets: false
+            },
+            restartOnPushState: true,
+            restartOnRequestAfter: true
+        };
+        $(function () {
+            $("body").prepend("<div class='pace-cover' style='display: none;'></div>");
+            Pace.on("start", function () {
+                $(".pace-cover").fadeIn();
+            });
+            Pace.on("done", function () {
+                $(".pace-cover").fadeOut();
+            });
+        });
+    </script>
+    <script type="text/javascript" src="/app/assets/bzamani/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
+    <style>
+        .pace-cover {
+            position: fixed;
+            left: 0px;
+            top: 1px;
+            width: 100%;
+            height: 100%;
+            z-index: 99999;
+            background: rgba(0, 0, 0, 0.4);
+        }
+    </style>
+    <!-- /pace mask -->
+
+    <!-- sweet alert -->
+    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/sweetalert/sweetalert2.min.css">
+    <!-- /sweet alert -->
+
+    <!-- datepicker  -->
+    <script src="/app/assets/bzamani/components/datepicker/persian-date.js"></script>
+    <script src="/app/assets/bzamani/components/datepicker/persian-datepicker.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/datepicker/persian-datepicker.css">
+    <!-- /datepicker  -->
+
+    <!-- thousand separator onKeyup of text box and textArea  -->
+    <script src="/app/assets/bzamani/simple.money.format.js"></script>
+    <!-- /thousand separator onKeyup of text box and textArea  -->
+
+    <script src="/app/assets/bzamani/jquery.template.js"></script>
+    <script src="/app/assets/bzamani/grid-utility.js"></script>
+    <script src="/app/assets/bzamani/general-utility.js"></script>
+
+    <script>
+        var contextPath = "/app";
+
+        var emptyEntityData = {
+            "id": '',
+            "settlementDateShamsi": '',
+            "clinic": {"id": -1, "organization": {"title": ''}},
+            "medikEarnsTotal": '',
+            "medikEarnsReceivedFinaly": '',
+            "description": '',
+            "confirmed": false
+        };
+        var entityData;
+
+        var searchFilters = {
+            "settlementDateShamsiFrom": '',
+            "settlementDateShamsiTo": '',
+            "clinicId": -1,
+            "referId": -1,
+            "description": '',
+            "confirmed": null,
+            "sort": "id,desc",
+            "page": 0,
+            "size": 10
+        };
+
+        $(function () {
+            initializeDatePicker();
+            initializeThousandSeparatorOnKeyup();
+            refreshGrid();
+
+            $('.sort-grid').on("click", function () {
+                searchFilters.sort = $(this).attr("order");
+                refreshGrid();
+            });
+
+            $('#cmbPageSize').change(function () {
+                searchFilters.size = $(this).val();
+                refreshGrid();
+            });
+
+            $('.searchFilter').keydown(function (e) {
+                if (e.which == 13)  // the enter key code
+                    searchSettlement();
+            });
+        });
+
+        function searchSettlement() {
+            searchFilters.settlementDateShamsiFrom = $("#txtSettlementDateShamsiFrom").val();
+            searchFilters.settlementDateShamsiTo = $("#txtSettlementDateShamsiTo").val();
+            searchFilters.clinicId = $("#hiddenFieldClinicIdInSearch").val();
+            searchFilters.description = $("#txtDescriptionInSearch").val();
+            searchFilters.confirmed = $("#cmbConfirmedInSearch").val();
+            searchFilters.referId = $('#txtReferIdInSearch').val(),
+                refreshGrid();
+        }
+
+        function clearSearch() {
+            $('#cmbPageSize').val(10);
+            searchFilters = {
+                "settlementDateShamsiFrom": '',
+                "settlementDateShamsiTo": '',
+                "clinicId": -1,
+                "description": '',
+                "confirmed": null,
+                "referId": -1,
+                "sort": "id,desc",
+                "page": 0,
+                "size": 10
+            };
+            $('.searchFilter').val('');
+            $('#hiddenFieldClinicIdInSearch').val(-1);
+            $('#cmbConfirmedInSearch').val(null);
+            refreshGrid();
+        }
+
+        function next() {
+            searchFilters.page = searchFilters.page + 1;
+            refreshGrid();
+        }
+
+        function previous() {
+            searchFilters.page = searchFilters.page - 1;
+            refreshGrid();
+        }
+
+        function goTo(pageNumber) {
+            searchFilters.page = pageNumber;
+            refreshGrid();
+        }
+
+        function deleteEntity() {
+            if ($('#hiddenFieldId').val() > 0)
+                $.ajax({
+                    url: contextPath + "/rest/refer/settlement/delete/" + $('#hiddenFieldId').val(),
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    type: 'DELETE',
+                    success: function (res) {
+                        refreshGrid();
+                        showMessage("حذف با موفقیت انجام شد.", "", "success");
+                    },
+                    error: function (err) {
+                        if (err.responseJSON.message.includes("Forbidden"))
+                            showMessage("خطای سطح دسترسی", " شما مجوز انجام این کار را ندارید.", "error");
+                        else
+                            showMessage("خطا در حذف اطلاعات", err.responseJSON.message, "error");
+                    }
+                });
+            else
+                showMessage("هیچ رکوردی انتخاب نشده است.", "", "error");
+        }
+
+        function rowSelected(id) {
+            $('#hiddenFieldId').val(id);
+        }
+
+        function rowDeselected() {
+            $('#hiddenFieldId').val();
+        }
+
+        function loadEntity(id) {
+            clearEntity();
+            $.ajax({
+                url: contextPath + "/rest/refer/settlement/load/" + id,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                type: 'GET',
+                success: function (res) {
+                    setInputsByEntity(res);
+                },
+                error: function (err) {
+                }
+            });
+        }
+
+        function saveEntity() {
+            if (validateForm() == 'ok') {
+                setEntityFromInputs();
+                $.ajax({
+                    url: contextPath + "/rest/refer/settlement/save",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify(entityData),
+                    type: 'POST',
+                    success: function (res) {
+                        $('#hiddenFieldId').val(res.id);
+                        showMessage("ثبت با موفقیت انجام شد.", "", "success");
+                        $('#btnCloseModal').click();
+                    },
+                    error: function (err) {
+                        showMessage("خطا در ثبت", err.responseJSON.message, "error");
+                    }
+                });
+            }
+        }
+
+        function validateForm() {
+            if ($('#txtSettlementDateShamsi').val() == '' || !$('#hiddenFieldClinicId').val() > 0) {
+                showMessage("پرکردن فیلدهای ستاره دار الزامی است.", "", "warning");
+                return;
+            } else return 'ok';
+        }
+
+        function clearEntity() {
+            entityData = emptyEntityData;
+            setInputsByEntity(emptyEntityData);
+        }
+
+        function setInputsByEntity(entity) {
+            $("#hiddenFieldId").val(entity.id);
+            $("#hiddenFieldClinicId").val(entity.clinic.id);
+            $("#txtClinicTitle").val(entity.clinic.organization.title);
+            $('#txtMedikEarnsTotal').val(toMoneyFormat(entity.medikEarnsTotal));
+            $('#txtMedikEarnsReceivedFinaly').val(toMoneyFormat(entity.medikEarnsReceivedFinaly));
+            $("#txtDescription").val(entity.description);
+            if (entity.id > 0) {
+                $("#txtSettlementDateShamsi").val(entity.settlementDateShamsi);
+            } else {
+                getCurrentDateShamsi();
+            }
+        }
+
+        function getCurrentDateShamsi() {
+            $.get(contextPath + "/api/public/getCurrentDateShamsi", function (res) {
+                $('#txtSettlementDateShamsi').val(res);
+            });
+        }
+
+        function setEntityFromInputs() {
+            entityData = {
+                "id": $('#hiddenFieldId').val(),
+                "settlementDateShamsi": $('#txtSettlementDateShamsi').val(),
+                "clinic": {"id": $('#hiddenFieldClinicId').val()},
+                "medikEarnsReceivedFinaly": removeMoneyFormat($('#txtMedikEarnsReceivedFinaly').val()),
+                "description": $('#txtDescription').val()
+            }
+        }
+
+        function setClinic(id, title) {
+            $('#hiddenFieldClinicId').val(id);
+            $('#txtClinicTitle').val(title);
+        }
+
+        function setClinicInSearch(id, title) {
+            $('#hiddenFieldClinicIdInSearch').val(id);
+            $('#txtClinicTitleInSearch').val(title);
+        }
+
+        function refreshGrid() {
+            fillGrid('settlementTemplate', 'settlementList', contextPath + "/rest/refer/settlement/searchSettlement", searchFilters);
+        }
+
+        function showRefers(settlementId,confirmed) {
+            viewFancyBox('showRefers.html?settlementId=' + settlementId + "&confirmed=" + confirmed, '90%', '90%', function () {
+                searchSettlement();
+            });
+        }
+
+        function confirmSettlement(id) {
+            showConfirm('تاییدیه تسویه حساب با کلینیک ', 'پس از تایید، ارجاعات مربوطه به حالت تسویه شده در می آیند و دیگر امکان اصلاح وجود ندارد. آیا از انجام این کار اطمینان کافی دارید؟', function () {
+                $.ajax({
+                    url: contextPath + "/rest/refer/settlement/confirm/" + id,
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    type: 'POST',
+                    success: function (res) {
+                        showMessage("تسویه حساب با کلینیک با موفقیت نجام شد.", "", "success");
+                        refreshGrid();
+                    },
+                    error: function (err) {
+                        showMessage("خطا در تایید", err.responseJSON.message, "error");
+                    }
+                });
+            });
+        }
+
+        function showOperation(id) {
+            document.getElementById("operationButton_" + id).classList.toggle("show");
+        }
+
+        window.onclick = function (event) {
+            if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+
+    </script>
+
+<body>
+<div class="row">
+    <div class="col-md-12 d-flex">
+        <!-- Grid -->
+        <div class="card card-table flex-fill">
+            <div class="col-sm-12" style="border-radius: 10px 10px 0px 0px">
+                <div class="float-left mt-1">
+                    <h5>لیست تسویه حساب ها</h5>
+                </div>
+                <div class="float-right">
+                    <a href="#add_edit_modal" data-toggle="modal" title="جدید"
+                       onclick="clearEntity();"
+                       class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-plus"></i></a>
+                </div>
+                <div class="float-right">
+                    <a href="javascript:void(0)" onclick="clearSearch();" data-toggle="tooltip" title="پاک کردن فیلترها"
+                       class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-eraser"></i></a>
+                </div>
+                <div class="float-right search-section" style="display: none">
+                    <a href="javascript:void(0)" onclick="searchSettlement();" data-toggle="tooltip" title="جستجو"
+                       class="btn btn-block btn-rounded btn-outline-secondary"><i class="fa fa-filter"></i></a>
+                </div>
+                <div class="float-right">
+                    <a href="javascript:void(0)" onclick="$('.search-section').slideToggle();"
+                       class="btn btn-block btn-rounded btn-outline-secondary"><i class="fa fa-search"></i></a>
+                </div>
+            </div>
+            <div class="col-sm-12 search-section" style="display: none">
+                <div class="float-left col-lg-2 col-xl-2">
+                    <input type="text" id="txtSettlementDateShamsiFrom" class="form-control searchFilter myDatepicker"
+                           placeholder="تسویه از تاریخ ...">
+                </div>
+                <div class="float-left col-lg-2 col-xl-2">
+                    <input type="text" id="txtSettlementDateShamsiTo" class="form-control searchFilter myDatepicker"
+                           placeholder="تا تاریخ ...">
+                </div>
+                <div class="float-left col-lg-3 col-xl-3 mt-1 mb-1">
+                    <input type="hidden" id="hiddenFieldClinicIdInSearch" value="-1"/>
+                    <div style="display: flex;white-space: nowrap">
+                        <input type="text" class="form-control searchFilter" id="txtClinicTitleInSearch"
+                               placeholder="فیلتر براساس کلینیک ..."
+                               onclick="viewFancyBox('/app/view/clinic/clinicSelect.html?isSearch=true','90%','90%')">
+                    </div>
+                </div>
+                <div class="float-left col-lg-2 col-xl-2">
+                    <input type="text" id="txtDescriptionInSearch" class="form-control searchFilter"
+                           placeholder="توضیحات ...">
+                </div>
+                <div class="float-left col-lg-1 col-xl-1 mt-1 mb-1">
+                    <select id="cmbConfirmInSearch" class="form-control floating">
+                        <option value="-1">...</option>
+                        <option value="false">در انتظار تایید</option>
+                        <option value="true">تاییدنهایی</option>
+                    </select>
+                </div>
+                <div class="float-left col-lg-2 col-xl-2">
+                    <input type="text" id="txtReferIdInSearch" class="form-control searchFilter"
+                           placeholder="کد رهگیری ارجاع ...">
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive" style="min-height: 400px">
+                    <table class="table table-hover table-center mb-0" >
+                        <thead>
+                        <tr>
+                            <th class="text-center">ردیف</th>
+                            <th>تاریخ تسویه
+                                <i class="fa fa-sort-up sort-grid" order="settlementDateShamsi,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="settlementDateShamsi,desc"></i>
+                            </th>
+                            <th>کلینیک
+                                <i class="fa fa-sort-up sort-grid" order="clinic.organization.title,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="clinic.organization.title,desc"></i>
+                            </th>
+                            <th>مجموع سهم مدیک
+                                <i class="fa fa-sort-up sort-grid" order="clinic.medikEarnsTotal,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="clinic.medikEarnsTotal,desc"></i>
+                            </th>
+                            <th>دریافتی نهایی
+                                <i class="fa fa-sort-up sort-grid" order="clinic.medikEarnsReceivedFinaly,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="clinic.medikEarnsReceivedFinaly,desc"></i>
+                            </th>
+                            <th>توضیحات
+                                <i class="fa fa-sort-up sort-grid" order="clinic.description,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="clinic.description,desc"></i>
+                            </th>
+                            <th>وضعیت
+                                <i class="fa fa-sort-up sort-grid" order="comfirmed,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="comfirmed,desc"></i>
+                            </th>
+                            <th>عملیات</th>
+                        </tr>
+                        </thead>
+                        <tbody id="settlementList">
+                        <script id="settlementTemplate" type="text/x-jquery-tmpl">
+                                    <tr>
+                                        <td class="text-center"><span class="tmplRowIndex"></span></td>
+                                        <td>
+                                            ${settlementDateShamsi}
+                                        </td>
+                                        <td style="font-family: iransans-medium;white-space: initial">
+                                            ${clinic.organization.title}
+                                        </td>
+                                        <td>
+                                            ${toMoneyFormat(medikEarnsTotal)}
+                                        </td>
+                                        <td>
+                                            {{if medikEarnsReceivedFinaly != null}}
+                                                ${toMoneyFormat(medikEarnsReceivedFinaly)}
+                                            {{/if}}
+                                        </td>
+                                        <td style="white-space: initial">
+                                            ${description}
+                                        </td>
+                                        <td>
+                                            {{if confirmed}}
+                                                <span class="badge badge-pill bg-info text-white">تایید نهایی</span>
+                                            {{else}}
+                                                <span class="badge badge-pill bg-danger text-white">در انتظار تایید</span>
+                                            {{/if}}
+                                        </td>
+                                        <td>
+                                            <div class="dropdown">
+                                              <button onclick="showOperation(${id})" class="dropbtn"> . . . <i class="fa fa-sort-down"></i></button>
+                                              <div id="operationButton_${id}" class="dropdown-content">
+                                              {{if confirmed==false}}
+                                                <a href="#add_edit_modal" onclick="loadEntity(${id})"  data-toggle="modal" ><i class="fa fa-pencil"></i>&nbsp;ویرایش</a>
+                                                <a href="#delete_settlement_modal" onclick="rowSelected(${id})" data-toggle="modal" ><i class="fa fa-remove"></i>&nbsp;حذف</a>
+                                                <a onclick="confirmSettlement(${id})" ><i class="fa fa-check"></i>&nbsp;تایید نهایی</a>
+                                              {{/if}}
+                                              <a onclick="showRefers(${id},${confirmed})" ><i class="fa fa-reply"></i>&nbsp;ارجاعات مربوطه</a>
+                                              </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        </script>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- /Grid -->
+    </div>
+
+    <!-- paging -->
+    <div class="row col-md-12 card-body pl-5" style="text-align: center!important;">
+        <span class="float-left pt-2"> صفحه &nbsp;</span>
+        <span class="float-left pt-2" id="currentPage"></span>
+        <span class="float-left pt-2">&nbsp;از &nbsp;</span>
+        <span class="float-left pt-2" id="totalPages"></span>&nbsp;
+
+        <ul class="pagination float-left" id="pagingList"></ul>&nbsp;
+
+        <span class="float-left pt-2" id="totalRecords"></span>
+        <span class="float-left pt-2"> مورد &nbsp;</span>
+
+        <select id="cmbPageSize" class="float-left" style="height: 35px;border-radius: 8px;cursor: pointer">
+            <option value="5">5</option>
+            <option value="10" selected>10</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+        </select>
+    </div>
+    <!-- paging -->
+
+    <!-- Add/Edit Modal -->
+    <div class="modal fade custom-modal" id="add_edit_modal" aria-hidden="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-white">ثبت تسویه حساب </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCloseModal"
+                            onclick="refreshGrid()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Add settlement -->
+                    <input type="hidden" id="hiddenFieldId"/>
+                    <div class="service-fields mb-3">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <input type="hidden" id="hiddenFieldClinicId"/>
+                                    <label>کلینیک<span class="text-danger">*</span></label>
+                                    <div style="display: flex;white-space: nowrap">
+                                        <input disabled type="text" class="form-control" id="txtClinicTitle">
+                                        <button class="btn btn-primary form-control"
+                                                style="width: 3rem"
+                                                onclick="viewFancyBox('/app/view/clinic/clinicSelect.html','90%','90%')">
+                                            000
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label>تاریخ تسویه<span class="text-danger">*</span></label>
+                                    <input class="form-control myDatepicker" type="text" id="txtSettlementDateShamsi"
+                                           required="">
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label>مجموع سهم مدیک</label>
+                                    <input type="text" class="form-control" id="txtMedikEarnsTotal" disabled>
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label>دریافتی نهایی</label>
+                                    <input type="text" class="form-control money"
+                                           id="txtMedikEarnsReceivedFinaly"></input>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label>توضیحات</label>
+                                    <input class="form-control" type="text" id="txtDescription" dir="rtl">
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="submit-section text-center">
+                                    <button class="btn btn-primary submit-btn" onclick="saveEntity()"> ثبت
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /Add settlement -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Add/Edit Modal -->
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="delete_settlement_modal" aria-hidden="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="form-content p-2">
+                        <h4 class="modal-title">تاییدیه حذف</h4>
+                        <p class="mb-4">آیا از حدف اطمینان کافی دارید؟</p>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                onclick="deleteEntity()">بله
+                        </button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"
+                                onclick="rowDeselected()">خیر
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Delete Modal -->
+
+</div>
+<!-- /Page Wrapper -->
+
+<!-- Bootstrap Core JS -->
+<script src="/app/assets/bzamani/bootstrap.min.js"></script>
+
+</body>
+</html>

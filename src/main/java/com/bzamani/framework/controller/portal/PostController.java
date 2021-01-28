@@ -16,19 +16,19 @@ public class PostController extends BaseController {
 
     @PreAuthorize("hasRole('17')")
     @PostMapping("/save")
-    public Post save(@RequestBody Post post) throws Exception {
+    public Post save(@RequestBody Post post)  {
         return iPostService.checkAndSave(post);
     }
 
     @PreAuthorize("hasRole('18')")
     @PostMapping("/confirmPost/{id}")
-    public Integer confirmPost(@PathVariable long id) throws Exception {
+    public Integer confirmPost(@PathVariable long id)  {
         return iPostService.confirmPost(id);
     }
 
     @PreAuthorize("hasRole('17')")
     @DeleteMapping("/delete/{id}")
-    public boolean delete(@PathVariable("id") long id) throws Exception {
+    public boolean delete(@PathVariable("id") long id)  {
         return iPostService.checkAndDeleteByEntityId(id);
     }
 

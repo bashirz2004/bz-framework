@@ -31,12 +31,12 @@ public class ActionService extends GenericService<Action, Long> implements IActi
     }
 
     @Override
-    public List<Action> loadMenuForCurrentUser() throws Exception {
+    public List<Action> loadMenuForCurrentUser()  {
         User authenticatedUser = iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername());
         if (authenticatedUser != null)
             return iActionRepository.loadMenuForCurrentUser(authenticatedUser.getId());
         else
-            throw new Exception("احراز هویت کاربر جاری به درستی انجام نشده است یا شما به واحد سازمانی خود دسترسی ندارید.");
+            throw new  RuntimeException("احراز هویت کاربر جاری به درستی انجام نشده است یا شما به واحد سازمانی خود دسترسی ندارید.");
     }
 
     /*@Override

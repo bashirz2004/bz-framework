@@ -37,9 +37,9 @@ public class GroupService extends GenericService<Group, Long> implements IGroupS
 
     @Transactional
     @Override
-    public boolean checkAndDeleteByEntityId(Long id) throws Exception {
+    public boolean checkAndDeleteByEntityId(Long id)  {
         if (id == 1L)
-            throw new Exception("گروه کاربری عمومی قابل حذف نمی باشد.");
+            throw new  RuntimeException("گروه کاربری عمومی قابل حذف نمی باشد.");
         else
             return super.deleteByEntityId(id);
     }
@@ -93,7 +93,7 @@ public class GroupService extends GenericService<Group, Long> implements IGroupS
 
     @Override
     @Transactional
-    public boolean reSaveGroupActions(long groupId, List<Long> actionIds) throws Exception {
+    public boolean reSaveGroupActions(long groupId, List<Long> actionIds)  {
         Group group = loadByEntityId(groupId);
         Set<Action> oldSet = group.getActions();
         oldSet.clear();

@@ -1,12 +1,16 @@
 package com.bzamani.framework.repository.refer;
 
+import com.bzamani.framework.model.clinic.Clinic;
 import com.bzamani.framework.model.refer.Refer;
 import com.bzamani.framework.model.refer.ReferStatus;
+import com.bzamani.framework.model.refer.Settlement;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface IReferRepository extends JpaRepository<Refer, Long> {
     @Query("SELECT e FROM Refer e where 1 = 1 " +
@@ -19,7 +23,7 @@ public interface IReferRepository extends JpaRepository<Refer, Long> {
             " and e.doctor.id =  CASE WHEN :doctorId > 0L THEN :doctorId ELSE e.doctor.id END " +
             " and e.patient.id =  CASE WHEN :patientId > 0L THEN :patientId ELSE e.patient.id END " +
             " and e.clinic.id =  CASE WHEN :clinicId > 0L THEN :clinicId ELSE e.clinic.id END  " +
-            " and e.id =  CASE WHEN :id > 0L THEN :id ELSE e.id END "+
+            " and e.id =  CASE WHEN :id > 0L THEN :id ELSE e.id END " +
             " and e.status =  CASE WHEN :status >= 0 THEN :status ELSE e.status END "
 
     )
@@ -35,6 +39,18 @@ public interface IReferRepository extends JpaRepository<Refer, Long> {
                             @Param("id") Long id,
                             @Param("status") Integer status,
                             Pageable pageable);
+
+    List<Refer> getAllByClinicEqualsAndStatusEqualsAndSettlementEquals(Clinic clinic, ReferStatus status, Settlement settlement);
+
+    @Query("SELECT e FROM Refer e where e.settlement.id = :settlementId " +
+            " and e.patient.id =  CASE WHEN :patientId > 0L THEN :patientId ELSE e.patient.id END " +
+            " and e.doctor.id =  CASE WHEN :doctorId > 0L THEN :doctorId ELSE e.doctor.id END  " +
+            " and e.id =  CASE WHEN :id > 0L THEN :id ELSE e.id END ")
+    Page<Refer> getAllBySettlementId(@Param("settlementId") long settlementId,
+                                     @Param("doctorId") Long doctorId,
+                                     @Param("patientId") Long patientId,
+                                     @Param("id") Long id,
+                                     Pageable pageable);
 
 
 }

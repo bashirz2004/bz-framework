@@ -10,11 +10,11 @@ import java.util.Map;
 
 public interface IGroupService extends IGenericService<Group, Long> {
     @Transactional
-    boolean checkAndDeleteByEntityId(Long id) throws Exception;
+    boolean checkAndDeleteByEntityId(Long id) ;
 
     Map<String, Object> searchGroup(String title, int page, int size, String[] sort);
 
-    boolean reSaveGroupActions(long groupId, List<Long> actionIds) throws Exception;
+    boolean reSaveGroupActions(long groupId, List<Long> actionIds) ;
 
     boolean userHaveAccessToGroup(long userId, long groupId);
 

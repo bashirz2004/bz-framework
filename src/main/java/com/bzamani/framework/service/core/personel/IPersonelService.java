@@ -8,10 +8,10 @@ import java.util.Map;
 
 public interface IPersonelService extends IGenericService<Personel, Long> {
     @Transactional
-    Personel checkAndSave(Personel personel) throws Exception;
+    Personel checkAndSave(Personel personel) ;
 
     @Transactional
-    boolean checkAndDelete(Long id) throws Exception;
+    boolean checkAndDelete(Long id) ;
 
     Map<String, Object> searchPersonel(String firstname,
                                        String lastname,

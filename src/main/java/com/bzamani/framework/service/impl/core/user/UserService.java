@@ -95,7 +95,7 @@ public class UserService extends GenericService<User, Long> implements IUserServ
 
     @Override
     @Transactional
-    public User selfRegister(SelfUserRegistrationDto userDto) throws Exception {
+    public User selfRegister(SelfUserRegistrationDto userDto)  {
         checkInputData(userDto.getMobile());
 
         Personel p = new Personel();
@@ -131,20 +131,20 @@ public class UserService extends GenericService<User, Long> implements IUserServ
         return save(newUser);
     }
 
-    public void checkInputData(String username) throws Exception {
+    public void checkInputData(String username)  {
         if (iOrganizationService.loadByEntityId(guestOrganizationId) == null)
-            throw new Exception("واحد سازمانی برای کاربران پورتال تعریف نشده است.");
+            throw new  RuntimeException("واحد سازمانی برای کاربران پورتال تعریف نشده است.");
         List<User> usersCreatedByCurrentIP = iUserRepository.findAllByIpOrderByLastUpdateDateDesc(SecurityUtility.getRequestIp());
         if (usersCreatedByCurrentIP != null && usersCreatedByCurrentIP.size() > 0)
             if (DateUtility.getDiffSeconds(usersCreatedByCurrentIP.get(0).getLastUpdateDate(), new Date()) < 60)
-                throw new Exception("کاربر گرامی حداقل فاصله زمانی بین ثبت دو کاربر، 1 دقیقه می باشد. ");
+                throw new  RuntimeException("کاربر گرامی حداقل فاصله زمانی بین ثبت دو کاربر، 1 دقیقه می باشد. ");
         if (findUserByUsernameEquals(username) != null)
-            throw new Exception("خطا در ثبت کاربر. با این شماره موبایل قبلا ثبت نام انجام شده است!");
+            throw new  RuntimeException("خطا در ثبت کاربر. با این شماره موبایل قبلا ثبت نام انجام شده است!");
     }
 
     @Override
     @Transactional
-    public void sendPasswordToUserEmail(String email) throws Exception {
+    public void sendPasswordToUserEmail(String email)  {
         checkMail(email);
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("noreply@bz-framework.com");
@@ -158,34 +158,34 @@ public class UserService extends GenericService<User, Long> implements IUserServ
         emailSender.send(message);
     }
 
-    public void checkMail(String email) throws Exception {
+    public void checkMail(String email)  {
         if (iPersonelService.findByEmailEquals(email) == null)
-            throw new Exception("فردی تاکنون با این ایمیل ثبت نام نکرده است.");
+            throw new  RuntimeException("فردی تاکنون با این ایمیل ثبت نام نکرده است.");
         else if (DateUtility.getDiffSeconds(iUserRepository.findByEmail(email).getLastUpdateDate(), new Date()) < 60)
-            throw new Exception("از آخرین ایمیل ارسال شده باید حداقل یک دقیقه گذشته باشد.");
+            throw new  RuntimeException("از آخرین ایمیل ارسال شده باید حداقل یک دقیقه گذشته باشد.");
     }
 
     @Transactional
-    public String updatePasswordOfUserByEmail(String email, String newPassword) throws Exception {
+    public String updatePasswordOfUserByEmail(String email, String newPassword)  {
         Integer result = iUserRepository.changePasswordByEmail(email, new BCryptPasswordEncoder().encode(newPassword), new Date());
         if (result > 0)
             return newPassword;
         else
-            throw new Exception("با این ایمیل، حساب کاربری ایجاد نشده است.");
+            throw new  RuntimeException("با این ایمیل، حساب کاربری ایجاد نشده است.");
     }
 
     @Transactional
     @Override
-    public String updatePasswordOfUserByMobile(String mobile, String newPassword) throws Exception {
+    public String updatePasswordOfUserByMobile(String mobile, String newPassword)  {
         if (iPersonelService.findByMobileEquals(mobile) == null)
-            throw new Exception("فردی تاکنون با این شماره موبایل ثبت نام نکرده است.");
+            throw new  RuntimeException("فردی تاکنون با این شماره موبایل ثبت نام نکرده است.");
         if (DateUtility.getDiffSeconds(iUserRepository.findByMobile(mobile).getLastUpdateDate(), new Date()) < 60)
-            throw new Exception("از آخرین پیامک ارسال شده باید حداقل یک دقیقه گذشته باشد.");
+            throw new  RuntimeException("از آخرین پیامک ارسال شده باید حداقل یک دقیقه گذشته باشد.");
         Integer result = iUserRepository.changePasswordByMobile(mobile, new BCryptPasswordEncoder().encode(newPassword), new Date());
         if (result > 0)
             return newPassword;
         else
-            throw new Exception("با این شماره موبایل، حساب کاربری ایجاد نشده است.");
+            throw new  RuntimeException("با این شماره موبایل، حساب کاربری ایجاد نشده است.");
     }
 
     @Transactional
@@ -200,10 +200,10 @@ public class UserService extends GenericService<User, Long> implements IUserServ
 
     @Transactional
     @Override
-    public void changeAuthenticatedUserPassword(String oldPassword, String newPassword) throws Exception {
+    public void changeAuthenticatedUserPassword(String oldPassword, String newPassword)  {
         User authenticatedUser = findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername());
         if (!new BCryptPasswordEncoder().matches(oldPassword, authenticatedUser.getPassword()))
-            throw new Exception("رمز عبور قدیم صحیح نمی باشد.");
+            throw new  RuntimeException("رمز عبور قدیم صحیح نمی باشد.");
         iUserRepository.changePassword(authenticatedUser.getId(), new BCryptPasswordEncoder().encode(newPassword), new Date());
     }
 
@@ -283,9 +283,9 @@ public class UserService extends GenericService<User, Long> implements IUserServ
 
     @Override
     @Transactional
-    public boolean deleteUserOrganization(long userId, long organizationId) throws Exception {
+    public boolean deleteUserOrganization(long userId, long organizationId)  {
         if (!iOrganizationService.userHaveAccessToOrganization(findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getId(), organizationId))
-            throw new Exception("خطا! شما به این واحد سازمانی دسترسی ندارید.");
+            throw new  RuntimeException("خطا! شما به این واحد سازمانی دسترسی ندارید.");
 
         User user = loadByEntityId(userId);
         user.setOrganizations(user.getOrganizations().stream()
@@ -297,7 +297,7 @@ public class UserService extends GenericService<User, Long> implements IUserServ
 
     @Override
     @Transactional
-    public boolean addUserOrganizations(long userId, List<Long> organizationIds) throws Exception {
+    public boolean addUserOrganizations(long userId, List<Long> organizationIds)  {
         if (organizationIds != null) {
             long authenticatedUserId = findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getId();
             User user = loadByEntityId(userId);
@@ -305,7 +305,7 @@ public class UserService extends GenericService<User, Long> implements IUserServ
             newSet.addAll(user.getOrganizations()); //copy old to new
             for (long newOrganizationId : organizationIds) {
                 if (!iOrganizationService.userHaveAccessToOrganization(authenticatedUserId, newOrganizationId)) {
-                    throw new Exception("خطا! شما به " + iOrganizationService.loadByEntityId(newOrganizationId).getTitle() + " دسترسی ندارید.");
+                    throw new  RuntimeException("خطا! شما به " + iOrganizationService.loadByEntityId(newOrganizationId).getTitle() + " دسترسی ندارید.");
                 }
 
                 boolean exists = false;
@@ -352,9 +352,9 @@ public class UserService extends GenericService<User, Long> implements IUserServ
 
     @Override
     @Transactional
-    public boolean deleteUserGroup(long userId, long groupId) throws Exception {
+    public boolean deleteUserGroup(long userId, long groupId)  {
         if (!iGroupService.userHaveAccessToGroup(findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getId(), groupId))
-            throw new Exception("خطا! شما به این گروه دسترسی ندارید.");
+            throw new  RuntimeException("خطا! شما به این گروه دسترسی ندارید.");
 
         User user = loadByEntityId(userId);
         user.setGroups(user.getGroups().stream()
@@ -366,7 +366,7 @@ public class UserService extends GenericService<User, Long> implements IUserServ
 
     @Override
     @Transactional
-    public boolean addUserGroups(long userId, List<Long> groupIds) throws Exception {
+    public boolean addUserGroups(long userId, List<Long> groupIds)  {
         if (groupIds != null) {
             long authenticatedUserId = findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getId();
             User user = loadByEntityId(userId);
@@ -374,7 +374,7 @@ public class UserService extends GenericService<User, Long> implements IUserServ
             newSet.addAll(user.getGroups()); //copy old to new
             for (long newGroupId : groupIds) {
                 if (!iGroupService.userHaveAccessToGroup(authenticatedUserId, newGroupId)) {
-                    throw new Exception("خطا! شما به " + iGroupService.loadByEntityId(newGroupId).getTitle() + " دسترسی ندارید.");
+                    throw new  RuntimeException("خطا! شما به " + iGroupService.loadByEntityId(newGroupId).getTitle() + " دسترسی ندارید.");
                 }
 
                 boolean exists = false;

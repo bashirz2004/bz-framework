@@ -97,12 +97,12 @@ public class CommentService extends GenericService<Comment, Long> implements ICo
 
     @Override
     @Transactional
-    public Comment saveComment(Comment comment) throws Exception {
+    public Comment saveComment(Comment comment)  {
         if (!iPostService.loadByEntityId(comment.getPost().getId()).isAllowLikeOrComment())
-            throw new Exception("این پست قابلیت ثبت نظر یا لایک را ندارد.");
+            throw new  RuntimeException("این پست قابلیت ثبت نظر یا لایک را ندارد.");
         Personel commenter = iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getPersonel();
         if (iCommentRepository.findAllByPostEqualsAndCommenterEqualsAndConfirmedEquals(comment.getPost(), commenter, false).size() >= 3)
-            throw new Exception("با تشکر از همراهی شما کاربر گرامی، با توجه به اینکه 3 نظر قبلی شما روی این پست، هنوز تایید نشده است، فعلا امکان ثبت نظر جدید وجود ندارد.");
+            throw new  RuntimeException("با تشکر از همراهی شما کاربر گرامی، با توجه به اینکه 3 نظر قبلی شما روی این پست، هنوز تایید نشده است، فعلا امکان ثبت نظر جدید وجود ندارد.");
         comment.setCommenter(commenter);
         comment.setCreateDateShamsi(DateUtility.todayShamsi());
         comment.setConfirmed(false);
@@ -111,22 +111,22 @@ public class CommentService extends GenericService<Comment, Long> implements ICo
 
     @Override
     @Transactional
-    public Integer changeStatus(long id, boolean status) throws Exception {
+    public Integer changeStatus(long id, boolean status)  {
         checkAccessToOrganization(id);
         return iCommentRepository.changeStatus(id, status, new Date());
     }
 
     @Override
     @Transactional
-    public boolean checkAndDelete(long id) throws Exception {
+    public boolean checkAndDelete(long id)  {
         checkAccessToOrganization(id);
         return super.deleteByEntityId(id);
     }
 
-    public void checkAccessToOrganization(long commentId) throws Exception {
+    public void checkAccessToOrganization(long commentId)  {
         long authenticatedUserId = iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getId();
         long authorOrganizationId = loadByEntityId(commentId).getPost().getAuthor().getOrganization().getId();
         if (iOrganizationService.userHaveAccessToOrganization(authenticatedUserId, authorOrganizationId) == false)
-            throw new Exception("شما به واحد سازمانی کاربر ثبت کننده پست دسترسی ندارید.");
+            throw new  RuntimeException("شما به واحد سازمانی کاربر ثبت کننده پست دسترسی ندارید.");
     }
 }

@@ -13,11 +13,11 @@ public interface ICommentService extends IGenericService<Comment, Long> {
     Map<String, Object> getAllConfirmedCommentsByPostId(Long postId, int page, int size, String[] sort);
 
     @Transactional
-    Comment saveComment(Comment comment) throws Exception;
+    Comment saveComment(Comment comment) ;
 
     @Transactional
-    Integer changeStatus(long id, boolean status) throws Exception;
+    Integer changeStatus(long id, boolean status) ;
 
     @Transactional
-    boolean checkAndDelete(long id) throws Exception;
+    boolean checkAndDelete(long id) ;
 }

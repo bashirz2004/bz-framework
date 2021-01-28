@@ -46,7 +46,7 @@ public class AuthenticationController extends BaseController {
 
     @PostMapping("/authenticate")
     @ResponseBody
-    public ResponseEntity createAuthenticationToken(@RequestBody Map<String, String> loginInfo, HttpServletRequest request) throws Exception {
+    public ResponseEntity createAuthenticationToken(@RequestBody Map<String, String> loginInfo, HttpServletRequest request) {
         if (isCaptchaEnabled) {
             String ip = request.getRemoteAddr();
             String captchaVerifyMessage = recaptchaService.verifyRecaptcha(ip, loginInfo.get("g-recaptcha-response"));
@@ -63,7 +63,7 @@ public class AuthenticationController extends BaseController {
             checkUser(loginInfo.get("username"));
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginInfo.get("username"), loginInfo.get("password")));
         } catch (DisabledException e) {
-            throw new Exception("USER_DISABLED", e);
+            throw new  RuntimeException("USER_DISABLED", e);
         } catch (BadCredentialsException e) {
             //check if username exists and user entered wrong password for 5 times, lock user
             if (user != null) {
@@ -71,7 +71,7 @@ public class AuthenticationController extends BaseController {
                 if (user.getWrongPasswordTries() != null && user.getWrongPasswordTries() == 4)
                     iUserService.lock(user.getId());
             }
-            throw new Exception("INVALID_CREDENTIALS", e);
+            throw new  RuntimeException("INVALID_CREDENTIALS", e);
         }
 
         UserDetails userdetails = userDetailsService.loadUserByUsername(loginInfo.get("username"));
@@ -80,16 +80,16 @@ public class AuthenticationController extends BaseController {
         return ResponseEntity.ok().body(user);
     }
 
-    public void checkUser(String username) throws Exception {
+    public void checkUser(String username)  {
         User user = iUserService.findUserByUsernameEquals(username);
         if (!user.isEnabled())
-            throw new Exception("کاربر محترم، حساب کاربری شما غیر فعال شده است.");
+            throw new  RuntimeException("کاربر محترم، حساب کاربری شما غیر فعال شده است.");
         if (!user.isAccountNonLocked())
-            throw new Exception("کاربر محترم، در اثر 5 بار ورود رمز اشتباه، حساب کاربری شما مسدود شده است.");
+            throw new  RuntimeException("کاربر محترم، در اثر 5 بار ورود رمز اشتباه، حساب کاربری شما مسدود شده است.");
         if (user.getUserExpireDateShamsi().compareTo(DateUtility.todayShamsi()) <= 0)
-            throw new Exception("کاربر محترم، اعتبار شما به پایان رسیده است.");
+            throw new  RuntimeException("کاربر محترم، اعتبار شما به پایان رسیده است.");
         if (user.getPasswordExpireDateShamsi().compareTo(DateUtility.todayShamsi()) <= 0)
-            throw new Exception("کاربر محترم، اعتبار رمزعبور شما تمام شده است.");
+            throw new  RuntimeException("کاربر محترم، اعتبار رمزعبور شما تمام شده است.");
     }
 
 }

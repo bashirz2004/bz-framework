@@ -42,7 +42,7 @@ public class PostService extends GenericService<Post, Long> implements IPostServ
 
     @Override
     @Transactional
-    public Post checkAndSave(Post post) throws Exception {
+    public Post checkAndSave(Post post)  {
         post.setFileCode(post.getFileCode() == null || post.getFileCode().length() == 0 ? null : post.getFileCode());
         String oldFileCode = null;
         String newFileCode = post.getFileCode();
@@ -59,7 +59,7 @@ public class PostService extends GenericService<Post, Long> implements IPostServ
 
     @Override
     @Transactional
-    public boolean checkAndDeleteByEntityId(Long id) throws Exception {
+    public boolean checkAndDeleteByEntityId(Long id)  {
         checkAccessToOrganization(id);
         if (loadByEntityId(id).getFileCode() != null)
             iFileAttachmentService.finalizeNewAndDeleteOldAttachment(null, loadByEntityId(id).getFileCode());
@@ -104,16 +104,16 @@ public class PostService extends GenericService<Post, Long> implements IPostServ
 
     @Override
     @Transactional
-    public Integer confirmPost(long id) throws Exception {
+    public Integer confirmPost(long id)  {
         checkAccessToOrganization(id);
         return iPostRepository.confirmPost(id, new Date());
     }
 
-    public void checkAccessToOrganization(long postId) throws Exception {
+    public void checkAccessToOrganization(long postId)  {
         long authenticatedUserId = iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getId();
         long authorOrganizationId = loadByEntityId(postId).getAuthor().getOrganization().getId();
         if (iOrganizationService.userHaveAccessToOrganization(authenticatedUserId, authorOrganizationId) == false)
-            throw new Exception("شما به واحد سازمانی کاربر ثبت کننده پست دسترسی ندارید.");
+            throw new  RuntimeException("شما به واحد سازمانی کاربر ثبت کننده پست دسترسی ندارید.");
     }
 
     @Override

@@ -17,8 +17,6 @@
     <!-- Feathericon CSS -->
     <link rel="stylesheet" href="assets/admin/css/feathericon.min.css">
 
-    <link rel="stylesheet" href="assets/admin/plugins/morris/morris.css">
-
     <!-- Main CSS -->
     <link rel="stylesheet" href="assets/bzamani/style-admin.css">
 
@@ -66,7 +64,6 @@
                 },
                 error: function (err) {
                     showMessage("خطا در بارگزاری منوها", err.responseJSON.message, "error");
-                    console.log(err.responseText);
                 }
             });
         }
@@ -284,7 +281,7 @@
     <!-- Page+ Wrapper -->
     <div class="page-wrapper">
         <div class="content">
-            <iframe id="myIframe" src="view/core/charts.html" width="100%" height="590px" class="windowIframe"
+            <iframe id="myIframe" src="view/core/charts/charts.html" width="100%" height="590px" class="windowIframe"
                     style="border: none;overflow: hidden" webkitallowfullscreen="true"
                     mozallowfullscreen="true"></iframe>
         </div>

@@ -101,7 +101,7 @@
             "username": '',
             "sort": "id,desc",
             "page": 0,
-            "size": 8
+            "size": 5
         };
 
         $(function () {
@@ -133,7 +133,7 @@
         }
 
         function clearSearch() {
-            $('#cmbPageSize').val(8);
+            $('#cmbPageSize').val(5);
             searchFilters = {
                 "firstname": '',
                 "lastname": '',
@@ -141,7 +141,7 @@
                 "username": '',
                 "sort": "id,desc",
                 "page": 0,
-                "size": 8
+                "size": 5
             };
             $('.searchFilter').val('');
             refreshGrid();
@@ -391,10 +391,6 @@
                                 <i class="fa fa-sort-up sort-grid" order="personel.mobile,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="personel.mobile,desc"></i>
                             </th>
-                            <th>نام کاربری
-                                <i class="fa fa-sort-up sort-grid" order="username,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="username,desc"></i>
-                            </th>
                             <th>فعال
                                 <i class="fa fa-sort-up sort-grid" order="enabled,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="enabled,desc"></i>
@@ -420,22 +416,17 @@
                                                         alt="User Image"></a>
                                             </h2>
                                         </td>
-                                        <td>
-                                            <h2 class="table-avatar">
-                                                <a href="javascript:void(0)">${personel.firstname}</a>
-                                            </h2>
+                                        <td style="white-space: initial">
+                                               ${personel.firstname}
                                         </td>
-                                        <td>
-                                            <h2 class="table-avatar">
-                                               <a href="javascript:void(0)">${personel.lastname}</a>
-                                            </h2>
+                                        <td style="white-space: initial">
+                                            ${personel.lastname}
                                         </td>
-                                        <td>${personel.organization.title}</td>
-                                        <td>${personel.mobile}</td>
-                                        <td>${username}</td>
+                                        <td style="white-space: initial">${personel.organization.title}</td>
+                                        <td style="white-space: initial">${personel.mobile}</td>
                                         <td class="text-center">{{if enabled}}<i class="fa fa-check text-success" aria-hidden="true"></i>{{else}}<i class="fa fa-remove text-secondary" aria-hidden="true"></i>{{/if}}</td>
                                         <td class="text-center">{{if !accountNonLocked}}<i class="fa fa-lock text-danger" aria-hidden="true"></i>{{else}}<i class="fa fa-unlock text-info" aria-hidden="true"></i>{{/if}}</td>
-                                        <td class="text-center">
+                                        <td style="white-space: initial">
                                             <div class="float-right">
                                                 <div class="float-right">
                                                      <a href="#delete_user_modal" onclick="rowSelected(${id})"  data-toggle="modal" title="حذف"
@@ -500,8 +491,7 @@
         <span class="float-left pt-2"> مورد &nbsp;</span>
 
         <select id="cmbPageSize" class="float-left" style="height: 35px;border-radius: 8px;cursor: pointer">
-            <option value="5">5</option>
-            <option value="8" selected>8</option>
+            <option value="5" selected>5</option>
             <option value="10">10</option>
             <option value="50">50</option>
             <option value="100">100</option>

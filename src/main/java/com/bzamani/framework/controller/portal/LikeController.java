@@ -16,7 +16,7 @@ public class LikeController extends BaseController {
     ILikeService iLikeService;
 
     @PostMapping("/save")
-    public Like saveLike(@RequestBody Like like) throws Exception {
+    public Like saveLike(@RequestBody Like like)  {
         return iLikeService.saveLike(like);
     }
 

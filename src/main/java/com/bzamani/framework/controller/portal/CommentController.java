@@ -16,19 +16,19 @@ public class CommentController extends BaseController {
     private ICommentService iCommentService;
 
     @PostMapping("/save")
-    public Comment save(@RequestBody Comment comment) throws Exception {
+    public Comment save(@RequestBody Comment comment)  {
         return iCommentService.saveComment(comment);
     }
 
     @PreAuthorize("hasRole('18')")
     @PostMapping("/changeStatus/{id}/{status}")
-    public Integer changeStatus(@PathVariable long id, @PathVariable boolean status) throws Exception {
+    public Integer changeStatus(@PathVariable long id, @PathVariable boolean status)  {
         return iCommentService.changeStatus(id, status);
     }
 
     @PreAuthorize("hasRole('18')")
     @DeleteMapping("/delete/{id}")
-    public boolean checkAndDelete(@PathVariable("id") long id) throws Exception {
+    public boolean checkAndDelete(@PathVariable("id") long id)  {
         return iCommentService.checkAndDelete(id);
     }
 

@@ -230,7 +230,7 @@
                                             <div class="comment">
                                                 <div class="comment-author">
                                                     <img class="avatar" src= {{if commenter.male && commenter.fileCode==null}}"/app/assets/img/man.png"{{/if}}
-                                                         {{if !commenter.male && author.fileCode==null}}"/app/assets/img/woman.png"{{/if}}
+                                                         {{if !commenter.male && commenter.fileCode==null}}"/app/assets/img/woman.png"{{/if}}
                                                          {{if commenter.fileCode!=null}}"/app/rest/core/file/download/${commenter.fileCode}/false"{{/if}}
                                                          alt="commenter image">
                                                 </div>

@@ -94,17 +94,17 @@ public class PublicAPIController extends BaseController {
     }
 
     @PostMapping("/user/selfRegister")
-    public User selfRegister(@RequestBody SelfUserRegistrationDto userDto) throws Exception {
+    public User selfRegister(@RequestBody SelfUserRegistrationDto userDto)  {
         return iUserService.selfRegister(userDto);
     }
 
     @PostMapping("/user/sendPasswordToUserEmail")
-    public void sendPasswordToUserEmail(@RequestParam String email) throws Exception {
+    public void sendPasswordToUserEmail(@RequestParam String email)  {
         iUserService.sendPasswordToUserEmail(email);
     }
 
     @GetMapping(value = "/user/getUserNewPassword", produces = "text/plain;charset=UTF-8")
-    public String getUserNewPassword(@RequestParam String mobile) throws Exception {
+    public String getUserNewPassword(@RequestParam String mobile)  {
         return iUserService.updatePasswordOfUserByMobile(mobile, RandomStringUtils.random(5, true, true));
     }
 

@@ -7,5 +7,5 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ILikeService extends IGenericService<Like, Long> {
 
     @Transactional
-    Like saveLike(Like like) throws Exception;
+    Like saveLike(Like like) ;
 }

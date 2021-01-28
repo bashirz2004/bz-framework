@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>ارجاعات تسویه شده در این مرحله</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/app/assets/img/favicon.png">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/app/assets/bzamani/bootstrap.css">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="/app/assets/admin/css/font-awesome.min.css">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/app/assets/bzamani/style-admin.css">
+
+    <!--[if lt IE 9]>
+    <script src="/app/assets/js/html5shiv.min.js"></script>
+    <script src="/app/assets/js/respond.min.js"></script>
+    <![endif]-->
+    <!-- jQuery -->
+    <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
+    <!-- fancybox -->
+    <script src="/app/assets/bzamani/components/fancybox/jquery.fancybox.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/fancybox/jquery.fancybox.css"/>
+
+    <!-- pace mask -->
+    <script>
+        paceOptions = {
+            elements: false,
+            document: true, // disabled
+            eventLag: false, // disabled
+            ajax: {
+                trackMethods: ['GET', 'POST', 'DELETE', 'PUT'],
+                trackWebSockets: false
+            },
+            restartOnPushState: true,
+            restartOnRequestAfter: true
+        };
+        $(function () {
+            $("body").prepend("<div class='pace-cover' style='display: none;'></div>");
+            Pace.on("start", function () {
+                $(".pace-cover").fadeIn();
+            });
+            Pace.on("done", function () {
+                $(".pace-cover").fadeOut();
+            });
+        });
+    </script>
+    <script type="text/javascript" src="/app/assets/bzamani/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
+    <style>
+        .pace-cover {
+            position: fixed;
+            left: 0px;
+            top: 1px;
+            width: 100%;
+            height: 100%;
+            z-index: 99999;
+            background: rgba(0, 0, 0, 0.4);
+        }
+    </style>
+    <!-- /pace mask -->
+
+    <!-- sweet alert -->
+    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/sweetalert/sweetalert2.min.css">
+    <!-- /sweet alert -->
+
+    <!-- datepicker  -->
+    <script src="/app/assets/bzamani/components/datepicker/persian-date.js"></script>
+    <script src="/app/assets/bzamani/components/datepicker/persian-datepicker.js"></script>
+    <link rel="stylesheet" href="/app/assets/bzamani/components/datepicker/persian-datepicker.css">
+    <!-- /datepicker  -->
+
+    <!-- thousand separator onKeyup of text box and textArea  -->
+    <script src="/app/assets/bzamani/simple.money.format.js"></script>
+    <!-- /thousand separator onKeyup of text box and textArea  -->
+
+    <script src="/app/assets/bzamani/jquery.template.js"></script>
+    <script src="/app/assets/bzamani/grid-utility.js"></script>
+    <script src="/app/assets/bzamani/general-utility.js"></script>
+
+    <script>
+        var contextPath = "/app";
+        var searchFilters = {
+            "settlementId": getUrlParameter("settlementId"),
+            "id": -1,
+            "doctorId": -1,
+            "patientId": -1,
+            "sort": "id,desc"
+        };
+
+        $(function () {
+            refreshGrid();
+
+            $('.sort-grid').on("click", function () {
+                searchFilters.sort = $(this).attr("order");
+                refreshGrid();
+            });
+
+            $('#txtId').keydown(function (e) {
+                if (e.which == 13)  // the enter key code
+                    searchRefer();
+            });
+        });
+
+        function searchRefer() {
+            searchFilters.doctorId = $("#hiddenFieldDoctorIdInSearch").val();
+            searchFilters.patientId = $("#hiddenFieldPatientIdInSearch").val();
+            searchFilters.id = $("#txtId").val();
+            refreshGrid();
+        }
+
+        function clearSearch() {
+            searchFilters = {
+                "settlementId": getUrlParameter("settlementId"),
+                "id": '',
+                "doctorId": -1,
+                "patientId": -1,
+                "sort": "id,desc"
+            };
+            $('#hiddenFieldDoctorIdInSearch').val(-1);
+            $('#hiddenFieldPatientIdInSearch').val(-1);
+            $('#txtId').val("");
+            refreshGrid();
+        }
+
+        function updateReferSettlementToNull() {
+            if ($('#hiddenFieldId').val() > 0)
+                $.ajax({
+                    url: contextPath + "/rest/refer/updateReferSettlementToNull/" + $('#hiddenFieldId').val(),
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    type: 'POST',
+                    success: function (res) {
+                        refreshGrid();
+                        showMessage("ارجاع، از لیست تسویه حساب  خارج شد.", "", "success");
+                    },
+                    error: function (err) {
+                        showMessage("خطا", err.responseJSON.message, "error");
+                    }
+                });
+            else
+                showMessage("هیچ رکوردی انتخاب نشده است.", "", "error");
+        }
+
+        function rowSelected(id) {
+            $('#hiddenFieldId').val(id);
+        }
+
+        function rowDeselected() {
+            $('#hiddenFieldId').val();
+        }
+
+        function setDoctorInSearch(id, firstname, lastname, fileCode) {
+            $('#hiddenFieldDoctorIdInSearch').val(id);
+            $('#txtDoctorTitleInSearch').val(firstname + " " + lastname);
+        }
+
+        function setPersonelInSearch(id, firstname, lastname) {
+            $('#hiddenFieldPatientIdInSearch').val(id);
+            $('#txtPatientTitleInSearch').val(firstname + " " + lastname);
+        }
+
+        function refreshGrid() {
+            fillGrid('referTemplate', 'referList', contextPath + "/rest/refer/getAllBySettlementId", searchFilters, function () {
+                if (getUrlParameter("confirmed") == 'false')
+                    $('.operationBtn').show();
+            });
+        }
+
+    </script>
+
+<body>
+<div class="row">
+    <div class="col-md-12 d-flex">
+        <!-- Grid -->
+        <div class="card card-table flex-fill">
+            <div class="col-sm-12" style="border-radius: 10px 10px 0px 0px">
+                <div class="float-left mt-1">
+                    <h5>ارجاعات تسویه شده در این مرحله</h5>
+                </div>
+                <div class="float-right">
+                    <a href="javascript:void(0)" onclick="clearSearch();" data-toggle="tooltip" title="پاک کردن فیلترها"
+                       class="btn btn-block btn-outline-secondary btn-rounded"><i class="fa fa-eraser"></i></a>
+                </div>
+                <div class="float-right">
+                    <a href="javascript:void(0)" onclick="searchRefer();" data-toggle="tooltip" title="جستجو"
+                       class="btn btn-block btn-rounded btn-outline-secondary"><i class="fa fa-filter"></i></a>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="float-left col-sm-4 col-md-4 col-lg-4 col-xl-4 mt-1 mb-1">
+                    <input type="hidden" id="hiddenFieldDoctorIdInSearch" value="-1"/>
+                    <div style="display: flex;white-space: nowrap">
+                        <input type="text" class="form-control searchFilter" id="txtDoctorTitleInSearch"
+                               placeholder="فیلتر براساس پزشک ..."
+                               onclick="viewFancyBox('/app/view/doctor/doctorSelectAuthorize.html?isSearch=true','90%','90%')">
+                    </div>
+                </div>
+                <div class="float-left col-sm-4 col-md-4 col-lg-4 col-xl-4 mt-1 mb-1">
+                    <input type="hidden" id="hiddenFieldPatientIdInSearch" value="-1"/>
+                    <div style="display: flex;white-space: nowrap">
+                        <input type="text" class="form-control searchFilter" id="txtPatientTitleInSearch"
+                               placeholder="فیلتر براساس بیمار ..."
+                               onclick="viewFancyBox('/app/view/core/personel/personelSelect.html?isSearch=true','90%','90%')">
+                    </div>
+                </div>
+                <div class="float-left col-sm-4 col-md-4 col-lg-4 col-xl-4 mt-1 mb-1">
+                    <input type="text" id="txtId" class="form-control"
+                           placeholder="کد رهگیری ...">
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive" style="min-height: 400px">
+                    <input type="hidden" id="hiddenFieldId"/>
+                    <table class="table table-hover table-center mb-0">
+                        <thead>
+                        <tr>
+                            <th class="text-center">ردیف</th>
+                            <th>تاریخ ارجاع
+                                <i class="fa fa-sort-up sort-grid" order="referDateShamsi,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="referDateShamsi,desc"></i>
+                            </th>
+                            <th>کد رهگیری
+                                <i class="fa fa-sort-up sort-grid" order="id,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="id,desc"></i>
+                            </th>
+                            <th>پزشک
+                                <i class="fa fa-sort-up sort-grid" order="doctor.personel.lastname,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="doctor.personel.lastname,desc"></i>
+                            </th>
+                            <th>بیمار
+                                <i class="fa fa-sort-up sort-grid" order="patient.lastname,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="patient.lastname,desc"></i>
+                            </th>
+                            <th>سهم مدیک
+                                <i class="fa fa-sort-up sort-grid" order="medikEarn,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="medikEarn,desc"></i>
+                            </th>
+                            <th align="center" class="operationBtn" style="display: none">حذف</th>
+                        </tr>
+                        </thead>
+                        <tbody id="referList">
+                        <script id="referTemplate" type="text/x-jquery-tmpl">
+                                    <tr>
+                                        <td class="text-center"><span class="tmplRowIndex"></span></td>
+                                        <td>
+                                            ${referDateShamsi}
+                                        </td>
+                                        <td>
+                                            ${id}
+                                        </td>
+                                        <td>
+                                            ${doctor.personel.firstname}  ${doctor.personel.lastname}
+                                        </td>
+                                        <td>
+                                            ${patient.firstname}  ${patient.lastname}
+                                        </td>
+                                        <td dir="rtl">
+                                            ${toMoneyFormat(medikEarn)}
+                                        </td>
+                                        <td align="center" class="operationBtn" style="display: none">
+                                           <a href="#delete_refer_modal" onclick="rowSelected(${id})"  data-toggle="modal" >
+                                            <i class="fa fa-remove text-danger"></i></a>
+                                        </td>
+                                    </tr>
+
+
+                        </script>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- /Grid -->
+    </div>
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="delete_refer_modal" aria-hidden="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="form-content p-2">
+                        <h4 class="modal-title"> تاییدیه حذف ارجاع، از این تسویه</h4>
+                        <p class="mb-4">آیا از انجام این کار اطمینان کافی دارید؟</p>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                onclick="updateReferSettlementToNull()">بله
+                        </button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"
+                                onclick="rowDeselected()">خیر
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Delete Modal -->
+
+</div>
+<!-- /Page Wrapper -->
+
+<!-- Bootstrap Core JS -->
+<script src="/app/assets/bzamani/bootstrap.min.js"></script>
+
+</body>
+</html>

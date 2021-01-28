@@ -28,7 +28,7 @@ public class ActionController {
     IGroupService iGroupService;
 
     @GetMapping("/loadMenuForCurrentUser")
-    public List<Action> loadMenuForCurrentUser() throws Exception {
+    public List<Action> loadMenuForCurrentUser()  {
         return iActionService.loadMenuForCurrentUser();
     }
 

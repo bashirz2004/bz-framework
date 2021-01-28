@@ -26,7 +26,7 @@ public class GroupController extends BaseController {
 
     @PreAuthorize("hasRole('14')")
     @DeleteMapping("/delete/{id}")
-    public boolean delete(@PathVariable("id") long id) throws Exception {
+    public boolean delete(@PathVariable("id") long id)  {
         return iGroupService.checkAndDeleteByEntityId(id);
     }
 
@@ -46,7 +46,7 @@ public class GroupController extends BaseController {
 
     @PreAuthorize("hasRole('15')")
     @PostMapping(value = "/reSaveGroupActions")
-    public boolean reSaveGroupActions(@RequestBody GroupActionDto dto) throws Exception {
+    public boolean reSaveGroupActions(@RequestBody GroupActionDto dto)  {
         return iGroupService.reSaveGroupActions(dto.getGroupId(), dto.getActionIds());
     }
 
