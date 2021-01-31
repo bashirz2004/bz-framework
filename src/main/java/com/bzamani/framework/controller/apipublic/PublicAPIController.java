@@ -20,6 +20,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 
@@ -104,7 +105,7 @@ public class PublicAPIController extends BaseController {
     }
 
     @GetMapping(value = "/user/getUserNewPassword", produces = "text/plain;charset=UTF-8")
-    public String getUserNewPassword(@RequestParam String mobile)  {
+    public String getUserNewPassword(@RequestParam String mobile) throws URISyntaxException {
         return iUserService.updatePasswordOfUserByMobile(mobile, RandomStringUtils.random(5, true, true));
     }
 

@@ -5,6 +5,7 @@ import com.bzamani.framework.model.core.user.User;
 import com.bzamani.framework.service.core.IGenericService;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ public interface IUserService extends IGenericService<User, Long> {
     void sendPasswordToUserEmail(String email) ;
 
     @Transactional
-    String updatePasswordOfUserByMobile(String mobile, String newPassword) ;
+    String updatePasswordOfUserByMobile(String mobile, String newPassword) throws URISyntaxException;
 
     @Transactional
     boolean changePasswordByAdmin(Long userId, String newPassword);
