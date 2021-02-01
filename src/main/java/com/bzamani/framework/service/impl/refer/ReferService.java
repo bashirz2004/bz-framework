@@ -2,6 +2,7 @@ package com.bzamani.framework.service.impl.refer;
 
 import com.bzamani.framework.common.utility.DateUtility;
 import com.bzamani.framework.common.utility.SecurityUtility;
+import com.bzamani.framework.common.utility.Utility;
 import com.bzamani.framework.model.clinic.Clinic;
 import com.bzamani.framework.model.core.personel.Personel;
 import com.bzamani.framework.model.refer.Refer;
@@ -26,6 +27,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -131,7 +133,7 @@ public class ReferService extends GenericService<Refer, Long> implements IReferS
 
     @Override
     @Transactional
-    public long changeStatus(long id, ReferStatus newStatus)  {
+    public long changeStatus(long id, ReferStatus newStatus) {
         Refer refer = loadByEntityId(id);
         ReferStatus oldStatus = refer.getStatus();
         UserDetails authenticatedUser = SecurityUtility.getAuthenticatedUser();
@@ -147,6 +149,15 @@ public class ReferService extends GenericService<Refer, Long> implements IReferS
                     refer.setStatus(ReferStatus.referred);
                     iReferLogService.save(new ReferLog(null, refer, currentDateShamsi, currentTime, authenticatedPersonel,
                             "ارجاع به کلینیک", oldStatus.getPersianTitle(), ReferStatus.referred.getPersianTitle()));
+                    try {
+                        Utility.sendSMS(refer.getPatient().getMobile(), refer.getPatient().getFirstname() + " " + refer.getPatient().getLastname() +
+                                " عزیز، ارجاع شما به " + refer.getClinic().getOrganization().getTitle() + " واقع در " +
+                                refer.getClinic().getOrganization().getAddress() + " - تلفن: " +
+                                refer.getClinic().getOrganization().getTelephone() + " با کد رهگیری " +
+                                refer.getId() + " از طریق مدیک انجام شد. ");
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
             case initialReception:
@@ -174,9 +185,10 @@ public class ReferService extends GenericService<Refer, Long> implements IReferS
         return save(refer).getId();
     }
 
+
     @Override
     @Transactional
-    public boolean deleteWithLogs(long id)  {
+    public boolean deleteWithLogs(long id) {
         Refer refer = loadByEntityId(id);
         if (refer.getStatus() == ReferStatus.initialSaved) {
             List<ReferLog> logs = iReferLogService.findAllByReferEqualsOrderByCreateDateDesc(refer);
@@ -189,13 +201,13 @@ public class ReferService extends GenericService<Refer, Long> implements IReferS
 
     @Override
     @Transactional
-    public Refer finishWork(Refer updatedRefer)  {
+    public Refer finishWork(Refer updatedRefer) {
         UserDetails authenticatedUser = SecurityUtility.getAuthenticatedUser();
         Personel authenticatedPersonel = iUserService.findUserByUsernameEquals(authenticatedUser.getUsername()).getPersonel();
         Refer mainRefer = loadByEntityId(updatedRefer.getId());
         if (mainRefer.getStatus() == ReferStatus.initialReception) {
             iReferLogService.save(new ReferLog(null, mainRefer, updatedRefer.getFinishDateShamsi(), DateUtility.currentTime(), authenticatedPersonel,
-                    "اعلام پایان کار بیمار", mainRefer.getStatus().getPersianTitle(), ReferStatus.finishedWork.getPersianTitle()));
+                    "اعلام پایان کار بیمار در کلینیک ", mainRefer.getStatus().getPersianTitle(), ReferStatus.finishedWork.getPersianTitle()));
             mainRefer.setStatus(ReferStatus.finishedWork);
         } else
             throw new RuntimeException("وضعیت فعلی ارجاع باید پذیرش اولیه باشد.");

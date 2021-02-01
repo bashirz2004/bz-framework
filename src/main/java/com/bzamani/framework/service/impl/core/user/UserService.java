@@ -2,8 +2,8 @@ package com.bzamani.framework.service.impl.core.user;
 
 import com.bzamani.framework.common.utility.DateUtility;
 import com.bzamani.framework.common.utility.SecurityUtility;
+import com.bzamani.framework.common.utility.Utility;
 import com.bzamani.framework.dto.SelfUserRegistrationDto;
-import com.bzamani.framework.dto.UserNewPasswordSMSDto;
 import com.bzamani.framework.model.core.group.Group;
 import com.bzamani.framework.model.core.organization.Organization;
 import com.bzamani.framework.model.core.personel.Personel;
@@ -23,18 +23,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -190,26 +185,10 @@ public class UserService extends GenericService<User, Long> implements IUserServ
             throw new RuntimeException("از آخرین پیامک ارسال شده باید حداقل یک دقیقه گذشته باشد.");
         Integer result = iUserRepository.changePasswordByMobile(mobile, new BCryptPasswordEncoder().encode(newPassword), new Date());
         if (result > 0) {
-            return sendSMS(mobile, newPassword);
+            return Utility.sendSMS(mobile, "رمز عبور جدید شما در مدیک: " + newPassword);
         } else
             throw new RuntimeException("با این شماره موبایل، حساب کاربری ایجاد نشده است.");
-    }
 
-    public String sendSMS(String mobile, String newPassword) throws URISyntaxException {
-
-        RestTemplate restTemplate = new RestTemplate();
-        final String baseUrl = "http://rest.ippanel.com/v1/messages";
-        URI uri = new URI(baseUrl);
-        String[] receipants = new String[1];
-        receipants[0] = "98" + mobile.substring(1);
-        UserNewPasswordSMSDto dto = new UserNewPasswordSMSDto("+98500010403843845", receipants, " * * مدیک * * رمز عبور جدید شما: " + newPassword);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "AccessKey JucDHH6f4nXGwryx3RRvmTOjfBz-7hgDi7UkyHJ5mYk=");
-
-        HttpEntity<UserNewPasswordSMSDto> request = new HttpEntity<>(dto, headers);
-        ResponseEntity<String> result = restTemplate.postForEntity(uri, request, String.class);
-        return String.valueOf(result.getStatusCodeValue());
     }
 
     @Transactional

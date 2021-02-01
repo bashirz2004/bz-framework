@@ -99,6 +99,7 @@
             "lastname": '',
             "mobile": '',
             "username": '',
+            "organizationId": -1,
             "sort": "id,desc",
             "page": 0,
             "size": 5
@@ -129,6 +130,7 @@
             searchFilters.lastname = $("#txtSearchLastname").val();
             searchFilters.mobile = $("#txtSearchMobile").val();
             searchFilters.username = $("#txtSearchUsername").val();
+            searchFilters.organizationId = $("#hiddenFieldSearchOrganizationId").val();
             refreshGrid();
         }
 
@@ -139,6 +141,7 @@
                 "lastname": '',
                 "mobile": '',
                 "username": '',
+                "organizationId": -1,
                 "sort": "id,desc",
                 "page": 0,
                 "size": 5
@@ -318,6 +321,12 @@
             viewFancyBox('/app/view/core/user/changePasswordByAdmin.html?userId=' + id + "&fullName=" + fullName, '60%', '60%');
         }
 
+        function setOrganizationInSearch(id, title) {
+            $('#hiddenFieldSearchOrganizationId').val(id);
+            $('#txtSearchOrganizationTitle').val(title);
+            searchUser();
+        }
+
     </script>
 
 <body>
@@ -348,21 +357,32 @@
                 </div>
             </div>
             <div class="col-sm-12 search-section" style="display: none">
-                <label class="float-left" style="padding-top: .5em">فیلتر کردن نتایج براساس : </label>
-                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                <div class="float-left col-sm-12 col-md-2 col-lg-2 col-xl-2">
                     <input type="text" id="txtSearchFirstname" class="form-control searchFilter" placeholder="نام ...">
                 </div>
-                <div class="float-left col-sm-2 col-md-3 col-lg-2 col-xl-2">
+                <div class="float-left col-sm-12 col-md-3 col-lg-2 col-xl-2">
                     <input type="text" id="txtSearchLastname" class="form-control searchFilter"
                            placeholder="نام خانوادگی ...">
                 </div>
-                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                <div class="float-left col-sm-12 col-md-2 col-lg-2 col-xl-2">
                     <input type="text" id="txtSearchMobile" class="form-control searchFilter"
                            placeholder="موبایل ...">
                 </div>
-                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                <div class="float-left col-sm-12 col-md-2 col-lg-2 col-xl-2">
                     <input type="text" id="txtSearchUsername" class="form-control searchFilter"
                            placeholder="نام کاربری ...">
+                </div>
+                <div class="float-left col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                    <input type="hidden" id="hiddenFieldSearchOrganizationId" class="searchFilter"/>
+                    <div style="display: flex;white-space: nowrap">
+                        <input disabled type="text" class="form-control searchFilter" id="txtSearchOrganizationTitle"
+                               placeholder="واحد سازمانی ...">
+                        <button class="btn btn-primary form-control"
+                                style="width: 3rem"
+                                onclick="viewFancyBox('/app/view/core/organization/organizationSelectAuthorize.html?isSearch=true','70%','90%')">
+                            000
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="card-body">
@@ -451,6 +471,7 @@
                                             </div>
                                         </td>
                                     </tr>
+
 
 
 

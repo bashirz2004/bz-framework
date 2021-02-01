@@ -67,6 +67,7 @@
 
     <script>
         var contextPath = "/app";
+        var form = getUrlParameter("form");
 
         $(function () {
             findAllByReferId(getUrlParameter("referId"));
@@ -83,6 +84,12 @@
                 success: function (res) {
                     $("#logList > div").remove();
                     $("#logTemplate").tmpl(res).appendTo("#logList");
+                    if (form == 'outbox') {
+                        $('.logs').each(function () {
+                            if ($(this).attr("newStatus").includes("تکمیل شده"))
+                                $(this).hide();
+                        });
+                    }
                 },
                 error: function (err) {
                     console.log("error ---- " + err);
@@ -104,7 +111,7 @@
             </div>
             <div class="col-md-12 col-lg-12 col-xl-12" id="logList">
                 <script id="logTemplate" type="text/x-jquery-tmpl">
-                    <div class="row">
+                    <div class="row logs" id="log_${id}" newStatus="${newStatusPersianTitle}">
                        <p>
                        در تاریخ
                        ${operationDateShamsi}،
@@ -131,6 +138,9 @@
                        {{/if}}
                        </p>
                     </div>
+
+
+
 
 
                 </script>

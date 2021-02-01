@@ -413,7 +413,7 @@
         }
 
         function showHistory(id) {
-            viewFancyBox('/app/view/refer/showHistory.html?referId=' + id, '90%', '90%');
+            viewFancyBox('/app/view/refer/showHistory.html?referId=' + id + "&form=" + form, '100%', '90%');
         }
 
         function showFinishWork(id, doctor, patient, clinic, sessionCountToDo, treatment, referShamsiDate) {
@@ -470,7 +470,7 @@
                     $('#txtFinishDateShamsiFull').val(refer.finishDateShamsi);
                     $('#txtMedikEarnFull').val(toMoneyFormat(refer.medikEarn));
                     $('#txtPaymentFull').val(toMoneyFormat(refer.payment));
-                    $('#txtSettlementDateShamsiFull').val(refer.settlement.settlementDateShamsi);
+                    $('#txtSettlementDateShamsiFull').val(refer.settlement != null ? refer.settlement.settlementDateShamsi : "");
                 },
                 error: function (err) {
                 }
@@ -569,7 +569,7 @@
                     <div style="display: flex;white-space: nowrap">
                         <input type="text" class="form-control searchFilter" id="txtClinicTitleInSearch"
                                placeholder="فیلتر براساس کلینیک ..."
-                               onclick="viewFancyBox('/app/view/clinic/clinicSelect.html?isSearch=true','90%','90%')">
+                               onclick="viewFancyBox('/app/view/clinic/clinicSelect.html?isSearch=true','100%','90%')">
                     </div>
                 </div>
                 <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2 mt-1 mb-1">
@@ -579,11 +579,11 @@
                 <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2 mt-1 mb-1">
                     <select class="form-control" id="cmbStatusInSearch">
                         <option value="-1">...</option>
-                        <option value="0">ثبت اولیه</option>
-                        <option value="1">ارجاع شده</option>
-                        <option value="2">پذیرش اولیه</option>
-                        <option value="3">پایان کار</option>
-                        <option value="4">تسویه شده</option>
+                        <option value="0">پذیرش در مطب</option>
+                        <option value="1">ارجاع شده به کلینیک</option>
+                        <option value="2">پذیرش اولیه در کلینیک</option>
+                        <option value="3">پایان کار بیمار در کلینیک</option>
+                        <option value="4">تکمیل شده</option>
                         <option value="5">ابطال شده</option>
                     </select>
                 </div>
@@ -690,9 +690,6 @@
                                               {{if status=='initialReception'}}
                                                 <a onclick="showFinishWork(${id},'${doctor.personel.firstname} ${doctor.personel.lastname}', '${patient.firstname} ${patient.lastname}','${clinic.organization.title}', ${sessionCountToDo}, '${treatment.title}','${referDateShamsi}')" class="inbox" ><i class="fa fa-wheelchair-alt"></i>&nbsp;پایان کار</a>
                                               {{/if}}
-                                              <!--{{if status=='finishedWork'}}
-                                                <a onclick="changeStatus(${id},'settlementDone','تسویه حساب')" ><i class="fa fa-money"></i>&nbsp;تسویه حساب</a>
-                                              {{/if}}-->
                                               {{if status!='initialSaved' &&  status!='settlementDone'}}
                                                 <a onclick="changeStatus(${id},'revoked','ابطال')" class="revokeBtn" style="display: none"><i class="fa fa-minus-circle"></i>&nbsp;ابطال</a>
                                               {{/if}}
@@ -702,6 +699,8 @@
                                             </div>
                                         </td>
                                     </tr>
+
+
 
 
 
@@ -862,7 +861,7 @@
                                         <input disabled type="text" class="form-control" id="txtClinicTitle">
                                         <button class="btn btn-primary form-control"
                                                 style="width: 3rem"
-                                                onclick="viewFancyBox('/app/view/clinic/clinicSelect.html?patientId='+$('#hiddenFieldPatientId').val(),'90%','90%')">
+                                                onclick="viewFancyBox('/app/view/clinic/clinicSelect.html?patientId='+$('#hiddenFieldPatientId').val(),'100%','90%')">
                                             000
                                         </button>
                                     </div>
@@ -1023,14 +1022,14 @@
                                            style="box-shadow: 0px 0px 5px 2px darkcyan"></input>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-3 inbox">
                                 <div class="form-group">
                                     <label>پرداخت بیمار(ریال)</label>
                                     <input type="text" class="form-control" id="txtPaymentFull"
                                            style="box-shadow: 0px 0px 5px 2px darkcyan"></input>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-3 inbox">
                                 <div class="form-group">
                                     <label>سهم مدیک(ریال)</label>
                                     <input type="text" class="form-control" id="txtMedikEarnFull"
@@ -1044,7 +1043,7 @@
                                            style="box-shadow: 0px 0px 5px 2px darkcyan">
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-3 inbox">
                                 <div class="form-group">
                                     <label>تاریخ تسویه حساب</label>
                                     <input type="text" class="form-control" id="txtSettlementDateShamsiFull"

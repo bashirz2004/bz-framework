@@ -15,10 +15,10 @@ public interface IUserService extends IGenericService<User, Long> {
     @Transactional
     User saveUserWithSets(User user);
 
-    User selfRegister(SelfUserRegistrationDto userDto) ;
+    User selfRegister(SelfUserRegistrationDto userDto);
 
     @Transactional
-    void sendPasswordToUserEmail(String email) ;
+    void sendPasswordToUserEmail(String email);
 
     @Transactional
     String updatePasswordOfUserByMobile(String mobile, String newPassword) throws URISyntaxException;
@@ -27,7 +27,7 @@ public interface IUserService extends IGenericService<User, Long> {
     boolean changePasswordByAdmin(Long userId, String newPassword);
 
     @Transactional
-    void changeAuthenticatedUserPassword(String oldPassword, String newPassword) ;
+    void changeAuthenticatedUserPassword(String oldPassword, String newPassword);
 
     Map<String, Object> searchUser(String firstname,
                                    String lastname,
@@ -43,16 +43,17 @@ public interface IUserService extends IGenericService<User, Long> {
 
     Map<String, Object> searchUserOrganizations(long userId, String organizationTitle, int page, int size, String[] sort);
 
-    boolean deleteUserOrganization(long userId, long organizationId) ;
-    boolean addUserOrganizations(long userId, List<Long> organizationIds) ;
+    boolean deleteUserOrganization(long userId, long organizationId);
+
+    boolean addUserOrganizations(long userId, List<Long> organizationIds);
 
     Map<String, Object> searchUserGroups(long userId, String groupTitle, int page, int size, String[] sort);
 
     @Transactional
-    boolean deleteUserGroup(long userId, long groupId) ;
+    boolean deleteUserGroup(long userId, long groupId);
 
     @Transactional
-    boolean addUserGroups(long userId, List<Long> groupIds) ;
+    boolean addUserGroups(long userId, List<Long> groupIds);
 
     @Transactional
     void resetWrongPasswordTries(Long userId);

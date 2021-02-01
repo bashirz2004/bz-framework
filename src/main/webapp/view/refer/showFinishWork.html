@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <title>ثبت پایان کار</title>
+    <title>ثبت پایان کار بیمار در کلینیک</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/app/assets/img/favicon.png">
@@ -110,7 +110,7 @@
         });
 
         function setReferData(){
-            $('#referInfo').html("ثبت پایان کار ارجاع " + referId + " مورخ " + referShamsiDate);
+            $('#referInfo').html("ثبت پایان کار بیمار در کلینیک برای ارجاع " + referId + " مورخ " + referShamsiDate);
             $('#txtDoctor').val(doctor);
             $('#txtPatient').val(patient);
             $('#txtClinic').val(clinic);
@@ -137,7 +137,7 @@
                     type: 'POST',
                     success: function (res) {
                         if (res != null) {
-                            showMessage("ثبت پایان کار با موفقیت انجام شد.", "", "success");
+                            showMessage("ثبت پایان کار بیمار در کلینیک با موفقیت انجام شد.", "", "success");
                             $('#btnSave').hide();
                         }
                     },
