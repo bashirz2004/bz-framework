@@ -21,17 +21,7 @@
     <script>
         var contextPath = "/app";
         $(function () {
-            var chart1Data = [];
-            $.getJSON(contextPath + "/rest/refer/chart/getAllRefersPercentGroupByStatus", null, function (entities) {
-                $.each(entities, function (index, value) {
-                    chart1Data.push({
-                        name: toPersian(value.status),
-                        y: value.percent
-                    });
-                });
-                fillChart1(chart1Data);
-            });
-
+            fillChart1()
             fillChart2();
             fillChart3();
         });
@@ -51,131 +41,154 @@
                 return "ابطال شده";
         }
 
-        function fillChart1(chart1Data) {
-            Highcharts.chart('container1', {
-                chart: {
-                    plotBackgroundColor: null,
-                    plotBorderWidth: null,
-                    plotShadow: false,
-                    type: 'pie'
-                },
-                title: {
-                    text: 'نمودار درصد ارجاعات به تفکیک وضعیت'
-                },
-                tooltip: {
-                    pointFormat: '{series.name}: <b>{point.percentage:.0f}</b>'
-                },
-                accessibility: {
-                    point: {
-                        valueSuffix: '%'
-                    }
-                },
-                plotOptions: {
-                    pie: {
-                        allowPointSelect: true,
-                        cursor: 'pointer',
-                        dataLabels: {
-                            enabled: true,
-                            format: '<b>{point.name}</b>: {point.percentage:.0f}'
+        function fillChart1() {
+            let chartData = [];
+            $.getJSON(contextPath + "/rest/refer/chart/getAllRefersCountGroupByStatus", null, function (entities) {
+                $.each(entities, function (index, value) {
+                    chartData.push({
+                        name: toPersian(value.status),
+                        y: value.percent
+                    });
+                });
+                Highcharts.chart('container1', {
+                    chart: {
+                        plotBackgroundColor: null,
+                        plotBorderWidth: null,
+                        plotShadow: false,
+                        type: 'pie'
+                    },
+                    title: {
+                        text: 'نمودار درصد ارجاعات به تفکیک وضعیت'
+                    },
+                    tooltip: {
+                        pointFormat: '{series.name}: <b>{point.percentage:.0f}</b>'
+                    },
+                    accessibility: {
+                        point: {
+                            valueSuffix: '%'
                         }
-                    }
-                },
-                series: [{
-                    name: 'درصد',
-                    colorByPoint: true,
-                    data: chart1Data
-                }]
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.name}</b>: {point.percentage:.0f}'
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'درصد',
+                        colorByPoint: true,
+                        data: chartData
+                    }]
+                });
             });
         }
 
         function fillChart2() {
-            Highcharts.chart('container2', {
-                chart: {
-                    type: 'column',
-                    zoomType: "x"
-                },
-                title: {
-                    text: 'نمودار رتبه بندی پزشکان از لحاظ تعداد ارجاعات'
-                },
-                subtitle: {
-                    text: 'medik'
-                },
-                xAxis: {
-                    categories: [
-                        'تعداد ارجاعات'
-                    ],
-                    crosshair: true
-                },
-                yAxis: {
-                    min: 0,
+            let chartData = [];
+            $.getJSON(contextPath + "/rest/refer/chart/getAllRefersGroupByDoctors", null, function (entities) {
+                $.each(entities, function (index, value) {
+                    chartData.push({
+                        name: value.key,
+                        data: [value.value]
+                    });
+                });
+                Highcharts.chart('container2', {
+                    chart: {
+                        type: 'column',
+                        zoomType: "x"
+                    },
                     title: {
-                        text: 'تعداد ارجاعات'
-                    }
-                },
-                tooltip: {
-                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                        '<td style="padding:0"><b>{point.y:.0f}</b></td></tr>',
-                    footerFormat: '</table>',
-                    shared: true,
-                    useHTML: true
-                },
-                plotOptions: {
-                    column: {
-                        pointPadding: 0.2,
-                        borderWidth: 0
-                    }
-                },
-                series: [{
-                    name: 'دکتر علی احمدی',
-                    data: [212]
-                }]
+                        text: 'نمودار رتبه بندی پزشکان از لحاظ تعداد ارجاعات به کلینیک ها'
+                    },
+                    subtitle: {
+                        text: 'medik'
+                    },
+                    xAxis: {
+                        categories: [
+                            'تعداد ارجاعات'
+                        ],
+                        crosshair: true
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'تعداد ارجاعات'
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                            '<td style="padding:0"><b>{point.y:.0f}</b></td></tr>',
+                        footerFormat: '</table>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
+                    series: chartData
+                });
             });
         }
 
         function fillChart3() {
-            Highcharts.chart('container3', {
-                chart: {
-                    type: 'column'
-                },
-                title: {
-                    text: 'نمودار رتبه بندی کلینیک ها از لحاظ تعداد پایان کار'
-                },
-                subtitle: {
-                    text: 'medik'
-                },
-                xAxis: {
-                    categories: [
-                        'تعداد پایان کار'
-                    ],
-                    crosshair: true
-                },
-                yAxis: {
-                    min: 0,
+            let chartData = [];
+            $.getJSON(contextPath + "/rest/refer/chart/getAllRefersGroupByClinics", null, function (entities) {
+                $.each(entities, function (index, value) {
+                    chartData.push({
+                        name: value.key,
+                        data: [value.value]
+                    });
+                });
+                Highcharts.chart('container3', {
+                    chart: {
+                        type: 'column'
+                    },
                     title: {
-                        text: 'تعداد پایان کار'
-                    }
-                },
-                tooltip: {
-                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                        '<td style="padding:0"><b>{point.y:.0f}</b></td></tr>',
-                    footerFormat: '</table>',
-                    shared: true,
-                    useHTML: true
-                },
-                plotOptions: {
-                    column: {
-                        pointPadding: 0.2,
-                        borderWidth: 0
-                    }
-                },
-                series: [{
-                    name: 'کلینیک حضرت ابوالفضل',
-                    data: [212]
-                }]
+                        text: 'نمودار رتبه بندی کلینیک ها از لحاظ تعداد پایان کار'
+                    },
+                    subtitle: {
+                        text: 'medik'
+                    },
+                    xAxis: {
+                        categories: [
+                            'تعداد پایان کار'
+                        ],
+                        crosshair: true
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'تعداد پایان کار'
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                            '<td style="padding:0"><b>{point.y:.0f}</b></td></tr>',
+                        footerFormat: '</table>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
+                    series: chartData
+                });
             });
         }
+
+
     </script>
 </head>
 <body dir="rtl">

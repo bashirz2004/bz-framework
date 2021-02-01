@@ -1,7 +1,7 @@
 package com.bzamani.framework.controller.refer;
 
-import com.bzamani.framework.common.utility.SecurityUtility;
 import com.bzamani.framework.controller.core.BaseController;
+import com.bzamani.framework.dto.ReferChartDto;
 import com.bzamani.framework.dto.ReferPieChartDto;
 import com.bzamani.framework.model.doctor.Doctor;
 import com.bzamani.framework.model.refer.Refer;
@@ -107,9 +107,20 @@ public class ReferController extends BaseController {
         return iReferService.updateReferSettlementToNull(referId);
     }
 
-    @GetMapping("/chart/getAllRefersPercentGroupByStatus")
-    public List<ReferPieChartDto> getAllRefersPercentGroupByStatus() {
-        return iReferService.getAllRefersPercentGroupByStatus();
+    @GetMapping("/chart/getAllRefersCountGroupByStatus")
+    public List<ReferPieChartDto> getAllRefersCountGroupByStatus() {
+        return iReferService.getAllRefersCountGroupByStatus();
     }
+
+    @GetMapping("/chart/getAllRefersGroupByDoctors")
+    public List<ReferChartDto> getAllRefersGroupByDoctors() {
+        return iReferService.getAllRefersGroupByDoctors();
+    }
+
+    @GetMapping("/chart/getAllRefersGroupByClinics")
+    public List<ReferChartDto> getAllRefersGroupByClinics() {
+        return iReferService.getAllRefersGroupByClinics();
+    }
+
 
 }

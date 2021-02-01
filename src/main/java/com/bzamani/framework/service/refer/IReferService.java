@@ -1,5 +1,6 @@
 package com.bzamani.framework.service.refer;
 
+import com.bzamani.framework.dto.ReferChartDto;
 import com.bzamani.framework.dto.ReferPieChartDto;
 import com.bzamani.framework.model.clinic.Clinic;
 import com.bzamani.framework.model.refer.Refer;
@@ -50,5 +51,9 @@ public interface IReferService extends IGenericService<Refer, Long> {
     @Transactional
     Refer updateReferSettlementToNull(long referId);
 
-    List<ReferPieChartDto> getAllRefersPercentGroupByStatus();
+    List<ReferPieChartDto> getAllRefersCountGroupByStatus();
+
+    List<ReferChartDto> getAllRefersGroupByDoctors();
+
+    List<ReferChartDto> getAllRefersGroupByClinics();
 }
