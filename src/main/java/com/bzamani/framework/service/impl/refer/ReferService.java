@@ -3,6 +3,7 @@ package com.bzamani.framework.service.impl.refer;
 import com.bzamani.framework.common.utility.DateUtility;
 import com.bzamani.framework.common.utility.SecurityUtility;
 import com.bzamani.framework.common.utility.Utility;
+import com.bzamani.framework.dto.ReferPieChartDto;
 import com.bzamani.framework.model.clinic.Clinic;
 import com.bzamani.framework.model.core.personel.Personel;
 import com.bzamani.framework.model.refer.Refer;
@@ -23,6 +24,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -262,6 +264,11 @@ public class ReferService extends GenericService<Refer, Long> implements IReferS
             throw new RuntimeException("امکان این کار به دلیل تایید نهایی شدن تسویه وجود ندارد.");
         refer.setSettlement(null);
         return save(refer);
+    }
+
+    @Override
+    public List<ReferPieChartDto> getAllRefersPercentGroupByStatus() {
+        return iReferRepository.getAllRefersPercentGroupByStatus(SecurityUtility.getAuthenticatedUser().getUsername());
     }
 
 }

@@ -19,7 +19,39 @@
         }
     </style>
     <script>
+        var contextPath = "/app";
         $(function () {
+            var chart1Data = [];
+            $.getJSON(contextPath + "/rest/refer/chart/getAllRefersPercentGroupByStatus", null, function (entities) {
+                $.each(entities, function (index, value) {
+                    chart1Data.push({
+                        name: toPersian(value.status),
+                        y: value.percent
+                    });
+                });
+                fillChart1(chart1Data);
+            });
+
+            fillChart2();
+            fillChart3();
+        });
+
+        function toPersian(englishStatus) {
+            if (englishStatus == "initialSaved")
+                return "پذیرش در مطب";
+            else if (englishStatus == "referred")
+                return "ارجاع شده به کلینیک";
+            else if (englishStatus == "initialReception")
+                return "پذیرش اولیه در کلینیک";
+            else if (englishStatus == "finishedWork")
+                return "پایان کار بیمار در کلینیک";
+            else if (englishStatus == "settlementDone")
+                return "تکمیل شده";
+            else if (englishStatus == "revoked")
+                return "ابطال شده";
+        }
+
+        function fillChart1(chart1Data) {
             Highcharts.chart('container1', {
                 chart: {
                     plotBackgroundColor: null,
@@ -49,33 +81,14 @@
                     }
                 },
                 series: [{
-                    name: 'تعداد',
+                    name: 'درصد',
                     colorByPoint: true,
-                    data: [{
-                        name: 'پذیرش در مطب',
-                        y: 30,
-                        sliced: true,
-                        selected: true
-                    }, {
-                        name: 'ارجاع شده به کلینیک',
-                        y: 20
-                    }, {
-                        name: 'پذیرش اولیه در کلینیک',
-                        y: 10
-                    }, {
-                        name: 'پایان کار بیمار در کلینیک',
-                        y: 25
-                    }, {
-                        name: 'تکمیل شده',
-                        y: 5
-                    }, {
-                        name: 'ابطال شده',
-                        y: 10
-                    },
-                    ]
+                    data: chart1Data
                 }]
             });
+        }
 
+        function fillChart2() {
             Highcharts.chart('container2', {
                 chart: {
                     type: 'column',
@@ -116,89 +129,31 @@
                 series: [{
                     name: 'دکتر علی احمدی',
                     data: [212]
-
-                }, {
-                    name: 'دکتر سوسن محمود زاده',
-                    data: [158]
-
-                }, {
-                    name: 'دکتر هدایت مقبلی',
-                    data: [130]
-
-                }, {
-                    name: 'دکتر سعید عسکر',
-                    data: [123]
-
-                }, {
-                    name: 'دکتر هدایت عام',
-                    data: [122]
-
-                }, {
-                    name: 'دکتر مریم قاضی',
-                    data: [119]
-
-                }, {
-                    name: 'دکتر زهرا بور',
-                    data: [115]
-
-                }, {
-                    name: 'دکتر حسن دادکان',
-                    data: [110]
-
-                }, {
-                    name: 'دکتر علی ارشی',
-                    data: [102]
-
-                }, {
-                    name: 'دکتر لاله صدرالمتالهین',
-                    data: [92]
-                }, {
-                    name: 'دکتر هدایت مقبلی',
-                    data: [71]
-
-                }, {
-                    name: 'دکتر حسام مهدوی فرد',
-                    data: [65]
-
-                }, {
-                    name: 'دکتر حسن قاسمی',
-                    data: [60]
-
-                }, {
-                    name: 'دکتر هستی هاشمی',
-                    data: [53]
-
-                }, {
-                    name: 'دکتر محمود حجتی',
-                    data: [20]
-
-                },{
-                    name: 'دکتر محمود اسدی',
-                    data: [4]
-
                 }]
             });
+        }
 
+        function fillChart3() {
             Highcharts.chart('container3', {
                 chart: {
                     type: 'column'
                 },
                 title: {
-                    text: 'نمودار رتبه بندی کلینیک ها از لحاظ تعداد پذیرش'
+                    text: 'نمودار رتبه بندی کلینیک ها از لحاظ تعداد پایان کار'
                 },
                 subtitle: {
                     text: 'medik'
                 },
                 xAxis: {
                     categories: [
-                        'تعداد پذیرش'
+                        'تعداد پایان کار'
                     ],
                     crosshair: true
                 },
                 yAxis: {
                     min: 0,
                     title: {
-                        text: 'تعداد پذیرش'
+                        text: 'تعداد پایان کار'
                     }
                 },
                 tooltip: {
@@ -218,25 +173,9 @@
                 series: [{
                     name: 'کلینیک حضرت ابوالفضل',
                     data: [212]
-
-                }, {
-                    name: 'کلینیک تهرانپارس',
-                    data: [158]
-
-                }, {
-                    name: 'کلینیک شهدای غزه',
-                    data: [130]
-
-                }, {
-                    name: 'کلینیک ستاره شرق',
-                    data: [100]
-                }, {
-                    name: 'کلینیک تخصصی شهران',
-                    data: [71]
-
                 }]
             });
-        });
+        }
     </script>
 </head>
 <body dir="rtl">

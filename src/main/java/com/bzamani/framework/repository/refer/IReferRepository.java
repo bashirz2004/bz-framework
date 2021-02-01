@@ -1,5 +1,6 @@
 package com.bzamani.framework.repository.refer;
 
+import com.bzamani.framework.dto.ReferPieChartDto;
 import com.bzamani.framework.model.clinic.Clinic;
 import com.bzamani.framework.model.refer.Refer;
 import com.bzamani.framework.model.refer.ReferStatus;
@@ -51,6 +52,19 @@ public interface IReferRepository extends JpaRepository<Refer, Long> {
                                      @Param("patientId") Long patientId,
                                      @Param("id") Long id,
                                      Pageable pageable);
+
+    @Query("SELECT new com.bzamani.framework.dto.ReferPieChartDto(e.status as key , count(e.id) as value) FROM Refer e where " +
+            "exists ( select 1 from Doctor d join d.personel p join UserOrganizationAuthorize oa on oa.organizationId = p.organization.id " +
+            "           join User u on u.id = oa.userId " +
+            "          where d.id = e.doctor.id and u.username = :username ) " +
+            " or " +
+            " exists ( select 1 from Clinic c " +
+            "    join UserOrganizationAuthorize oa on oa.organizationId = c.organization.id " +
+            "           join User u on u.id = oa.userId " +
+            "          where c.id = e.clinic.id and u.username = :username )" +
+            " group by e.status order by count(e.id) desc "
+    )
+    List<ReferPieChartDto> getAllRefersPercentGroupByStatus(@Param("username") String username);
 
 
 }

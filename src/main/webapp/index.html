@@ -30,15 +30,15 @@
     <script>
         var contextPath = "/app";
         $(function () {
-            loadClinicsOrderByScore();
-            loadDoctorsOrderByScore();
-            load4RecentPosts();
             if (localStorage.getItem("authenticatedUserFullName")) {
                 $('#dashboardPage').show();
                 $('#btnLogin').hide();
                 $('#userInfo').html(localStorage.getItem("authenticatedUserFullName") + "&nbsp;");
                 $('#btnLogout').show();
             }
+            loadClinicsOrderByScore();
+            loadDoctorsOrderByScore();
+            load4RecentPosts();
         });
 
         function navigateToLoginPage() {

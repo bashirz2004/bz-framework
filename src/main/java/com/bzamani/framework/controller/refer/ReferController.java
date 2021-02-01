@@ -1,6 +1,8 @@
 package com.bzamani.framework.controller.refer;
 
+import com.bzamani.framework.common.utility.SecurityUtility;
 import com.bzamani.framework.controller.core.BaseController;
+import com.bzamani.framework.dto.ReferPieChartDto;
 import com.bzamani.framework.model.doctor.Doctor;
 import com.bzamani.framework.model.refer.Refer;
 import com.bzamani.framework.model.refer.ReferStatus;
@@ -30,7 +32,7 @@ public class ReferController extends BaseController {
 
     @PreAuthorize("hasRole('1005')")
     @DeleteMapping("/delete/{id}")
-    public boolean delete(@PathVariable("id") long id)  {
+    public boolean delete(@PathVariable("id") long id) {
         return iReferService.deleteWithLogs(id);
     }
 
@@ -71,13 +73,13 @@ public class ReferController extends BaseController {
     }
 
     @PostMapping("/changeStatus/{id}/{newStatus}")
-    public Long changeStatus(@PathVariable long id, @PathVariable ReferStatus newStatus)  {
+    public Long changeStatus(@PathVariable long id, @PathVariable ReferStatus newStatus) {
         return iReferService.changeStatus(id, newStatus);
     }
 
     @PreAuthorize("hasRole('1008')")
     @PostMapping("/finishWork")
-    public Refer finishWork(@RequestBody Refer refer)  {
+    public Refer finishWork(@RequestBody Refer refer) {
         return iReferService.finishWork(refer);
     }
 
@@ -103,6 +105,11 @@ public class ReferController extends BaseController {
     @PostMapping("/updateReferSettlementToNull/{referId}")
     public Refer updateReferSettlementToNull(@PathVariable long referId) {
         return iReferService.updateReferSettlementToNull(referId);
+    }
+
+    @GetMapping("/chart/getAllRefersPercentGroupByStatus")
+    public List<ReferPieChartDto> getAllRefersPercentGroupByStatus() {
+        return iReferService.getAllRefersPercentGroupByStatus();
     }
 
 }
