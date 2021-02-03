@@ -30,6 +30,8 @@
     <script>
         var contextPath = "/app";
         $(function () {
+            saveSiteVisitor();
+            getCountOfVisitors();
             if (localStorage.getItem("authenticatedUserFullName")) {
                 $('#dashboardPage').show();
                 $('#btnLogin').hide();
@@ -40,6 +42,28 @@
             loadDoctorsOrderByScore();
             load4RecentPosts();
         });
+
+        function saveSiteVisitor() {
+            $.ajax({
+                url: contextPath + "/api/public/statistics/saveSiteVisitor",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                type: 'POST',
+                success: function (res) {
+
+                },
+                error: function (err) {
+
+                }
+            });
+        }
+
+        function getCountOfVisitors() {
+            $.getJSON(contextPath + "/api/public/statistics/getCountOfVisitors", {"fromDateShamsi": '', "toDateShamsi": ''}, function (counter) {
+                $('#visitCounter').html(counter);
+            });
+        }
+
 
         function navigateToLoginPage() {
             document.location = "login.html";
@@ -235,9 +259,11 @@
                                             ${organization.region.title}
                                         </span>
                         </div>
+
+
                         </script>
                     </div>
-                    <a class="sub-title" href="public/searchClinics.html" style="color: deeppink" >مشاهده همه ... </a>
+                    <a class="sub-title" href="public/searchClinics.html" style="color: deeppink">مشاهده همه ... </a>
                 </div>
             </div>
         </div>
@@ -270,9 +296,11 @@
                                             ${speciality.title}
                                         </span>
                         </div>
+
+
                         </script>
                     </div>
-                    <a class="sub-title" href="public/searchDoctors.html" style="color: deeppink" >مشاهده همه ... </a>
+                    <a class="sub-title" href="public/searchDoctors.html" style="color: deeppink">مشاهده همه ... </a>
                 </div>
             </div>
         </div>
@@ -350,6 +378,8 @@
                         </div>
                     </div>
                 </div>
+
+
 
 
 
@@ -511,16 +541,10 @@
                             </div>
                         </div>
                         <div class="col-md-6 col-lg-6">
-
-                            <!-- Copyright Menu -->
-                            <div class="copyright-menu">
-                                <ul class="policy-menu">
-                                    <li><a>شرایط و مقررات</a></li>
-                                    <li><a>حریم خصوصی</a></li>
-                                </ul>
+                            <div class="copyright-text" style="display: flex;white-space: nowrap">
+                                <p class="mb-0">آمار بازدید سایت تا امروز: &nbsp;</p>
+                                <span id="visitCounter" style="color: white"></span>
                             </div>
-                            <!-- /Copyright Menu -->
-
                         </div>
                     </div>
                 </div>

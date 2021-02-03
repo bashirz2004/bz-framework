@@ -6,12 +6,13 @@ import com.bzamani.framework.controller.core.BaseController;
 import com.bzamani.framework.dto.PostCategoryDto;
 import com.bzamani.framework.dto.SelfUserRegistrationDto;
 import com.bzamani.framework.model.core.baseinfo.BaseInfo;
+import com.bzamani.framework.model.core.statistics.SiteVisitors;
 import com.bzamani.framework.model.core.user.User;
 import com.bzamani.framework.model.doctor.Doctor;
-import com.bzamani.framework.model.portal.Comment;
 import com.bzamani.framework.model.portal.Post;
 import com.bzamani.framework.service.clinic.IClinicService;
 import com.bzamani.framework.service.core.baseinfo.IBaseInfoService;
+import com.bzamani.framework.service.core.statistics.ISiteVisitorsService;
 import com.bzamani.framework.service.core.user.IUserService;
 import com.bzamani.framework.service.doctor.IDoctorService;
 import com.bzamani.framework.service.portal.ICommentService;
@@ -44,6 +45,22 @@ public class PublicAPIController extends BaseController {
 
     @Autowired
     IClinicService iClinicService;
+
+    @Autowired
+    ISiteVisitorsService iSiteVisitorsService;
+
+    @PostMapping("/statistics/saveSiteVisitor")
+    public void save() {
+        SiteVisitors visitor = new SiteVisitors();
+        visitor.setDateShamsi(DateUtility.todayShamsi());
+        visitor.setIp(SecurityUtility.getRequestIp());
+        iSiteVisitorsService.save(visitor);
+    }
+
+    @GetMapping(value = "/statistics/getCountOfVisitors", produces = "text/plain;charset=UTF-8")
+    public String getCountOfVisitors(String fromDateShamsi, String toDateShamsi) {
+        return String.valueOf(iSiteVisitorsService.getCountOfVisitors(fromDateShamsi, toDateShamsi));
+    }
 
     @GetMapping(value = "/getCurrentDateShamsi", produces = "text/plain;charset=UTF-8")
     public String getCurrentDateShamsi() {
@@ -95,12 +112,12 @@ public class PublicAPIController extends BaseController {
     }
 
     @PostMapping("/user/selfRegister")
-    public User selfRegister(@RequestBody SelfUserRegistrationDto userDto)  {
+    public User selfRegister(@RequestBody SelfUserRegistrationDto userDto) {
         return iUserService.selfRegister(userDto);
     }
 
     @PostMapping("/user/sendPasswordToUserEmail")
-    public void sendPasswordToUserEmail(@RequestParam String email)  {
+    public void sendPasswordToUserEmail(@RequestParam String email) {
         iUserService.sendPasswordToUserEmail(email);
     }
 
