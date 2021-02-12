@@ -92,17 +92,22 @@
             "fatherName": '',
             "motherName": '',
             "birthPlace": '',
-            "educationLevel": {"id": ''},
-            "ainRole": {"id": ''},
-            "militaryServiceStatus": {"id": ''},
             "mobile": '',
             "address": '',
             "telephone": '',
-            "organization": {"id": ''},
             "fileCode": '',
-            "state": {"id": ''},
-            "city": {"id": ''},
-            "region": {"id": ''}
+            "educationLevelId": -1,
+            "educationLevelTitle": '',
+            "militaryServiceStatusId": -1,
+            "militaryServiceStatusTitle": '',
+            "organizationId": -1,
+            "organizationTitle": '',
+            "stateId": -1,
+            "stateTitle": '',
+            "cityId": -1,
+            "cityTitle": '',
+            "regionId": -1,
+            "regionTitle": ''
         };
         var entityData;
 
@@ -134,7 +139,6 @@
                     searchPersonel();
             });
 
-            fillComboBaseInfo(5, "cmbJob");
             fillComboBaseInfo(3, "cmbEducationLevel");
             fillComboBaseInfo(2, "cmbMilitaryServiceStatus");
             fillComboBaseInfo(1, "cmbState");
@@ -328,14 +332,9 @@
             $("#txtFatherName").val(entity.fatherName);
             $("#txtMotherName").val(entity.motherName);
             $("#txtBirthPlace").val(entity.birthPlace);
-            $("#cmbEducationLevel").val(entity.educationLevel != null ? entity.educationLevel.id : -1);
-            $("#cmbJob").val(entity.cmbJob != null ? entity.cmbJob.id : -1);
-            $("#cmbMilitaryServiceStatus").val(entity.militaryServiceStatus != null ? entity.militaryServiceStatus.id : -1);
             $("#txtMobile").val(entity.mobile);
             $("#txtAddress").val(entity.address);
             $("#txtTelephone").val(entity.telephone);
-            $("#hiddenFieldOrganizationId").val(entity.organization.id);
-            $("#txtOrganizationTitle").val(entity.organization.title);
             if (entity.fileCode != null && entity.fileCode.length > 0) {
                 $('#uploadedImage').prop("src", "/app/rest/core/file/download/" + entity.fileCode + "/false");
                 $("#hiddenFieldFileCode").val(entity.fileCode);
@@ -343,13 +342,18 @@
                 $('#uploadedImage').prop("src", "");
                 $("#hiddenFieldFileCode").val(null);
             }
-            if (entity.state != null && entity.state.id > 0) {
-                $("#cmbState").val(entity.state.id);
-                fillComboCity(entity.state.id, function () {
-                    $("#cmbCity").val(entity.city != null ? entity.city.id : -1);
-                    if (entity.city != null) {
-                        fillComboRegion(entity.city.id, function () {
-                            $("#cmbRegion").val(entity.region != null ? entity.region.id : -1);
+
+            $("#cmbEducationLevel").val(entity.educationLevelId != null ? entity.educationLevelId : -1);
+            $("#cmbMilitaryServiceStatus").val(entity.militaryServiceStatusId != null ? entity.militaryServiceStatusId : -1);
+            $("#hiddenFieldOrganizationId").val(entity.organizationId);
+            $("#txtOrganizationTitle").val(entity.organizationTitle);
+            if (entity.stateId != null && entity.stateId > 0) {
+                $("#cmbState").val(entity.stateId);
+                fillComboCity(entity.stateId, function () {
+                    $("#cmbCity").val(entity.cityId != null ? entity.cityId : -1);
+                    if (entity.cityId != null) {
+                        fillComboRegion(entity.cityId, function () {
+                            $("#cmbRegion").val(entity.regionId != null ? entity.regionId : -1);
                             $('#cmbRegion').trigger('change');
                         });
                     }
@@ -374,17 +378,17 @@
                 "fatherName": $('#txtFirstname').val(),
                 "motherName": $('#txtMotherName').val(),
                 "birthPlace": $('#txtBirthPlace').val(),
-                "educationLevel": $('#cmbEducationLevel').val() > 0 ? {"id": $('#cmbEducationLevel').val()} : null,
-                "job": $('#cmbJob').val() > 0 ? {"id": $('#cmbJob').val()} : null,
-                "militaryServiceStatus": $('#cmbMilitaryServiceStatus').val() > 0 ? {"id": $('#cmbMilitaryServiceStatus').val()} : null,
                 "mobile": $('#txtMobile').val(),
                 "address": $('#txtAddress').val(),
                 "telephone": $('#txtTelephone').val(),
-                "organization": {"id": $('#hiddenFieldOrganizationId').val()},
                 "fileCode": $('#hiddenFieldFileCode').val(),
-                "state": $('#cmbState').val() > 0 ? {"id": $('#cmbState').val()} : null,
-                "city": $('#cmbCity').val() > 0 ? {"id": $('#cmbCity').val()} : null,
-                "region": $('#cmbRegion').val() > 0 ? {"id": $('#cmbRegion').val()} : null
+
+                "educationLevelId": $('#cmbEducationLevel').val(),
+                "militaryServiceStatusId": $('#cmbMilitaryServiceStatus').val(),
+                "organizationId": $('#hiddenFieldOrganizationId').val(),
+                "stateId": $('#cmbState').val(),
+                "cityId": $('#cmbCity').val(),
+                "regionId": $('#cmbRegion').val()
             }
         }
 
@@ -548,21 +552,21 @@
                                                ${lastname}
                                         </td>
                                         <td style="white-space: initial">
-                                            ${organization.title}
+                                            ${organizationTitle}
                                         </td>
                                         <td style="white-space: initial">
-                                            {{if state}}
-                                                ${state.title}
+                                            {{if stateId > 0}}
+                                                ${stateTitle}
                                             {{/if}}
                                         </td>
                                         <td style="white-space: initial">
-                                            {{if city}}
-                                                ${city.title}
+                                            {{if cityId > 0}}
+                                                ${cityTitle}
                                             {{/if}}
                                         </td>
                                         <td style="white-space: initial">
-                                            {{if region}}
-                                                ${region.title}
+                                            {{if regionId > 0}}
+                                                ${regionTitle}
                                             {{/if}}
                                         </td>
                                         <td style="white-space: initial">${mobile}</td>
@@ -580,6 +584,10 @@
                                             </div>
                                         </td>
                                     </tr>
+
+
+
+
 
 
 
@@ -702,13 +710,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-lg-2">
-                                <div class="form-group">
-                                    <label>شغل</label>
-                                    <select class="form-control" id="cmbJob"></select>
-                                </div>
-                            </div>
-                            <div class="col-lg-2">
+                            <div class="col-lg-4">
                                 <div class="form-group">
                                     <label>مدرک تحصیلی</label>
                                     <select class="form-control" id="cmbEducationLevel"></select>
@@ -768,14 +770,14 @@
                                         <select class="form-control" id="cmbCity" required=""></select>
                                     </div>
                                 </div>
-                                <div class="col-lg-4">
+                                <div class="col-lg-2">
                                     <div class="form-group">
                                         <label>منطقه/محله</label>
                                         <select class="form-control" id="cmbRegion" required=""
                                                 style="width: 100%"></select>
                                     </div>
                                 </div>
-                                <div class="col-lg-4">
+                                <div class="col-lg-6">
                                     <div class="form-group col-lg-12">
                                         <input type="hidden" id="hiddenFieldOrganizationId"/>
                                         <label>واحد سازمانی<span class="text-danger">*</span></label>

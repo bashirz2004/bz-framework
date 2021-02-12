@@ -136,5 +136,20 @@
     <orderEntry type="library" name="Maven: net.time4j:time4j-calendar:4.28" level="project" />
     <orderEntry type="library" name="Maven: net.time4j:time4j-core:4.28" level="project" />
     <orderEntry type="library" name="Maven: net.time4j:time4j-i18n:4.28" level="project" />
+    <orderEntry type="library" name="Maven: com.github.dozermapper:dozer-core:6.5.0" level="project" />
+    <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.9.3" level="project" />
+    <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.2" level="project" />
+    <orderEntry type="library" name="Maven: commons-io:commons-io:2.5" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.30" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:jcl-over-slf4j:1.7.30" level="project" />
+    <orderEntry type="library" name="Maven: org.objenesis:objenesis:2.6" level="project" />
+    <orderEntry type="library" name="Maven: org.glassfish.jaxb:jaxb-runtime:2.3.2" level="project" />
+    <orderEntry type="library" name="Maven: org.glassfish.jaxb:txw2:2.3.2" level="project" />
+    <orderEntry type="library" name="Maven: com.sun.istack:istack-commons-runtime:3.0.8" level="project" />
+    <orderEntry type="library" name="Maven: org.jvnet.staxex:stax-ex:1.8.1" level="project" />
+    <orderEntry type="library" name="Maven: com.sun.xml.fastinfoset:FastInfoset:1.2.16" level="project" />
+    <orderEntry type="library" name="Maven: com.github.dozermapper:dozer-spring-boot-starter:6.5.0" level="project" />
+    <orderEntry type="library" name="Maven: com.github.dozermapper:dozer-spring4:6.5.0" level="project" />
+    <orderEntry type="library" name="Maven: com.github.dozermapper:dozer-spring-boot-autoconfigure:6.5.0" level="project" />
   </component>
 </module>

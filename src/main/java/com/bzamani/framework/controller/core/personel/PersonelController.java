@@ -1,14 +1,15 @@
 package com.bzamani.framework.controller.core.personel;
 
 
+import com.bzamani.framework.common.config.dozermapper.ModelMapper;
 import com.bzamani.framework.controller.core.BaseController;
 import com.bzamani.framework.model.core.personel.Personel;
 import com.bzamani.framework.service.core.personel.IPersonelService;
+import com.bzamani.framework.viewmodel.core.personel.PersonelViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -19,24 +20,19 @@ public class PersonelController extends BaseController {
 
     @PreAuthorize("hasRole('9')")
     @PostMapping("/save")
-    public Personel save(@RequestBody Personel personel)  {
-        return iPersonelService.checkAndSave(personel);
+    public Personel save(@RequestBody PersonelViewModel personelViewModel) {
+        return iPersonelService.checkAndSave(ModelMapper.map(personelViewModel, Personel.class, true));
     }
 
     @PreAuthorize("hasRole('9')")
     @DeleteMapping("/delete/{id}")
-    public boolean delete(@PathVariable("id") long id)  {
+    public boolean delete(@PathVariable("id") long id) {
         return iPersonelService.checkAndDelete(id);
     }
 
     @GetMapping("/load/{id}")
-    public Personel load(@PathVariable("id") long id) {
-        return iPersonelService.loadByEntityId(id);
-    }
-
-    @GetMapping("/getAll")
-    public List<Personel> getAll(@RequestParam(defaultValue = "id,desc") String[] sort) {
-        return iPersonelService.getAll(sort);
+    public PersonelViewModel load(@PathVariable("id") long id) {
+        return ModelMapper.map(iPersonelService.loadByEntityId(id), PersonelViewModel.class);
     }
 
     @GetMapping("/searchPersonels")

@@ -77,6 +77,16 @@
             <artifactId>time4j-calendar</artifactId>
             <version>4.28</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.dozermapper</groupId>
+            <artifactId>dozer-core</artifactId>
+            <version>6.5.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.dozermapper</groupId>
+            <artifactId>dozer-spring-boot-starter</artifactId>
+            <version>6.5.0</version>
+        </dependency>
     </dependencies>
 
     <profiles>

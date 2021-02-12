@@ -1,5 +1,6 @@
 package com.bzamani.framework.service.impl.core.personel;
 
+import com.bzamani.framework.common.config.dozermapper.ModelMapper;
 import com.bzamani.framework.common.utility.SecurityUtility;
 import com.bzamani.framework.model.core.personel.Personel;
 import com.bzamani.framework.repository.core.personel.IPersonelRepository;
@@ -8,6 +9,7 @@ import com.bzamani.framework.service.core.organization.IOrganizationService;
 import com.bzamani.framework.service.core.personel.IPersonelService;
 import com.bzamani.framework.service.core.user.IUserService;
 import com.bzamani.framework.service.impl.core.GenericService;
+import com.bzamani.framework.viewmodel.core.personel.PersonelViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -95,7 +97,7 @@ public class PersonelService extends GenericService<Personel, Long> implements I
                 organizationId, pagingSort);
         personels = pageTuts.getContent();
         Map<String, Object> response = new HashMap<>();
-        response.put("entityList", personels);
+        response.put("entityList", ModelMapper.mapList(personels, PersonelViewModel.class));
         response.put("currentPage", pageTuts.getNumber());
         response.put("totalRecords", pageTuts.getTotalElements());
         response.put("totalPages", pageTuts.getTotalPages());
@@ -124,7 +126,7 @@ public class PersonelService extends GenericService<Personel, Long> implements I
                 organizationId, iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getId(), pagingSort);
         personels = pageTuts.getContent();
         Map<String, Object> response = new HashMap<>();
-        response.put("entityList", personels);
+        response.put("entityList", ModelMapper.mapList(personels, PersonelViewModel.class));
         response.put("currentPage", pageTuts.getNumber());
         response.put("totalRecords", pageTuts.getTotalElements());
         response.put("totalPages", pageTuts.getTotalPages());
