@@ -10,8 +10,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IPersonelRepository extends JpaRepository<Personel, Long> {
-    @Query("SELECT e FROM Personel e left join e.state s left join e.city c left join e.region r where 1 = 1  " +
+public interface IPersonelRepository extends JpaRepository<Personel, Long>,PersonelCustomRepository {
+   /* @Query("SELECT e FROM Personel e left join e.state s left join e.city c left join e.region r where 1 = 1  " +
             " and e.firstname like COALESCE(cast('%'||:firstname||'%' AS text), '%'||e.firstname)||'%'  " +
             " and e.lastname like COALESCE(cast('%'||:lastname||'%' AS text), '%'||e.lastname)||'%' " +
             " and case when e.mobile is null then 'foo' else e.mobile end like '%' || coalesce(cast( :mobile as text), case when e.mobile is null then 'foo' else e.mobile end) || '%'" +
@@ -20,7 +20,7 @@ public interface IPersonelRepository extends JpaRepository<Personel, Long> {
                                   @Param("lastname") String lastname,
                                   @Param("mobile") String mobile,
                                   @Param("organizationId") Long organizationId,
-                                  Pageable pageable);
+                                  Pageable pageable);*/
 
     @Query("SELECT e FROM Personel e left join e.state s left join e.city c left join e.region r where 1 = 1  " +
             " and e.firstname like COALESCE(cast('%'||:firstname||'%' AS text), '%'||e.firstname)||'%'  " +

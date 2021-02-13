@@ -37,7 +37,7 @@ spring:
             enable: true
 google:
   recaptcha:
-    enabled: true
+    enabled: false
     key:
       site: 6LfAqRYaAAAAADjef9Myz5oOGGa_1ykOGiHLLa6_
       secret: 6LfAqRYaAAAAAHw8W__o7I9hQtg9e1pMhjVto1M3
