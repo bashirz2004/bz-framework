@@ -6,26 +6,26 @@
     <title>لیست کلینیک ها</title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="/app/assets/img/favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.png">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="/app/assets/bzamani/bootstrap.css">
+    <link rel="stylesheet" href="/assets/bzamani/bootstrap.css">
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="/app/assets/admin/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/admin/css/font-awesome.min.css">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="/app/assets/bzamani/style-admin.css">
+    <link rel="stylesheet" href="/assets/bzamani/style-admin.css">
 
     <!--[if lt IE 9]>
-    <script src="/app/assets/js/html5shiv.min.js"></script>
-    <script src="/app/assets/js/respond.min.js"></script>
+    <script src="/assets/js/html5shiv.min.js"></script>
+    <script src="/assets/js/respond.min.js"></script>
     <![endif]-->
     <!-- jQuery -->
-    <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
+    <script src="/assets/bzamani/jquery-1.10.2.min.js"></script>
     <!-- fancybox -->
-    <script src="/app/assets/bzamani/components/fancybox/jquery.fancybox.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/fancybox/jquery.fancybox.css"/>
+    <script src="/assets/bzamani/components/fancybox/jquery.fancybox.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/fancybox/jquery.fancybox.css"/>
 
     <!-- pace mask -->
     <script>
@@ -50,8 +50,8 @@
             });
         });
     </script>
-    <script type="text/javascript" src="/app/assets/bzamani/components/pace/pace.min.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
+    <script type="text/javascript" src="/assets/bzamani/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
     <style>
         .pace-cover {
             position: fixed;
@@ -66,17 +66,17 @@
     <!-- /pace mask -->
 
     <!-- sweet alert -->
-    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
-    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/sweetalert/sweetalert2.min.css">
+    <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/sweetalert/sweetalert2.min.css">
     <!-- /sweet alert -->
 
-    <script src="/app/assets/bzamani/jquery.template.js"></script>
-    <script src="/app/assets/bzamani/grid-utility.js"></script>
-    <script src="/app/assets/bzamani/general-utility.js"></script>
+    <script src="/assets/bzamani/jquery.template.js"></script>
+    <script src="/assets/bzamani/grid-utility.js"></script>
+    <script src="/assets/bzamani/general-utility.js"></script>
 
     <script>
-        var contextPath = "/app";
+
         var emptyEntityData = {
             "id": '',
             "percent": '',
@@ -145,7 +145,7 @@
         function deleteEntity() {
             if ($('#hiddenFieldId').val() > 0)
                 $.ajax({
-                    url: contextPath + "/rest/clinic/delete/" + $('#hiddenFieldId').val(),
+                    url: "/rest/clinic/delete/" + $('#hiddenFieldId').val(),
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
                     type: 'DELETE',
@@ -175,7 +175,7 @@
         function loadEntity(id) {
             clearEntity();
             $.ajax({
-                url: contextPath + "/rest/clinic/load/" + id,
+                url: "/rest/clinic/load/" + id,
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 type: 'GET',
@@ -191,7 +191,7 @@
             if (validateForm() == 'ok') {
                 setEntityFromInputs();
                 $.ajax({
-                    url: contextPath + "/rest/clinic/save",
+                    url: "/rest/clinic/save",
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
                     data: JSON.stringify(entityData),
@@ -244,12 +244,12 @@
         }
 
         function refreshGrid() {
-            fillGrid('clinicTemplate', 'clinicList', contextPath + "/rest/clinic/searchClinic", searchFilters);
+            fillGrid('clinicTemplate', 'clinicList', "/rest/clinic/searchClinic", searchFilters);
         }
 
         function setImagePath(fileCode) {
             if (fileCode)
-                $('#image_full_size').attr("src", "/app/rest/core/file/download/" + fileCode + "/false");
+                $('#image_full_size').attr("src", "/rest/core/file/download/" + fileCode + "/false");
             else
                 $('#image_full_size').attr("src", "");
         }
@@ -334,7 +334,7 @@
                                             <h2 class="table-avatar">
                                                 <a href="#image_modal" data-toggle="modal" class="avatar avatar-sm mr-2"><img onclick="setImagePath('${organization.fileCode}')"
                                                         class="avatar-img rounded-circle"
-                                                        src={{if organization.fileCode!=null}}"/app/rest/core/file/download/${organization.fileCode}/false"{{/if}}
+                                                        src={{if organization.fileCode!=null}}"/rest/core/file/download/${organization.fileCode}/false"{{/if}}
                                                         alt="organization Image"></a>
                                             </h2>
                                         </td>
@@ -437,7 +437,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title text-white">افزودن / ویرایش کلینیک </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCloseModal"
-                            onclick="fillGrid('clinicTemplate', 'clinicList', contextPath + '/rest/clinic/searchClinic', searchFilters)">
+                            onclick="fillGrid('clinicTemplate', 'clinicList', '/rest/clinic/searchClinic', searchFilters)">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -454,7 +454,7 @@
                                         <input disabled type="text" class="form-control" id="txtOrganizationTitle">
                                         <button class="btn btn-primary form-control"
                                                 style="width: 3rem"
-                                                onclick="viewFancyBox('/app/view/core/organization/organizationSelectAuthorize.html','90%','90%')">
+                                                onclick="viewFancyBox('/view/core/organization/organizationSelectAuthorize.html','90%','90%')">
                                             000
                                         </button>
                                     </div>
@@ -539,7 +539,7 @@
 <!-- /Page Wrapper -->
 
 <!-- Bootstrap Core JS -->
-<script src="/app/assets/bzamani/bootstrap.min.js"></script>
+<script src="/assets/bzamani/bootstrap.min.js"></script>
 
 </body>
 </html>

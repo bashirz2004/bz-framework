@@ -1,7 +1,5 @@
 server:
   port: 80
-  servlet:
-    context-path: /app
 spring:
   banner:
     image:

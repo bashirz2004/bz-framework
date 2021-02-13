@@ -6,30 +6,30 @@
     <title>لیست افراد</title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="/app/assets/img/favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.png">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="/app/assets/bzamani/bootstrap.css">
+    <link rel="stylesheet" href="/assets/bzamani/bootstrap.css">
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="/app/assets/admin/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/admin/css/font-awesome.min.css">
 
     <!-- Select2 CSS -->
-    <link rel="stylesheet" href="/app/assets/bzamani/select2.min.css">
+    <link rel="stylesheet" href="/assets/bzamani/select2.min.css">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="/app/assets/bzamani/style-admin.css">
+    <link rel="stylesheet" href="/assets/bzamani/style-admin.css">
 
     <!--[if lt IE 9]>
-    <script src="/app/assets/js/html5shiv.min.js"></script>
-    <script src="/app/assets/js/respond.min.js"></script>
+    <script src="/assets/js/html5shiv.min.js"></script>
+    <script src="/assets/js/respond.min.js"></script>
     <![endif]-->
 
     <!-- jQuery -->
-    <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
+    <script src="/assets/bzamani/jquery-1.10.2.min.js"></script>
     <!-- fancybox -->
-    <script src="/app/assets/bzamani/components/fancybox/jquery.fancybox.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/fancybox/jquery.fancybox.css"/>
+    <script src="/assets/bzamani/components/fancybox/jquery.fancybox.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/fancybox/jquery.fancybox.css"/>
 
     <!-- pace mask -->
     <script>
@@ -54,8 +54,8 @@
             });
         });
     </script>
-    <script type="text/javascript" src="/app/assets/bzamani/components/pace/pace.min.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
+    <script type="text/javascript" src="/assets/bzamani/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
     <style>
         .pace-cover {
             position: fixed;
@@ -70,17 +70,17 @@
     <!-- /pace mask -->
 
     <!-- sweet alert -->
-    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
-    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/sweetalert/sweetalert2.min.css">
+    <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/sweetalert/sweetalert2.min.css">
     <!-- /sweet alert -->
 
-    <script src="/app/assets/bzamani/jquery.template.js"></script>
-    <script src="/app/assets/bzamani/grid-utility.js"></script>
-    <script src="/app/assets/bzamani/general-utility.js"></script>
+    <script src="/assets/bzamani/jquery.template.js"></script>
+    <script src="/assets/bzamani/grid-utility.js"></script>
+    <script src="/assets/bzamani/general-utility.js"></script>
 
     <script>
-        var contextPath = "/app";
+
         var emptyEntityData = {
             "id": '',
             "male": '',
@@ -157,7 +157,7 @@
         function fillComboCity(stateId, callBackFunction) {
             $.ajax({
                 type: "GET",
-                url: contextPath + "/api/public/baseinfo/getAllByParentId/" + stateId,
+                url: "/api/public/baseinfo/getAllByParentId/" + stateId,
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 success: function (res) {
@@ -177,7 +177,7 @@
         function fillComboRegion(cityId, callBackFunction) {
             $.ajax({
                 type: "GET",
-                url: contextPath + "/api/public/baseinfo/getAllByParentId/" + cityId,
+                url: "/api/public/baseinfo/getAllByParentId/" + cityId,
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 success: function (res) {
@@ -236,7 +236,7 @@
         function deleteEntity() {
             if ($('#hiddenFieldId').val() > 0)
                 $.ajax({
-                    url: contextPath + "/rest/core/personel/delete/" + $('#hiddenFieldId').val(),
+                    url: "/rest/core/personel/delete/" + $('#hiddenFieldId').val(),
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
                     type: 'DELETE',
@@ -256,7 +256,7 @@
         }
 
         function refreshGrid() {
-            fillGrid('personelTemplate', 'personelList', contextPath + "/rest/core/personel/searchPersonels", searchFilters);
+            fillGrid('personelTemplate', 'personelList', "/rest/core/personel/searchPersonels", searchFilters);
         }
 
         function rowSelected(id) {
@@ -270,7 +270,7 @@
         function loadEntity(id) {
             clearEntity();
             $.ajax({
-                url: contextPath + "/rest/core/personel/load/" + id,
+                url: "/rest/core/personel/load/" + id,
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 type: 'GET',
@@ -286,7 +286,7 @@
             if (validateForm() == 'ok') {
                 setEntityFromInputs();
                 $.ajax({
-                    url: contextPath + "/rest/core/personel/save",
+                    url: "/rest/core/personel/save",
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
                     data: JSON.stringify(entityData),
@@ -336,7 +336,7 @@
             $("#txtAddress").val(entity.address);
             $("#txtTelephone").val(entity.telephone);
             if (entity.fileCode != null && entity.fileCode.length > 0) {
-                $('#uploadedImage').prop("src", "/app/rest/core/file/download/" + entity.fileCode + "/false");
+                $('#uploadedImage').prop("src", "/rest/core/file/download/" + entity.fileCode + "/false");
                 $("#hiddenFieldFileCode").val(entity.fileCode);
             } else {
                 $('#uploadedImage').prop("src", "");
@@ -394,7 +394,7 @@
 
         function uploadFile() {
             $.ajax({
-                url: contextPath + "/rest/core/file/upload",
+                url: "/rest/core/file/upload",
                 type: "POST",
                 data: new FormData($("#upload-file-form")[0]),
                 enctype: 'multipart/form-data',
@@ -404,7 +404,7 @@
                 dataType: "text",
                 success: function (fileCode) {
                     if (fileCode != null && fileCode.length > 0) {
-                        $('#uploadedImage').prop("src", "/app/rest/core/file/download/" + fileCode + "/false");
+                        $('#uploadedImage').prop("src", "/rest/core/file/download/" + fileCode + "/false");
                         $('#hiddenFieldFileCode').val(fileCode);
                         $('.submit-btn').show();
                     }
@@ -417,7 +417,7 @@
         }
 
         function setImagePath(fileCode) {
-            $('#image_full_size').attr("src", "/app/rest/core/file/download/" + fileCode + "/false");
+            $('#image_full_size').attr("src", "/rest/core/file/download/" + fileCode + "/false");
         }
 
         function setOrganization(id, title) {
@@ -480,7 +480,7 @@
                                placeholder="واحد سازمانی ...">
                         <button class="btn btn-primary form-control"
                                 style="width: 3rem"
-                                onclick="viewFancyBox('/app/view/core/organization/organizationSelectAuthorize.html?isSearch=true','70%','90%')">
+                                onclick="viewFancyBox('/view/core/organization/organizationSelectAuthorize.html?isSearch=true','70%','90%')">
                             000
                         </button>
                     </div>
@@ -539,9 +539,9 @@
                                             <h2 class="table-avatar">
                                                 <a href="#image_modal" data-toggle="modal" class="avatar avatar-sm mr-2"><img onclick="setImagePath('${fileCode}')"
                                                         class="avatar-img rounded-circle"
-                                                        src={{if male && fileCode==null}}"/app/assets/img/man.png"{{/if}}
-                                                            {{if !male && fileCode==null}}"/app/assets/img/woman.png"{{/if}}
-                                                            {{if fileCode!=null}}"/app/rest/core/file/download/${fileCode}/false"{{/if}}
+                                                        src={{if male && fileCode==null}}"/assets/img/man.png"{{/if}}
+                                                            {{if !male && fileCode==null}}"/assets/img/woman.png"{{/if}}
+                                                            {{if fileCode!=null}}"/rest/core/file/download/${fileCode}/false"{{/if}}
                                                         alt="User Image"></a>
                                             </h2>
                                         </td>
@@ -672,7 +672,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title text-white">افزودن / ویرایش فرد </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCloseModal"
-                            onclick="fillGrid('personelTemplate', 'personelList', contextPath + '/rest/core/personel/searchPersonels', searchFilters)">
+                            onclick="fillGrid('personelTemplate', 'personelList', '/rest/core/personel/searchPersonels', searchFilters)">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -786,7 +786,7 @@
                                                    required="">
                                             <button class="btn btn-primary form-control"
                                                     style="width: 3rem"
-                                                    onclick="viewFancyBox('/app/view/core/organization/organizationSelectAuthorize.html','70%','90%')">
+                                                    onclick="viewFancyBox('/view/core/organization/organizationSelectAuthorize.html','70%','90%')">
                                                 000
                                             </button>
                                         </div>
@@ -893,10 +893,10 @@
 <!-- /Page Wrapper -->
 
 <!-- Bootstrap Core JS -->
-<script src="/app/assets/bzamani/bootstrap.min.js"></script>
+<script src="/assets/bzamani/bootstrap.min.js"></script>
 
 <!-- Select2 JS -->
-<script src="/app/assets/bzamani/select2.min.js"></script>
+<script src="/assets/bzamani/select2.min.js"></script>
 
 </body>
 </html>

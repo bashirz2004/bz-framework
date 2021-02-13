@@ -6,22 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
 
     <!-- Favicons -->
-    <link href="/app/assets/img/favicon.png" rel="icon">
+    <link href="/assets/img/favicon.png" rel="icon">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="/app/assets/bzamani/bootstrap.css">
+    <link rel="stylesheet" href="/assets/bzamani/bootstrap.css">
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="/app/assets/admin/plugins/fontawesome/css/fontawesome.min.css">
-    <link rel="stylesheet" href="/app/assets/plugins/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="/assets/admin/plugins/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/assets/plugins/fontawesome/css/all.min.css">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="/app/assets/bzamani/style-admin.css">
+    <link rel="stylesheet" href="/assets/bzamani/style-admin.css">
 
     <!-- jQuery -->
-    <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
-    <script src="/app/assets/bzamani/jquery.template.js"></script>
-    <script src="/app/assets/bzamani/general-utility.js"></script>
+    <script src="/assets/bzamani/jquery-1.10.2.min.js"></script>
+    <script src="/assets/bzamani/jquery.template.js"></script>
+    <script src="/assets/bzamani/general-utility.js"></script>
 
     <!-- pace mask -->
     <script>
@@ -46,8 +46,8 @@
             });
         });
     </script>
-    <script type="text/javascript" src="/app/assets/bzamani/components/pace/pace.min.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
+    <script type="text/javascript" src="/assets/bzamani/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
     <style>
         .pace-cover {
             position: fixed;
@@ -62,13 +62,13 @@
     <!-- /pace mask -->
 
     <!-- sweet alert -->
-    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
-    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/sweetalert/sweetalert2.min.css">
+    <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/sweetalert/sweetalert2.min.css">
     <!-- /sweet alert -->
 
     <script>
-        var contextPath = "/app";
+
         var postId = getUrlParameter("postId");
         var searchFilters = {
             "postId": postId,
@@ -92,7 +92,7 @@
 
         function loadPost(id) {
             $.ajax({
-                url: contextPath + "/api/public/portal/post/load/" + id,
+                url: "/api/public/portal/post/load/" + id,
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 type: 'GET',
@@ -109,7 +109,7 @@
 
 
         function getAllCommentsByPostId() {
-            $.getJSON(contextPath + "/rest/portal/comment/getAllCommentsByPostId", searchFilters, function (res) {
+            $.getJSON("/rest/portal/comment/getAllCommentsByPostId", searchFilters, function (res) {
                 $('#lblAllCommentsCount').html(res.totalRecords);
                 $("#commentsList > li").remove();
                 $("#commentsTemplate").tmpl(res.entityList).appendTo("#commentsList");
@@ -118,7 +118,7 @@
 
         function confirmComment(id, status) {
             $.ajax({
-                url: contextPath + "/rest/portal/comment/changeStatus/" + id + "/" + status,
+                url: "/rest/portal/comment/changeStatus/" + id + "/" + status,
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 type: 'POST',
@@ -142,7 +142,7 @@
         function deleteComment(id) {
             showConfirm('تاییدیه حذف نظر', 'آیا از این کار اطمینان دارید؟', function () {
                 $.ajax({
-                    url: contextPath + "/rest/portal/comment/delete/" + id,
+                    url: "/rest/portal/comment/delete/" + id,
                     type: 'DELETE',
                     contentType: 'application/json; charset=utf-8',
                     success: function (res) {
@@ -173,8 +173,8 @@
                                 <div class="blog blog-single-post">
                                     <div class="text-center">
                                         <a href="javascript:void(0);">
-                                        <img src={{if fileCode!=null}}"/app/rest/core/file/download/${fileCode}/false" style="max-width: 100%"
-                                                 {{else}}"/app/assets/img/3.png"
+                                        <img src={{if fileCode!=null}}"/rest/core/file/download/${fileCode}/false" style="max-width: 100%"
+                                                 {{else}}"/assets/img/3.png"
                                                  {{/if}}
                                              alt="post Image"></a>
                                     </div>
@@ -184,9 +184,9 @@
                                             <ul>
                                                 <li>
                                                     <div class="post-author">
-                                                        <a href="javascript:void(0);"><img src= {{if author.male && author.fileCode==null}}"/app/assets/img/man.png"{{/if}}
-                                                              {{if !author.male && author.fileCode==null}}"/app/assets/img/woman.png"{{/if}}
-                                                              {{if author.fileCode!=null}}"/app/rest/core/file/download/${author.fileCode}/false"{{/if}}
+                                                        <a href="javascript:void(0);"><img src= {{if author.male && author.fileCode==null}}"/assets/img/man.png"{{/if}}
+                                                              {{if !author.male && author.fileCode==null}}"/assets/img/woman.png"{{/if}}
+                                                              {{if author.fileCode!=null}}"/rest/core/file/download/${author.fileCode}/false"{{/if}}
                                                                alt="Post Author"><span>${author.firstname} ${author.lastname}</span></a>
                                                     </div>
                                                 </li>
@@ -236,9 +236,9 @@
                                         <li>
                                             <div class="comment">
                                                 <div class="comment-author">
-                                                    <img class="avatar" src= {{if commenter.male && commenter.fileCode==null}}"/app/assets/img/man.png"{{/if}}
-                                                         {{if !commenter.male && commenter.fileCode==null}}"/app/assets/img/woman.png"{{/if}}
-                                                         {{if commenter.fileCode!=null}}"/app/rest/core/file/download/${commenter.fileCode}/false"{{/if}}
+                                                    <img class="avatar" src= {{if commenter.male && commenter.fileCode==null}}"/assets/img/man.png"{{/if}}
+                                                         {{if !commenter.male && commenter.fileCode==null}}"/assets/img/woman.png"{{/if}}
+                                                         {{if commenter.fileCode!=null}}"/rest/core/file/download/${commenter.fileCode}/false"{{/if}}
                                                          alt="commenter image">
                                                 </div>
                                                 <div class="comment-block float-left">
@@ -301,13 +301,13 @@
 
 
 <!-- Bootstrap Core JS -->
-<script src="/app/assets/admin/chart/popper.min.js"></script>
+<script src="/assets/admin/chart/popper.min.js"></script>
 
 <!-- Bootstrap Core JS -->
-<script src="/app/assets/bzamani/bootstrap.min.js"></script>
+<script src="/assets/bzamani/bootstrap.min.js"></script>
 
 <!-- Custom JS -->
-<script src="/app/assets/admin/chart/script.js"></script>
+<script src="/assets/admin/chart/script.js"></script>
 
 </body>
 </html>

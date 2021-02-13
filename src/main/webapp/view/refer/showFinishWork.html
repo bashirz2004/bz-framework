@@ -6,24 +6,24 @@
     <title>ثبت پایان کار بیمار در کلینیک</title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="/app/assets/img/favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.png">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="/app/assets/bzamani/bootstrap.css">
+    <link rel="stylesheet" href="/assets/bzamani/bootstrap.css">
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="/app/assets/admin/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/admin/css/font-awesome.min.css">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="/app/assets/bzamani/style-admin.css">
+    <link rel="stylesheet" href="/assets/bzamani/style-admin.css">
 
     <!--[if lt IE 9]>
-    <script src="/app/assets/js/html5shiv.min.js"></script>
-    <script src="/app/assets/js/respond.min.js"></script>
+    <script src="/assets/js/html5shiv.min.js"></script>
+    <script src="/assets/js/respond.min.js"></script>
     <![endif]-->
 
     <!-- jQuery -->
-    <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
+    <script src="/assets/bzamani/jquery-1.10.2.min.js"></script>
 
     <!-- pace mask -->
     <script>
@@ -48,8 +48,8 @@
             });
         });
     </script>
-    <script type="text/javascript" src="/app/assets/bzamani/components/pace/pace.min.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
+    <script type="text/javascript" src="/assets/bzamani/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
     <style>
         .pace-cover {
             position: fixed;
@@ -64,26 +64,26 @@
     <!-- /pace mask -->
 
     <!-- sweet alert -->
-    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
-    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/sweetalert/sweetalert2.min.css">
+    <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/sweetalert/sweetalert2.min.css">
     <!-- /sweet alert -->
 
     <!-- datepicker  -->
-    <script src="/app/assets/bzamani/components/datepicker/persian-date.js"></script>
-    <script src="/app/assets/bzamani/components/datepicker/persian-datepicker.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/datepicker/persian-datepicker.css">
+    <script src="/assets/bzamani/components/datepicker/persian-date.js"></script>
+    <script src="/assets/bzamani/components/datepicker/persian-datepicker.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/datepicker/persian-datepicker.css">
     <!-- /datepicker  -->
 
     <!-- thousand separator onKeyup of text box and textArea  -->
-    <script src="/app/assets/bzamani/simple.money.format.js"></script>
+    <script src="/assets/bzamani/simple.money.format.js"></script>
     <!-- /thousand separator onKeyup of text box and textArea  -->
 
-    <script src="/app/assets/bzamani/jquery.template.js"></script>
-    <script src="/app/assets/bzamani/general-utility.js"></script>
+    <script src="/assets/bzamani/jquery.template.js"></script>
+    <script src="/assets/bzamani/general-utility.js"></script>
 
     <script>
-        var contextPath = "/app";
+
         var referId = getUrlParameter("referId");
         var referShamsiDate = getUrlParameter("referShamsiDate");
         var clinic = getUrlParameter("clinic");
@@ -130,7 +130,7 @@
 
 
                 $.ajax({
-                    url: contextPath + "/rest/refer/finishWork",
+                    url: "/rest/refer/finishWork",
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
                     data: JSON.stringify(params),
@@ -161,13 +161,13 @@
         }
 
         function getClinicPercent() {
-            $.getJSON(contextPath + "/rest/refer/getClinicPercent/" + referId, function (percent) {
+            $.getJSON("/rest/refer/getClinicPercent/" + referId, function (percent) {
                 $('#txtPercent').val(percent);
             });
         }
 
         function getCurrentDateShamsi() {
-            $.get(contextPath + "/api/public/getCurrentDateShamsi", function (res) {
+            $.get("/api/public/getCurrentDateShamsi", function (res) {
                 $('#txtFinishDateShamsi').val(res);
             });
         }
@@ -238,7 +238,7 @@
     </div>
 </div>
 <!-- Bootstrap Core JS -->
-<script src="/app/assets/bzamani/bootstrap.min.js"></script>
+<script src="/assets/bzamani/bootstrap.min.js"></script>
 
 </body>
 </html>

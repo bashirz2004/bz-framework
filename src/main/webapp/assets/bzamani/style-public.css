@@ -505,26 +505,26 @@ a.bg-danger:focus, a.bg-danger:hover, button.bg-danger:focus, button.bg-danger:h
     border: 1px solid #09dca4;
 }
 
-.btn-primary.active /app/ assets
+.btn-primary.active / assets
 
 /
 :disabled
 
 )
-/app/ assets
+/ assets
 
 /
 .disabled
 
 )
 ,
-.btn-primary:active /app/ assets
+.btn-primary:active / assets
 
 /
 :disabled
 
 )
-/app/ assets
+/ assets
 
 /
 .disabled
@@ -537,26 +537,26 @@ a.bg-danger:focus, a.bg-danger:hover, button.bg-danger:focus, button.bg-danger:h
     color: #fff;
 }
 
-.btn-primary.active:focus /app/ assets
+.btn-primary.active:focus / assets
 
 /
 :disabled
 
 )
-/app/ assets
+/ assets
 
 /
 .disabled
 
 )
 ,
-.btn-primary:active:focus /app/ assets
+.btn-primary:active:focus / assets
 
 /
 :disabled
 
 )
-/app/ assets
+/ assets
 
 /
 .disabled

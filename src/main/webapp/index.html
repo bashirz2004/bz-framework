@@ -24,11 +24,11 @@
     <script src="assets/js/html5shiv.min.js"></script>
     <script src="assets/js/respond.min.js"></script>
     <![endif]-->
-    <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
+    <script src="/assets/bzamani/jquery-1.10.2.min.js"></script>
     <script src="assets/bzamani/jquery.template.js"></script>
     <script src="assets/bzamani/propper.min.js"></script>
     <script>
-        var contextPath = "/app";
+
         $(function () {
             saveSiteVisitor();
             getCountOfVisitors();
@@ -45,7 +45,7 @@
 
         function saveSiteVisitor() {
             $.ajax({
-                url: contextPath + "/api/public/statistics/saveSiteVisitor",
+                url: "/api/public/statistics/saveSiteVisitor",
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 type: 'POST',
@@ -59,7 +59,7 @@
         }
 
         function getCountOfVisitors() {
-            $.getJSON(contextPath + "/api/public/statistics/getCountOfVisitors", {"fromDateShamsi": '', "toDateShamsi": ''}, function (counter) {
+            $.getJSON("/api/public/statistics/getCountOfVisitors", {"fromDateShamsi": '', "toDateShamsi": ''}, function (counter) {
                 $('#visitCounter').html(counter);
             });
         }
@@ -75,7 +75,7 @@
                 "page": 0,
                 "size": 6
             };
-            $.getJSON(contextPath + "/api/public/clinic/searchClinic", searchFilter, function (entities) {
+            $.getJSON("/api/public/clinic/searchClinic", searchFilter, function (entities) {
                 $('#clinics-template').tmpl(entities.entityList).prependTo('#clinics-list');
             });
         }
@@ -86,13 +86,13 @@
                 "page": 0,
                 "size": 6
             };
-            $.getJSON(contextPath + "/api/public/doctor/searchDoctors", searchFilter, function (entities) {
+            $.getJSON("/api/public/doctor/searchDoctors", searchFilter, function (entities) {
                 $('#doctors-template').tmpl(entities.entityList).prependTo('#doctors-list');
             });
         }
 
         function load4RecentPosts() {
-            $.getJSON(contextPath + "/api/public/portal/post/get4RecentPosts", {
+            $.getJSON("/api/public/portal/post/get4RecentPosts", {
                 "sort": "lastUpdateDate,desc",
                 "page": 0,
                 "size": 4
@@ -250,7 +250,7 @@
                                  <img class="col-lg-12 col-md-12 col-sm-12 float-left img-fluid"
                                              alt="Clinic Image"
                                              style="border-radius:30px;padding:20px;max-width:100%;max-height:100%"
-                                              src={{if organization.fileCode!=null}}"/app/rest/core/file/download/${organization.fileCode}/false"{{/if}}
+                                              src={{if organization.fileCode!=null}}"/rest/core/file/download/${organization.fileCode}/false"{{/if}}
                                              />
                                         <span class="col-lg-12 col-md-12 col-sm-12 float-left">
                                             ${organization.title}
@@ -285,9 +285,9 @@
                                  <img class="col-lg-12 col-md-12 col-sm-12 float-left"
                                              alt="User Image"
                                              style="border-radius: 2em;padding:1em;max-width:100%;max-height:100%"
-                                              src={{if personel.male && personel.fileCode==null}}"/app/assets/img/man.png"{{/if}}
-                                                            {{if !personel.male && personel.fileCode==null}}"/app/assets/img/woman.png"{{/if}}
-                                                            {{if personel.fileCode!=null}}"/app/rest/core/file/download/${personel.fileCode}/false"{{/if}}
+                                              src={{if personel.male && personel.fileCode==null}}"/assets/img/man.png"{{/if}}
+                                                            {{if !personel.male && personel.fileCode==null}}"/assets/img/woman.png"{{/if}}
+                                                            {{if personel.fileCode!=null}}"/rest/core/file/download/${personel.fileCode}/false"{{/if}}
                                              />
                                         <span class="col-lg-12 col-md-12 col-sm-12 float-left">
                                             ${personel.firstname} ${personel.lastname}
@@ -354,8 +354,8 @@
                     <div class="blog grid-blog">
                         <div class="blog-image">
                             <a href="showPostDetail.html?postId=${id}"><img class="img-fluid" style="width: 25em;height:13em"
-                                             src={{if fileCode!=null}}"/app/rest/core/file/download/${fileCode}/false"
-                                                 {{else}}"/app/assets/img/3.png"
+                                             src={{if fileCode!=null}}"/rest/core/file/download/${fileCode}/false"
+                                                 {{else}}"/assets/img/3.png"
                                                  {{/if}}
                                              alt="post Image"></a>
                         </div>
@@ -363,9 +363,9 @@
                             <ul class="entry-meta meta-item">
                                 <li>
                                     <div class="post-author">
-                                        <a ><img src= {{if author.male && author.fileCode==null}}"/app/assets/img/man.png"{{/if}}
-                                                              {{if !author.male && author.fileCode==null}}"/app/assets/img/woman.png"{{/if}}
-                                                              {{if author.fileCode!=null}}"/app/rest/core/file/download/${author.fileCode}/false"{{/if}}
+                                        <a ><img src= {{if author.male && author.fileCode==null}}"/assets/img/man.png"{{/if}}
+                                                              {{if !author.male && author.fileCode==null}}"/assets/img/woman.png"{{/if}}
+                                                              {{if author.fileCode!=null}}"/rest/core/file/download/${author.fileCode}/false"{{/if}}
                                                                alt="Post Author">
                                             <span style="color:black">${author.firstname} ${author.lastname}</span></a>
                                     </div>

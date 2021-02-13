@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,13 +40,20 @@ public class PersonelCustomRepositoryImpl implements PersonelCustomRepository {
         }
         if (organizationId != null && organizationId > 0L) {
             hql += " and e.organization.id = :organizationId ";
-            parameters.put("organizationId",  organizationId );
+            parameters.put("organizationId", organizationId);
+        }
+        if (!pageable.getSort().isEmpty()) {
+            hql += " order by " + pageable.getSort().get().findFirst().get().getProperty() + " " + pageable.getSort().get().findFirst().get().getDirection();
         }
 
         Query query = entityManager.createQuery(hql);
         parameters.entrySet().iterator().forEachRemaining(a -> {
             query.setParameter(a.getKey(), a.getValue());
         });
-        return new PageImpl<>(query.getResultList());
+
+        query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
+        query.setMaxResults(query.getResultList().size());
+
+        return new PageImpl<Personel>(query.getResultList(), pageable, query.getResultList().size());
     }
 }

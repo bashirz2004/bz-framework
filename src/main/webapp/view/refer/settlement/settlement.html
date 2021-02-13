@@ -6,26 +6,26 @@
     <title>تسویه حساب با کلینیک ها</title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="/app/assets/img/favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.png">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="/app/assets/bzamani/bootstrap.css">
+    <link rel="stylesheet" href="/assets/bzamani/bootstrap.css">
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="/app/assets/admin/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/admin/css/font-awesome.min.css">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="/app/assets/bzamani/style-admin.css">
+    <link rel="stylesheet" href="/assets/bzamani/style-admin.css">
 
     <!--[if lt IE 9]>
-    <script src="/app/assets/js/html5shiv.min.js"></script>
-    <script src="/app/assets/js/respond.min.js"></script>
+    <script src="/assets/js/html5shiv.min.js"></script>
+    <script src="/assets/js/respond.min.js"></script>
     <![endif]-->
     <!-- jQuery -->
-    <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
+    <script src="/assets/bzamani/jquery-1.10.2.min.js"></script>
     <!-- fancybox -->
-    <script src="/app/assets/bzamani/components/fancybox/jquery.fancybox.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/fancybox/jquery.fancybox.css"/>
+    <script src="/assets/bzamani/components/fancybox/jquery.fancybox.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/fancybox/jquery.fancybox.css"/>
 
     <!-- pace mask -->
     <script>
@@ -50,8 +50,8 @@
             });
         });
     </script>
-    <script type="text/javascript" src="/app/assets/bzamani/components/pace/pace.min.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
+    <script type="text/javascript" src="/assets/bzamani/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
     <style>
         .pace-cover {
             position: fixed;
@@ -66,27 +66,27 @@
     <!-- /pace mask -->
 
     <!-- sweet alert -->
-    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
-    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/sweetalert/sweetalert2.min.css">
+    <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/sweetalert/sweetalert2.min.css">
     <!-- /sweet alert -->
 
     <!-- datepicker  -->
-    <script src="/app/assets/bzamani/components/datepicker/persian-date.js"></script>
-    <script src="/app/assets/bzamani/components/datepicker/persian-datepicker.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/datepicker/persian-datepicker.css">
+    <script src="/assets/bzamani/components/datepicker/persian-date.js"></script>
+    <script src="/assets/bzamani/components/datepicker/persian-datepicker.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/datepicker/persian-datepicker.css">
     <!-- /datepicker  -->
 
     <!-- thousand separator onKeyup of text box and textArea  -->
-    <script src="/app/assets/bzamani/simple.money.format.js"></script>
+    <script src="/assets/bzamani/simple.money.format.js"></script>
     <!-- /thousand separator onKeyup of text box and textArea  -->
 
-    <script src="/app/assets/bzamani/jquery.template.js"></script>
-    <script src="/app/assets/bzamani/grid-utility.js"></script>
-    <script src="/app/assets/bzamani/general-utility.js"></script>
+    <script src="/assets/bzamani/jquery.template.js"></script>
+    <script src="/assets/bzamani/grid-utility.js"></script>
+    <script src="/assets/bzamani/general-utility.js"></script>
 
     <script>
-        var contextPath = "/app";
+
 
         var emptyEntityData = {
             "id": '',
@@ -179,7 +179,7 @@
         function deleteEntity() {
             if ($('#hiddenFieldId').val() > 0)
                 $.ajax({
-                    url: contextPath + "/rest/refer/settlement/delete/" + $('#hiddenFieldId').val(),
+                    url: "/rest/refer/settlement/delete/" + $('#hiddenFieldId').val(),
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
                     type: 'DELETE',
@@ -209,7 +209,7 @@
         function loadEntity(id) {
             clearEntity();
             $.ajax({
-                url: contextPath + "/rest/refer/settlement/load/" + id,
+                url: "/rest/refer/settlement/load/" + id,
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 type: 'GET',
@@ -225,7 +225,7 @@
             if (validateForm() == 'ok') {
                 setEntityFromInputs();
                 $.ajax({
-                    url: contextPath + "/rest/refer/settlement/save",
+                    url: "/rest/refer/settlement/save",
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
                     data: JSON.stringify(entityData),
@@ -269,7 +269,7 @@
         }
 
         function getCurrentDateShamsi() {
-            $.get(contextPath + "/api/public/getCurrentDateShamsi", function (res) {
+            $.get("/api/public/getCurrentDateShamsi", function (res) {
                 $('#txtSettlementDateShamsi').val(res);
             });
         }
@@ -295,7 +295,7 @@
         }
 
         function refreshGrid() {
-            fillGrid('settlementTemplate', 'settlementList', contextPath + "/rest/refer/settlement/searchSettlement", searchFilters);
+            fillGrid('settlementTemplate', 'settlementList', "/rest/refer/settlement/searchSettlement", searchFilters);
         }
 
         function showRefers(settlementId,confirmed) {
@@ -307,7 +307,7 @@
         function confirmSettlement(id) {
             showConfirm('تاییدیه تسویه حساب با کلینیک ', 'پس از تایید، ارجاعات مربوطه به حالت تسویه شده در می آیند و دیگر امکان اصلاح وجود ندارد. آیا از انجام این کار اطمینان کافی دارید؟', function () {
                 $.ajax({
-                    url: contextPath + "/rest/refer/settlement/confirm/" + id,
+                    url: "/rest/refer/settlement/confirm/" + id,
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
                     type: 'POST',
@@ -382,7 +382,7 @@
                     <div style="display: flex;white-space: nowrap">
                         <input type="text" class="form-control searchFilter" id="txtClinicTitleInSearch"
                                placeholder="فیلتر براساس کلینیک ..."
-                               onclick="viewFancyBox('/app/view/clinic/clinicSelect.html?isSearch=true','100%','90%')">
+                               onclick="viewFancyBox('/view/clinic/clinicSelect.html?isSearch=true','100%','90%')">
                     </div>
                 </div>
                 <div class="float-left col-lg-2 col-xl-2">
@@ -544,7 +544,7 @@
                                         <input disabled type="text" class="form-control" id="txtClinicTitle">
                                         <button class="btn btn-primary form-control"
                                                 style="width: 3rem"
-                                                onclick="viewFancyBox('/app/view/clinic/clinicSelect.html','100%','90%')">
+                                                onclick="viewFancyBox('/view/clinic/clinicSelect.html','100%','90%')">
                                             000
                                         </button>
                                     </div>
@@ -616,7 +616,7 @@
 <!-- /Page Wrapper -->
 
 <!-- Bootstrap Core JS -->
-<script src="/app/assets/bzamani/bootstrap.min.js"></script>
+<script src="/assets/bzamani/bootstrap.min.js"></script>
 
 </body>
 </html>

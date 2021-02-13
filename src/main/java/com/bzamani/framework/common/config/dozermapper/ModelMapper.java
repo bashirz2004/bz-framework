@@ -4,7 +4,6 @@ import com.bzamani.framework.model.core.BaseEntity;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.dozermapper.core.DozerBeanMapper;
 import com.github.dozermapper.core.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,9 +17,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * @author azizkhani
- */
 @Component
 public class ModelMapper {
 
@@ -32,16 +28,7 @@ public class ModelMapper {
     }
 
     public static Mapper getMapper() {
-
-        //if (mapper != null)
-            return mapper;
-/*
-        try {
-            mapper = new DozerBeanMapper();
-        } catch (Exception ex) {
-            mapper = null;
-        }
-        return mapper;*/
+        return mapper;
     }
 
     public static <T, U> U map(T source, final Class<U> destType) {

@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <title>نمودارها</title>
     <!-- jQuery -->
-    <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
+    <script src="/assets/bzamani/jquery-1.10.2.min.js"></script>
 
-    <script src="/app/view/core/charts/js/highcharts.js"></script>
-    <script src="/app/view/core/charts/js/exporting.js"></script>
-    <script src="/app/view/core/charts/js/export-data.js"></script>
-    <script src="/app/view/core/charts/js/accessibility.js"></script>
+    <script src="/view/core/charts/js/highcharts.js"></script>
+    <script src="/view/core/charts/js/exporting.js"></script>
+    <script src="/view/core/charts/js/export-data.js"></script>
+    <script src="/view/core/charts/js/accessibility.js"></script>
 
     <style>
         .highcharts-figure, .highcharts-data-table table {
@@ -19,7 +19,7 @@
         }
     </style>
     <script>
-        var contextPath = "/app";
+
         $(function () {
             fillChart1()
             fillChart2();
@@ -43,7 +43,7 @@
 
         function fillChart1() {
             let chartData = [];
-            $.getJSON(contextPath + "/rest/refer/chart/getAllRefersCountGroupByStatus", null, function (entities) {
+            $.getJSON("/rest/refer/chart/getAllRefersCountGroupByStatus", null, function (entities) {
                 $.each(entities, function (index, value) {
                     chartData.push({
                         name: toPersian(value.status),
@@ -89,7 +89,7 @@
 
         function fillChart2() {
             let chartData = [];
-            $.getJSON(contextPath + "/rest/refer/chart/getAllRefersGroupByDoctors", null, function (entities) {
+            $.getJSON("/rest/refer/chart/getAllRefersGroupByDoctors", null, function (entities) {
                 $.each(entities, function (index, value) {
                     chartData.push({
                         name: value.key,
@@ -140,7 +140,7 @@
 
         function fillChart3() {
             let chartData = [];
-            $.getJSON(contextPath + "/rest/refer/chart/getAllRefersGroupByClinics", null, function (entities) {
+            $.getJSON("/rest/refer/chart/getAllRefersGroupByClinics", null, function (entities) {
                 $.each(entities, function (index, value) {
                     chartData.push({
                         name: value.key,

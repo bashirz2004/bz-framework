@@ -25,12 +25,12 @@
     <![endif]-->
 
     <!-- jQuery -->
-    <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
+    <script src="/assets/bzamani/jquery-1.10.2.min.js"></script>
 
     <!-- sweet alert -->
-    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
-    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/sweetalert/sweetalert2.min.css">
+    <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/sweetalert/sweetalert2.min.css">
     <!-- /sweet alert -->
 
     <!-- pace mask -->
@@ -56,8 +56,8 @@
             });
         });
     </script>
-    <script type="text/javascript" src="/app/assets/bzamani/components/pace/pace.min.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
+    <script type="text/javascript" src="/assets/bzamani/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
     <style>
         .pace-cover {
             position: fixed;
@@ -71,7 +71,7 @@
     </style>
     <!-- /pace mask -->
     <script>
-        var contextPath = "/app";
+
         $(function () {
 
         });
@@ -79,7 +79,7 @@
         function register() {
             if (validateForm() == 'ok') {
                 $.ajax({
-                    url: contextPath + "/api/public/user/selfRegister",
+                    url: "/api/public/user/selfRegister",
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
                     data: JSON.stringify({
@@ -96,7 +96,7 @@
                     success: function (res) {
                         clearInputs();
                         showConfirm("حساب کاربری شما با موفقیت ایجاد شد.", "آیا برای ورود به سامانه آماده هستید؟", function () {
-                            document.location.href = contextPath + "/login.html";
+                            document.location.href = "/login.html";
                         });
                     },
                     error: function (err) {

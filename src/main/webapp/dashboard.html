@@ -35,26 +35,26 @@
     <link rel="stylesheet" href="assets/bzamani/components/fancybox/jquery.fancybox.css"/>
 
     <!-- sweet alert -->
-    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
-    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/sweetalert/sweetalert2.min.css">
+    <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/sweetalert/sweetalert2.min.css">
     <!-- /sweet alert -->
 
     <script>
-        var contextPath = "/app";
+
         $(function () {
             if (localStorage.getItem("authenticatedUserFullName"))
                 $('#lblUserFullName').html(localStorage.getItem("authenticatedUserFullName") + "&nbsp;");
             if (localStorage.getItem("authenticatedUserImageFileCode"))
-                $('#userAvatar').attr("src", "/app/rest/core/file/download/" + localStorage.getItem("authenticatedUserImageFileCode") + "/false");
+                $('#userAvatar').attr("src", "/rest/core/file/download/" + localStorage.getItem("authenticatedUserImageFileCode") + "/false");
             else
-                $('#userAvatar').attr("src", "/app/assets/img/man.png");
+                $('#userAvatar').attr("src", "/assets/img/man.png");
             loadMenu();
         });
 
         function loadMenu() {
             $.ajax({
-                url: contextPath + "/rest/core/action/loadMenuForCurrentUser",
+                url: "/rest/core/action/loadMenuForCurrentUser",
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 type: 'GET',
@@ -76,7 +76,7 @@
             $("#menu_" + code).css("border-radius", "3px");
             $("#menu_" + code + '> a').css("color", "black");
             $("#menu_" + code + '> a').css("fontWeight", "bold");
-            $("#myIframe").attr("src", contextPath + src);
+            $("#myIframe").attr("src", src);
         }
 
         function openChangePasswordForm() {

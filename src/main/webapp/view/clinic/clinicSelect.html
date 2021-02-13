@@ -7,31 +7,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
 
     <!-- Favicons -->
-    <link href="/app/assets/img/favicon.png" rel="icon">
+    <link href="/assets/img/favicon.png" rel="icon">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="/app/assets/bzamani/bootstrap.css">
+    <link rel="stylesheet" href="/assets/bzamani/bootstrap.css">
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="/app/assets/plugins/fontawesome/css/fontawesome.min.css">
-    <link rel="stylesheet" href="/app/assets/plugins/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="/assets/plugins/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/assets/plugins/fontawesome/css/all.min.css">
 
     <!-- Select2 CSS -->
-    <link rel="stylesheet" href="/app/assets/bzamani/select2.min.css">
+    <link rel="stylesheet" href="/assets/bzamani/select2.min.css">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="/app/assets/bzamani/style-public.css">
+    <link rel="stylesheet" href="/assets/bzamani/style-public.css">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-    <script src="/app/assets/js/html5shiv.min.js"></script>
-    <script src="/app/assets/js/respond.min.js"></script>
+    <script src="/assets/js/html5shiv.min.js"></script>
+    <script src="/assets/js/respond.min.js"></script>
     <![endif]-->
 
     <!-- jQuery -->
-    <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
-    <script src="/app/assets/bzamani/jquery.template.js"></script>
-    <script src="/app/assets/bzamani/general-utility.js"></script>
+    <script src="/assets/bzamani/jquery-1.10.2.min.js"></script>
+    <script src="/assets/bzamani/jquery.template.js"></script>
+    <script src="/assets/bzamani/general-utility.js"></script>
 
     <!-- pace mask -->
     <script>
@@ -56,8 +56,8 @@
             });
         });
     </script>
-    <script type="text/javascript" src="/app/assets/bzamani/components/pace/pace.min.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
+    <script type="text/javascript" src="/assets/bzamani/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
     <style>
         .pace-cover {
             position: fixed;
@@ -81,7 +81,6 @@
     </style>
 
     <script>
-        contextPath = "/app";
         patientId = getUrlParameter("patientId");
         searchFilters = {
             "stateId": -1,
@@ -143,7 +142,7 @@
         function fillComboState(headerId, callBackFunction) {
             $.ajax({
                 type: "GET",
-                url: contextPath + "/api/public/baseinfo/getAllByHeaderId/" + headerId,
+                url: "/api/public/baseinfo/getAllByHeaderId/" + headerId,
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 success: function (res) {
@@ -162,7 +161,7 @@
         function fillComboCity(stateId, callBackFunction) {
             $.ajax({
                 type: "GET",
-                url: contextPath + "/api/public/baseinfo/getAllByParentId/" + stateId,
+                url: "/api/public/baseinfo/getAllByParentId/" + stateId,
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 success: function (res) {
@@ -182,7 +181,7 @@
         function fillComboRegion(cityId, callBackFunction) {
             $.ajax({
                 type: "GET",
-                url: contextPath + "/api/public/baseinfo/getAllByParentId/" + cityId,
+                url: "/api/public/baseinfo/getAllByParentId/" + cityId,
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 success: function (res) {
@@ -209,7 +208,7 @@
             }*/
             $.ajax({
                 type: "GET",
-                url: contextPath + "/api/public/clinic/searchClinic",
+                url: "/api/public/clinic/searchClinic",
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 data: searchFilters,
@@ -229,7 +228,7 @@
         function applyPatientLocationFilter() {
             if (patientId > 0) {
                 $.ajax({
-                    url: contextPath + "/rest/core/personel/load/" + patientId,
+                    url: "/rest/core/personel/load/" + patientId,
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
                     type: 'GET',
@@ -347,7 +346,7 @@
                                 <div class="doc-info-left">
                                     <div class="doctor-img">
                                         <a>
-                                            <img src= {{if organization.fileCode!=null}}"/app/rest/core/file/download/${organization.fileCode}/false"{{/if}}
+                                            <img src= {{if organization.fileCode!=null}}"/rest/core/file/download/${organization.fileCode}/false"{{/if}}
                                             class="img-fluid"
                                             alt="Clinic Image">
                                         </a>
@@ -460,18 +459,18 @@
 <!-- /Main Wrapper -->
 
 <!-- Bootstrap Core JS -->
-<script src="/app/assets/admin/chart/popper.min.js"></script>
-<script src="/app/assets/bzamani/bootstrap.min.js"></script>
+<script src="/assets/admin/chart/popper.min.js"></script>
+<script src="/assets/bzamani/bootstrap.min.js"></script>
 
 <!-- Sticky Sidebar JS -->
 
 
 <!-- Select2 JS -->
-<script src="/app/assets/bzamani/select2.min.js"></script>
+<script src="/assets/bzamani/select2.min.js"></script>
 
 
 <!-- Custom JS -->
-<script src="/app/assets/admin/chart/script.js"></script>
+<script src="/assets/admin/chart/script.js"></script>
 
 
 </body>

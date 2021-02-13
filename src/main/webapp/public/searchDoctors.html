@@ -54,8 +54,8 @@
             });
         });
     </script>
-    <script type="text/javascript" src="/app/assets/bzamani/components/pace/pace.min.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
+    <script type="text/javascript" src="/assets/bzamani/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
     <style>
         .pace-cover {
             position: fixed;
@@ -78,7 +78,6 @@
     </style>
 
     <script>
-        contextPath = "/app";
         searchFilters = {
             "stateId": -1,
             "cityId": -1,
@@ -128,7 +127,7 @@
         function fillComboState() {
             $.ajax({
                 type: "GET",
-                url: contextPath + "/api/public/baseinfo/getAllByHeaderId/1",
+                url: "/api/public/baseinfo/getAllByHeaderId/1",
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 success: function (res) {
@@ -146,7 +145,7 @@
         function fillComboCity(stateId) {
             $.ajax({
                 type: "GET",
-                url: contextPath + "/api/public/baseinfo/getAllByParentId/" + stateId,
+                url: "/api/public/baseinfo/getAllByParentId/" + stateId,
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 success: function (res) {
@@ -165,7 +164,7 @@
         function fillComboRegion(cityId) {
             $.ajax({
                 type: "GET",
-                url: contextPath + "/api/public/baseinfo/getAllByParentId/" + cityId,
+                url: "/api/public/baseinfo/getAllByParentId/" + cityId,
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 success: function (res) {
@@ -185,7 +184,7 @@
         function fillSpecialityCheckboxes() {
             $.ajax({
                 type: "GET",
-                url: contextPath + "/api/public/baseinfo/getAllByHeaderId/1000",
+                url: "/api/public/baseinfo/getAllByHeaderId/1000",
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 success: function (res) {
@@ -217,7 +216,7 @@
             searchFilters.address = $("#txtSearchAddress").val();
             $.ajax({
                 type: "GET",
-                url: contextPath + "/api/public/doctor/searchDoctors",
+                url: "/api/public/doctor/searchDoctors",
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 data: searchFilters,
@@ -340,9 +339,9 @@
                                     <div class="doctor-img">
                                         <a >
                                             <img
-                                             src={{if personel.male && personel.fileCode==null}}"/app/assets/img/man.png"{{/if}}
-                                                            {{if !personel.male && personel.fileCode==null}}"/app/assets/img/woman.png"{{/if}}
-                                                            {{if personel.fileCode!=null}}"/app/rest/core/file/download/${personel.fileCode}/false"{{/if}}
+                                             src={{if personel.male && personel.fileCode==null}}"/assets/img/man.png"{{/if}}
+                                                            {{if !personel.male && personel.fileCode==null}}"/assets/img/woman.png"{{/if}}
+                                                            {{if personel.fileCode!=null}}"/rest/core/file/download/${personel.fileCode}/false"{{/if}}
                                             class="img-fluid"
                                             alt="User Image">
                                         </a>

@@ -16,8 +16,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Value("${server.servlet.context-path}")
-    private String contextPath;
 
     @Autowired
     private CustomUserDetailsService userDetailsService;
@@ -44,6 +42,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().sameOrigin();
         http.csrf().disable()
                 .authorizeRequests()
+                .antMatchers("/").permitAll()
                 .antMatchers("/view/**").permitAll()//private pages are here, view of pages are public but in first ajax request @preauthorize controls access
                 .antMatchers("/public/**").permitAll()//icludes all public pages like blogs, posts,comments,products,search,...
                 .antMatchers("/assets/**").permitAll()

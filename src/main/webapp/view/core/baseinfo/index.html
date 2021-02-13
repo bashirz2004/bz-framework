@@ -6,25 +6,25 @@
     <title>ساختار سازمان</title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="/app/assets/img/favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.png">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="/app/assets/bzamani/bootstrap.css">
+    <link rel="stylesheet" href="/assets/bzamani/bootstrap.css">
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="/app/assets/admin/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/admin/css/font-awesome.min.css">
 
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="/app/assets/bzamani/style-admin.css">
+    <link rel="stylesheet" href="/assets/bzamani/style-admin.css">
 
     <!--[if lt IE 9]>
-    <script src="/app/assets/js/html5shiv.min.js"></script>
-    <script src="/app/assets/js/respond.min.js"></script>
+    <script src="/assets/js/html5shiv.min.js"></script>
+    <script src="/assets/js/respond.min.js"></script>
     <![endif]-->
 
     <!-- jQuery -->
-    <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
+    <script src="/assets/bzamani/jquery-1.10.2.min.js"></script>
 
     <!-- pace mask -->
     <script>
@@ -49,8 +49,8 @@
             });
         });
     </script>
-    <script type="text/javascript" src="/app/assets/bzamani/components/pace/pace.min.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
+    <script type="text/javascript" src="/assets/bzamani/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
     <style>
         .pace-cover {
             position: fixed;
@@ -65,19 +65,19 @@
     <!-- /pace mask -->
 
     <!-- sweet alert -->
-    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
-    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/sweetalert/sweetalert2.min.css">
+    <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/sweetalert/sweetalert2.min.css">
     <!-- /sweet alert -->
 
     <!-- dhtml tree -->
-    <script type="text/javascript" src="/app/assets/bzamani/components/tree/tree.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/app/assets/bzamani/components/tree/tree.css"/>
+    <script type="text/javascript" src="/assets/bzamani/components/tree/tree.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/assets/bzamani/components/tree/tree.css"/>
     <!-- /dhtml tree -->
 
     <!-- autocomplete -->
-    <script src="/app/assets/bzamani/components/autocomplete/jquery-ui-1.8.17.custom.min.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/autocomplete/jquery-ui-1.8.17.custom.css"/>
+    <script src="/assets/bzamani/components/autocomplete/jquery-ui-1.8.17.custom.min.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/autocomplete/jquery-ui-1.8.17.custom.css"/>
     <!-- /autocomplete -->
 
     <script type="text/javascript">
@@ -100,7 +100,7 @@
 
         var entityData;
 
-        var contextPath = "/app";
+
 
         $(function () {
             initTree();
@@ -117,7 +117,7 @@
                         title: req.term,
                         size: 10
                     };
-                    $.getJSON(contextPath + "/rest/core/baseinfo/searchBaseInfo", searchFilter, function (data) {
+                    $.getJSON("/rest/core/baseinfo/searchBaseInfo", searchFilter, function (data) {
                         resp($.map(data.entityList, function (result) {
                             return {
                                 label: result.title,
@@ -138,7 +138,7 @@
 
         function reMakeTreeAfterAutoComplete(id) {
             XMLData = FirstData;
-            $.get(contextPath + "/rest/core/baseinfo/reMakeTreeAfterAutoComplete/" + id, function (data) {
+            $.get("/rest/core/baseinfo/reMakeTreeAfterAutoComplete/" + id, function (data) {
                 XMLData = XMLData + data + "</tree>";
                 tree.destructor();
                 configTree();
@@ -149,7 +149,7 @@
 
         function initTree() {
             configTree();
-            $.get(contextPath + "/rest/core/baseinfo/getAllHeadersAsXml", function (data) {
+            $.get("/rest/core/baseinfo/getAllHeadersAsXml", function (data) {
                 XMLData = XMLData + data + "</tree>";
                 tree.loadXMLString(XMLData);
             });
@@ -158,7 +158,7 @@
         function configTree() {
             tree = new dhtmlXTreeObject("tree_div", "100%", "100%", 0);
             tree.setSkin('dhx_skyblue');
-            tree.setImagePath("/app/assets/bzamani/components/tree/icons/");
+            tree.setImagePath("/assets/bzamani/components/tree/icons/");
             tree.enableHighlighting(true);
             tree.attachEvent("onRightClick", function (id, e) {
                 nodeId = id;
@@ -188,7 +188,7 @@
             menu = new dhtmlXMenuObject();
             menu.renderAsContextMenu();
             menu.attachEvent("onClick", onButtonClick);
-            menu.loadXML("/app/assets/bzamani/components/tree/contextMenu.xml");
+            menu.loadXML("/assets/bzamani/components/tree/contextMenu.xml");
         }
 
         function setBaseInformationHeaderId(nodeId) {
@@ -210,7 +210,7 @@
             var tempScrollTop = $('.containerTableStyle').scrollTop();
             var src = '<item text="..." im0="leaf.gif" id="t' + id + '" />';
             if (tree.getItemText('t' + id) === '...') {
-                $.get(contextPath + "/rest/core/baseinfo/getChildsAsXml/" + id,
+                $.get("/rest/core/baseinfo/getChildsAsXml/" + id,
                     function (data) {
                         XMLData = XMLData.replace(src, data);
                         tree.destructor();
@@ -252,7 +252,7 @@
 
         function openEditModal() {
             $.ajax({
-                url: contextPath + "/rest/core/baseinfo/load/" + nodeId.substring(1),
+                url: "/rest/core/baseinfo/load/" + nodeId.substring(1),
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 type: 'GET',
@@ -269,7 +269,7 @@
             if (id.substring(0, 1) != "H") {
                 showConfirm('تاییدیه حذف اطلاعات', 'آیا از حذف اطمینان دارید؟', function () {
                     $.ajax({
-                        url: contextPath + "/rest/core/baseinfo/delete/" + id.substring(1),
+                        url: "/rest/core/baseinfo/delete/" + id.substring(1),
                         type: 'DELETE',
                         dataType: 'json',
                         contentType: 'application/json; charset=utf-8',
@@ -323,7 +323,7 @@
             if (validateForm() == 'ok') {
                 setEntityFromInputs();
                 $.ajax({
-                    url: contextPath + "/rest/core/baseinfo/save",
+                    url: "/rest/core/baseinfo/save",
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
                     data: JSON.stringify(entityData),
@@ -433,6 +433,6 @@
 <!-- /Add/Edit Modal -->
 
 <!-- Bootstrap Core JS -->
-<script src="/app/assets/bzamani/bootstrap.min.js"></script>
+<script src="/assets/bzamani/bootstrap.min.js"></script>
 </body>
 </html>

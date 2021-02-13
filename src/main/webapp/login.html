@@ -24,17 +24,17 @@
     <script src="assets/js/respond.min.js"></script>
     <![endif]-->
     <!-- jQuery -->
-    <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
-    <script src="/app/assets/bzamani/jquery.cookie.js"></script>
+    <script src="/assets/bzamani/jquery-1.10.2.min.js"></script>
+    <script src="/assets/bzamani/jquery.cookie.js"></script>
 
     <!-- sweet alert -->
-    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
-    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/sweetalert/sweetalert2.min.css">
+    <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/sweetalert/sweetalert2.min.css">
     <!-- /sweet alert -->
     <script src='https://www.google.com/recaptcha/api.js'></script>
     <script>
-        var contextPath = "/app";
+
         $(function () {
             localStorage.clear();
 
@@ -55,7 +55,7 @@
         function login() {
             if ($('#txtUsername').val() != '' && $('#txtPassword').val() != '') {
                 $.ajax({
-                    url: contextPath + "/authenticate",
+                    url: "/authenticate",
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
                     data: JSON.stringify({
@@ -72,7 +72,7 @@
                         if(document.referrer && !document.referrer.includes('/register.html') && !document.referrer.includes('/forgot-password.html'))
                             document.location.href = document.referrer;
                         else
-                            document.location.href = contextPath + "/index.html";
+                            document.location.href = "/index.html";
                     },
                     error: function (err) {
                         $('#g-recaptcha-response').val('');

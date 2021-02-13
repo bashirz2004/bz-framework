@@ -6,25 +6,25 @@
     <title>عملیات گروه کاربری</title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="/app/assets/img/favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.png">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="/app/assets/bzamani/bootstrap.css">
+    <link rel="stylesheet" href="/assets/bzamani/bootstrap.css">
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="/app/assets/admin/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/admin/css/font-awesome.min.css">
 
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="/app/assets/bzamani/style-admin.css">
+    <link rel="stylesheet" href="/assets/bzamani/style-admin.css">
 
     <!--[if lt IE 9]>
-    <script src="/app/assets/js/html5shiv.min.js"></script>
-    <script src="/app/assets/js/respond.min.js"></script>
+    <script src="/assets/js/html5shiv.min.js"></script>
+    <script src="/assets/js/respond.min.js"></script>
     <![endif]-->
 
     <!-- jQuery -->
-    <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
+    <script src="/assets/bzamani/jquery-1.10.2.min.js"></script>
 
     <!-- pace mask -->
     <script>
@@ -49,8 +49,8 @@
             });
         });
     </script>
-    <script type="text/javascript" src="/app/assets/bzamani/components/pace/pace.min.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
+    <script type="text/javascript" src="/assets/bzamani/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
     <style>
         .pace-cover {
             position: fixed;
@@ -65,18 +65,18 @@
     <!-- /pace mask -->
 
     <!-- sweet alert -->
-    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
-    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/sweetalert/sweetalert2.min.css">
+    <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/sweetalert/sweetalert2.min.css">
     <!-- /sweet alert -->
 
     <!-- dhtml tree -->
-    <script type="text/javascript" src="/app/assets/bzamani/components/tree/tree.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/app/assets/bzamani/components/tree/tree.css"/>
+    <script type="text/javascript" src="/assets/bzamani/components/tree/tree.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/assets/bzamani/components/tree/tree.css"/>
     <!-- /dhtml tree -->
 
-    <script src="/app/assets/bzamani/jquery.template.js"></script>
-    <script src="/app/assets/bzamani/general-utility.js"></script>
+    <script src="/assets/bzamani/jquery.template.js"></script>
+    <script src="/assets/bzamani/general-utility.js"></script>
 
     <script type="text/javascript">
         var currentGroupId = getUrlParameter("groupId");
@@ -89,7 +89,7 @@
             item: []
         };
 
-        var contextPath = "/app";
+
 
         $(function () {
             makePageHeader();
@@ -102,7 +102,7 @@
 
         function initTree() {
             configTree();
-            $.get(contextPath + "/rest/core/action/loadWholeTreeWithoutAuthorization?id=" + treeRootId + "&groupId=" + currentGroupId, function (data) {
+            $.get("/rest/core/action/loadWholeTreeWithoutAuthorization?id=" + treeRootId + "&groupId=" + currentGroupId, function (data) {
                 superRootNode.item.push(data);
                 tree.loadJSONObject(superRootNode);
                 tree.openItem(treeRootId);
@@ -112,8 +112,8 @@
 
         function configTree() {
             tree = new dhtmlXTreeObject('tree_div', '100%', '100%', 0);
-            tree.setImagePath("/app/assets/bzamani/components/tree/icons/");
-            tree.setXMLAutoLoading(contextPath + "/rest/core/action/loadWholeTreeWithoutAuthorization");
+            tree.setImagePath("/assets/bzamani/components/tree/icons/");
+            tree.setXMLAutoLoading("/rest/core/action/loadWholeTreeWithoutAuthorization");
             tree.setDataMode("json");
             tree.enableCheckBoxes(1, 0);
         }
@@ -142,7 +142,7 @@
 
         function saveAll(data) {
             $.ajax({
-                url: contextPath + '/rest/core/group/reSaveGroupActions',
+                url: '/rest/core/group/reSaveGroupActions',
                 type: 'POST',
                 dataType: 'json',
                 contentType: 'application/json; charset=utf-8',
@@ -170,7 +170,7 @@
     <input type="button" id="btnAdd" class="btn btn-primary" onclick="addSelectedActions()" value='ثبت'/>
 </div>
 <!-- Bootstrap Core JS -->
-<script src="/app/assets/bzamani/bootstrap.min.js"></script>
+<script src="/assets/bzamani/bootstrap.min.js"></script>
 </body>
 </html>
 

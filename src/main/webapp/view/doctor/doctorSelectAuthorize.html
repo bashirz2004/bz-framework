@@ -6,28 +6,28 @@
     <title>انتخاب پزشک</title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="/app/assets/img/favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.png">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="/app/assets/bzamani/bootstrap.css">
+    <link rel="stylesheet" href="/assets/bzamani/bootstrap.css">
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="/app/assets/admin/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/admin/css/font-awesome.min.css">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="/app/assets/bzamani/style-admin.css">
+    <link rel="stylesheet" href="/assets/bzamani/style-admin.css">
 
     <!--[if lt IE 9]>
-    <script src="/app/assets/js/html5shiv.min.js"></script>
-    <script src="/app/assets/js/respond.min.js"></script>
+    <script src="/assets/js/html5shiv.min.js"></script>
+    <script src="/assets/js/respond.min.js"></script>
     <![endif]-->
 
     <!-- jQuery -->
-    <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
+    <script src="/assets/bzamani/jquery-1.10.2.min.js"></script>
 
     <!-- fancybox -->
-    <script src="/app/assets/bzamani/components/fancybox/jquery.fancybox.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/fancybox/jquery.fancybox.css"/>
+    <script src="/assets/bzamani/components/fancybox/jquery.fancybox.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/fancybox/jquery.fancybox.css"/>
 
     <!-- pace mask -->
     <script>
@@ -52,8 +52,8 @@
             });
         });
     </script>
-    <script type="text/javascript" src="/app/assets/bzamani/components/pace/pace.min.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
+    <script type="text/javascript" src="/assets/bzamani/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
     <style>
         .pace-cover {
             position: fixed;
@@ -67,12 +67,12 @@
     </style>
     <!-- /pace mask -->
 
-    <script src="/app/assets/bzamani/jquery.template.js"></script>
-    <script src="/app/assets/bzamani/grid-utility.js"></script>
-    <script src="/app/assets/bzamani/general-utility.js"></script>
+    <script src="/assets/bzamani/jquery.template.js"></script>
+    <script src="/assets/bzamani/grid-utility.js"></script>
+    <script src="/assets/bzamani/general-utility.js"></script>
 
     <script>
-        var contextPath = "/app";
+
         var searchFilters = {
             "firstname": '',
             "lastname": '',
@@ -107,7 +107,7 @@
         }
 
         function refreshGrid() {
-            fillGrid('doctorTemplate', 'doctorList', contextPath + "/rest/doctor/searchDoctorAuthorize", searchFilters);
+            fillGrid('doctorTemplate', 'doctorList', "/rest/doctor/searchDoctorAuthorize", searchFilters);
         }
 
         function clearSearch() {
@@ -220,9 +220,9 @@
                                             <h2 class="table-avatar">
                                                 <a href="#image_modal" data-toggle="modal" class="avatar avatar-sm mr-2"><img onclick="setImagePath('${personel.fileCode}')"
                                                         class="avatar-img rounded-circle"
-                                                        src={{if personel.male && personel.fileCode==null}}"/app/assets/img/man.png"{{/if}}
-                                                            {{if !personel.male && personel.fileCode==null}}"/app/assets/img/woman.png"{{/if}}
-                                                            {{if personel.fileCode!=null}}"/app/rest/core/file/download/${personel.fileCode}/false"{{/if}}
+                                                        src={{if personel.male && personel.fileCode==null}}"/assets/img/man.png"{{/if}}
+                                                            {{if !personel.male && personel.fileCode==null}}"/assets/img/woman.png"{{/if}}
+                                                            {{if personel.fileCode!=null}}"/rest/core/file/download/${personel.fileCode}/false"{{/if}}
                                                         alt="User Image"></a>
                                             </h2>
                                         </td>
@@ -304,7 +304,7 @@
 <!-- /Page Wrapper -->
 
 <!-- Bootstrap Core JS -->
-<script src="/app/assets/bzamani/bootstrap.min.js"></script>
+<script src="/assets/bzamani/bootstrap.min.js"></script>
 
 </body>
 </html>

@@ -6,23 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
 
     <!-- Favicons -->
-    <link href="/app/assets/img/favicon.png" rel="icon">
+    <link href="/assets/img/favicon.png" rel="icon">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="/app/assets/bzamani/bootstrap.css">
+    <link rel="stylesheet" href="/assets/bzamani/bootstrap.css">
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="/app/assets/admin/plugins/fontawesome/css/fontawesome.min.css">
-    <link rel="stylesheet" href="/app/assets/plugins/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="/assets/admin/plugins/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/assets/plugins/fontawesome/css/all.min.css">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="/app/assets/bzamani/style-admin.css">
+    <link rel="stylesheet" href="/assets/bzamani/style-admin.css">
 
     <!-- jQuery -->
-    <script src="/app/assets/bzamani/jquery-1.10.2.min.js"></script>
-    <script src="/app/assets/bzamani/jquery.template.js"></script>
-    <script src="/app/assets/bzamani/grid-utility.js"></script>
-    <script src="/app/assets/bzamani/general-utility.js"></script>
+    <script src="/assets/bzamani/jquery-1.10.2.min.js"></script>
+    <script src="/assets/bzamani/jquery.template.js"></script>
+    <script src="/assets/bzamani/grid-utility.js"></script>
+    <script src="/assets/bzamani/general-utility.js"></script>
 
     <!-- pace mask -->
     <script>
@@ -47,8 +47,8 @@
             });
         });
     </script>
-    <script type="text/javascript" src="/app/assets/bzamani/components/pace/pace.min.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
+    <script type="text/javascript" src="/assets/bzamani/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
     <style>
         .pace-cover {
             position: fixed;
@@ -63,13 +63,13 @@
     <!-- /pace mask -->
 
     <!-- sweet alert -->
-    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
-    <script type="text/javascript" src="/app/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
-    <link rel="stylesheet" href="/app/assets/bzamani/components/sweetalert/sweetalert2.min.css">
+    <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/sweetalert/sweetalert2.min.css">
     <!-- /sweet alert -->
 
     <script>
-        var contextPath = "/app";
+
         var emptyEntityData = {
             "id": '',
             "title": '',
@@ -126,7 +126,7 @@
         });
 
         function reFillCategories() {
-            $.getJSON(contextPath + "/api/public/portal/post/getAllUsedPostCategories", searchFilters, function (res) {
+            $.getJSON("/api/public/portal/post/getAllUsedPostCategories", searchFilters, function (res) {
                 $("#categoryList > li").remove();
                 $("#categoryTemplate").tmpl(res).appendTo("#categoryList");
             });
@@ -172,7 +172,7 @@
         function deleteEntity() {
             if ($('#hiddenFieldId').val() > 0)
                 $.ajax({
-                    url: contextPath + "/rest/portal/post/delete/" + $('#hiddenFieldId').val(),
+                    url: "/rest/portal/post/delete/" + $('#hiddenFieldId').val(),
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
                     type: 'DELETE',
@@ -190,7 +190,7 @@
 
         function refreshGrid() {
             reFillCategories();
-            $.getJSON(contextPath + "/api/public/portal/post/searchPost", searchFilters, function (entities) {
+            $.getJSON("/api/public/portal/post/searchPost", searchFilters, function (entities) {
                 if (entities.entityList) {
                     $('#postList :not(script)').remove();
                     $('#postTemplate').tmpl(entities.entityList).prependTo('#postList');
@@ -235,7 +235,7 @@
         function loadEntity(id) {
             clearEntity();
             $.ajax({
-                url: contextPath + "/api/public/portal/post/load/" + id,
+                url: "/api/public/portal/post/load/" + id,
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 type: 'GET',
@@ -251,7 +251,7 @@
             if (validateForm() == 'ok') {
                 setEntityFromInputs();
                 $.ajax({
-                    url: contextPath + "/rest/portal/post/save",
+                    url: "/rest/portal/post/save",
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
                     data: JSON.stringify(entityData),
@@ -271,7 +271,7 @@
         function confirmPost(id) {
             if (id > 0) {
                 $.ajax({
-                    url: contextPath + "/rest/portal/post/confirmPost/" + id,
+                    url: "/rest/portal/post/confirmPost/" + id,
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
                     type: 'POST',
@@ -308,7 +308,7 @@
             $("#cmbCategory").val(entity.category.id);
             entity.allowLikeOrComment == true ? $('#enable_switch').prop("checked", "checked") : $('#enable_switch').prop("checked", "");
             if (entity.fileCode != null && entity.fileCode.length > 0) {
-                $('#uploadedImage').prop("src", "/app/rest/core/file/download/" + entity.fileCode + "/false");
+                $('#uploadedImage').prop("src", "/rest/core/file/download/" + entity.fileCode + "/false");
                 $("#hiddenFieldfileCode").val(entity.fileCode);
             }
             else{
@@ -331,7 +331,7 @@
 
         function uploadFile() {
             $.ajax({
-                url: contextPath + "/rest/core/file/upload",
+                url: "/rest/core/file/upload",
                 type: "POST",
                 data: new FormData($("#upload-file-form")[0]),
                 enctype: 'multipart/form-data',
@@ -341,7 +341,7 @@
                 dataType: "text",
                 success: function (fileCode) {
                     if (fileCode != null && fileCode.length > 0) {
-                        $('#uploadedImage').prop("src", "/app/rest/core/file/download/" + fileCode + "/false");
+                        $('#uploadedImage').prop("src", "/rest/core/file/download/" + fileCode + "/false");
                         $('#hiddenFieldfileCode').val(fileCode);
                         $('.submit-btn').show();
                     }
@@ -473,8 +473,8 @@
                             <div class="blog grid-blog">
                                 <div class="blog-image">
                                     <a><img class="img-fluid" style="width: 25em;height:17em"
-                                             src={{if fileCode!=null}}"/app/rest/core/file/download/${fileCode}/false"
-                                                 {{else}}"/app/assets/img/3.png"
+                                             src={{if fileCode!=null}}"/rest/core/file/download/${fileCode}/false"
+                                                 {{else}}"/assets/img/3.png"
                                                  {{/if}}
                                              alt="post Image"></a>
                                 </div>
@@ -486,9 +486,9 @@
                                                     <li class="col-md-6 col-sm-12 float-left">
                                                         <div class="post-author">
                                                             <a href="doctor-profile.html">
-                                                            <img src= {{if author.male && author.fileCode==null}}"/app/assets/img/man.png"{{/if}}
-                                                              {{if !author.male && author.fileCode==null}}"/app/assets/img/woman.png"{{/if}}
-                                                              {{if author.fileCode!=null}}"/app/rest/core/file/download/${author.fileCode}/false"{{/if}}
+                                                            <img src= {{if author.male && author.fileCode==null}}"/assets/img/man.png"{{/if}}
+                                                              {{if !author.male && author.fileCode==null}}"/assets/img/woman.png"{{/if}}
+                                                              {{if author.fileCode!=null}}"/rest/core/file/download/${author.fileCode}/false"{{/if}}
                                                                alt="Post Author">
                                                             <span>${author.firstname} ${author.lastname}</span></a>
                                                         </div>
@@ -682,13 +682,13 @@
 
 
 <!-- Bootstrap Core JS -->
-<script src="/app/assets/admin/chart/popper.min.js"></script>
+<script src="/assets/admin/chart/popper.min.js"></script>
 
 <!-- Bootstrap Core JS -->
-<script src="/app/assets/bzamani/bootstrap.min.js"></script>
+<script src="/assets/bzamani/bootstrap.min.js"></script>
 
 <!-- Custom JS -->
-<script src="/app/assets/admin/chart/script.js"></script>
+<script src="/assets/admin/chart/script.js"></script>
 
 </body>
 </html>

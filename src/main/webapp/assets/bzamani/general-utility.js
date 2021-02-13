@@ -25,10 +25,9 @@ function viewFancyBox(url, width, height, beforeCloseAction, afterCloseFunction)
 }
 
 function fillComboBaseInfo(headerId, elementId) {
-    let contextPath = "/app";
     $.ajax({
         type: "GET",
-        url: contextPath + "/api/public/baseinfo/getAllByHeaderId/" + headerId,
+        url: "/api/public/baseinfo/getAllByHeaderId/" + headerId,
         contentType: "application/json;charset=utf-8",
         dataType: "json",
         success: function (res) {
