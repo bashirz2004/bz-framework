@@ -82,6 +82,8 @@ public class AuthenticationController extends BaseController {
 
     public void checkUser(String username)  {
         User user = iUserService.findUserByUsernameEquals(username);
+        if(user == null)
+            throw new  RuntimeException("نام کاربری یا رمز عبور اشتباه است.");
         if (!user.isEnabled())
             throw new  RuntimeException("کاربر محترم، حساب کاربری شما غیر فعال شده است.");
         if (!user.isAccountNonLocked())

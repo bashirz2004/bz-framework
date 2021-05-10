@@ -27,7 +27,9 @@ public class ReferController extends BaseController {
     @PreAuthorize("hasRole('1005')")
     @PostMapping("/save")
     public Refer save(@RequestBody Refer refer) {
-        return iReferService.saveRefer(refer);
+        Refer savedRefer = iReferService.saveRefer(refer);
+        iReferService.changeStatus(savedRefer.getId(),ReferStatus.referred);
+        return savedRefer;
     }
 
     @PreAuthorize("hasRole('1005')")

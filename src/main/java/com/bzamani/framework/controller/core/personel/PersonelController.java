@@ -25,6 +25,12 @@ public class PersonelController extends BaseController {
     }
 
     @PreAuthorize("hasRole('9')")
+    @PostMapping("/saveBrief")
+    public Personel saveBrief(@RequestBody PersonelViewModel personelViewModel) {
+        return iPersonelService.saveBrief(ModelMapper.map(personelViewModel, Personel.class, true));
+    }
+
+    @PreAuthorize("hasRole('9')")
     @DeleteMapping("/delete/{id}")
     public boolean delete(@PathVariable("id") long id) {
         return iPersonelService.checkAndDelete(id);

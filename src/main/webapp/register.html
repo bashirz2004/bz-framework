@@ -106,6 +106,8 @@
                             showMessage("خطا در ثبت کاربر", " با این کدملی قبلا ثبت نام انجام شده است.", "error");
                         else if (err.responseText.includes("unq_personel_email"))
                             showMessage("خطا در ثبت کاربر", " با این ایمیل قبلا ثبت نام انجام شده است.", "error");
+                        else if (err.responseText.includes("unq_personel_mobile"))
+                            showMessage("خطا در ثبت کاربر", " با این شماره موبایل قبلا ثبت نام انجام شده است.", "error");
                         else
                             showMessage(err.responseJSON.message, "", "error");
                     }

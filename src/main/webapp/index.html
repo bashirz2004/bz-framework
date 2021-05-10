@@ -25,6 +25,7 @@
     <script src="assets/js/respond.min.js"></script>
     <![endif]-->
     <script src="/assets/bzamani/jquery-1.10.2.min.js"></script>
+    <script src="/assets/bzamani/jquery.cookie.js"></script>
     <script src="assets/bzamani/jquery.template.js"></script>
     <script src="assets/bzamani/propper.min.js"></script>
     <script>
@@ -67,6 +68,16 @@
 
         function navigateToLoginPage() {
             document.location = "login.html";
+        }
+
+        function navigateToRegisterPage() {
+            document.location = "register.html";
+        }
+
+        function logout() {
+            localStorage.clear();
+            $.removeCookie('Authorization', {path: '/'});
+            document.location = "index.html";
         }
 
         function loadClinicsOrderByScore() {
@@ -155,11 +166,15 @@
             </div>
             <ul class="nav col-md-2 col-sm-12">
                 <li class="nav-item" style="display: flex;white-space: nowrap">
-                    <button type="button" class="btn btn-primary btn-sm" style="color: black" id="btnLogin"
+                    <button type="button" class="btn btn-primary btn-rounded btn-sm" style="color: black" id="btnLogin"
                             onclick="navigateToLoginPage()">
                         ورود
                     </button>
-                    <button type="button" class="btn btn-danger btn-sm" id="btnLogout" onclick="navigateToLoginPage()"
+                    <button type="button" class="btn btn-info btn-rounded btn-sm" style="color: black" id="btnRegister"
+                            onclick="navigateToRegisterPage()">
+                        ثبت نام
+                    </button>
+                    <button type="button" class="btn btn-danger btn-rounded btn-sm" id="btnLogout" onclick="logout()"
                             style="display: none">
                         خروج
                     </button>
@@ -507,7 +522,7 @@
                             <div class="footer-contact-inincludesfo">
                                 <div class="footer-address">
                                     <span><i class="fas fa-map-marker-alt"></i></span>
-                                    <p> تهران<br> جنت آباد شمالی کوچه شهید هشت متری </p>
+                                    <p> تهران<br> جنت آباد شمالی نرسیده به میدان 51 نارمک </p>
                                 </div>
                                 <p>
                                     <i class="fas fa-phone-alt"></i>

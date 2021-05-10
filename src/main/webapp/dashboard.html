@@ -27,6 +27,7 @@
 
     <!-- jQuery -->
     <script src="assets/bzamani/jquery-1.10.2.min.js"></script>
+    <script src="/assets/bzamani/jquery.cookie.js"></script>
     <script src="assets/bzamani/jquery.template.js"></script>
     <script src="assets/bzamani/general-utility.js"></script>
 
@@ -81,6 +82,11 @@
 
         function openChangePasswordForm() {
             viewFancyBox('changePasswordByUser.html?fullName=' + $('#lblUserFullName').html(), '70%', '70%');
+        }
+
+        function logoutUser() {
+            localStorage.clear();
+            $.removeCookie('Authorization', {path: '/'});
         }
 
     </script>
@@ -179,7 +185,7 @@
                     <a class="dropdown-item text-white" href="javascript:void(0);" onclick="openChangePasswordForm()">تغییر
                         رمز
                         عبور</a>
-                    <a class="dropdown-item text-white" href="login.html">خروج</a>
+                    <a class="dropdown-item text-white" href="index.html" onclick="logoutUser()">خروج</a>
                 </div>
             </li>
             <!-- /User Menu -->

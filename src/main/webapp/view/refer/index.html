@@ -271,8 +271,7 @@
 
         function validateForm() {
             if ($('#txtReferDateShamsi').val() == '' || !$('#hiddenFieldDoctorId').val() > 0
-                || !$('#hiddenFieldPatientId').val() > 0 || !$('#hiddenFieldClinicId').val() > 0
-                || !($('#cmbSickness').val() > 0) || !($('#cmbTreatment').val() > 0) || $('#txtSessionCountToDo').val() == '') {
+                || !$('#hiddenFieldPatientId').val() > 0 || !$('#hiddenFieldClinicId').val() > 0) {
                 showMessage("پرکردن فیلدهای ستاره دار الزامی است.", "", "warning");
                 return;
             } else return 'ok';
@@ -342,9 +341,9 @@
                 "doctor": {"id": $('#hiddenFieldDoctorId').val()},
                 "patient": {"id": $('#hiddenFieldPatientId').val()},
                 "clinic": {"id": $('#hiddenFieldClinicId').val()},
-                "sickness": {"id": $('#cmbSickness').val()},
-                "treatment": {"id": $('#cmbTreatment').val()},
-                "sessionCountToDo": $('#txtSessionCountToDo').val(),
+                "sickness": $('#cmbSickness').val() > 0 ? {"id": $('#cmbSickness').val()} : null,
+                "treatment": $('#cmbTreatment').val() > 0 ? {"id": $('#cmbTreatment').val()} : null,
+                "sessionCountToDo": $('#txtSessionCountToDo').val() > 0 ? $('#txtSessionCountToDo').val() : null,
                 "fileCode": $('#hiddenFieldFileCode').val()
             }
         }
@@ -561,7 +560,7 @@
                     <div style="display: flex;white-space: nowrap">
                         <input type="text" class="form-control searchFilter" id="txtPatientTitleInSearch"
                                placeholder="فیلتر براساس بیمار ..."
-                               onclick="viewFancyBox('/view/core/personel/personelSelect.html?isSearch=true','90%','90%')">
+                               onclick="viewFancyBox('/view/core/personel/personelSelectWithAdd.html?isSearch=true','90%','90%')">
                     </div>
                 </div>
                 <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2 mt-1 mb-1">
@@ -614,14 +613,6 @@
                                 <i class="fa fa-sort-up sort-grid" order="clinic.organization.title,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="clinic.organization.title,desc"></i>
                             </th>
-                            <th>بیماری
-                                <i class="fa fa-sort-up sort-grid" order="sickness.title,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="sickness.title,desc"></i>
-                            </th>
-                            <th>تجویز
-                                <i class="fa fa-sort-up sort-grid" order="treatment.title,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="treatment.title,desc"></i>
-                            </th>
                             <th>وضعیت
                                 <i class="fa fa-sort-up sort-grid" order="status,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="status,desc"></i>
@@ -651,12 +642,6 @@
                                         </td>
                                         <td style="font-family: iransans-medium;white-space: initial">
                                             ${clinic.organization.title}
-                                        </td>
-                                        <td style="white-space: initial">
-                                            ${sickness.title}
-                                        </td>
-                                        <td style="white-space: initial">
-                                            ${treatment.title}
                                         </td>
                                         <td>
                                             <span class="badge badge-pill
@@ -699,6 +684,8 @@
                                             </div>
                                         </td>
                                     </tr>
+
+
 
 
 
@@ -847,7 +834,7 @@
                                         <input disabled type="text" class="form-control" id="txtPatientTitle">
                                         <button class="btn btn-primary form-control"
                                                 style="width: 3rem"
-                                                onclick="viewFancyBox('/view/core/personel/personelSelect.html','90%','90%')">
+                                                onclick="viewFancyBox('/view/core/personel/personelSelectWithAdd.html','90%','90%')">
                                             000
                                         </button>
                                     </div>
@@ -876,19 +863,19 @@
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label>بیماری<span class="text-danger">*</span></label>
+                                    <label>بیماری</label>
                                     <select class="form-control" id="cmbSickness"></select>
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label>تجویز<span class="text-danger">*</span></label>
+                                    <label>تجویز</label>
                                     <select class="form-control" id="cmbTreatment"></select>
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label>تعداد جلسه<span class="text-danger">*</span></label>
+                                    <label>تعداد جلسه</label>
                                     <input type="text" class="form-control" id="txtSessionCountToDo"></input>
                                 </div>
                             </div>

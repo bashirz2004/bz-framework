@@ -51,19 +51,16 @@ public class Refer extends BaseEntity {
     @JoinColumn(name = "clinic_id", nullable = false)
     private Clinic clinic;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sickness_id", nullable = false)
+    @JoinColumn(name = "sickness_id")
     private BaseInfo sickness;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "treatment_id", nullable = false)
+    @JoinColumn(name = "treatment_id")
     private BaseInfo treatment;
 
-    @NotNull
-    @Column(name = "session_Count_ToDo", nullable = false)
-    private int sessionCountToDo;
+    @Column(name = "session_Count_ToDo")
+    private Integer sessionCountToDo;
 
     @Column(name = "reception_date_shamsi")
     private String receptionDateShamsi;

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>لیست افراد</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.png">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/assets/bzamani/bootstrap.css">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="/assets/admin/css/font-awesome.min.css">
+
+    <!-- Select2 CSS -->
+    <link rel="stylesheet" href="/assets/bzamani/select2.min.css">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/assets/bzamani/style-admin.css">
+
+    <!--[if lt IE 9]>
+    <script src="/assets/js/html5shiv.min.js"></script>
+    <script src="/assets/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery -->
+    <script src="/assets/bzamani/jquery-1.10.2.min.js"></script>
+    <!-- fancybox -->
+    <script src="/assets/bzamani/components/fancybox/jquery.fancybox.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/fancybox/jquery.fancybox.css"/>
+
+    <!-- pace mask -->
+    <script>
+        paceOptions = {
+            elements: false,
+            document: true, // disabled
+            eventLag: false, // disabled
+            ajax: {
+                trackMethods: ['GET', 'POST', 'DELETE', 'PUT'],
+                trackWebSockets: false
+            },
+            restartOnPushState: true,
+            restartOnRequestAfter: true
+        };
+        $(function () {
+            $("body").prepend("<div class='pace-cover' style='display: none;'></div>");
+            Pace.on("start", function () {
+                $(".pace-cover").fadeIn();
+            });
+            Pace.on("done", function () {
+                $(".pace-cover").fadeOut();
+            });
+        });
+    </script>
+    <script type="text/javascript" src="/assets/bzamani/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
+    <style>
+        .pace-cover {
+            position: fixed;
+            left: 0px;
+            top: 1px;
+            width: 100%;
+            height: 100%;
+            z-index: 99999;
+            background: rgba(0, 0, 0, 0.4);
+        }
+    </style>
+    <!-- /pace mask -->
+
+    <!-- sweet alert -->
+    <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/sweetalert/sweetalert2.min.css">
+    <!-- /sweet alert -->
+
+    <script src="/assets/bzamani/jquery.template.js"></script>
+    <script src="/assets/bzamani/grid-utility.js"></script>
+    <script src="/assets/bzamani/general-utility.js"></script>
+
+    <script>
+        let entityData;
+
+        function saveEntity() {
+            if (validateForm() == 'ok') {
+                setEntityFromInputs();
+                $.ajax({
+                    url: "/rest/core/personel/saveBrief",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify(entityData),
+                    type: 'POST',
+                    success: function (res) {
+                        parent.refreshGrid();
+                        parent.$.fancybox.close();
+                    },
+                    error: function (err) {
+                        if (err.responseText.includes("unq_personel_mobile"))
+                            showMessage("خطا. شماره موبایل تکراری است.", "", "error");
+                        if (err.responseText.includes("unq_personel_nationalCode"))
+                            showMessage("خطا. کدملی تکراری است.", "", "error");
+                        if (err.responseText.includes("unq_personel_email"))
+                            showMessage("خطا. ایمیل تکراری است.", "", "error");
+                        else
+                            showMessage("خطا", err.responseJSON.message, "error");
+                    }
+                });
+            } else showMessage(validateForm(), "", "warning");
+        }
+
+        function validateForm() {
+            if ($('#txtMobile').val() == '' || $('#txtFirstname').val() == '' || $('#txtLastname').val() == '' || $('#cmbGender').val() == '' || $('#cmbGender').val() == '...' )
+                return "پرکردن فیلدهای ستاره دار الزامی است.";
+            else if($('#txtMobile').val().length != 11)
+                return "شماره موبایل باید 11 رقم باشد.";
+            else return 'ok';
+        }
+
+        function setEntityFromInputs() {
+            entityData = {
+                "male": $('#cmbGender').val(),
+                "firstname": $('#txtFirstname').val(),
+                "lastname": $('#txtLastname').val(),
+                "mobile": $('#txtMobile').val()
+            }
+        }
+    </script>
+</head>
+<body>
+<h5>افزودن فرد جدید</h5>
+<!-- Add Personel -->
+<div class="service-fields mb-3">
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label>نام <span class="text-danger">*</span></label>
+                <input class="form-control" type="text" id="txtFirstname" required="">
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label>نام خانوادگی <span class="text-danger">*</span></label>
+                <input class="form-control" type="text" id="txtLastname" required="">
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label>موبایل<span class="text-danger">*</span></label>
+                <input type="text" maxlength="11" minlength="11" id="txtMobile"
+                       class="form-control service-desc"/>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label>جنسیت<span class="text-danger">*</span></label>
+                <select id="cmbGender" class="form-control">
+                    <option value="..."></option>
+                    <option value="true">مرد</option>
+                    <option value="false">زن</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="submit-section offset-5">
+            <button class="btn btn-primary submit-btn" onclick="saveEntity()"> ثبت
+            </button>
+        </div>
+    </div>
+</div>
+<!-- Add Personel -->
+
+<!-- Bootstrap Core JS -->
+<script src="/assets/bzamani/bootstrap.min.js"></script>
+
+</body>
+</html>

@@ -69,10 +69,10 @@
                         if (res.personel.fileCode != null)
                             localStorage.setItem("authenticatedUserImageFileCode", res.personel.fileCode);
                         $.cookie('Authorization', "Bearer-" + res.token, {expires: 1, path: '/'});
-                        if(document.referrer && !document.referrer.includes('/register.html') && !document.referrer.includes('/forgot-password.html'))
+                        if(document.referrer && !document.referrer.includes('/register.html') && !document.referrer.includes('/forgot-password.html') && !document.referrer.includes('/index.html'))
                             document.location.href = document.referrer;
                         else
-                            document.location.href = "/index.html";
+                            document.location.href = "/dashboard.html";
                     },
                     error: function (err) {
                         $('#g-recaptcha-response').val('');

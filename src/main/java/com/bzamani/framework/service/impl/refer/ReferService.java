@@ -14,6 +14,7 @@ import com.bzamani.framework.model.refer.Settlement;
 import com.bzamani.framework.repository.refer.IReferRepository;
 import com.bzamani.framework.service.clinic.IClinicService;
 import com.bzamani.framework.service.core.file.IFileAttachmentService;
+import com.bzamani.framework.service.core.personel.IPersonelService;
 import com.bzamani.framework.service.core.user.IUserService;
 import com.bzamani.framework.service.impl.core.GenericService;
 import com.bzamani.framework.service.refer.IReferLogService;
@@ -54,6 +55,9 @@ public class ReferService extends GenericService<Refer, Long> implements IReferS
 
     @Autowired
     private ISettlementService iSettlementService;
+
+    @Autowired
+    private IPersonelService iPersonelService;
 
     @Override
     protected JpaRepository<Refer, Long> getGenericRepo() {
@@ -152,10 +156,10 @@ public class ReferService extends GenericService<Refer, Long> implements IReferS
                     iReferLogService.save(new ReferLog(null, refer, currentDateShamsi, currentTime, authenticatedPersonel,
                             "ارجاع به کلینیک", oldStatus.getPersianTitle(), ReferStatus.referred.getPersianTitle()));
                     try {
-                        Utility.sendSMS(refer.getPatient().getMobile(), refer.getPatient().getFirstname() + " " + refer.getPatient().getLastname() +
-                                " عزیز، ارجاع شما به " + refer.getClinic().getOrganization().getTitle() + " واقع در " +
-                                refer.getClinic().getOrganization().getAddress() + " - تلفن: " +
-                                refer.getClinic().getOrganization().getTelephone() + " با کد رهگیری " +
+                        Utility.sendSMS(iPersonelService.loadByEntityId(refer.getPatient().getId()).getMobile(), iPersonelService.loadByEntityId(refer.getPatient().getId()).getFirstname() + " " + iPersonelService.loadByEntityId(refer.getPatient().getId()).getLastname() +
+                                " عزیز، ارجاع شما به " + iClinicService.loadByEntityId(refer.getClinic().getId()).getOrganization().getTitle() + " واقع در " +
+                                iClinicService.loadByEntityId(refer.getClinic().getId()).getOrganization().getAddress() + " - تلفن: " +
+                                iClinicService.loadByEntityId(refer.getClinic().getId()).getOrganization().getTelephone() + " با کد رهگیری " +
                                 refer.getId() + " از طریق مدیک انجام شد. ");
                     } catch (URISyntaxException e) {
                         e.printStackTrace();
@@ -280,7 +284,6 @@ public class ReferService extends GenericService<Refer, Long> implements IReferS
     public List<ReferChartDto> getAllRefersGroupByClinics() {
         return iReferRepository.getAllRefersGroupByClinics(SecurityUtility.getAuthenticatedUser().getUsername());
     }
-
 
 
 }

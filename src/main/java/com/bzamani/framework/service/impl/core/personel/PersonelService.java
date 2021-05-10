@@ -45,11 +45,11 @@ public class PersonelService extends GenericService<Personel, Long> implements I
 
     @Override
     @Transactional
-    public Personel checkAndSave(Personel personel)  {
+    public Personel checkAndSave(Personel personel) {
         if (personel.getId() != null && personel.getId() > 0) {//edit mode
             if (!iOrganizationService.userHaveAccessToOrganization(
                     iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getId(), loadByEntityId(personel.getId()).getOrganization().getId()))
-                throw new  RuntimeException("امکان ویرایش اطلاعات این فرد برای شما که به واحد سازمانی آن دسترسی ندارید وجود ندارد.");
+                throw new RuntimeException("امکان ویرایش اطلاعات این فرد برای شما که به واحد سازمانی آن دسترسی ندارید وجود ندارد.");
         }
 
         personel.setFileCode(personel.getFileCode() == null || personel.getFileCode().length() == 0 ? null : personel.getFileCode());
@@ -63,13 +63,20 @@ public class PersonelService extends GenericService<Personel, Long> implements I
         return super.save(personel);
     }
 
+    @Override
+    @Transactional
+    public Personel saveBrief(Personel personel) {
+        personel.setOrganization(iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getPersonel().getOrganization());
+        return super.save(personel);
+    }
+
     @Transactional
     @Override
-    public boolean checkAndDelete(Long id)  {
+    public boolean checkAndDelete(Long id) {
         Personel personel = loadByEntityId(id);
         if (!iOrganizationService.userHaveAccessToOrganization(
                 iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getId(), personel.getOrganization().getId()))
-            throw new  RuntimeException("امکان حذف فرد برای شما که به واحد سازمانی این فرد دسترسی ندارید وجود ندارد.");
+            throw new RuntimeException("امکان حذف فرد برای شما که به واحد سازمانی این فرد دسترسی ندارید وجود ندارد.");
         if (loadByEntityId(id).getFileCode() != null)
             iFileAttachmentService.finalizeNewAndDeleteOldAttachment(null, loadByEntityId(id).getFileCode());
         return super.deleteByEntityId(id);

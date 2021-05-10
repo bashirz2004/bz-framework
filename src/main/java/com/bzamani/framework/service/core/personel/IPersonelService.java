@@ -11,6 +11,9 @@ public interface IPersonelService extends IGenericService<Personel, Long> {
     Personel checkAndSave(Personel personel) ;
 
     @Transactional
+    Personel saveBrief(Personel personel);
+
+    @Transactional
     boolean checkAndDelete(Long id) ;
 
     Map<String, Object> searchPersonel(String firstname,
