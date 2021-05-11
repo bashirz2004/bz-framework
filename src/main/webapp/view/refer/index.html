@@ -290,7 +290,7 @@
             $("#txtClinicTitle").val(entity.clinic.organization.title);
             $('#cmbSickness').val(entity.sickness.id);
             $('#cmbTreatment').val(entity.treatment.id);
-            $("#txtSessionCountToDo").val(entity.sessionCountToDo);
+            $("#txtSessionCountToDo").val(entity.sessionCountToDo > 0 ? entity.sessionCountToDo : 0);
 
             if (entity.id > 0) {
                 $("#hiddenFieldDoctorId").val(entity.doctor.id);
@@ -462,8 +462,8 @@
                     $('#txtClinicTitleFull').val(refer.clinic.organization.title);
                     $('#txtReferDateShamsiFull').val(refer.referDateShamsi);
                     $('#txtSessionCountToDoFull').val(refer.sessionCountToDo);
-                    $('#txtTreatmentFull').val(refer.treatment.title);
-                    $('#txtSicknessFull').val(refer.sickness.title);
+                    $('#txtTreatmentFull').val(refer.treatment != null ? refer.treatment.title : "");
+                    $('#txtSicknessFull').val(refer.sickness != null ? refer.sickness.title : "");
                     $('#txtSessionCountDoneFull').val(refer.sessionCountDone);
                     $('#txtReceptionDateShamsiFull').val(refer.receptionDateShamsi);
                     $('#txtFinishDateShamsiFull').val(refer.finishDateShamsi);
@@ -673,7 +673,7 @@
                                                 <a onclick="changeStatus(${id},'initialReception','پذیرش اولیه')"  class="inbox"><i class="fa fa-ambulance"></i>&nbsp;پذیرش اولیه</a>
                                               {{/if}}
                                               {{if status=='initialReception'}}
-                                                <a onclick="showFinishWork(${id},'${doctor.personel.firstname} ${doctor.personel.lastname}', '${patient.firstname} ${patient.lastname}','${clinic.organization.title}', ${sessionCountToDo}, '${treatment.title}','${referDateShamsi}')" class="inbox" ><i class="fa fa-wheelchair-alt"></i>&nbsp;پایان کار</a>
+                                                <a onclick="showFinishWork(${id},'${doctor.personel.firstname} ${doctor.personel.lastname}', '${patient.firstname} ${patient.lastname}','${clinic.organization.title}', {{if sessionCountToDo}}${sessionCountToDo}{{else}}0{{/if}}, {{if treatment}}'${treatment.title}'{{else}}'-'{{/if}},'${referDateShamsi}')" class="inbox" ><i class="fa fa-wheelchair-alt"></i>&nbsp;پایان کار</a>
                                               {{/if}}
                                               {{if status!='initialSaved' &&  status!='settlementDone'}}
                                                 <a onclick="changeStatus(${id},'revoked','ابطال')" class="revokeBtn" style="display: none"><i class="fa fa-minus-circle"></i>&nbsp;ابطال</a>
@@ -684,6 +684,7 @@
                                             </div>
                                         </td>
                                     </tr>
+
 
 
 
