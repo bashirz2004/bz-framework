@@ -12,8 +12,8 @@
     <link rel="stylesheet" href="/assets/bzamani/bootstrap.css">
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="/assets/admin/plugins/fontawesome/css/fontawesome.min.css">
-    <link rel="stylesheet" href="/assets/plugins/fontawesome/css/all.min.css">
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="/assets/admin/css/font-awesome.min.css">
 
     <!-- Main CSS -->
     <link rel="stylesheet" href="/assets/bzamani/style-admin.css">
@@ -194,10 +194,10 @@
                                                                alt="Post Author"><span>${author.firstname} ${author.lastname}</span></a>
                                                     </div>
                                                 </li>
-                                                <li><i class="far fa-calendar"></i>${createDateShamsi}</li>
+                                                <li><i class="fa fa-calendar"></i>${createDateShamsi}</li>
                                                 <li><i class="fa fa-tags"></i>${category.title}</li>
                                                 {{if allowLikeOrComment}}
-                                                    <li><i class="far fa-comments"></i>${commentsCount} نظر</li>
+                                                    <li><i class="fa fa-comments"></i>${commentsCount} نظر</li>
                                                     <li><i class="fa fa-heart text-danger" style="cursor:pointer" onclick="likePost(${id})"></i>${likesCount}</li>
                                                 {{/if}}
                                             </ul>
