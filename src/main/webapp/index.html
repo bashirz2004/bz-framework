@@ -99,7 +99,7 @@
             let searchFilter = {
                 "sort": "id,desc",
                 "page": 0,
-                "size": 6
+                "size": 8
             };
             $.getJSON("/api/public/doctor/searchDoctors", searchFilter, function (entities) {
                 $('#doctors-template').tmpl(entities.entityList).prependTo('#doctors-list');
