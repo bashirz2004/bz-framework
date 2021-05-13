@@ -13,8 +13,9 @@
     <link rel="stylesheet" href="assets/bzamani/bootstrap.css">
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
-    <link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="assets/plugins/fontawesome/css/all5.css">
+    <script src="assets/plugins/fontawesome/css/all5.js"></script>
+
 
     <!-- Main CSS -->
     <link rel="stylesheet" href="assets/bzamani/style-public.css">
@@ -60,7 +61,10 @@
         }
 
         function getCountOfVisitors() {
-            $.getJSON("/api/public/statistics/getCountOfVisitors", {"fromDateShamsi": '', "toDateShamsi": ''}, function (counter) {
+            $.getJSON("/api/public/statistics/getCountOfVisitors", {
+                "fromDateShamsi": '',
+                "toDateShamsi": ''
+            }, function (counter) {
                 $('#visitCounter').html(counter);
             });
         }
@@ -113,7 +117,7 @@
         }
     </script>
 </head>
-<body style="font-family: iransans-medium;color: #222222">
+<body style="font-family: iran-yekan;color: #222222">
 
 <!-- Main Wrapper -->
 <div class="main-wrapper">
@@ -122,13 +126,6 @@
     <header class="header">
         <nav class="navbar navbar-expand-lg header-nav">
             <div class="navbar-header  col-md-2 col-sm-12">
-                <!--<a id="mobile_btn" href="javascript:void(0);">
-							<span class="bar-icon">
-								<span></span>
-								<span></span>
-								<span></span>
-							</span>
-                </a>-->
                 <a href="index.html" class="navbar-brand logo">
                     <img src="assets/img/logo.png" class="img-fluid" alt="Logo">
                 </a>
@@ -143,8 +140,11 @@
                     </a>
                 </div>
                 <ul class="main-nav">
+                    <li>
+                        <a href="/index.html">صفحه اصلی</a>
+                    </li>
                     <li class="has-submenu">
-                        <a href="#">جستجوی پیشرفته<i class="fas fa-chevron-down"></i></a>
+                        <a href="#">جستجوی پیشرفته<i class="fas fa-angle-down"></i></a>
                         <ul class="submenu">
                             <li><a href="public/searchDoctors.html">جستجوی پزشکان</a></li>
                             <li><a href="public/searchClinics.html">جستجوی کلینیک ها</a></li>
@@ -267,13 +267,14 @@
                                              style="border-radius:30px;padding:20px;max-width:100%;max-height:100%"
                                               src={{if organization.fileCode!=null}}"/rest/core/file/download/${organization.fileCode}/false"{{/if}}
                                              />
-                                        <span class="col-lg-12 col-md-12 col-sm-12 float-left">
+                                        <span class="col-lg-12 col-md-12 col-sm-12 float-left text-center" style="font-size: 0.8rem">
                                             ${organization.title}
                                         </span>
-                                         <span class="col-lg-12 col-md-12 col-sm-12 float-left badge-pill bg-info text-white">
+                                         <span class="col-lg-12 col-md-12 col-sm-12 float-left badge-pill text-white text-center" style="background-color: #fb00ca">
                                             ${organization.region.title}
                                         </span>
                         </div>
+
 
 
                         </script>
@@ -296,7 +297,7 @@
                     </div>
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" id="doctors-list">
                         <script id="doctors-template" type="text/x-jquery-tmpl">
-                        <div class="col-lg-2 col-md-4 col-sm-12 float-left text-center">
+                        <div class="col-lg-3 col-md-4 col-sm-12 float-left text-center">
                                  <img class="col-lg-12 col-md-12 col-sm-12 float-left"
                                              alt="User Image"
                                              style="border-radius: 2em;padding:1em;max-width:100%;max-height:100%"
@@ -304,13 +305,14 @@
                                                             {{if !personel.male && personel.fileCode==null}}"/assets/img/woman.png"{{/if}}
                                                             {{if personel.fileCode!=null}}"/rest/core/file/download/${personel.fileCode}/false"{{/if}}
                                              />
-                                        <span class="col-lg-12 col-md-12 col-sm-12 float-left">
+                                        <span class="col-lg-12 col-md-12 col-sm-12 float-left" style="font-size: 0.8rem">
                                             ${personel.firstname} ${personel.lastname}
                                         </span>
-                                         <span class="col-lg-12 col-md-12 col-sm-12 float-left badge-pill bg-info text-white">
+                                         <span class="col-lg-12 col-md-12 col-sm-12 float-left badge-pill bg-info text-white text-center">
                                             ${speciality.title}
                                         </span>
                         </div>
+
 
 
                         </script>
@@ -417,6 +419,7 @@
 
 
 
+
                 </script>
                 <!-- /Blog Post -->
             </div>
@@ -434,7 +437,7 @@
         <div class="footer-top">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-lg-4 col-md-6">
+                    <div class="col-lg-3 col-md-6">
 
                         <!-- Footer Widget -->
                         <div class="footer-widget footer-about">
@@ -442,12 +445,12 @@
                                 <img src="assets/img/footer-logo.png" alt="logo">
                             </div>
                             <div class="footer-about-content">
-                                <p>مدیک یک وب سایت اطلاع رسانی در حوزه سلامت است که قصد دارد خدمات نوین پزشکی را در سریع
-                                    ترین زمان ممکن و با حداکثر کیفیت به بیماران گرامی ارائه نماید. </p>
+                                <p>مدیک یک وب اپلیکیشن در حوزه سلامت است که قصد دارد خدمات نوین پزشکی را در سریع
+                                    ترین زمان ممکن و با حداکثر کیفیت به کاربران گرامی ارائه نماید. </p>
                                 <div class="social-icon">
                                     <ul>
                                         <li>
-                                            <a href="#" target="_blank"><i class="fab fa-facebook-f"></i> </a>
+                                            <a href="#" target="_blank"><i class="fab fa-search"></i> </a>
                                         </li>
                                         <li>
                                             <a href="#" target="_blank"><i class="fab fa-twitter"></i> </a>
@@ -514,7 +517,7 @@
 
                     </div>
 
-                    <div class="col-lg-2 col-md-6">
+                    <div class="col-lg-3 col-md-6">
 
                         <!-- Footer Widget -->
                         <div class="footer-widget footer-contact" style="color: white">
@@ -550,15 +553,16 @@
                 <!-- Copyright -->
                 <div class="copyright">
                     <div class="row">
-                        <div class="col-md-6 col-lg-6">
+                        <div class="col-md-5 col-lg-5">
                             <div class="copyright-text">
-                                <p class="mb-0">تمامی حقوق برای مدیک تب محفوظ است.</p>
+                                <p class="mb-0">تمامی حقوق این اپلیکیشن برای مدیک اپ محفوظ است.</p>
                             </div>
                         </div>
-                        <div class="col-md-6 col-lg-6">
+                        <div class="col-md-7 col-lg-7">
                             <div class="copyright-text" style="display: flex;white-space: nowrap">
-                                <p class="mb-0">آمار بازدید سایت تا امروز: &nbsp;</p>
-                                <span id="visitCounter" style="color: white"></span>
+                                <p class="mb-0">آمار سایت تا امروز: &nbsp;</p>
+                                <span id="visitCounter" style="color: white"></span>&nbsp;
+                                <span style="color: white"> بازدید </span>
                             </div>
                         </div>
                     </div>

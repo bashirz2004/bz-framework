@@ -14,6 +14,7 @@
     <!-- Fontawesome CSS -->
     <link rel="stylesheet" href="assets/admin/css/font-awesome.min.css">
 
+
     <!-- Feathericon CSS -->
     <link rel="stylesheet" href="assets/admin/css/feathericon.min.css">
 
@@ -40,6 +41,12 @@
     <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
     <link rel="stylesheet" href="/assets/bzamani/components/sweetalert/sweetalert2.min.css">
     <!-- /sweet alert -->
+
+    <style>
+        #returnLink:hover {
+            color: white !important;
+        }
+    </style>
 
     <script>
 
@@ -69,7 +76,7 @@
             });
         }
 
-        function loadIframe(src,code) {
+        function loadIframe(src, code) {
             $(".menuItem").css("backgroundColor", "#00121e");
             $(".menuItem > a").css("color", "white");
             $(".menuItem > a").css("fontWeight", "normal");
@@ -111,7 +118,7 @@
         <!-- /Logo -->
 
         <a href="javascript:void(0);" id="toggle_btn">
-            <i class="fe fe-text-align-left"></i>
+            <i class="fa fa-align-left fa-2"></i>
         </a>
 
         <!-- <div class="top-nav-search">
@@ -127,11 +134,12 @@
         </a>
         <!-- /Mobile Menu Toggle -->
 
+        <a href="/index.html" style="color: #c6b17e;margin-right: 3em;line-height: 4em" id="returnLink">صفحه اصلی</a>
+
         <!-- Header Right Menu -->
         <ul class="nav user-menu">
-
             <!-- Notifications -->
-            <li class="nav-item dropdown noti-dropdown" style="display: none">
+            <!--<li class="nav-item dropdown noti-dropdown" style="display: none">
                 <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
                     <i class="fe fe-bell"></i> <span class="badge badge-pill bg-danger">3</span>
                 </a>
@@ -163,7 +171,7 @@
                         <a href="#">مشاهده همه اطلاعیه‌ها</a>
                     </div>
                 </div>
-            </li>
+            </li>-->
             <!-- /Notifications -->
 
             <!-- User Menu -->
@@ -216,6 +224,8 @@
                             </a>
                         </li>
                     </ul>
+
+
 
 
 

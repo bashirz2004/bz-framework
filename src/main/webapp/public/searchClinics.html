@@ -13,8 +13,7 @@
     <link rel="stylesheet" href="../assets/bzamani/bootstrap.css">
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="../assets/plugins/fontawesome/css/fontawesome.min.css">
-    <link rel="stylesheet" href="../assets/plugins/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="../assets/admin/css/font-awesome.min.css">
 
     <!-- Select2 CSS -->
     <link rel="stylesheet" href="../assets/bzamani/select2.min.css">
@@ -216,20 +215,44 @@
     <!-- Header -->
     <header class="header">
         <nav class="navbar navbar-expand-lg header-nav">
-            <div class="navbar-header  col-md-2 col-sm-12">
+            <div class="navbar-header col-lg-2 col-sm-12">
                 <a href="../index.html" class="navbar-brand logo">
                     <img src="../assets/img/logo.png" class="img-fluid" alt="Logo">
                 </a>
             </div>
-            <div class="main-menu-wrapper  col-md-7 col-sm-12">
+            <div class="main-menu-wrapper col-lg-10 col-sm-12">
                 <div class="menu-header">
-                    <a href="../index.html" class="menu-logo">
-                        <img src="../assets/img/logo.png" class="img-fluid" alt="Logo">
+                    <a href="index.html" class="menu-logo">
+                        <img src="assets/img/logo.png" class="img-fluid" alt="Logo">
                     </a>
                     <a id="menu_close" class="menu-close" href="javascript:void(0);">
                         <i class="fas fa-times"></i>
                     </a>
                 </div>
+                <ul class="main-nav">
+                    <li>
+                        <a href="/index.html">صفحه اصلی</a>
+                    </li>
+                    <li class="has-submenu">
+                        <a href="#">جستجوی پیشرفته<i class="fa fa-angle-down"></i></a>
+                        <ul class="submenu">
+                            <li><a href="/public/searchDoctors.html">جستجوی پزشکان</a></li>
+                            <li><a href="/public/searchClinics.html">جستجوی کلینیک ها</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="/showAllPosts.html">وبلاگ</a>
+                    </li>
+                    <li>
+                        <a href="/aboutUs.html">درباره ما</a>
+                    </li>
+                    <li>
+                        <a href="/contactUs.html">تماس با ما</a>
+                    </li>
+                    <li id="dashboardPage" style="display: none">
+                        <a href="/dashboard.html">داشبورد</a>
+                    </li>
+                </ul>
             </div>
         </nav>
     </header>
@@ -316,21 +339,21 @@
                                         </p>
                                         <h5 class="doc-department"> تخفیف: ${discount} %</h5>
                                         <div class="rating">
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star"></i>
+                                            <i class="fa fa-star filled"></i>
+                                            <i class="fa fa-star filled"></i>
+                                            <i class="fa fa-star filled"></i>
+                                            <i class="fa fa-star filled"></i>
+                                            <i class="fa fa-star"></i>
                                             <span class="d-inline-block average-rating">(${id})</span>
                                         </div>
                                         <div class="clinic-details">
                                             <p class="doc-location">
-                                                <i class="fas fa-map-marker-alt"></i> ${organization.address}
+                                                <i class="fa fa-map"></i> ${organization.address}
                                             </p>
                                         </div>
                                         <div class="clinic-details">
                                             <p class="doc-location">
-                                                <i class="fas fa-phone"></i> ${organization.telephone}
+                                                <i class="fa fa-phone"></i> ${organization.telephone}
                                             </p>
                                         </div>
                                     </div>
@@ -338,11 +361,11 @@
                                 <div class="doc-info-right">
                                     <div class="clini-infos">
                                         <ul>
-                                            <li><i class="far fa-thumbs-up"></i> 95% رضایتمندی بیماران</li>
-                                            <li><i class="far fa-comment"></i> 17 نظر ثبت شده</li>
-                                            <li><i class="fas fa-map-marker-alt"></i>{{if organization.city != null }}${organization.city.title}{{/if}} - {{if organization.region != null }}${organization.region.title}{{/if}}</li>
-                                            <li><i class="far fa-money-bill-alt"></i>${discount} %<i
-                                                    class="fas fa-info-circle"
+                                            <li><i class="fa fa-thumbs-up"></i> 95% رضایتمندی بیماران</li>
+                                            <li><i class="fa fa-comment"></i> 17 نظر ثبت شده</li>
+                                            <li><i class="fa fa-map"></i>{{if organization.city != null }}${organization.city.title}{{/if}} - {{if organization.region != null }}${organization.region.title}{{/if}}</li>
+                                            <li><i class="fa fa-money-bill-alt"></i>${discount} %<i
+                                                    class="fa fa-info-circle"
                                                     data-toggle="tooltip" title="Lorem Ipsum"></i></li>
                                         </ul>
                                     </div>

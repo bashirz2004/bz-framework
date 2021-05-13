@@ -13,8 +13,7 @@
     <link rel="stylesheet" href="/assets/bzamani/bootstrap.css">
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="/assets/plugins/fontawesome/css/fontawesome.min.css">
-    <link rel="stylesheet" href="/assets/plugins/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="/assets/admin/css/font-awesome.min.css">
 
     <!-- Select2 CSS -->
     <link rel="stylesheet" href="/assets/bzamani/select2.min.css">
@@ -360,16 +359,16 @@
                                         </p>
                                         <h5 class="doc-department"> تخفیف: ${discount} %</h5>
                                         <div class="rating">
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star"></i>
+                                            <i class="fa fa-star filled"></i>
+                                            <i class="fa fa-star filled"></i>
+                                            <i class="fa fa-star filled"></i>
+                                            <i class="fa fa-star filled"></i>
+                                            <i class="fa fa-star"></i>
                                             <span class="d-inline-block average-rating">(${id})</span>
                                         </div>
                                         <div class="clinic-details">
                                             <p class="doc-location">
-                                                <i class="fas fa-map-marker-alt"></i> ${organization.address}
+                                                <i class="fa fa-map-marker-alt"></i> ${organization.address}
                                             </p>
                                         </div>
                                     </div>
@@ -377,10 +376,10 @@
                                 <div class="doc-info-right">
                                     <div class="clini-infos">
                                         <ul>
-                                            <li><i class="far fa-thumbs-up"></i> 95% رضایتمندی بیماران</li>
-                                            <li><i class="far fa-comment"></i> 17 نظر ثبت شده</li>
-                                            <li><i class="fas fa-map-marker-alt"></i>{{if organization.city != null }}${organization.city.title}{{/if}} - {{if organization.region != null }}${organization.region.title}{{/if}}</li>
-                                            <li><i class="fas fa-phone"></i> ${organization.telephone}</li>
+                                            <li><i class="fa fa-thumbs-up"></i> 95% رضایتمندی بیماران</li>
+                                            <li><i class="fa fa-comment"></i> 17 نظر ثبت شده</li>
+                                            <li><i class="fa fa-map"></i>{{if organization.city != null }}${organization.city.title}{{/if}} - {{if organization.region != null }}${organization.region.title}{{/if}}</li>
+                                            <li><i class="fa fa-phone"></i> ${organization.telephone}</li>
                                         </div>
                                         </ul>
                                     </div>

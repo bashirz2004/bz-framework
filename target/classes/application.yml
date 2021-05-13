@@ -1,7 +1,5 @@
 server:
   port: 80
-  servlet:
-    context-path: /app
 spring:
   banner:
     image:
@@ -19,7 +17,7 @@ spring:
   security:
     jwt:
       secret: bashir
-      expirationDateInMs: 18000000
+      expirationDateInMs: 86400000
 
   servlet:
     multipart:
@@ -35,6 +33,15 @@ spring:
           auth: true
           starttls:
             enable: true
+google:
+  recaptcha:
+    enabled: false
+    key:
+      site: 6LfAqRYaAAAAADjef9Myz5oOGGa_1ykOGiHLLa6_
+      secret: 6LfAqRYaAAAAAHw8W__o7I9hQtg9e1pMhjVto1M3
+
+bzamani:
+  organization-id-for-guest-users: 2
 
 logging:
   level:
@@ -45,5 +52,4 @@ logging:
             sql:
               BasicBinder: TRACE
         SQL: DEBUG
-bzamani:
-  organization-id-for-guest-users: 2
+
