@@ -777,12 +777,15 @@ code {
   justify-content: space-between;
   cursor: pointer;
   font-size: 13px;
-  color: #c6b17e;
   padding: 11px 14px;
   transition: .600s;
-
+  color: #c6b17e;
   font-weight: 600;
   letter-spacing: 1px; }
+#sidebar ul.menu-categories li.menu > .dropdown-toggle > span {
+  color: white;
+}
+
 #sidebar ul.menu-categories li.menu > .dropdown-toggle > div {
   align-self: center; }
 
