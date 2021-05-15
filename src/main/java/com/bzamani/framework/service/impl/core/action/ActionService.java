@@ -2,7 +2,7 @@ package com.bzamani.framework.service.impl.core.action;
 
 import com.bzamani.framework.common.utility.SecurityUtility;
 import com.bzamani.framework.common.utility.TreeNode;
-import com.bzamani.framework.dto.HierarchicalObjectDto;
+import com.bzamani.framework.dto.MenuTreeNodeDto;
 import com.bzamani.framework.model.core.action.Action;
 import com.bzamani.framework.model.core.user.User;
 import com.bzamani.framework.repository.core.action.IActionRepository;
@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -31,28 +32,33 @@ public class ActionService extends GenericService<Action, Long> implements IActi
     }
 
     @Override
-    public List<Action> loadMenuForCurrentUser()  {
+    public List<Action> loadMenuForCurrentUser() {
         User authenticatedUser = iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername());
         if (authenticatedUser != null)
             return iActionRepository.loadMenuForCurrentUser(authenticatedUser.getId());
         else
-            throw new  RuntimeException("احراز هویت کاربر جاری به درستی انجام نشده است یا شما به واحد سازمانی خود دسترسی ندارید.");
+            throw new RuntimeException("احراز هویت کاربر جاری به درستی انجام نشده است یا شما به واحد سازمانی خود دسترسی ندارید.");
     }
 
-    /*@Override
-    public TreeNode loadCompleteTreeAuthorize(long id, long authenticatedUserId) {
+    @Override
+    public MenuTreeNodeDto loadCompleteTreeAuthorize(long id, long authenticatedUserId) {
         Action action = loadByEntityId(id);
-        TreeNode treeNode = new TreeNode(action.getId().toString(), action.getTitle());
-        List<HierarchicalObjectDto> children = iActionRepository.getAuthorizeActionsForUserId(authenticatedUserId, action.getId()); //get all children that authenticated user has access
-        treeNode.setChildCount(children.size());
-        treeNode.addAttr("checked", "1");
-        treeNode.addAttr("text", action.getTitle());
-        treeNode.addAttr("id", String.valueOf(id));
-        if (children.size() > 0)
-            for (HierarchicalObjectDto item : children)
-                treeNode.getChilds().add(loadCompleteTreeAuthorize(item.getId(), authenticatedUserId));
-        return treeNode;
-    }*/
+        MenuTreeNodeDto node = new MenuTreeNodeDto();
+        node.setId(id);
+        node.setTitle(action.getTitle());
+        node.setIconClass(action.getIconClass());
+        node.setParentId(action.getParent() != null ? action.getParent().getId() : null);
+        node.setSrc(action.getSrc());
+        node.setSortOrder(action.getSortOrder());
+        List<MenuTreeNodeDto> children = iActionRepository.getAuthorizeActionsForUserId(authenticatedUserId, action.getId()); //get all children that authenticated user has access
+        if (children.size() > 0) {
+            List<MenuTreeNodeDto> nodeChildren = new ArrayList<>();
+            for (MenuTreeNodeDto item : children)
+                nodeChildren.add(loadCompleteTreeAuthorize(item.getId(), authenticatedUserId));
+            node.setChildren(nodeChildren);
+        }
+        return node;
+    }
 
     @Override
     public TreeNode loadWholeTreeWithoutAuthorization(long actionId, Set<Action> groupActions) {

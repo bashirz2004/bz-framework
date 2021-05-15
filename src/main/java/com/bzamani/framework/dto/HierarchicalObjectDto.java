@@ -19,6 +19,5 @@ public class HierarchicalObjectDto {
         this.title = title;
         this.parentId = parentId;
         this.childCount = childCount;
-
     }
 }

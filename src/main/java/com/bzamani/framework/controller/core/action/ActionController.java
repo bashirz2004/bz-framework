@@ -2,6 +2,7 @@ package com.bzamani.framework.controller.core.action;
 
 import com.bzamani.framework.common.utility.SecurityUtility;
 import com.bzamani.framework.common.utility.TreeNode;
+import com.bzamani.framework.dto.MenuTreeNodeDto;
 import com.bzamani.framework.model.core.action.Action;
 import com.bzamani.framework.service.core.action.IActionService;
 import com.bzamani.framework.service.core.group.IGroupService;
@@ -32,10 +33,10 @@ public class ActionController {
         return iActionService.loadMenuForCurrentUser();
     }
 
-   /* @GetMapping(value = "/loadCompleteTreeAuthorize")
-    public TreeNode loadCompleteTreeAuthorize(long id) {
+    @GetMapping(value = "/loadCompleteTreeAuthorize")
+    public MenuTreeNodeDto loadCompleteTreeAuthorize(long id) {
         return iActionService.loadCompleteTreeAuthorize(id, iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername()).getId());
-    }*/
+    }
 
     @GetMapping(value = "/loadWholeTreeWithoutAuthorization")
     public TreeNode loadWholeTreeWithoutAuthorization(long id, long groupId) {

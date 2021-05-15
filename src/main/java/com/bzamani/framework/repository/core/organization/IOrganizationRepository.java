@@ -37,7 +37,7 @@ public interface IOrganizationRepository extends JpaRepository<Organization, Lon
             "		p.id as id,  																	" +
             "		p.title as title,																" +
             "		p.parent.id as parentId,                                                        " +
-            "   	cast((select count(a.id) from Organization a where a.parent.id = p.id) as integer) as childCount   ) " +
+            "   	cast((select count(a.id) from Organization a where a.parent.id = p.id) as integer) as childCount ) " +
             "	from Organization p                                                                 " +
             "	where p.hierarchyCode in (                                                          " +
             "              select substring(org.hierarchyCode,1,length(p.hierarchyCode))            " +
