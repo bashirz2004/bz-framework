@@ -7,14 +7,17 @@
     <title>داشبورد</title>
     <link rel="icon" type="image/x-icon" href="assets/img/favicon.png"/>
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
-    <link href="assets/menu/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-    <link href="assets/menu/plugins.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/newtheme/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/newtheme/plugins.css" rel="stylesheet" type="text/css"/>
     <!-- END GLOBAL MANDATORY STYLES -->
 
     <!-- Fontawesome CSS -->
     <link rel="stylesheet" href="assets/admin/css/font-awesome.min.css">
 
-    <script src="assets/menu/jquery-3.1.1.min.js"></script>
+    <!-- chat box CSS -->
+    <link rel="stylesheet" href="assets/bzamani/chat.css">
+
+    <script src="assets/newtheme/jquery-3.1.1.min.js"></script>
     <script src="assets/bzamani/jquery.cookie.js"></script>
     <script src="assets/bzamani/general-utility.js"></script>
 
@@ -95,6 +98,14 @@
             $.removeCookie('Authorization', {path: '/'});
         }
 
+        function openForm() {
+            document.getElementById("myForm").style.display = "block";
+        }
+
+        function closeForm() {
+            document.getElementById("myForm").style.display = "none";
+        }
+
     </script>
 
 </head>
@@ -168,17 +179,31 @@
 </div>
 <!-- END MAIN CONTAINER -->
 
+<!--<button class="btn open-button" onclick="openForm()">چت آنلاین با پشتیبانی</button>
+<div class="form-popup" id="myForm" style="display: none;">
+    <form class="form-container">
+        <h4 style="color: black">چت آنلاین با پشتیبانی</h4>
+
+        <label<b>پیام</b></label>
+        <textarea placeholder="به مدیک خوش آمدید. هر سوالی دارید اینجا بپرسید..." name="msg" required=""></textarea>
+
+        <button type="button" class="btn">ارسال</button>
+        <button type="button" class="btn cancel" onclick="closeForm()">بستن</button>
+    </form>
+</div>-->
+
+
 <!-- BEGIN GLOBAL MANDATORY SCRIPTS -->
-<script src="assets/menu/popper.min.js"></script>
-<script src="assets/menu/bootstrap.min.js"></script>
-<script src="assets/menu/perfect-scrollbar.min.js"></script>
-<script src="assets/menu/app.js"></script>
+<script src="assets/newtheme/popper.min.js"></script>
+<script src="assets/newtheme/bootstrap.min.js"></script>
+<script src="assets/newtheme/perfect-scrollbar.min.js"></script>
+<script src="assets/newtheme/app.js"></script>
 <script>
     $(document).ready(function () {
         App.init();
     });
 </script>
-<script src="assets/menu/custom.js"></script>
+<script src="assets/newtheme/custom.js"></script>
 <!-- END GLOBAL MANDATORY SCRIPTS -->
 
 </body>

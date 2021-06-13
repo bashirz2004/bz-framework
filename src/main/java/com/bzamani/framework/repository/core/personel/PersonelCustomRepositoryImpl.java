@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,9 +50,10 @@ public class PersonelCustomRepositoryImpl implements PersonelCustomRepository {
             query.setParameter(a.getKey(), a.getValue());
         });
 
+        int totalRecords = query.getResultList().size();
         query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
-        query.setMaxResults(query.getResultList().size());
+        query.setMaxResults(pageable.getPageSize());
 
-        return new PageImpl<Personel>(query.getResultList(), pageable, query.getResultList().size());
+        return new PageImpl<Personel>(query.getResultList(), pageable, totalRecords);
     }
 }
