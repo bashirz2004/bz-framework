@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface IActionService extends IGenericService<Action, Long> {
-    List<Action> loadMenuForCurrentUser() ;
+    //List<Action> loadMenuForCurrentUser() ;
 
     TreeNode loadWholeTreeWithoutAuthorization(long actionId, Set<Action> groupActions);
 

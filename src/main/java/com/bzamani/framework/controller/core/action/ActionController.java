@@ -28,10 +28,10 @@ public class ActionController {
     @Autowired
     IGroupService iGroupService;
 
-    @GetMapping("/loadMenuForCurrentUser")
+    /*@GetMapping("/loadMenuForCurrentUser")
     public List<Action> loadMenuForCurrentUser()  {
         return iActionService.loadMenuForCurrentUser();
-    }
+    }*/
 
     @GetMapping(value = "/loadCompleteTreeAuthorize")
     public MenuTreeNodeDto loadCompleteTreeAuthorize(long id) {
