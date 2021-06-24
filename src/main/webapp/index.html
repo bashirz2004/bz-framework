@@ -23,6 +23,12 @@
         .result:hover {
             background-color: #09e5ab54;
         }
+        .carousel-item{
+            opacity: 50%;
+        }
+        .d-block{
+            border-radius: 0 0 10rem 0;
+        }
     </style>
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -64,29 +70,29 @@
             $('#clinic-search-result-list').show();
             $('#doctor-search-result-list').show();
             //if (searchParameter != "") {
-                let clinicFinalResult = [];
-                let doctorFinalResult = [];
-                for (let i = 0; i < allClinics.length; i++) {
-                    if (allClinics[i].organization.address.includes(searchParameter) || allClinics[i].organization.title.includes(searchParameter))
-                        clinicFinalResult.push({
-                            "id": allClinics[i].id,
-                            "title": allClinics[i].organization.title,
-                            "fileCode": allClinics[i].organization.fileCode
-                        });
-                }
-                for (let i = 0; i < allDoctors.length; i++) {
-                    if (allDoctors[i].personel.lastname.includes(searchParameter) || allDoctors[i].speciality.title.includes(searchParameter))
-                        doctorFinalResult.push({
-                            "id": allDoctors[i].id,
-                            "firstname": allDoctors[i].personel.firstname,
-                            "lastname": allDoctors[i].personel.lastname,
-                            "male": allDoctors[i].personel.male,
-                            "fileCode": allDoctors[i].personel.fileCode
-                        });
-                }
+            let clinicFinalResult = [];
+            let doctorFinalResult = [];
+            for (let i = 0; i < allClinics.length; i++) {
+                if (allClinics[i].organization.address.includes(searchParameter) || allClinics[i].organization.title.includes(searchParameter))
+                    clinicFinalResult.push({
+                        "id": allClinics[i].id,
+                        "title": allClinics[i].organization.title,
+                        "fileCode": allClinics[i].organization.fileCode
+                    });
+            }
+            for (let i = 0; i < allDoctors.length; i++) {
+                if (allDoctors[i].personel.lastname.includes(searchParameter) || allDoctors[i].speciality.title.includes(searchParameter))
+                    doctorFinalResult.push({
+                        "id": allDoctors[i].id,
+                        "firstname": allDoctors[i].personel.firstname,
+                        "lastname": allDoctors[i].personel.lastname,
+                        "male": allDoctors[i].personel.male,
+                        "fileCode": allDoctors[i].personel.fileCode
+                    });
+            }
 
-                $('#clinic-search-result-template').tmpl(clinicFinalResult).prependTo('#clinic-search-result-list');
-                $('#doctor-search-result-template').tmpl(doctorFinalResult).prependTo('#doctor-search-result-list');
+            $('#clinic-search-result-template').tmpl(clinicFinalResult).prependTo('#clinic-search-result-list');
+            $('#doctor-search-result-template').tmpl(doctorFinalResult).prependTo('#doctor-search-result-list');
             /*} else
                 $('#txtSearchBox').focus();*/
         }
@@ -272,22 +278,64 @@
     </header>
     <!-- /Header -->
 
-    <!-- Banner -->
-    <div style="padding-right:0;padding-left: 0;">
-        <img src="assets/img/new/med2.jpg" onclick="clearAutoComplete()"
-             style="width: 100%;opacity: 70%;margin-top: 4rem;border-radius: 10rem 0rem 10rem 1rem;box-shadow: 0rem 0rem 7rem 2rem black">
+    <!-- slider -->
+    <div id="carouselExampleIndicators" style="margin-top: 4rem;" onclick="clearAutoComplete()"
+         class="carousel slide text-center col-lg-12 float-left pl-0 pr-0"
+         data-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-target="#carouselExampleIndicators" data-slide-to="0" ></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="1" class="active"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img class="d-block w-100" src="assets/img/new/med2.jpg" alt="توضیحات درباره خدمات">
+                <h5></h5>
+                <p></p>
+            </div>
+            <div class="carousel-item">
+                <img class="d-block w-100" src="assets/img/new/h.jpg" alt="توضیحات درباره خدمات">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5></h5>
+                    <p></p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img class="d-block w-100" src="assets/img/new/4docs.jpg" alt="توضیحات درباره خدمات">
+                <h5></h5>
+                <p></p>
+            </div>
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button"
+           data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button"
+           data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
     </div>
+    <!-- /slider -->
+
+
+    <!-- Banner -->
+    <!-- <div style="padding-right:0;padding-left: 0;">
+         <img src="assets/img/new/med2.jpg" onclick="clearAutoComplete()"
+              style="width: 100%;opacity: 70%;margin-top: 4rem;border-radius: 10rem 0rem 10rem 1rem;box-shadow: 0rem 0rem 7rem 2rem black">
+     </div>-->
     <!-- /Banner -->
 
     <!-- Title on banner -->
-    <div style="position: absolute;top: 6rem;right: 5rem;width: 100%">
+    <div class="w-100 text-left pl-5" style="position: absolute;top: 6rem;">
         <h1>مدیک دستیار سلامت شما</h1>
-        <p style="width: 50%">دریافت سریع و راحت خدمات از مراکز درمانی و پزشکان متخصص در هر زمان و مکان</p>
+        <h5 class="text-left pl-4">دریافت سریع و راحت خدمات از مراکز درمانی و پزشکان متخصص در هر زمان و مکان</h5>
     </div>
     <!-- Title on banner -->
 
     <!-- Search box on banner -->
-    <div style="position: absolute;top: 12rem;" class="col-lg-12 col-md-12 col-sm-12">
+    <div style="position: absolute;top: 13rem;" class="col-lg-12 col-md-12 col-sm-12">
         <input id="txtSearchBox" type="text" class="form-control col-xl-6 col-lg-6 col-md-8 col-sm-10 col-10 float-left"
                style="min-height: 3rem"
                placeholder="جستجوی مراكز درمانی براساس نام یا آدرس و جستجوی پزشکان بر اساس نام خانوادگی یا تخصص یا آدرس ...">
@@ -323,6 +371,10 @@
 
 
 
+
+
+
+
             </script>
         </div>
         <div id="doctor-search-result-list" class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-6 float-left"
@@ -348,6 +400,10 @@
                                 </span>
                             </div>
                         </div>
+
+
+
+
 
 
 
@@ -487,10 +543,15 @@
 
 
 
+
+
+
+
                         </script>
                     </div>
                     <a class="sub-title" href="public/searchClinics.html"
-                       style="color: rgba(48,46,48,0.61);display: flex;white-space: nowrap;position: absolute">مشاهده همه</a>
+                       style="color: rgba(48,46,48,0.61);display: flex;white-space: nowrap;position: absolute">مشاهده
+                        همه</a>
                 </div>
             </div>
         </div>
@@ -524,6 +585,10 @@
                                              <p style="font-size: 0.8rem; height:2rem">${personel.organization.address} - ${personel.organization.telephone}</p>
                                         </span>
                         </div>
+
+
+
+
 
 
 
@@ -614,6 +679,10 @@
                         </div>
                     </div>
                 </div>
+
+
+
+
 
 
 
@@ -827,7 +896,6 @@
 
 </div>
 <!-- /Main Wrapper -->
-
 
 <!-- Bootstrap Core JS -->
 
