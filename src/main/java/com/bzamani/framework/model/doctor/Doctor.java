@@ -31,5 +31,16 @@ public class Doctor extends BaseEntity {
     @JoinColumn(name = "speciality_id", nullable = false)
     private BaseInfo speciality;
 
+    @NotNull
+    @Column(name = "confirmed", nullable = false)
+    private boolean confirmed;
+
+    @NotNull
+    @Column(name = "show_in_vip_list", nullable = false)
+    private boolean showInVipList;
+
+    @Column(name = "order_number")
+    private Integer orderNumber;
+
 
 }

@@ -14,9 +14,18 @@ public interface IClinicRepository extends JpaRepository<Clinic, Long> {
             " and e.organization.address like COALESCE(cast('%'||:organizationAddress||'%' AS text), '%'||e.organization.address)||'%'  " +
             " and coalesce(s.id,0) =  CASE WHEN :stateId > 0L THEN :stateId ELSE coalesce(s.id,0) END " +
             " and coalesce(c.id,0) = CASE WHEN :cityId > 0L THEN :cityId ELSE coalesce(c.id,0) END " +
-            " and coalesce(r.id,0) = CASE WHEN :regionId > 0L THEN :regionId ELSE coalesce(r.id,0) END ")
-    Page<Clinic> searchClinic(@Param("organizationTitle") String organizationTitle, @Param("organizationAddress") String organizationAddress,
-                              @Param("stateId") Long stateId, @Param("cityId") Long cityId, @Param("regionId") Long regionId, Pageable pageable);
+            " and coalesce(r.id,0) = CASE WHEN :regionId > 0L THEN :regionId ELSE coalesce(r.id,0) END "+
+            " and e.confirmed = CASE WHEN :confirmed is null THEN e.confirmed ELSE :confirmed END "+
+            " and e.showInVipList = CASE WHEN :showInVipList is null THEN e.showInVipList ELSE :showInVipList END "
+    )
+    Page<Clinic> searchClinic(@Param("organizationTitle") String organizationTitle,
+                              @Param("organizationAddress") String organizationAddress,
+                              @Param("stateId") Long stateId,
+                              @Param("cityId") Long cityId,
+                              @Param("regionId") Long regionId,
+                              @Param("confirmed") Boolean confirmed,
+                              @Param("showInVipList") Boolean showInVipList,
+                              Pageable pageable);
 
 
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <title>لیست کاربران</title>
+    <title>لیست پزشکان</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.png">
@@ -81,7 +81,10 @@
             "id": '',
             "medicalNationalNumber": '',
             "personel": {"id": '', "firstname": '', "lastname": ''},
-            "speciality": {"id": ''}
+            "speciality": {"id": ''},
+            "confirmed": false,
+            "showInVipList": false,
+            "orderNumber": ''
         };
         var entityData;
 
@@ -89,6 +92,8 @@
             "firstname": '',
             "lastname": '',
             "specialityTitle": '',
+            "confirmed": '',
+            "showInVipList": '',
             "sort": "id,desc",
             "page": 0,
             "size": 8
@@ -117,6 +122,8 @@
             searchFilters.firstname = $("#txtSearchFirstname").val();
             searchFilters.lastname = $("#txtSearchLastname").val();
             searchFilters.specialityTitle = $("#txtSearchSpecialityTitle").val();
+            searchFilters.confirmed = $("#cmbSearchConfirmed").val() != '-1' ? $("#cmbSearchConfirmed").val() : null;
+            searchFilters.showInVipList = $("#cmbSearchShowInVipList").val() != '-1' ? $("#cmbSearchShowInVipList").val() : null;
             refreshGrid();
         }
 
@@ -126,6 +133,8 @@
                 "firstname": '',
                 "lastname": '',
                 "specialityTitle": '',
+                "confirmed": '',
+                "showInVipList": '',
                 "sort": "id,desc",
                 "page": 0,
                 "size": 8
@@ -164,7 +173,7 @@
                         if (err.responseJSON.message.includes("Forbidden"))
                             showMessage("خطای سطح دسترسی", " شما مجوز انجام این کار را ندارید.", "error");
                         else
-                            showMessage("خطا در حذف اطلاعات", "", "error");
+                            showMessage("خطا در حذف اطلاعات", "این پزشك دارای سابقه ارجاع است.", "error");
                     }
                 });
             else
@@ -213,6 +222,8 @@
                             showMessage("خطا. این پزشک قبلا ثبت شده است.", "", "error");
                         else if (err.responseJSON.message.includes("Forbidden"))
                             showMessage("خطای سطح دسترسی", " شما مجوز انجام این کار را ندارید.", "error");
+                        else
+                            showMessage(err.responseJSON.message, "", "error");
 
                     }
                 });
@@ -241,6 +252,10 @@
                 $('#uploadedImage').prop("src", "/rest/core/file/download/" + entity.personel.fileCode + "/false");
             else
                 $('#uploadedImage').prop("src", "");
+            entity.confirmed == true ? $('#confirmed_switch').prop("checked", "checked") : $('#confirmed_switch').prop("checked", "");
+            entity.showInVipList == true ? $('#showInVipList_switch').prop("checked", "checked") : $('#showInVipList_switch').prop("checked", "");
+            $("#txtOrderNumber").val(entity.orderNumber);
+
         }
 
         function setEntityFromInputs() {
@@ -248,7 +263,10 @@
                 "id": $('#hiddenFieldId').val(),
                 "medicalNationalNumber": $('#txtMedicalNationalNumber').val(),
                 "personel": {"id": $('#hiddenFieldPersonelId').val()},
-                "speciality": {"id": $('#cmbSpeciality').val()}
+                "speciality": {"id": $('#cmbSpeciality').val()},
+                "confirmed": $('#confirmed_switch').prop("checked"),
+                "showInVipList": $('#showInVipList_switch').prop("checked"),
+                "orderNumber": $('#txtOrderNumber').val()
             }
         }
 
@@ -311,9 +329,27 @@
                     <input type="text" id="txtSearchLastname" class="form-control searchFilter"
                            placeholder="نام خانوادگی ...">
                 </div>
-                <div class="float-left col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                <div class="float-left col-sm-2 col-md-3 col-lg-2 col-xl-2">
                     <input type="text" id="txtSearchSpecialityTitle" class="form-control searchFilter"
                            placeholder="تخصص ...">
+                </div>
+                <div class="float-left col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2">
+                    <label class="float-left col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">وضعیت </label>
+                    <select id="cmbSearchConfirmed"
+                            class="form-control searchFilter col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <option value="-1">...</option>
+                        <option value="true">تایید شده</option>
+                        <option value="false">تایید نشده</option>
+                    </select>
+                </div>
+                <div class="float-left col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2">
+                    <label class="float-left col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">ویژه </label>
+                    <select id="cmbSearchShowInVipList"
+                            class="form-control searchFilter col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <option value="-1">...</option>
+                        <option value="true">ویژه</option>
+                        <option value="false">عادی</option>
+                    </select>
                 </div>
             </div>
             <div class="card-body">
@@ -341,6 +377,18 @@
                             <th>تخصص
                                 <i class="fa fa-sort-up sort-grid" order="speciality.title,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="speciality.title,desc"></i>
+                            </th>
+                            <th>تایید
+                                <i class="fa fa-sort-up sort-grid" order="confirmed,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="confirmed,desc"></i>
+                            </th>
+                            <th>ویژه
+                                <i class="fa fa-sort-up sort-grid" order="showInVipList,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="showInVipList,desc"></i>
+                            </th>
+                            <th>ترتيب
+                                <i class="fa fa-sort-up sort-grid" order="orderNumber,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="orderNumber,desc"></i>
                             </th>
                             <th>عملیات</th>
                         </tr>
@@ -370,7 +418,18 @@
                                             </h2>
                                         </td>
                                         <td>${personel.organization.title}</td>
-                                         <td>${speciality.title}</td>
+                                        <td>${speciality.title}</td>
+                                        <td>
+                                            {{if confirmed}}
+                                                <i class="fa fa-check" aria-hidden="true"></i>
+                                            {{/if}}
+                                        </td>
+                                        <td>
+                                            {{if showInVipList}}
+                                                <i class="fa fa-line-chart" aria-hidden="true"></i>
+                                            {{/if}}
+                                        </td>
+                                        <td>${orderNumber}</td>
                                         <td class="text-center">
                                             <div class="float-right">
                                                 <div class="float-right">
@@ -384,6 +443,8 @@
                                             </div>
                                         </td>
                                     </tr>
+
+
 
 
 
@@ -441,7 +502,7 @@
 
     <!-- Add/Edit Modal -->
     <div class="modal fade custom-modal" id="add_edit_modal" aria-hidden="true" role="dialog">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title text-white">افزودن / ویرایش پزشک </h5>
@@ -455,7 +516,7 @@
                     <input type="hidden" id="hiddenFieldId"/>
                     <div class="service-fields mb-3">
                         <div class="row">
-                            <div class="col-lg-4">
+                            <div class="col-lg-12">
                                 <div class="form-group">
                                     <input type="hidden" id="hiddenFieldPersonelId"/>
                                     <label>انتخاب فرد<span class="text-danger">*</span></label>
@@ -469,32 +530,53 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-6">
                                 <div class="form-group">
                                     <label>نظام پزشکی<span class="text-danger">*</span></label>
                                     <input class="form-control" type="text" id="txtMedicalNationalNumber" required="">
                                 </div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-6">
                                 <div class="form-group">
                                     <label>تخصص<span class="text-danger">*</span></label>
                                     <select class="form-control" id="cmbSpeciality"></select>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="service-fields mb-3">
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <div class="submit-section">
-                                        <button class="btn btn-primary submit-btn" onclick="saveEntity()"> ثبت
-                                        </button>
+                            <div class="col-lg-6">
+                                <div class="form-group float-left">
+                                    <label>تایید<span class="text-danger">*</span></label>
+                                    <div class="status-toggle">
+                                        <label class="switch" for="confirmed_switch">
+                                            <input type="checkbox" id="confirmed_switch">
+                                            <span class="slider round"></span>
+                                        </label>
                                     </div>
                                 </div>
-                                <div class="col-lg-4 text-center">
-                                    <img id="uploadedImage"
-                                         style="width: 8em;border: 1px solid;border-radius: 10px;box-shadow: 0px 0px 10px 1px;"/>
+                                <div class="form-group float-left">
+                                    <label> ویژه<span class="text-danger">*</span></label>
+                                    <div class="status-toggle">
+                                        <label class="switch" for="showInVipList_switch">
+                                            <input type="checkbox" id="showInVipList_switch">
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </div>
                                 </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>ترتیب نمایش</label>
+                                    <input class="form-control" type="number" id="txtOrderNumber">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="submit-section">
+                                    <button class="btn btn-primary submit-btn" onclick="saveEntity()"> ثبت
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <img id="uploadedImage"
+                                     style="width: 8em;border: 1px solid;border-radius: 10px;box-shadow: 0px 0px 10px 1px;"/>
                             </div>
                         </div>
                     </div>

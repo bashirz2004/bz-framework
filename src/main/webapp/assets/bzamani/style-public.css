@@ -1907,7 +1907,6 @@ a.bg-danger:focus, a.bg-danger:hover, button.bg-danger:focus, button.bg-danger:h
     align-items: center;
     background-color: #00121e;
     border: 0;
-    border-bottom: 1px solid #f0f0f0;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -1917,8 +1916,8 @@ a.bg-danger:focus, a.bg-danger:hover, button.bg-danger:focus, button.bg-danger:h
     -webkit-justify-content: space-between;
     -ms-flex-pack: space-between;
     position: relative;
-    height: 85px;
-    padding: 0 30px;
+    height: 4rem;
+    padding: 0;
     margin-bottom: 0;
 }
 
@@ -9286,4 +9285,8 @@ ul.benifits-col li i {
 .sort-btn:hover {
     background-color: lightgray;
     cursor: pointer;
+}
+
+.main-page-section{
+    padding: 1rem;
 }

@@ -19,7 +19,7 @@ public class ClinicController extends BaseController {
     @PreAuthorize("hasRole('1003')")
     @PostMapping("/save")
     public Clinic save(@RequestBody Clinic clinic) {
-        return iClinicService.save(clinic);
+        return iClinicService.saveClinic(clinic);
     }
 
     @PreAuthorize("hasRole('1003')")
@@ -36,10 +36,12 @@ public class ClinicController extends BaseController {
     @GetMapping("/searchClinic")
     public Map<String, Object> searchClinic(
             @RequestParam(required = false) String organizationTitle,
+            @RequestParam(required = false) Boolean confirmed,
+            @RequestParam(required = false) Boolean showInVipList,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "8") int size,
             @RequestParam(defaultValue = "id,desc") String[] sort) {
 
-        return iClinicService.searchClinic(organizationTitle, null, -1L, -1L, -1L, page, size, sort);
+        return iClinicService.searchClinic(organizationTitle, null, -1L, -1L, -1L, confirmed, showInVipList, page, size, sort);
     }
 }

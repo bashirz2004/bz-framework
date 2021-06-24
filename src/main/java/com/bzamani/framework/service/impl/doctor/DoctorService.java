@@ -3,9 +3,7 @@ package com.bzamani.framework.service.impl.doctor;
 import com.bzamani.framework.common.utility.SecurityUtility;
 import com.bzamani.framework.model.core.user.User;
 import com.bzamani.framework.model.doctor.Doctor;
-import com.bzamani.framework.repository.core.user.IUserRepository;
 import com.bzamani.framework.repository.doctor.IDoctorRepository;
-import com.bzamani.framework.service.core.file.IFileAttachmentService;
 import com.bzamani.framework.service.core.user.IUserService;
 import com.bzamani.framework.service.doctor.IDoctorService;
 import com.bzamani.framework.service.impl.core.GenericService;
@@ -15,7 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,10 +34,21 @@ public class DoctorService extends GenericService<Doctor, Long> implements IDoct
         return iDoctorRepository;
     }
 
+
+    @Override
+    @Transactional
+    public Doctor saveDoctor(Doctor doctor) {
+        if (doctor.getId() != null && doctor.getId() > 0)
+            if (!loadByEntityId(doctor.getId()).getPersonel().getId().equals(doctor.getPersonel().getId()))
+                throw new RuntimeException("هویت فردی يك پزشک، قابل ويرايش نيست.");
+
+        return save(doctor);
+    }
+
     @Override
     public Map<String, Object> searchDoctors(String firstname, String lastname, String medicalNationalNumber, Boolean male,
                                              Long stateId, Long cityId, Long regionId, Long specialityId, String specialityTitle, String address,
-                                             String telephone, String specialities, String genders, int page, int size, String[] sort) {
+                                             String telephone, String specialities, String genders, Boolean confirmed, Boolean showInVipList, int page, int size, String[] sort) {
         List<Sort.Order> orders = new ArrayList<Sort.Order>();
         if (sort[0].contains(",")) {
             for (String sortOrder : sort) {
@@ -50,10 +58,10 @@ public class DoctorService extends GenericService<Doctor, Long> implements IDoct
         } else {
             orders.add(new Sort.Order(getSortDirection(sort[1]), sort[0]));
         }
-        List<Doctor> doctors = new ArrayList<Doctor>();
+        List<Doctor> doctors;
         Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
         Page<Doctor> pageTuts = iDoctorRepository.searchDoctors(firstname, lastname, medicalNationalNumber, male,
-                stateId, cityId, regionId, specialityId, specialityTitle, address, telephone, specialities, genders, pagingSort);
+                stateId, cityId, regionId, specialityId, specialityTitle, address, telephone, specialities, genders, confirmed, showInVipList, pagingSort);
         doctors = pageTuts.getContent();
         Map<String, Object> response = new HashMap<>();
         response.put("entityList", doctors);

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +29,17 @@ public class ClinicService extends GenericService<Clinic, Long> implements IClin
     }
 
     @Override
-    public Map<String, Object> searchClinic(String organizationTitle, String organizationAddress, Long stateId, Long cityId, Long regionId, int page, int size, String[] sort) {
+    @Transactional
+    public Clinic saveClinic(Clinic clinic) {
+        if (clinic.getId() != null && clinic.getId() > 0)
+            if (!loadByEntityId(clinic.getId()).getOrganization().getId().equals(clinic.getOrganization().getId()))
+                throw new RuntimeException("واحد سازماني يك كلينيك، قابل ويرايش نيست.");
+
+        return save(clinic);
+    }
+
+    @Override
+    public Map<String, Object> searchClinic(String organizationTitle, String organizationAddress, Long stateId, Long cityId, Long regionId, Boolean confirmed, Boolean showInVipList, int page, int size, String[] sort) {
         List<Sort.Order> orders = new ArrayList<Sort.Order>();
         if (sort[0].contains(",")) {
             for (String sortOrder : sort) {
@@ -40,7 +51,7 @@ public class ClinicService extends GenericService<Clinic, Long> implements IClin
         }
         List<Clinic> clinics = new ArrayList<>();
         Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
-        Page<Clinic> pageTuts = iClinicRepository.searchClinic(organizationTitle, organizationAddress, stateId, cityId, regionId, pagingSort);
+        Page<Clinic> pageTuts = iClinicRepository.searchClinic(organizationTitle, organizationAddress, stateId, cityId, regionId, confirmed, showInVipList, pagingSort);
         clinics = pageTuts.getContent();
         Map<String, Object> response = new HashMap<>();
         response.put("entityList", clinics);

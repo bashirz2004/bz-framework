@@ -26,5 +26,16 @@ public class Clinic extends BaseEntity {
     @Column(name = "discount")
     private Integer discount;
 
+    @NotNull
+    @Column(name = "confirmed", nullable = false)
+    private boolean confirmed;
+
+    @NotNull
+    @Column(name = "show_in_vip_list", nullable = false)
+    private boolean showInVipList;
+
+    @Column(name = "order_number")
+    private Integer orderNumber;
+
 
 }

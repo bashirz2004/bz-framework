@@ -82,11 +82,16 @@
             "percent": '',
             "discount": '',
             "organization": {"id": ''},
+            "confirmed": false,
+            "showInVipList": false,
+            "orderNumber": ''
         };
         var entityData;
 
         var searchFilters = {
             "organizationTitle": '',
+            "confirmed": '',
+            "showInVipList": '',
             "sort": "id,desc",
             "page": 0,
             "size": 8
@@ -112,6 +117,8 @@
 
         function searchClinic() {
             searchFilters.organizationTitle = $("#txtSearchOrganizationTitle").val();
+            searchFilters.confirmed = $("#cmbSearchConfirmed").val() != '-1' ? $("#cmbSearchConfirmed").val() : null;
+            searchFilters.showInVipList = $("#cmbSearchShowInVipList").val() != '-1' ? $("#cmbSearchShowInVipList").val() : null;
             refreshGrid();
         }
 
@@ -119,6 +126,8 @@
             $('#cmbPageSize').val(8);
             searchFilters = {
                 "organizationTitle": '',
+                "confirmed": '',
+                "showInVipList": '',
                 "sort": "id,desc",
                 "page": 0,
                 "size": 8
@@ -157,7 +166,7 @@
                         if (err.responseJSON.message.includes("Forbidden"))
                             showMessage("خطای سطح دسترسی", " شما مجوز انجام این کار را ندارید.", "error");
                         else
-                            showMessage("خطا در حذف اطلاعات", "", "error");
+                            showMessage("خطا در حذف اطلاعات", "این کلینیک دارای سابقه ارجاع است.", "error");
                     }
                 });
             else
@@ -202,8 +211,11 @@
                         $('#btnCloseModal').click();
                     },
                     error: function (err) {
+                        console.log(err);
                         if (err.responseText.includes("unq_clinic_organization"))
                             showMessage("خطا. این کلینیک قبلا ثبت شده است.", "", "error");
+                        else
+                            showMessage(err.responseJSON.message, "", "error");
                     }
                 });
             }
@@ -227,6 +239,9 @@
             $("#txtDiscount").val(entity.discount);
             $("#hiddenFieldOrganizationId").val(entity.organization.id);
             $("#txtOrganizationTitle").val(entity.organization.title);
+            entity.confirmed == true ? $('#confirmed_switch').prop("checked", "checked") : $('#confirmed_switch').prop("checked", "");
+            entity.showInVipList == true ? $('#showInVipList_switch').prop("checked", "checked") : $('#showInVipList_switch').prop("checked", "");
+            $("#txtOrderNumber").val(entity.orderNumber);
         }
 
         function setEntityFromInputs() {
@@ -234,7 +249,10 @@
                 "id": $('#hiddenFieldId').val(),
                 "percent": $('#txtPercent').val(),
                 "discount": $('#txtDiscount').val(),
-                "organization": {"id": $('#hiddenFieldOrganizationId').val()}
+                "organization": {"id": $('#hiddenFieldOrganizationId').val()},
+                "confirmed": $('#confirmed_switch').prop("checked"),
+                "showInVipList": $('#showInVipList_switch').prop("checked"),
+                "orderNumber": $('#txtOrderNumber').val()
             }
         }
 
@@ -285,8 +303,27 @@
             </div>
             <div class="col-sm-12 search-section" style="display: none">
                 <label class="float-left" style="padding-top: .5em">فیلتر کردن نتایج براساس : </label>
-                <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
-                    <input type="text" id="txtSearchOrganizationTitle" class="form-control searchFilter" placeholder="نام ...">
+                <div class="float-left col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2">
+                    <input type="text" id="txtSearchOrganizationTitle" class="form-control searchFilter"
+                           placeholder="نام ...">
+                </div>
+                <div class="float-left col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2">
+                    <label class="float-left col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">وضعیت </label>
+                    <select id="cmbSearchConfirmed"
+                            class="form-control searchFilter col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <option value="-1">...</option>
+                        <option value="true">تایید شده</option>
+                        <option value="false">تایید نشده</option>
+                    </select>
+                </div>
+                <div class="float-left col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2">
+                    <label class="float-left col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">ویژه </label>
+                    <select id="cmbSearchShowInVipList"
+                            class="form-control searchFilter col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <option value="-1">...</option>
+                        <option value="true">ویژه</option>
+                        <option value="false">عادی</option>
+                    </select>
                 </div>
             </div>
             <div class="card-body">
@@ -303,10 +340,6 @@
                                 <i class="fa fa-sort-up sort-grid" order="organization.title,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="organization.title,desc"></i>
                             </th>
-                            <th>استان
-                                <i class="fa fa-sort-up sort-grid" order="organization.state.title,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="organization.state.title,desc"></i>
-                            </th>
                             <th>شهر
                                 <i class="fa fa-sort-up sort-grid" order="organization.city.title,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="organization.city.title,desc"></i>
@@ -322,6 +355,18 @@
                             <th>درصد پورسانت
                                 <i class="fa fa-sort-up sort-grid" order="percent,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="percent,desc"></i>
+                            </th>
+                            <th>تایید
+                                <i class="fa fa-sort-up sort-grid" order="confirmed,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="confirmed,desc"></i>
+                            </th>
+                            <th>ویژه
+                                <i class="fa fa-sort-up sort-grid" order="showInVipList,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="showInVipList,desc"></i>
+                            </th>
+                            <th>ترتيب
+                                <i class="fa fa-sort-up sort-grid" order="orderNumber,asc"></i>
+                                <i class="fa fa-sort-down sort-grid" order="orderNumber,desc"></i>
                             </th>
                             <th>عملیات</th>
                         </tr>
@@ -342,11 +387,6 @@
                                             ${organization.title}
                                         </td>
                                         <td>
-                                            {{if organization.state}}
-                                                ${organization.state.title}
-                                            {{/if}}
-                                        </td>
-                                        <td>
                                             {{if organization.city}}
                                                 ${organization.city.title}
                                             {{/if}}
@@ -362,6 +402,17 @@
                                         <td>
                                             ${percent}
                                         </td>
+                                        <td>
+                                            {{if confirmed}}
+                                                <i class="fa fa-check" aria-hidden="true"></i>
+                                            {{/if}}
+                                        </td>
+                                        <td>
+                                            {{if showInVipList}}
+                                                <i class="fa fa-line-chart" aria-hidden="true"></i>
+                                            {{/if}}
+                                        </td>
+                                        <td>${orderNumber}</td>
                                         <td class="text-center">
                                             <div class="float-right">
                                                 <div class="float-right">
@@ -375,6 +426,8 @@
                                             </div>
                                         </td>
                                     </tr>
+
+
 
 
 
@@ -432,7 +485,7 @@
 
     <!-- Add/Edit Modal -->
     <div class="modal fade custom-modal" id="add_edit_modal" aria-hidden="true" role="dialog">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title text-white">افزودن / ویرایش کلینیک </h5>
@@ -446,7 +499,7 @@
                     <input type="hidden" id="hiddenFieldId"/>
                     <div class="service-fields mb-3">
                         <div class="row">
-                            <div class="col-lg-6">
+                            <div class="col-lg-12">
                                 <div class="form-group">
                                     <input type="hidden" id="hiddenFieldOrganizationId"/>
                                     <label>انتخاب واحدسازمانی<span class="text-danger">*</span></label>
@@ -460,31 +513,48 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-6">
                                 <div class="form-group">
                                     <label>درصد تخفیف<span class="text-danger">*</span></label>
                                     <input class="form-control" type="text" id="txtDiscount" required="" maxlength="3">
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-6">
                                 <div class="form-group">
                                     <label>درصد پورسانت<span class="text-danger">*</span></label>
                                     <input class="form-control" type="text" id="txtPercent" required="" maxlength="3">
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="service-fields mb-3">
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <div class="submit-section">
-                                        <button class="btn btn-primary submit-btn" onclick="saveEntity()"> ثبت
-                                        </button>
+                            <div class="col-lg-6">
+                                <div class="form-group float-left">
+                                    <label>تایید<span class="text-danger">*</span></label>
+                                    <div class="status-toggle">
+                                        <label class="switch" for="confirmed_switch">
+                                            <input type="checkbox" id="confirmed_switch">
+                                            <span class="slider round"></span>
+                                        </label>
                                     </div>
                                 </div>
-                                <div class="col-lg-4 text-center">
-                                    <img id="uploadedImage"
-                                         style="width: 8em;border: 1px solid;border-radius: 10px;box-shadow: 0px 0px 10px 1px;"/>
+                                <div class="form-group float-left">
+                                    <label> ویژه<span class="text-danger">*</span></label>
+                                    <div class="status-toggle">
+                                        <label class="switch" for="showInVipList_switch">
+                                            <input type="checkbox" id="showInVipList_switch">
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>ترتیب نمایش</label>
+                                    <input class="form-control" type="number" id="txtOrderNumber">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="submit-section">
+                                    <button class="btn btn-primary submit-btn" onclick="saveEntity()"> ثبت
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -528,7 +598,8 @@
                     </button>
                 </div>
                 <div class="modal-body text-center">
-                    <img src="" class="img-fluid" alt="هنوز تصویری برای این واحد سازمانی آپلود نشده است." id="image_full_size">
+                    <img src="" class="img-fluid" alt="هنوز تصویری برای این واحد سازمانی آپلود نشده است."
+                         id="image_full_size">
                 </div>
             </div>
         </div>

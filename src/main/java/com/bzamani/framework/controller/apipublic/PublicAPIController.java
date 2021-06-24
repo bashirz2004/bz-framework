@@ -87,13 +87,14 @@ public class PublicAPIController extends BaseController {
             @RequestParam(required = false) String telephone,
             @RequestParam(required = false) String specialities,
             @RequestParam(required = false) String genders,
+            @RequestParam(required = false) Boolean showInVipList,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "50") int size,
             @RequestParam(defaultValue = "id,desc") String[] sort) {
 
         return iDoctorService.searchDoctors(firstname, lastname,
                 medicalNationalNumber, male, stateId, cityId,
-                regionId, specialityId, specialityTitle, address, telephone, specialities, genders, page, size, sort);
+                regionId, specialityId, specialityTitle, address, telephone, specialities, genders, true, showInVipList, page, size, sort);
     }
 
     @GetMapping("/baseinfo/getAllByHeaderId/{headerId}")
@@ -172,11 +173,12 @@ public class PublicAPIController extends BaseController {
             @RequestParam(required = false) Long stateId,
             @RequestParam(required = false) Long cityId,
             @RequestParam(required = false) Long regionId,
+            @RequestParam(required = false) Boolean showInVipList,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "50") int size,
             @RequestParam(defaultValue = "id,desc") String[] sort) {
 
-        return iClinicService.searchClinic(organizationTitle, organizationAddress, stateId, cityId, regionId, page, size, sort);
+        return iClinicService.searchClinic(organizationTitle, organizationAddress, stateId, cityId, regionId,true,showInVipList, page, size, sort);
     }
 
 }

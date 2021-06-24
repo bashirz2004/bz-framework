@@ -19,6 +19,11 @@
 
     <!-- Main CSS -->
     <link rel="stylesheet" href="assets/bzamani/style-public.css">
+    <style>
+        .result:hover {
+            background-color: #09e5ab54;
+        }
+    </style>
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -30,12 +35,14 @@
     <script src="assets/bzamani/jquery.template.js"></script>
     <script src="assets/bzamani/propper.min.js"></script>
     <script>
+        var allDoctors, allClinics; //for autocomplete search
 
         $(function () {
             saveSiteVisitor();
             getCountOfVisitors();
             if (localStorage.getItem("authenticatedUserFullName")) {
                 $('#dashboardPage').show();
+                $('#btnDashboard').show();
                 $('#btnLogin').hide();
                 $('#userInfo').html(localStorage.getItem("authenticatedUserFullName") + "&nbsp;");
                 $('#btnLogout').show();
@@ -43,7 +50,70 @@
             loadClinicsOrderByScore();
             loadDoctorsOrderByScore();
             load4RecentPosts();
+            loadAllDoctorsAndAllClinicsForAutoCompleteSearch();
+            $('#txtSearchBox').keypress(function (e) {
+                if (e.keyCode == 13)
+                    searchAutoComplete();
+            });
         });
+
+        function searchAutoComplete() {
+            let searchParameter = $('#txtSearchBox').val().trim();
+            $("#clinic-search-result-list > div").remove();
+            $("#doctor-search-result-list > div").remove();
+            $('#clinic-search-result-list').show();
+            $('#doctor-search-result-list').show();
+            //if (searchParameter != "") {
+                let clinicFinalResult = [];
+                let doctorFinalResult = [];
+                for (let i = 0; i < allClinics.length; i++) {
+                    if (allClinics[i].organization.address.includes(searchParameter) || allClinics[i].organization.title.includes(searchParameter))
+                        clinicFinalResult.push({
+                            "id": allClinics[i].id,
+                            "title": allClinics[i].organization.title,
+                            "fileCode": allClinics[i].organization.fileCode
+                        });
+                }
+                for (let i = 0; i < allDoctors.length; i++) {
+                    if (allDoctors[i].personel.lastname.includes(searchParameter) || allDoctors[i].speciality.title.includes(searchParameter))
+                        doctorFinalResult.push({
+                            "id": allDoctors[i].id,
+                            "firstname": allDoctors[i].personel.firstname,
+                            "lastname": allDoctors[i].personel.lastname,
+                            "male": allDoctors[i].personel.male,
+                            "fileCode": allDoctors[i].personel.fileCode
+                        });
+                }
+
+                $('#clinic-search-result-template').tmpl(clinicFinalResult).prependTo('#clinic-search-result-list');
+                $('#doctor-search-result-template').tmpl(doctorFinalResult).prependTo('#doctor-search-result-list');
+            /*} else
+                $('#txtSearchBox').focus();*/
+        }
+
+        function clearAutoComplete() {
+            $('#txtSearchBox').val('');
+            $('#clinic-search-result-list').hide();
+            $('#doctor-search-result-list').hide();
+            $("#clinic-search-result-list > div").remove();
+            $("#doctor-search-result-list > div").remove();
+        }
+
+        function loadAllDoctorsAndAllClinicsForAutoCompleteSearch() {
+            let searchFilter = {
+                "sort": "id,desc",
+                "page": 0,
+                "size": 5000
+            };
+            $.getJSON("/api/public/clinic/searchClinic", searchFilter, function (clinics) {
+                allClinics = clinics.entityList;
+                $.getJSON("/api/public/doctor/searchDoctors", searchFilter, function (doctors) {
+                    allDoctors = doctors.entityList;
+                    console.log(allClinics);
+                    console.log(allDoctors);
+                });
+            });
+        }
 
         function saveSiteVisitor() {
             $.ajax({
@@ -74,6 +144,10 @@
             document.location = "login.html";
         }
 
+        function navigateToDashboardPage() {
+            document.location = "dashboard.html";
+        }
+
         function navigateToRegisterPage() {
             document.location = "register.html";
         }
@@ -86,9 +160,10 @@
 
         function loadClinicsOrderByScore() {
             let searchFilter = {
-                "sort": "id,desc",
+                "showInVipList": true,
+                "sort": "orderNumber,asc",
                 "page": 0,
-                "size": 6
+                "size": 3
             };
             $.getJSON("/api/public/clinic/searchClinic", searchFilter, function (entities) {
                 $('#clinics-template').tmpl(entities.entityList).prependTo('#clinics-list');
@@ -97,9 +172,10 @@
 
         function loadDoctorsOrderByScore() {
             let searchFilter = {
-                "sort": "id,desc",
+                "showInVipList": true,
+                "sort": "orderNumber,asc",
                 "page": 0,
-                "size": 8
+                "size": 3
             };
             $.getJSON("/api/public/doctor/searchDoctors", searchFilter, function (entities) {
                 $('#doctors-template').tmpl(entities.entityList).prependTo('#doctors-list');
@@ -123,17 +199,17 @@
 <div class="main-wrapper">
 
     <!-- Header -->
-    <header class="header">
+    <header class="header" style="z-index: 1;position: fixed;width: 100%">
         <nav class="navbar navbar-expand-lg header-nav">
-            <div class="navbar-header  col-md-2 col-sm-12">
+            <div class="navbar-header  col-xl-2 col-lg-2 col-md-2 col-sm-12 col-12" style="top: 0.4rem">
                 <a href="index.html" class="navbar-brand logo">
-                    <img src="assets/img/logo.png" class="img-fluid" alt="Logo">
+                    <img src="assets/img/logo.jpg" class="img-fluid" alt="Logo" style="border-radius: 2rem">
                 </a>
             </div>
-            <div class="main-menu-wrapper  col-md-8 col-sm-12">
+            <div class="main-menu-wrapper  col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
                 <div class="menu-header">
                     <a href="index.html" class="menu-logo">
-                        <img src="assets/img/logo.png" class="img-fluid" alt="Logo">
+                        <img src="assets/img/logo.jpg" class="img-fluid" alt="Logo">
                     </a>
                     <a id="menu_close" class="menu-close" href="javascript:void(0);">
                         <i class="fas fa-times"></i>
@@ -141,31 +217,42 @@
                 </div>
                 <ul class="main-nav">
                     <li>
-                        <a href="/index.html">صفحه اصلی</a>
+                        <a href="#servicesFragment">خدمات مدیک</a>
                     </li>
-                    <li class="has-submenu">
+                    <li>
+                        <a href="javascript:void(0)">هوم ویزیت</a>
+                    </li>
+                    <li>
+                        <a href="public/searchDoctors.html">پزشکان</a>
+                    </li>
+                    <li>
+                        <a href="public/searchClinics.html">مراکز درمانی</a>
+                    </li>
+                    <!--<li class="has-submenu">
                         <a href="#">جستجوی پیشرفته<i class="fas fa-angle-down"></i></a>
                         <ul class="submenu">
-                            <li><a href="public/searchDoctors.html">جستجوی پزشکان</a></li>
+                            <li><a href="public/searchDoctors.html">جستجوی </a></li>
                             <li><a href="public/searchClinics.html">جستجوی کلینیک ها</a></li>
                         </ul>
+                    </li>-->
+                    <li>
+                        <a href="#blogFragment">مجله سلامتی</a>
                     </li>
                     <li>
-                        <a href="#blogFragment">‌وبلاگ</a>
-                    </li>
-                    <li>
-                        <a href="aboutUs.html">درباره ما</a>
-                    </li>
-                    <li>
-                        <a href="contactUs.html">تماس با ما</a>
+                        <a href="javascript:void(0)">ارتباط با ما</a>
                     </li>
                     <li id="dashboardPage" style="display: none">
                         <a href="dashboard.html">داشبورد</a>
                     </li>
                 </ul>
             </div>
-            <ul class="nav col-md-2 col-sm-12">
+            <ul class="nav col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
                 <li class="nav-item" style="display: flex;white-space: nowrap">
+                    <button type="button" class="btn btn-primary btn-rounded btn-sm" style="color: black;display: none"
+                            id="btnDashboard"
+                            onclick="navigateToDashboardPage()">
+                        داشبورد
+                    </button>
                     <button type="button" class="btn btn-primary btn-rounded btn-sm" style="color: black" id="btnLogin"
                             onclick="navigateToLoginPage()">
                         ورود
@@ -185,8 +272,112 @@
     </header>
     <!-- /Header -->
 
+    <!-- Banner -->
+    <div style="padding-right:0;padding-left: 0;">
+        <img src="assets/img/new/med2.jpg" onclick="clearAutoComplete()"
+             style="width: 100%;opacity: 70%;margin-top: 4rem;border-radius: 10rem 0rem 10rem 1rem;box-shadow: 0rem 0rem 7rem 2rem black">
+    </div>
+    <!-- /Banner -->
+
+    <!-- Title on banner -->
+    <div style="position: absolute;top: 6rem;right: 5rem;width: 100%">
+        <h1>مدیک دستیار سلامت شما</h1>
+        <p style="width: 50%">دریافت سریع و راحت خدمات از مراکز درمانی و پزشکان متخصص در هر زمان و مکان</p>
+    </div>
+    <!-- Title on banner -->
+
+    <!-- Search box on banner -->
+    <div style="position: absolute;top: 12rem;" class="col-lg-12 col-md-12 col-sm-12">
+        <input id="txtSearchBox" type="text" class="form-control col-xl-6 col-lg-6 col-md-8 col-sm-10 col-10 float-left"
+               style="min-height: 3rem"
+               placeholder="جستجوی مراكز درمانی براساس نام یا آدرس و جستجوی پزشکان بر اساس نام خانوادگی یا تخصص یا آدرس ...">
+        <button style="min-height: 3rem" type="button"
+                class="btn btn-primary col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 float-left"
+                onclick="searchAutoComplete()" title="جستجو">
+            <i class=" fa fa-search"></i>
+        </button>
+        <button style="min-height: 3rem" type="button"
+                class="btn btn-danger col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 float-left"
+                onclick="clearAutoComplete()" title="پاک کردن">
+            <i class="fa fa-trash"></i>
+        </button>
+
+        <div id="clinic-search-result-list" class="col-xl-5 col-lg-5 col-md-6 col-sm-6 col-6 float-left"
+             style="display:none;background: #19181a8c;border-radius: 0 0 1rem 0">
+            <script id="clinic-search-result-template" type="text/x-jquery-tmpl">
+                        <div class="result col-lg-12 col-md-12 col-sm-12 col-12 float-left">
+                            <div class="col-lg-2 col-md-2 col-sm-12 col-12 float-left">
+                                <img class="img-fluid" style="width: 3rem;height:3rem;border-radius:2rem"
+                                             src={{if fileCode!=null}}"/rest/core/file/download/${fileCode}/false"
+                                                 {{else}}"/assets/img/clinics/3.jpg"
+                                                 {{/if}}
+                                             alt="فاقد تصویر">
+                            </div>
+                            <div class="col-lg-10 col-md-10 col-sm-12 col-12 float-left">
+                                <span class="col-lg-12 col-md-12 col-sm-12 col-12 float-left" style="font-size: 0.9rem;color:white;cursor:pointer;top:0.5rem">
+                                ${title}
+                                </span>
+                            </div>
+                        </div>
+
+
+
+
+            </script>
+        </div>
+        <div id="doctor-search-result-list" class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-6 float-left"
+             style="display:none;width: 25%;background: #19181a8c;border-radius: 0 0 0 1rem">
+            <script id="doctor-search-result-template" type="text/x-jquery-tmpl">
+                        <div class="result col-lg-12 col-md-12 col-sm-12 col-12 float-left">
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-12 float-left">
+                                <img class="img-fluid" style="width: 3rem;height:3rem;border-radius:2rem"
+                                             src={{if fileCode!=null}}
+                                                    "/rest/core/file/download/${fileCode}/false"
+                                                 {{else}}
+                                                    {{if male}}
+                                                        "/assets/img/man.png"
+                                                    {{else}}
+                                                        "/assets/img/woman.png"
+                                                    {{/if}}
+                                                 {{/if}}
+                                             alt="فاقد تصویر">
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-12 col-12 float-left">
+                                <span class="col-lg-12 col-md-12 col-sm-12 col-12 float-left" style="font-size: 0.9rem;color:white;cursor:pointer;top:0.5rem">
+                                دکتر     ${firstname} ${lastname}
+                                </span>
+                            </div>
+                        </div>
+
+
+
+
+
+            </script>
+        </div>
+    </div>
+    <!-- Search box on banner -->
+
+    <!-- why medik -->
+    <section class="main-page-section">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="m-auto">
+                    <div class="text-center mt-5">
+                        <h2>چرا مدیک ؟</h2>
+                        <h4>
+                            مدیک یک وب اپلیکیشن در حوزه سلامت است که قصد دارد خدمات نوین پزشکی را در سریع ترین زمان ممکن
+                            و با حداکثر کیفیت به کاربران گرامی ارائه نماید.
+                        </h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- /why medik -->
+
     <!-- medik services -->
-    <section>
+    <section class="main-page-section" id="servicesFragment">
         <div class="container-fluid">
             <div class="row">
                 <div class="m-auto">
@@ -197,48 +388,46 @@
                     <div class="row">
                         <div class="col-lg-3 col-md-6 col-sm-12 mb-3 p-1">
                             <div class="card text-center doctor-book-card">
-                                <img src="assets/img/consultant.jpg" alt="" class="img-fluid">
+                                <img src="assets/img/new/d575-445.jpg" alt="" class="img-fluid">
                                 <div class="doctor-book-card-content tile-card-content-1">
                                     <div>
-                                        <h3 class="card-title mb-0">مشاوره تلفنی</h3>
-                                        <a href="javascript:void(0);" class="btn book-btn1 px-3 py-2 mt-3" tabindex="0">به
-                                            زودی</a>
+                                        <h3 class="card-title mb-0">معرفی پزشکان</h3>
+                                        <a href="javascript:void(0);" class="btn book-btn1 px-3 py-2 mt-3" tabindex="0">مشاهده</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-6 col-sm-12 mb-3 p-1">
                             <div class="card text-center doctor-book-card">
-                                <img src="assets/img/orto.jpg" alt="" class="img-fluid">
+                                <img src="assets/img/new/c575-445.jpg" alt="" class="img-fluid">
+                                <div class="doctor-book-card-content tile-card-content-1">
+                                    <div>
+                                        <h3 class="card-title mb-0">معرفی مراکز درمانی</h3>
+                                        <a href="javascript:void(0);" class="btn book-btn1 px-3 py-2 mt-3" tabindex="0">مشاهده</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-12 mb-3 p-1">
+                            <div class="card text-center doctor-book-card">
+                                <img src="assets/img/new/hv.jpg" alt="" class="img-fluid">
+                                <div class="doctor-book-card-content tile-card-content-1">
+                                    <div>
+                                        <h3 class="card-title mb-0">هوم ویزیت</h3>
+                                        <a href="javascript:void(0);" class="btn book-btn1 px-3 py-2 mt-3" tabindex="0">ثبت
+                                            درخواست</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-12 mb-3 p-1">
+                            <div class="card text-center doctor-book-card">
+                                <img src="assets/img/new/equip.jpg" alt="" class="img-fluid">
                                 <div class="doctor-book-card-content tile-card-content-1">
                                     <div>
                                         <h3 class="card-title mb-0">فروش تجهیزات ارتوپدی</h3>
                                         <a href="javascript:void(0);" class="btn book-btn1 px-3 py-2 mt-3"
                                            tabindex="0">به زودی</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-6 col-sm-12 mb-3 p-1">
-                            <div class="card text-center doctor-book-card">
-                                <img src="assets/img/home-visit.jpg" alt="" class="img-fluid">
-                                <div class="doctor-book-card-content tile-card-content-1">
-                                    <div>
-                                        <h3 class="card-title mb-0">هوم ویزیت</h3>
-                                        <a href="javascript:void(0);" class="btn book-btn1 px-3 py-2 mt-3" tabindex="0">به
-                                            زودی</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-6 col-sm-12 mb-3 p-1">
-                            <div class="card text-center doctor-book-card">
-                                <img src="assets/img/lab.jpg" alt="" class="img-fluid">
-                                <div class="doctor-book-card-content tile-card-content-1">
-                                    <div>
-                                        <h3 class="card-title mb-0">تحویل آزمایش</h3>
-                                        <a href="javascript:void(0);" class="btn book-btn1 px-3 py-2 mt-3" tabindex="0">به
-                                            زودی</a>
                                     </div>
                                 </div>
                             </div>
@@ -251,35 +440,57 @@
     <!-- /medik services -->
 
     <!-- slider of clinics intro -->
-    <section>
+    <section class="main-page-section">
         <div class="container-fluid">
             <div class="row">
                 <div>
                     <div class="text-center mt-5">
                         <h2>معرفی کلینیک ها</h2>
-                        <p class="sub-title">محبوب ترین و مجهزترین کلینیک ها </p>
+                        <p class="sub-title">محبوب ترین و مجهزترین کلینیک های پیشنهادی مدیک </p>
                     </div>
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" id="clinics-list">
                         <script id="clinics-template" type="text/x-jquery-tmpl">
-                        <div class="col-lg-2 col-md-4 col-sm-12 float-left">
+                        <div class="col-lg-4 col-md-6 col-sm-12 float-left">
                                  <img class="col-lg-12 col-md-12 col-sm-12 float-left img-fluid"
                                              alt="Clinic Image"
                                              style="border-radius:30px;padding:20px;max-width:100%;max-height:100%"
-                                              src={{if organization.fileCode!=null}}"/rest/core/file/download/${organization.fileCode}/false"{{/if}}
+                                              src={{if organization.fileCode!=null}}"/rest/core/file/download/${organization.fileCode}/false"
+                                              {{else}}
+                                              "/assets/img/clinics/3.jpg"
+                                              {{/if}}
                                              />
-                                        <span class="col-lg-12 col-md-12 col-sm-12 float-left text-center" style="font-size: 0.8rem">
+                                        <span class="col-lg-12 col-md-12 col-sm-12 float-left text-center" style="font-size: 1.5rem">
                                             ${organization.title}
                                         </span>
-                                         <span class="col-lg-12 col-md-12 col-sm-12 float-left badge-pill text-white text-center" style="background-color: #fb00ca">
-                                            ${organization.region.title}
+                                        <span class="col-lg-12 col-md-12 col-sm-12 float-left badge-pill text-white text-center" style="background-color: #35b033cf">
+                                             <p style="font-size: 0.8rem; height:2rem">${organization.address} - ${organization.telephone}</p>
                                         </span>
                         </div>
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         </script>
                     </div>
-                    <a class="sub-title" href="public/searchClinics.html" style="color: deeppink">مشاهده همه ... </a>
+                    <a class="sub-title" href="public/searchClinics.html"
+                       style="color: rgba(48,46,48,0.61);display: flex;white-space: nowrap;position: absolute">مشاهده همه</a>
                 </div>
             </div>
         </div>
@@ -287,17 +498,17 @@
     <!-- /slider of clinics intro -->
 
     <!-- slider of doctors intro -->
-    <section>
+    <section class="main-page-section">
         <div class="container-fluid">
             <div class="row">
                 <div>
                     <div class="text-center mt-5">
                         <h2>معرفی پزشکان</h2>
-                        <p class="sub-title">پزشکان برتر از دید مخاطبان </p>
+                        <p class="sub-title">پزشکان برتر از دید مراجعه کنندگان </p>
                     </div>
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" id="doctors-list">
                         <script id="doctors-template" type="text/x-jquery-tmpl">
-                        <div class="col-lg-3 col-md-4 col-sm-12 float-left text-center">
+                        <div class="col-lg-4 col-md-6 col-sm-12 float-left">
                                  <img class="col-lg-12 col-md-12 col-sm-12 float-left"
                                              alt="User Image"
                                              style="border-radius: 2em;padding:1em;max-width:100%;max-height:100%"
@@ -305,19 +516,28 @@
                                                             {{if !personel.male && personel.fileCode==null}}"/assets/img/woman.png"{{/if}}
                                                             {{if personel.fileCode!=null}}"/rest/core/file/download/${personel.fileCode}/false"{{/if}}
                                              />
-                                        <span class="col-lg-12 col-md-12 col-sm-12 float-left" style="font-size: 0.8rem">
+                                        <span class="col-lg-12 col-md-12 col-sm-12 float-left text-center" style="font-size: 1.5rem">
                                             ${personel.firstname} ${personel.lastname}
                                         </span>
-                                         <span class="col-lg-12 col-md-12 col-sm-12 float-left badge-pill bg-info text-white text-center">
-                                            ${speciality.title}
+                                        <span class="col-lg-12 col-md-12 col-sm-12 float-left badge-pill text-white text-center" style="background-color: #35b033cf">
+                                             <p style="font-size: 1rem;">${speciality.title}</p>
+                                             <p style="font-size: 0.8rem; height:2rem">${personel.organization.address} - ${personel.organization.telephone}</p>
                                         </span>
                         </div>
 
 
 
+
+
+
+
+
+
+
                         </script>
                     </div>
-                    <a class="sub-title" href="public/searchDoctors.html" style="color: deeppink">مشاهده همه ... </a>
+                    <a class="sub-title" href="public/searchDoctors.html"
+                       style="color: deeppink;display: flex;white-space: nowrap;position: absolute">مشاهده همه</a>
                 </div>
             </div>
         </div>
@@ -325,7 +545,7 @@
     <!-- /slider of doctors intro -->
 
     <!-- aparat tutorial videoes -->
-    <section>
+    <section class="main-page-section">
         <div class="container-fluid">
             <div class="text-center mt-5">
                 <h2>فیلم های آموزشی</h2>
@@ -353,13 +573,12 @@
     </section>
     <!-- /aparat tutorial videoes -->
 
-
     <!-- Blog Section -->
-    <section>
+    <section class="main-page-section" id="blogFragment">
         <div class="container-fluid">
             <!-- Section Header -->
-            <div class="text-center mt-5" id="blogFragment">
-                <h2>وبلاگ</h2>
+            <div class="text-center mt-5">
+                <h2>مجله سلامتی</h2>
                 <p class="sub-title">جدیدترین پست ها، مقالات، اخبار و اطلاعات مفید در حوزه بهداشت و سلامت </p>
             </div>
             <!-- /Section Header -->
@@ -420,12 +639,42 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 </script>
                 <!-- /Blog Post -->
             </div>
-            <div class="view-all text-center mb-4">
-                <a href="showAllPosts.html" class="btn btn-info">مشاهده همه پست ها</a>
-            </div>
+            <a class="sub-title" href="showAllPosts.html" style="color: deeppink">مشاهده همه ... </a>
         </div>
     </section>
     <!-- /Blog Section -->
@@ -442,7 +691,7 @@
                         <!-- Footer Widget -->
                         <div class="footer-widget footer-about">
                             <div class="footer-logo">
-                                <img src="assets/img/footer-logo.png" alt="logo">
+                                <img src="assets/img/footer-logo.jpg" alt="logo">
                             </div>
                             <div class="footer-about-content">
                                 <p>مدیک یک وب اپلیکیشن در حوزه سلامت است که قصد دارد خدمات نوین پزشکی را در سریع

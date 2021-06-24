@@ -22,7 +22,9 @@ public interface IDoctorRepository extends JpaRepository<Doctor, Long> {
             " and case when e.personel.address is null then 'foo' else e.personel.address end like '%' || coalesce(cast( :address as text), case when e.personel.address is null then 'foo' else e.personel.address end) || '%'" +
             " and case when e.personel.telephone is null then 'foo' else e.personel.telephone end like '%' || coalesce(cast( :telephone as text), case when e.personel.telephone is null then 'foo' else e.personel.telephone end) || '%'" +
             " and instr(CASE WHEN :genders!='' THEN :genders ELSE cast(e.personel.male as text) END, cast(e.personel.male as text),  1,  1) > 0 " +
-            " and instr(CASE WHEN :specialities!='' THEN :specialities ELSE cast(e.speciality.id as text) END, cast(e.speciality.id as text),  1,  1) > 0 "
+            " and instr(CASE WHEN :specialities!='' THEN :specialities ELSE cast(e.speciality.id as text) END, cast(e.speciality.id as text),  1,  1) > 0 "+
+            " and e.confirmed = CASE WHEN :confirmed is null THEN e.confirmed ELSE :confirmed END "+
+            " and e.showInVipList = CASE WHEN :showInVipList is null THEN e.showInVipList ELSE :showInVipList END "
     )
     Page<Doctor> searchDoctors(@Param("firstname") String firstname,
                                @Param("lastname") String lastname,
@@ -37,6 +39,8 @@ public interface IDoctorRepository extends JpaRepository<Doctor, Long> {
                                @Param("telephone") String telephone,
                                @Param("specialities") String specialities,
                                @Param("genders") String genders,
+                               @Param("confirmed") Boolean confirmed,
+                               @Param("showInVipList") Boolean showInVipList,
                                Pageable pageable);
 
     Doctor findByPersonel(Personel personel);

@@ -20,7 +20,7 @@ public class DoctorController extends BaseController {
     @PreAuthorize("hasRole('1001')")
     @PostMapping("/save")
     public Doctor save(@RequestBody Doctor doctor) {
-        return iDoctorService.save(doctor);
+        return iDoctorService.saveDoctor(doctor);
     }
 
     @PreAuthorize("hasRole('1001')")
@@ -44,12 +44,14 @@ public class DoctorController extends BaseController {
             @RequestParam(required = false) String firstname,
             @RequestParam(required = false) String lastname,
             @RequestParam(required = false) String specialityTitle,
+            @RequestParam(required = false) Boolean confirmed,
+            @RequestParam(required = false) Boolean showInVipList,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "8") int size,
             @RequestParam(defaultValue = "id,desc") String[] sort) {
 
         return iDoctorService.searchDoctors(firstname, lastname, null, null, null, null,
-                null, null, specialityTitle, null, null, null, null, page, size, sort);
+                null, null, specialityTitle, null, null, null, null, confirmed, showInVipList, page, size, sort);
     }
 
     @GetMapping("/searchDoctorAuthorize")
