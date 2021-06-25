@@ -23,10 +23,12 @@
         .result:hover {
             background-color: #09e5ab54;
         }
-        .carousel-item{
+
+        .carousel-item {
             opacity: 50%;
         }
-        .d-block{
+
+        .d-block {
             border-radius: 0 0 10rem 0;
         }
     </style>
@@ -226,7 +228,7 @@
                         <a href="#servicesFragment">خدمات مدیک</a>
                     </li>
                     <li>
-                        <a href="javascript:void(0)">هوم ویزیت</a>
+                        <a href="homeVisit.html">هوم ویزیت</a>
                     </li>
                     <li>
                         <a href="public/searchDoctors.html">پزشکان</a>
@@ -245,7 +247,7 @@
                         <a href="#blogFragment">مجله سلامتی</a>
                     </li>
                     <li>
-                        <a href="javascript:void(0)">ارتباط با ما</a>
+                        <a href="contactUs.html">ارتباط با ما</a>
                     </li>
                     <li id="dashboardPage" style="display: none">
                         <a href="dashboard.html">داشبورد</a>
@@ -283,7 +285,7 @@
          class="carousel slide text-center col-lg-12 float-left pl-0 pr-0"
          data-ride="carousel">
         <ol class="carousel-indicators">
-            <li data-target="#carouselExampleIndicators" data-slide-to="0" ></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="0"></li>
             <li data-target="#carouselExampleIndicators" data-slide-to="1" class="active"></li>
             <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
         </ol>
@@ -375,6 +377,10 @@
 
 
 
+
+
+
+
             </script>
         </div>
         <div id="doctor-search-result-list" class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-6 float-left"
@@ -409,6 +415,10 @@
 
 
 
+
+
+
+
             </script>
         </div>
     </div>
@@ -421,9 +431,13 @@
                 <div class="m-auto">
                     <div class="text-center mt-5">
                         <h2>چرا مدیک ؟</h2>
-                        <h4>
+                        <h4 style="padding-right: 6rem; padding-left: 6rem;   text-align: justify;  line-height: 3rem;">
                             مدیک یک وب اپلیکیشن در حوزه سلامت است که قصد دارد خدمات نوین پزشکی را در سریع ترین زمان ممکن
-                            و با حداکثر کیفیت به کاربران گرامی ارائه نماید.
+                            و با حداکثر کیفیت به بیماران گرامی ارائه نماید. مدیک آمده تا رابطه بین بیمار، پزشک و مراکز
+                            درمانی را تسهیل و ارتقاء دهد. مدیک به جز افزایش سطح آگاهی در حوزه پزشکی، محیطی فراهم
+                            کرده تا بیماران بتوانند با بهترین پزشکان و مراکز درمانی نزدیک خود آشنا شده و سپس با آگاهی
+                            کامل به آنها
+                            مراجعه نمایند.
                         </h4>
                     </div>
                 </div>
@@ -448,7 +462,7 @@
                                 <div class="doctor-book-card-content tile-card-content-1">
                                     <div>
                                         <h3 class="card-title mb-0">معرفی پزشکان</h3>
-                                        <a href="javascript:void(0);" class="btn book-btn1 px-3 py-2 mt-3" tabindex="0">مشاهده</a>
+                                        <a href="services.html" class="btn book-btn1 px-3 py-2 mt-3" tabindex="0">مشاهده</a>
                                     </div>
                                 </div>
                             </div>
@@ -459,7 +473,7 @@
                                 <div class="doctor-book-card-content tile-card-content-1">
                                     <div>
                                         <h3 class="card-title mb-0">معرفی مراکز درمانی</h3>
-                                        <a href="javascript:void(0);" class="btn book-btn1 px-3 py-2 mt-3" tabindex="0">مشاهده</a>
+                                        <a href="services.html" class="btn book-btn1 px-3 py-2 mt-3" tabindex="0">مشاهده</a>
                                     </div>
                                 </div>
                             </div>
@@ -470,7 +484,7 @@
                                 <div class="doctor-book-card-content tile-card-content-1">
                                     <div>
                                         <h3 class="card-title mb-0">هوم ویزیت</h3>
-                                        <a href="javascript:void(0);" class="btn book-btn1 px-3 py-2 mt-3" tabindex="0">ثبت
+                                        <a href="homeVisit.html" class="btn book-btn1 px-3 py-2 mt-3" tabindex="0">ثبت
                                             درخواست</a>
                                     </div>
                                 </div>
@@ -547,6 +561,10 @@
 
 
 
+
+
+
+
                         </script>
                     </div>
                     <a class="sub-title" href="public/searchClinics.html"
@@ -585,6 +603,10 @@
                                              <p style="font-size: 0.8rem; height:2rem">${personel.organization.address} - ${personel.organization.telephone}</p>
                                         </span>
                         </div>
+
+
+
+
 
 
 
@@ -679,6 +701,10 @@
                         </div>
                     </div>
                 </div>
+
+
+
+
 
 
 
