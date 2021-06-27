@@ -52,6 +52,8 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/register.html").permitAll()
                 .antMatchers("/index.html").permitAll()
                 .antMatchers("/contactUs.html").permitAll()
+                .antMatchers("/services.html").permitAll()
+                .antMatchers("/homeVisit.html").permitAll()
                 .antMatchers("/forgot-password.html").permitAll()
                 .antMatchers("/change-password.html").permitAll()
                 .antMatchers("/showAllPosts.html").permitAll()
