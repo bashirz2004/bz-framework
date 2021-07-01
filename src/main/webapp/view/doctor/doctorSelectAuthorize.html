@@ -71,6 +71,19 @@
     <script src="/assets/bzamani/grid-utility.js"></script>
     <script src="/assets/bzamani/general-utility.js"></script>
 
+    <style>
+        @media only screen and (max-width: 600px) {
+            .extra-column {
+                display: none;
+            }
+
+            .main-column {
+                font-size: 0.6rem;
+            }
+
+        }
+    </style>
+
     <script>
 
         var searchFilters = {
@@ -155,7 +168,7 @@
         <div class="card card-table flex-fill">
             <div class="col-sm-12" style="background-color: darkslategray;border-radius: 10px 10px 0px 0px">
                 <div class="float-left mt-1">
-                    <h5 class="text-white">انتخاب پزشک</h5>
+                    <h6 class="text-white">انتخاب پزشک</h6>
                 </div>
                 <div class="float-right">
                     <a href="javascript:void(0)" onclick="clearSearch();" data-toggle="tooltip" title="پاک کردن فیلترها"
@@ -171,12 +184,12 @@
                 </div>
             </div>
             <div class="col-sm-12 search-section">
-                <label class="float-left" style="padding-top: .5em">فیلتر کردن : </label>
+                <label class="float-left main-column" style="padding-top: .5em">پس از جستجوی پزشک، برای انتخاب، دابل کلیک کنید یا روی دکمه انتخاب کلیک نمایید. فیلتر بر اساس :</label>
                 <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
-                    <input type="text" id="txtSearchFirstname" class="form-control searchFilter" placeholder="نام ...">
+                    <input type="text" id="txtSearchFirstname" class="form-control searchFilter main-column" placeholder="نام ...">
                 </div>
                 <div class="float-left col-sm-2 col-md-2 col-lg-2 col-xl-2">
-                    <input type="text" id="txtSearchLastname" class="form-control searchFilter"
+                    <input type="text" id="txtSearchLastname" class="form-control searchFilter main-column"
                            placeholder="نام خانوادگی ...">
                 </div>
             </div>
@@ -185,38 +198,41 @@
                     <table class="table table-hover table-center mb-0">
                         <thead>
                         <tr>
-                            <th class="text-center">ردیف</th>
-                            <th>تصویر
+                            <th class="text-center extra-column">ردیف</th>
+                            <th class="extra-column">تصویر
                                 <i class="fa fa-sort-up sort-grid" order="personel.fileCode,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="personel.fileCode,desc"></i>
                             </th>
-                            <th>نام
-                                <i class="fa fa-sort-up sort-grid" order="personel.firstname,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="personel.firstname,desc"></i>
+                            <th class="main-column">نام
+                                <i class="fa fa-sort-up sort-grid extra-column" order="personel.firstname,asc"></i>
+                                <i class="fa fa-sort-down sort-grid extra-column" order="personel.firstname,desc"></i>
                             </th>
-                            <th>نام خانوادگی
-                                <i class="fa fa-sort-up sort-grid" order="personel.lastname,asc"></i>
-                                <i class="fa fa-sort-down sort-grid" order="personel.lastname,desc"></i>
+                            <th class="main-column">نام خانوادگی
+                                <i class="fa fa-sort-up sort-grid extra-column" order="personel.lastname,asc"></i>
+                                <i class="fa fa-sort-down sort-grid extra-column" order="personel.lastname,desc"></i>
                             </th>
-                            <th>واحد سازمانی
+                            <th class="extra-column">واحد سازمانی
                                 <i class="fa fa-sort-up sort-grid" order="personel.organization.title,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="personel.organization.title,desc"></i>
                             </th>
-                            <th>تخصص
+                            <th class="extra-column">تخصص
                                 <i class="fa fa-sort-up sort-grid" order="speciality.title,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="speciality.title,asc"></i>
                             </th>
-                            <th>نظام پزشکی
+                            <th class="extra-column">نظام پزشکی
                                 <i class="fa fa-sort-up sort-grid" order="medicalNationalNumber,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="medicalNationalNumber,desc"></i>
+                            </th>
+                            <th class="main-column">
+                                عملیات
                             </th>
                         </tr>
                         </thead>
                         <tbody id="doctorList">
                         <script id="doctorTemplate" type="text/x-jquery-tmpl">
                                     <tr ondblclick="selectDoctor(${id},'${personel.firstname}','${personel.lastname}','${personel.fileCode}')">
-                                        <td class="text-center"><span class="tmplRowIndex"></span></td>
-                                        <td>
+                                        <td class="text-center extra-column"><span class="tmplRowIndex"></span></td>
+                                        <td class="extra-column">
                                             <h2 class="table-avatar">
                                                 <a href="#image_modal" data-toggle="modal" class="avatar avatar-sm mr-2"><img onclick="setImagePath('${personel.fileCode}')"
                                                         class="avatar-img rounded-circle"
@@ -226,20 +242,24 @@
                                                         alt="User Image"></a>
                                             </h2>
                                         </td>
-                                        <td>
+                                        <td class="main-column">
                                             <h2 class="table-avatar">
                                                 <a href="javascript:void(0)">${personel.firstname}</a>
                                             </h2>
                                         </td>
-                                        <td>
+                                        <td class="main-column">
                                             <h2 class="table-avatar">
                                                <a href="javascript:void(0)">${personel.lastname}</a>
                                             </h2>
                                         </td>
-                                        <td>${personel.organization.title}</td>
-                                        <td>${speciality.title}</td>
-                                        <td>${medicalNationalNumber}</td>
+                                        <td class="extra-column">${personel.organization.title}</td>
+                                        <td class="extra-column">${speciality.title}</td>
+                                        <td class="extra-column">${medicalNationalNumber}</td>
+                                        <td class="main-column">
+                                            <button class="btn btn-primary text-danger main-column" onclick="selectDoctor(${id},'${personel.firstname}','${personel.lastname}','${personel.fileCode}')">انتخاب</button>
+                                        </td>
                                     </tr>
+
 
 
 
@@ -262,7 +282,7 @@
     </div>
 
     <!-- paging -->
-    <div class="row col-md-12 card-body pl-5" style="text-align: center!important;">
+    <div class="row col-md-12 card-body pl-5 main-column" style="text-align: center!important;">
         <span class="float-left pt-2"> صفحه &nbsp;</span>
         <span class="float-left pt-2" id="currentPage"></span>
         <span class="float-left pt-2">&nbsp;از &nbsp;</span>

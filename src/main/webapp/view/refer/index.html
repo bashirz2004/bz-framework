@@ -85,6 +85,23 @@
     <script src="/assets/bzamani/grid-utility.js"></script>
     <script src="/assets/bzamani/general-utility.js"></script>
 
+    <style>
+        @media only screen and (max-width: 600px) {
+            .extra-column {
+                display: none;
+            }
+
+            .main-column {
+                font-size: 0.6rem;
+            }
+
+            .btn {
+                width: 2.7rem;
+                height: 2.7rem;
+            }
+        }
+    </style>
+
     <script>
 
         var form = getUrlParameter("form");
@@ -592,58 +609,58 @@
                     <table class="table table-hover table-center mb-0">
                         <thead>
                         <tr>
-                            <th class="text-center">ردیف</th>
-                            <th>تاریخ ارجاع
+                            <th class="text-center main-column">ردیف</th>
+                            <th class="extra-column">تاریخ ارجاع
                                 <i class="fa fa-sort-up sort-grid" order="referDateShamsi,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="referDateShamsi,desc"></i>
                             </th>
-                            <th>کد
+                            <th class="extra-column">کد
                                 <i class="fa fa-sort-up sort-grid" order="id,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="id,desc"></i>
                             </th>
-                            <th>پزشک
+                            <th class="extra-column">پزشک
                                 <i class="fa fa-sort-up sort-grid" order="doctor.personel.lastname,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="doctor.personel.lastname,desc"></i>
                             </th>
-                            <th>بیمار
+                            <th class="main-column">بیمار
                                 <i class="fa fa-sort-up sort-grid" order="patient.lastname,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="patient.lastname,desc"></i>
                             </th>
-                            <th>کلینیک
+                            <th class="main-column">کلینیک
                                 <i class="fa fa-sort-up sort-grid" order="clinic.organization.title,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="clinic.organization.title,desc"></i>
                             </th>
-                            <th>وضعیت
+                            <th class="main-column">وضعیت
                                 <i class="fa fa-sort-up sort-grid" order="status,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="status,desc"></i>
                             </th>
-                            <th>نسخه
+                            <th class="extra-column">نسخه
                                 <i class="fa fa-sort-up sort-grid" order="fileCode,asc"></i>
                                 <i class="fa fa-sort-down sort-grid" order="fileCode,desc"></i>
                             </th>
-                            <th>عملیات</th>
+                            <th class="main-column">عملیات</th>
                         </tr>
                         </thead>
                         <tbody id="referList">
                         <script id="referTemplate" type="text/x-jquery-tmpl">
                                     <tr>
-                                        <td class="text-center"><span class="tmplRowIndex"></span></td>
-                                        <td>
+                                        <td class="text-center main-column"><span class="tmplRowIndex"></span></td>
+                                        <td class="extra-column">
                                             ${referDateShamsi}
                                         </td>
-                                        <td>
+                                        <td class="extra-column">
                                             ${id}
                                         </td>
-                                        <td style="white-space: initial">
+                                        <td style="white-space: initial"  class="extra-column">
                                             ${doctor.personel.firstname}  ${doctor.personel.lastname}
                                         </td>
-                                        <td style="white-space: initial">
+                                        <td class="main-column" style="white-space: initial">
                                             ${patient.firstname}  ${patient.lastname}
                                         </td>
-                                        <td style="font-family: iransans-medium;white-space: initial">
+                                        <td class="main-column" style="font-family: iransans-medium;white-space: initial">
                                             ${clinic.organization.title}
                                         </td>
-                                        <td>
+                                        <td  class="main-column">
                                             <span class="badge badge-pill
                                             {{if status=='initialSaved'}}bg-primary
                                             {{else status=='referred'}}bg-info text-white
@@ -655,7 +672,7 @@
                                                 ${statusPersianTitle}
                                             </span>
                                         </td>
-                                        <td>
+                                        <td class="extra-column">
                                             {{if fileCode}}
                                             <span class="fa fa-file-archive-o" style="cursor:pointer" onclick="downloadFile('${fileCode}')" />
                                             {{/if}}
@@ -684,6 +701,9 @@
                                             </div>
                                         </td>
                                     </tr>
+
+
+
 
 
 

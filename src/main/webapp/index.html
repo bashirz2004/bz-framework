@@ -20,6 +20,14 @@
     <!-- Main CSS -->
     <link rel="stylesheet" href="assets/bzamani/style-public.css">
     <style>
+        @media only screen and (min-width: 600px) {
+            #why-medik {
+                line-height: 3rem;
+                padding-right: 3rem;
+                padding-left: 3rem;
+            }
+        }
+
         .result:hover {
             background-color: #09e5ab54;
         }
@@ -207,7 +215,7 @@
 <div class="main-wrapper">
 
     <!-- Header -->
-    <header class="header" style="z-index: 1;position: fixed;width: 100%">
+    <header class="header" style="z-index: 2;position: fixed;width: 100%">
         <nav class="navbar navbar-expand-lg header-nav">
             <div class="navbar-header  col-xl-2 col-lg-2 col-md-2 col-sm-12 col-12" style="top: 0.4rem">
                 <a href="index.html" class="navbar-brand logo">
@@ -256,12 +264,12 @@
             </div>
             <ul class="nav col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
                 <li class="nav-item" style="display: flex;white-space: nowrap">
-                    <button type="button" class="btn btn-primary btn-rounded btn-sm" style="color: black;display: none"
+                    <button type="button" class="btn btn-primary btn-rounded btn-sm" style="color: black;display: none;z-index: 3;"
                             id="btnDashboard"
                             onclick="navigateToDashboardPage()">
                         داشبورد
                     </button>
-                    <button type="button" class="btn btn-primary btn-rounded btn-sm" style="color: black" id="btnLogin"
+                    <button type="button" class="btn btn-primary btn-rounded btn-sm" style="color: black;z-index: 3" id="btnLogin"
                             onclick="navigateToLoginPage()">
                         ورود
                     </button>
@@ -393,6 +401,7 @@
 
 
 
+
             </script>
         </div>
         <div id="doctor-search-result-list" class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-6 float-left"
@@ -433,6 +442,7 @@
 
 
 
+
             </script>
         </div>
     </div>
@@ -445,7 +455,7 @@
                 <div class="m-auto">
                     <div class="text-center mt-5">
                         <h2>چرا مدیک ؟</h2>
-                        <h4 style="padding-right: 6rem; padding-left: 6rem;   text-align: justify;  line-height: 3rem;">
+                        <h4 style="text-align: justify;" id="why-medik">
                             مدیک یک وب اپلیکیشن در حوزه سلامت است که قصد دارد خدمات نوین پزشکی را در سریع ترین زمان ممکن
                             و با حداکثر کیفیت به بیماران گرامی ارائه نماید. مدیک آمده تا رابطه بین بیمار، پزشک و مراکز
                             درمانی را تسهیل و ارتقاء دهد. مدیک به جز افزایش سطح آگاهی در حوزه پزشکی، محیطی فراهم
@@ -583,6 +593,7 @@
 
 
 
+
                         </script>
                     </div>
                     <a class="sub-title" href="public/searchClinics.html"
@@ -621,6 +632,7 @@
                                              <p style="font-size: 0.8rem; height:2rem">${personel.organization.address} - ${personel.organization.telephone}</p>
                                         </span>
                         </div>
+
 
 
 
@@ -721,6 +733,7 @@
                         </div>
                     </div>
                 </div>
+
 
 
 

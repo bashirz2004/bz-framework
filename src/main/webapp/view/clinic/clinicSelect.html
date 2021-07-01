@@ -380,6 +380,7 @@
                                             <li><i class="fa fa-comment"></i> 17 نظر ثبت شده</li>
                                             <li><i class="fa fa-map"></i>{{if organization.city != null }}${organization.city.title}{{/if}} - {{if organization.region != null }}${organization.region.title}{{/if}}</li>
                                             <li><i class="fa fa-phone"></i> ${organization.telephone}</li>
+                                            <li><button class="btn btn-primary text-danger main-column" onclick="selectClinic(${id},'${organization.title}')">انتخاب</button></li>
                                         </div>
                                         </ul>
                                     </div>
