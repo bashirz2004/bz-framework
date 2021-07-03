@@ -1,7 +1,7 @@
 package com.bzamani.framework.controller.core.user;
 
 import com.bzamani.framework.controller.core.BaseController;
-import com.bzamani.framework.dto.SelfUserRegistrationDto;
+import com.bzamani.framework.dto.UserSelfRegistrationDto;
 import com.bzamani.framework.dto.UserGroupDto;
 import com.bzamani.framework.dto.UserOrganizationDto;
 import com.bzamani.framework.model.core.user.User;
@@ -63,12 +63,12 @@ public class UserController extends BaseController {
 
     @PreAuthorize("hasRole('10')")
     @PostMapping("/changePasswordByAdmin")
-    public boolean changePasswordByAdmin(@RequestBody SelfUserRegistrationDto dto) {
+    public boolean changePasswordByAdmin(@RequestBody UserSelfRegistrationDto dto) {
         return iUserService.changePasswordByAdmin(dto.getUserId(), dto.getPassword());
     }
 
     @PostMapping("/changeAuthenticatedUserPassword")
-    public boolean changeAuthenticatedUserPassword(@RequestBody SelfUserRegistrationDto dto)  {
+    public boolean changeAuthenticatedUserPassword(@RequestBody UserSelfRegistrationDto dto)  {
         iUserService.changeAuthenticatedUserPassword(dto.getOldPassword(), dto.getPassword());
         return true;
     }

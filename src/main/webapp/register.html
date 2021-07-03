@@ -26,6 +26,10 @@
 
     <!-- jQuery -->
     <script src="/assets/bzamani/jquery-1.10.2.min.js"></script>
+    <script src="/assets/bzamani/general-utility.js"></script>
+
+    <!-- Select2 CSS -->
+    <link rel="stylesheet" href="/assets/bzamani/select2.min.css">
 
     <!-- sweet alert -->
     <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
@@ -73,10 +77,110 @@
     <script>
 
         $(function () {
+            fillComboBaseInfo(1, "cmbDoctorState");
+            fillComboBaseInfo(1, "cmbClinicState");
+            fillComboBaseInfo(1000, "cmbDoctorSpeciality");
 
+            $("#cmbDoctorState").change(function () {
+                fillComboDoctorCity($(this).val());
+                $("#cmbDoctorRegion").html("<select class='select' id='cmbDoctorRegion'></select>");
+            });
+            $("#cmbClinicState").change(function () {
+                fillComboClinicCity($(this).val());
+                $("#cmbClinicRegion").html("<select class='select' id='cmbClinicRegion'></select>");
+            });
+
+            $("#cmbDoctorCity").change(function () {
+                fillComboDoctorRegion($(this).val());
+            });
+            $("#cmbClinicCity").change(function () {
+                fillComboClinicRegion($(this).val());
+            });
+
+            function fillComboDoctorCity(stateId, callBackFunction) {
+                $.ajax({
+                    type: "GET",
+                    url: "/api/public/baseinfo/getAllByParentId/" + stateId,
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: function (res) {
+                        $("#cmbDoctorCity").html("<select class='select' id='cmbDoctorCity'></select>");
+                        $("#cmbDoctorCity").append("<option value=-1>...</option>");
+                        $.each(res, function (index, value) {
+                            $("#cmbDoctorCity").append("<option value=" + value.id + ">" + value.title + "</option>");
+                        });
+                        if (callBackFunction != null && typeof callBackFunction == 'function')
+                            callBackFunction();
+                    },
+                    error: function (err) {
+                    }
+                });
+            }
+
+            function fillComboClinicCity(stateId, callBackFunction) {
+                $.ajax({
+                    type: "GET",
+                    url: "/api/public/baseinfo/getAllByParentId/" + stateId,
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: function (res) {
+                        $("#cmbClinicCity").html("<select class='select' id='cmbClinicCity'></select>");
+                        $("#cmbClinicCity").append("<option value=-1>...</option>");
+                        $.each(res, function (index, value) {
+                            $("#cmbClinicCity").append("<option value=" + value.id + ">" + value.title + "</option>");
+                        });
+                        if (callBackFunction != null && typeof callBackFunction == 'function')
+                            callBackFunction();
+                    },
+                    error: function (err) {
+                    }
+                });
+            }
+
+            function fillComboDoctorRegion(cityId, callBackFunction) {
+                $.ajax({
+                    type: "GET",
+                    url: "/api/public/baseinfo/getAllByParentId/" + cityId,
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: function (res) {
+                        $("#cmbDoctorRegion").html("<select class='select' id='cmbDoctorRegion'></select>");
+                        $("#cmbDoctorRegion").append("<option value=-1>...</option>");
+                        $.each(res, function (index, value) {
+                            $("#cmbDoctorRegion").append("<option value=" + value.id + ">" + value.title + "</option>");
+                        });
+                        $('#cmbDoctorRegion').select2();
+                        if (callBackFunction != null && typeof callBackFunction == 'function')
+                            callBackFunction();
+                    },
+                    error: function (err) {
+                    }
+                });
+            }
+
+            function fillComboClinicRegion(cityId, callBackFunction) {
+                $.ajax({
+                    type: "GET",
+                    url: "/api/public/baseinfo/getAllByParentId/" + cityId,
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: function (res) {
+                        $("#cmbClinicRegion").html("<select class='select' id='cmbClinicRegion'></select>");
+                        $("#cmbClinicRegion").append("<option value=-1>...</option>");
+                        $.each(res, function (index, value) {
+                            $("#cmbClinicRegion").append("<option value=" + value.id + ">" + value.title + "</option>");
+                        });
+                        $('#cmbClinicRegion').select2();
+                        if (callBackFunction != null && typeof callBackFunction == 'function')
+                            callBackFunction();
+                    },
+                    error: function (err) {
+                    }
+                });
+            }
         });
 
-        function register() {
+        function registerPortalUser() {
             if (validateForm() == 'ok') {
                 $.ajax({
                     url: "/api/public/user/selfRegister",
@@ -115,17 +219,140 @@
             } else showMessage(validateForm(), "", "warning");
         }
 
+        function registerDoctor() {
+            if (validateFormDoctor() == 'ok') {
+                $.ajax({
+                    url: "/api/public/doctor/selfRegister",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        "mobile": $('#txtDoctorMobile').val(),
+                        "firstname": $('#txtDoctorFirstname').val(),
+                        "lastname": $('#txtDoctorLastname').val(),
+                        "medicalNationalNumber": $('#txtDoctorMedicalNationalNumber').val(),
+                        "specialityId": $('#cmbDoctorSpeciality').val(),
+                        "phone": $('#txtDoctorPhone').val(),
+                        "address": $('#txtDoctorAddress').val(),
+                        "male": $('#cmbDoctorGender').val(),
+                        "stateId": $('#cmbDoctorState').val(),
+                        "cityId": $('#cmbDoctorCity').val(),
+                        "regionId": $('#cmbDoctorRegion').val(),
+                        "fileCode": $('#hiddenFieldFileCodeDoctor').val()
+                    }),
+                    type: 'POST',
+                    success: function (res) {
+                        clearInputs();
+                        showMessage("ثبت موفق", "درخواست ثبت نام شما با موفقیت ثبت شد. پس از بررسی توسط مدیر سامانه، نتیجه به اطلاع شما خواهد رسید.", "success");
+                    },
+                    error: function (err) {
+                        if (err.responseText.includes("unq_personel_mobile"))
+                            showMessage("خطا در ثبت درخواست", " با این شماره موبایل قبلا یک پزشک ثبت نام کرده است.", "error");
+                        else
+                            showMessage(err.responseJSON.message, "", "error");
+                    }
+                });
+            } else showMessage(validateFormDoctor(), "", "warning");
+        }
+
+        function registerClinic() {
+            if (validateFormClinic() == 'ok') {
+                $.ajax({
+                    url: "/api/public/clinic/selfRegister",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        "title": $('#txtClinicTitle').val(),
+                        "address": $('#txtClinicAddress').val(),
+                        "phone": $('#txtClinicPhone').val(),
+                        "stateId": $('#cmbClinicState').val(),
+                        "cityId": $('#cmbClinicCity').val(),
+                        "regionId": $('#cmbClinicRegion').val(),
+                        "fileCode": $('#hiddenFieldFileCodeClinic').val()
+                    }),
+                    type: 'POST',
+                    success: function (res) {
+                        clearInputs();
+                        showMessage("ثبت موفق", "درخواست ثبت نام شما با موفقیت ثبت شد. پس از بررسی توسط مدیر سامانه، نتیجه به اطلاع شما خواهد رسید.", "success");
+                    },
+                    error: function (err) {
+                        if (err.responseText.includes("unq_parent_title"))
+                            showMessage("خطا در ثبت درخواست", " با این نام قبلا یک کلینیک ثبت نام کرده است.", "error");
+                        else
+                            showMessage(err.responseJSON.message, "", "error");
+                    }
+                });
+            } else showMessage(validateFormClinic(), "", "warning");
+        }
+
+        function validateFormDoctor() {
+            if ($('#txtDoctorMobile').val() == '' || $('#txtDoctorFirstname').val() == ''
+                || $('#txtDoctorLastname').val() == ''
+                || $('#txtDoctorMedicalNationalNumber').val() == ''
+                || $('#cmbDoctorSpeciality').val() == ''
+                || $('#txtDoctorAddress').val() == ''
+                || $('#txtDoctorPhone').val() == ''
+                || !$('#cmbDoctorState').val() > 0
+                || !$('#cmbDoctorCity').val() > 0
+                || !$('#cmbDoctorRegion').val() > 0
+                || $('#hiddenFieldFileCodeDoctor').val() == ''
+            )
+                return 'لطفا فیلدهای الزامی را پر کنید.';
+            else if ($('#txtDoctorMobile').val().length != 11
+                || $('#txtDoctorMobile').val().substring(0, 1) != '0')
+                return 'شماره موبایل باید با صفر شروع شود و 11 رقمی باشد.';
+            else return 'ok';
+        }
+
+        function validateFormClinic() {
+            if ($('#txtClinicTitle').val() == ''
+                || $('#txtClinicAddress').val() == ''
+                || $('#txtClinicPhone').val() == ''
+                || !$('#cmbClinicState').val() > 0
+                || !$('#cmbClinicCity').val() > 0
+                || !$('#cmbClinicRegion').val() > 0
+                || $('#hiddenFieldFileCodeClinic').val() == '')
+                return 'لطفا فیلدهای الزامی را پر کنید.';
+            else return 'ok';
+        }
+
         function validateForm() {
             if ($('#txtMobile').val() == '' || $('#txtPassword').val() == '' || $('#txtRepeatPassword').val() == '')
                 return 'لطفا شماره موبایل، رمز و تکرار رمز را وارد کنید.';
             else if ($('#txtPassword').val() != $('#txtRepeatPassword').val())
                 return 'رمز عبور و تکرار آن یکسان نیستند.';
-            else if ($('#txtMobile').val().length != 11 || $('#txtMobile').val().substring(0,1) != '0')
+            else if ($('#txtMobile').val().length != 11 || $('#txtMobile').val().substring(0, 1) != '0')
                 return 'شماره موبایل باید با صفر شروع شود و 11 رقمی باشد.';
             else return 'ok';
         }
 
         function clearInputs() {
+            //clear doctor
+            $('#txtDoctorMobile').val('');
+            $('#txtDoctorFirstname').val('');
+            $('#txtDoctorLastname').val('');
+            $('#txtDoctorMedicalNationalNumber').val('');
+            $('#cmbDoctorGender').val(true);
+            $('#txtDoctorPhone').val('');
+            $('#txtDoctorAddress').val('');
+            $('#uploadedImageDoctor').prop("src", "");
+            $('#hiddenFieldFileCodeDoctor').val(null);
+            $("#cmbDoctorState").val(-1);
+            $("#cmbDoctorCity").val(-1);
+            $("#cmbDoctorRegion").val(-1);
+            $('#cmbDoctorRegion').trigger('change');
+
+            //clear clinic
+            $('#txtClinicTitle').val('');
+            $('#txtClinicAddress').val('');
+            $('#txtClinicPhone').val('');
+            $('#uploadedImageClinic').prop("src", "");
+            $('#hiddenFieldFileCodeClinic').val(null);
+            $("#cmbClinicState").val(-1);
+            $("#cmbClinicCity").val(-1);
+            $("#cmbClinicRegion").val(-1);
+            $('#cmbClinicRegion').trigger('change');
+
+            //clear user
             $('#txtMobile').val('');
             $('#txtPassword').val('');
             $('#txtRepeatPassword').val('');
@@ -135,96 +362,499 @@
             $('#txtEmail').val('');
         }
 
+        function uploadFileDoctor() {
+            $.ajax({
+                url: "/rest/core/file/upload",
+                type: "POST",
+                data: new FormData($("#upload-file-form-doctor")[0]),
+                enctype: 'multipart/form-data',
+                processData: false,
+                contentType: false,
+                cache: false,
+                dataType: "text",
+                success: function (fileCode) {
+                    if (fileCode != null && fileCode.length > 0) {
+                        $('#uploadedImageDoctor').prop("src", "/rest/core/file/download/" + fileCode + "/false");
+                        $('#hiddenFieldFileCodeDoctor').val(fileCode);
+                        $('.submit-btn').show();
+                    }
+                },
+                error: function (err) {
+                    if (err.responseText && err.responseText.toLowerCase().includes('SizeLimitExceededException'.toLowerCase()))
+                        showMessage('خطا! حداکثر حجم تصویر شما می تواند ' + parseInt(err.responseText.substring(err.responseText.lastIndexOf('(') + 1, err.responseText.lastIndexOf(')'))) / 1048576 + ' مگابایت باشد.', "", "error");
+                }
+            });
+        }
+
+        function uploadFileClinic() {
+            $.ajax({
+                url: "/rest/core/file/upload",
+                type: "POST",
+                data: new FormData($("#upload-file-form-clinic")[0]),
+                enctype: 'multipart/form-data',
+                processData: false,
+                contentType: false,
+                cache: false,
+                dataType: "text",
+                success: function (fileCode) {
+                    if (fileCode != null && fileCode.length > 0) {
+                        $('#uploadedImageClinic').prop("src", "/rest/core/file/download/" + fileCode + "/false");
+                        $('#hiddenFieldFileCodeClinic').val(fileCode);
+                        $('.submit-btn').show();
+                    }
+                },
+                error: function (err) {
+                    if (err.responseText && err.responseText.toLowerCase().includes('SizeLimitExceededException'.toLowerCase()))
+                        showMessage('خطا! حداکثر حجم تصویر شما می تواند ' + parseInt(err.responseText.substring(err.responseText.lastIndexOf('(') + 1, err.responseText.lastIndexOf(')'))) / 1048576 + ' مگابایت باشد.', "", "error");
+                }
+            });
+        }
+
     </script>
+
+    <style>
+        .login-header {
+            background-color: #7fffd4;
+            border-radius: 1rem;
+        }
+
+        .login-header:hover {
+            background-color: #34eaa9;
+            cursor: pointer;
+        }
+
+        .ejb {
+            background-color: #35b033;
+        }
+
+        .login-btn {
+            background-color: #35b033;
+        }
+
+        .reg-section {
+            border-radius: 1rem;
+        }
+    </style>
 
 </head>
 <body class="account-page">
 
 <!-- Main Wrapper -->
 <div class="main-wrapper">
+    <!-- Header -->
+    <header class="header" style="z-index: 2;position: fixed;width: 100%">
+        <nav class="navbar navbar-expand-lg header-nav">
+            <div class="navbar-header  col-xl-2 col-lg-2 col-md-2 col-sm-12 col-12" style="top: 0.4rem">
+                <a href="index.html" class="navbar-brand logo">
+                    <img src="assets/img/logo.jpg" class="img-fluid" alt="Logo" style="border-radius: 2rem">
+                </a>
+            </div>
+            <div class="main-menu-wrapper  col-xl-10 col-lg-10 col-md-12 col-sm-12 col-12">
+                <div class="menu-header">
+                    <a href="index.html" class="menu-logo">
+                        <img src="assets/img/logo.jpg" class="img-fluid" alt="Logo">
+                    </a>
+                    <a id="menu_close" class="menu-close" href="javascript:void(0);">
+                        <i class="fas fa-times"></i>
+                    </a>
+                </div>
+                <ul class="main-nav">
+                    <li>
+                        <a href="services.html">خدمات مدیک</a>
+                    </li>
+                    <li>
+                        <a href="homeVisit.html">هوم ویزیت</a>
+                    </li>
+                    <li>
+                        <a href="public/searchDoctors.html">پزشکان</a>
+                    </li>
+                    <li>
+                        <a href="public/searchClinics.html">مراکز درمانی</a>
+                    </li>
+
+                    <li>
+                        <a href="#blogFragment">مجله سلامتی</a>
+                    </li>
+                    <li>
+                        <a href="contactUs.html">ارتباط با ما</a>
+                    </li>
+                    <li id="dashboardPage" style="display: none">
+                        <a href="dashboard.html">داشبورد</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <!-- /Header -->
 
     <!-- Page Content -->
     <div class="content">
         <div class="container-fluid">
-
-            <div class="row">
-                <div class="col-md-8 offset-md-2">
-
-                    <!-- Register Content -->
-                    <div class="account-content">
-                        <div class="row align-items-center justify-content-center">
-                            <div class="col-md-7 col-lg-6 login-left">
-                                <img src="assets/img/login-banner.png" class="img-fluid" alt="Doccure Register">
-                            </div>
-                            <div class="col-md-12 col-lg-6 login-right">
-                                <div class="login-header">
-                                    <h3>ثبت نام کاربر جدید </h3>
-                                </div>
-                                <h6 class="badge badge-pill bg-info text-white">مشخصات اصلی(اجباری)</h6>
-                                <!-- Register Form -->
-                                <div class="form-group form-focus">
-                                    <input type="text" class="form-control floating" id="txtMobile" dir="ltr" maxlength="11">
-                                    <label class="focus-label"> شماره موبایل (مانند 09123843845) </label>
-                                </div>
-                                <div class="form-group form-focus">
-                                    <input type="password" class="form-control floating" id="txtPassword" dir="ltr" maxlength="69">
-                                    <label class="focus-label"> رمزعبور </label>
-                                </div>
-                                <div class="form-group form-focus">
-                                    <input type="password" class="form-control floating" id="txtRepeatPassword"  maxlength="69"
-                                           dir="ltr">
-                                    <label class="focus-label"> تکرار رمزعبور </label>
-                                </div>
-
-                                <h6 class="badge badge-pill bg-secondary text-white">مشخصات تکمیلی(اختیاری)</h6>
-
-                                <div class="form-group form-focus">
-                                    <input type="text" class="form-control floating" id="txtFirstname">
-                                    <label class="focus-label">نام</label>
-                                </div>
-                                <div class="form-group form-focus">
-                                    <input type="text" class="form-control floating" id="txtLastname">
-                                    <label class="focus-label"> نام خانوادگی</label>
-                                </div>
-                                <div class="form-group form-focus">
-                                    <input type="text" class="form-control floating" id="txtNationalCode" maxlength="10"
-                                           minlength="10">
-                                    <label class="focus-label">کدملی</label>
-                                </div>
-                                <div class="form-group form-focus">
-                                    <select id="cmbGender" class="form-control floating">
-                                        <option value="true">مرد</option>
-                                        <option value="false">زن</option>
-                                    </select>
-                                    <label class="focus-label">جنسیت</label>
-                                </div>
-                                <div class="form-group form-focus">
-                                    <input type="email" dir="ltr" class="form-control floating" id="txtEmail">
-                                    <label class="focus-label">پست الکترونیکی(جهت ارسال رمزعبور فراموش شده شما) </label>
-                                </div>
-                                <div class="text-right">
-                                    <a class="forgot-link" href="login.html">حساب کاربری دارم</a>
-                                </div>
-                                <button class="btn btn-primary btn-block btn-lg login-btn" onclick="register()">
-                                    ثبت‌نام
-                                </button>
-                                <div class="text-center dont-have">
-                                    <a href="index.html">بازگشت به صفحه اصلی</a>
-                                </div>
-                                <!-- /Register Form -->
-
-                            </div>
+            <!-- Register Content -->
+            <div class="account-content">
+                <div class="row justify-content-center pt-4">
+                    <div class="col-lg-3 login-left">
+                        <div class="pt-lg-5">
+                            <img src="assets/img/login-banner.png" class="img-fluid" alt="doctor">
                         </div>
                     </div>
-                    <!-- /Register Content -->
+                    <div class="reg-section col-lg-3 login-right">
+                        <div class="login-header p-2" onclick="$('#doctor-div').toggle();">
+                            <h3>ثبت نام پزشک </h3>
+                        </div>
+
+                        <!-- Register Form -->
+                        <div id="doctor-div" style="display: none">
+                            <div class="form-group form-focus">
+                                <input type="text" class="form-control floating" id="txtDoctorMobile" dir="ltr"
+                                       maxlength="11">
+                                <label class="focus-label"> شماره موبایل (مانند 09123843845) </label>
+                            </div>
+                            <div class="form-group form-focus">
+                                <input type="text" class="form-control floating" id="txtDoctorFirstname">
+                                <label class="focus-label">نام</label>
+                            </div>
+                            <div class="form-group form-focus">
+                                <input type="text" class="form-control floating" id="txtDoctorLastname">
+                                <label class="focus-label"> نام خانوادگی</label>
+                            </div>
+                            <div class="form-group form-focus">
+                                <input type="text" class="form-control floating" id="txtDoctorMedicalNationalNumber"
+                                       dir="ltr">
+                                <label class="focus-label">نظام پزشکی</label>
+                            </div>
+                            <div class="form-group form-focus">
+                                <select id="cmbDoctorSpeciality" class="form-control floating" dir="ltr">
+                                </select>
+                                <label class="focus-label">تخصص</label>
+                            </div>
+                            <div class="form-group form-focus">
+                                <select id="cmbDoctorGender" class="form-control floating" dir="ltr">
+                                    <option value="true">مرد</option>
+                                    <option value="false">زن</option>
+                                </select>
+                                <label class="focus-label">جنسیت</label>
+                            </div>
+
+                            <div class="form-group form-focus">
+                                <input type="text" class="form-control floating" id="txtDoctorPhone" maxlength="30"
+                                       minlength="0" dir="ltr">
+                                <label class="focus-label">تلفن مطب</label>
+                            </div>
+                            <div class="form-group form-focus">
+                                <input type="email" dir="rtl" class="form-control floating" id="txtDoctorAddress">
+                                <label class="focus-label">آدرس مطب </label>
+                            </div>
+                            <div class="form-group form-focus">
+                                <select class="form-control" id="cmbDoctorState" dir="ltr"></select>
+                                <label class="focus-label">استان</label>
+                            </div>
+                            <div class="form-group form-focus">
+                                <select class="form-control" id="cmbDoctorCity" dir="ltr"></select>
+                                <label class="focus-label">شهر</label>
+                            </div>
+                            <div class="form-group form-focus" dir="ltr">
+                                <select class="form-control" id="cmbDoctorRegion" dir="ltr"></select>
+                                <label class="focus-label">منطقه/محله</label>
+                            </div>
+                            <div class="form-group form-focus service-upload text-center"
+                                 style="color: cadetblue;min-height: 10rem">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>بارگذاری تصویر</span>
+                                <div>
+                                    <form id="upload-file-form-doctor">
+                                        <input id="upload-file-input-doctor" type="file" name="attachment"
+                                               accept="image/*"
+                                               onchange="uploadFileDoctor();$('.submit-btn').hide();"/>
+                                        <img id="uploadedImageDoctor"
+                                             style="width: 8em;border: 1px solid;border-radius: 10px;box-shadow: 0px 0px 10px 1px;"/>
+                                        <input type="hidden" id="hiddenFieldFileCodeDoctor"/>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="text-right">
+                                <a class="forgot-link" href="login.html">حساب کاربری دارم</a>
+                            </div>
+                            <button class="btn btn-primary btn-block btn-lg login-btn" onclick="registerDoctor()">
+                                ارسال درخواست
+                            </button>
+                            <button class="btn btn-danger btn-block btn-lg" onclick="clearInputs()">
+                                پاک کردن
+                            </button>
+                            <div class="text-center dont-have">
+                                <a href="index.html">بازگشت به صفحه اصلی</a>
+                            </div>
+                        </div>
+                        <!-- /Register Form -->
+
+                    </div>
+                    <div class="reg-section col-lg-3 login-right">
+                        <div class="login-header p-2" onclick="$('#clinic-div').toggle();">
+                            <h3>ثبت نام مرکز درمانی </h3>
+                        </div>
+
+                        <!-- Register Form -->
+                        <div id="clinic-div" style="display: none">
+                            <div class="form-group form-focus">
+                                <input type="text" class="form-control floating" id="txtClinicTitle" dir="rtl"
+                                       maxlength="11">
+                                <label class="focus-label"> عنوان مرکز درمانی </label>
+                            </div>
+                            <div class="form-group form-focus">
+                                <select class="form-control" id="cmbClinicState" dir="ltr"></select>
+                                <label class="focus-label">استان</label>
+                            </div>
+                            <div class="form-group form-focus">
+                                <select class="form-control" id="cmbClinicCity" dir="ltr"></select>
+                                <label class="focus-label">شهر</label>
+                            </div>
+                            <div class="form-group form-focus">
+                                <select class="form-control" id="cmbClinicRegion" dir="ltr"></select>
+                                <label class="focus-label">منطقه/محله</label>
+                            </div>
+                            <div class="form-group form-focus">
+                                <input type="email" dir="rtl" class="form-control floating" id="txtClinicAddress">
+                                <label class="focus-label">آدرس </label>
+                            </div>
+                            <div class="form-group form-focus">
+                                <input type="text" class="form-control floating" id="txtClinicPhone" maxlength="30"
+                                       minlength="0" dir="ltr">
+                                <label class="focus-label">تلفن</label>
+                            </div>
+                            <div class="form-group form-focus service-upload text-center"
+                                 style="color: cadetblue;min-height: 10rem">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>بارگذاری تصویر</span>
+                                <form id="upload-file-form-clinic">
+                                    <input id="upload-file-input-clinic" type="file" name="attachment"
+                                           accept="image/*"
+                                           onchange="uploadFileClinic();$('.submit-btn').hide();"/>
+                                    <img id="uploadedImageClinic"
+                                         style="width: 8em;border: 1px solid;border-radius: 10px;box-shadow: 0px 0px 10px 1px;"/>
+                                    <input type="hidden" id="hiddenFieldFileCodeClinic"/>
+                                </form>
+                            </div>
+
+                            <div class="text-right">
+                                <a class="forgot-link" href="login.html">حساب کاربری دارم</a>
+                            </div>
+                            <button class="btn btn-primary btn-block btn-lg login-btn" onclick="registerClinic()">
+                                ارسال درخواست
+                            </button>
+                            <button class="btn btn-danger btn-block btn-lg" onclick="clearInputs()">
+                                پاک کردن
+                            </button>
+                            <div class="text-center dont-have">
+                                <a href="index.html">بازگشت به صفحه اصلی</a>
+                            </div>
+                        </div>
+                        <!-- /Register Form -->
+
+                    </div>
+                    <div class="reg-section col-lg-3 login-right">
+                        <div class="login-header p-2" onclick="$('#portal-user-div').toggle();">
+                            <h3>ثبت نام کاربر پورتال </h3>
+                        </div>
+
+                        <!-- Register Form -->
+                        <div id="portal-user-div" style="display: none">
+                            <h6 class="ejb badge badge-pill text-white">مشخصات اصلی(اجباری)</h6>
+                            <div class="form-group form-focus">
+                                <input type="text" class="form-control floating" id="txtMobile" dir="ltr"
+                                       maxlength="11">
+                                <label class="focus-label"> شماره موبایل (مانند 09123843845) </label>
+                            </div>
+                            <div class="form-group form-focus">
+                                <input type="password" class="form-control floating" id="txtPassword" dir="ltr"
+                                       maxlength="69">
+                                <label class="focus-label"> رمزعبور </label>
+                            </div>
+                            <div class="form-group form-focus">
+                                <input type="password" class="form-control floating" id="txtRepeatPassword"
+                                       maxlength="69"
+                                       dir="ltr">
+                                <label class="focus-label"> تکرار رمزعبور </label>
+                            </div>
+
+                            <h6 class="badge badge-pill bg-secondary text-white">مشخصات تکمیلی(اختیاری)</h6>
+
+                            <div class="form-group form-focus">
+                                <input type="text" class="form-control floating" id="txtFirstname">
+                                <label class="focus-label">نام</label>
+                            </div>
+                            <div class="form-group form-focus">
+                                <input type="text" class="form-control floating" id="txtLastname">
+                                <label class="focus-label"> نام خانوادگی</label>
+                            </div>
+                            <div class="form-group form-focus">
+                                <input type="text" class="form-control floating" id="txtNationalCode" maxlength="10"
+                                       minlength="10">
+                                <label class="focus-label">کدملی</label>
+                            </div>
+                            <div class="form-group form-focus">
+                                <select id="cmbGender" class="form-control floating">
+                                    <option value="true">مرد</option>
+                                    <option value="false">زن</option>
+                                </select>
+                                <label class="focus-label">جنسیت</label>
+                            </div>
+                            <div class="form-group form-focus">
+                                <input type="email" dir="ltr" class="form-control floating" id="txtEmail">
+                                <label class="focus-label">پست الکترونیکی </label>
+                            </div>
+                            <div class="text-right">
+                                <a class="forgot-link" href="login.html">حساب کاربری دارم</a>
+                            </div>
+                            <button class="btn btn-primary btn-block btn-lg login-btn" onclick="registerPortalUser()">
+                                ثبت نام
+                            </button>
+                            <button class="btn btn-danger btn-block btn-lg" onclick="clearInputs()">
+                                پاک کردن
+                            </button>
+                            <div class="text-center dont-have">
+                                <a href="index.html">بازگشت به صفحه اصلی</a>
+                            </div>
+                        </div>
+                        <!-- /Register Form -->
+
+                    </div>
+                </div>
+            </div>
+            <!-- /Register Content -->
+        </div>
+    </div>
+    <!-- /Page Content -->
+
+    <!-- Footer -->
+    <footer class="footer float-left">
+
+        <!-- Footer Top -->
+        <div class="footer-top">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-3 col-md-6">
+
+                        <!-- Footer Widget -->
+                        <div class="footer-widget footer-about">
+                            <div class="footer-logo">
+                                <img src="assets/img/footer-logo.jpg" alt="logo">
+                            </div>
+                            <div class="footer-about-content">
+                                <p>مدیک یک وب اپلیکیشن در حوزه سلامت است که قصد دارد خدمات نوین پزشکی را در سریع
+                                    ترین زمان ممکن و با حداکثر کیفیت به کاربران گرامی ارائه نماید. </p>
+                                <div class="social-icon">
+                                    <ul>
+                                        <li>
+                                            <a href="#" target="_blank"><i class="fa fa-twitter"></i> </a>
+                                        </li>
+                                        <li>
+                                            <a href="#" target="_blank"><i class="fa fa-instagram"></i></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /Footer Widget -->
+
+                    </div>
+
+                    <div class="col-lg-2 col-md-6">
+
+                        <!-- Footer Widget -->
+                        <div class="footer-widget footer-menu">
+                            <h2 class="footer-title">برای مراجعه‌کنندگان</h2>
+                            <ul>
+                                <li><a href="public/searchDoctors.html">جستجوی پزشکان</a></li>
+                                <li><a href="public/searchClinics.html">جستجوی کلینیک ها</a></li>
+                                <li><a href="register.html">‌ثبت‌نام</a></li>
+                                <li><a href="login.html">‌ورود</a></li>
+                                <li><a href="dashboard.html">داشبورد</a></li>
+                            </ul>
+                        </div>
+                        <!-- /Footer Widget -->
+
+                    </div>
+
+                    <div class="col-lg-2 col-md-6">
+
+                        <!-- Footer Widget -->
+                        <div class="footer-widget footer-menu">
+                            <h2 class="footer-title">برای پزشکان</h2>
+                            <ul>
+                                <li><a href="login.html">‌ورود</a></li>
+                                <li><a href="dashboard.html">داشبورد</a></li>
+                            </ul>
+                        </div>
+                        <!-- /Footer Widget -->
+
+                    </div>
+
+                    <div class="col-lg-2 col-md-6">
+
+                        <!-- Footer Widget -->
+                        <div class="footer-widget footer-menu">
+                            <h2 class="footer-title">برای کلینیک ها</h2>
+                            <ul>
+                                <li><a href="login.html">‌ورود</a></li>
+                                <li><a href="dashboard.html">داشبورد</a></li>
+                            </ul>
+                        </div>
+                        <!-- /Footer Widget -->
+
+                    </div>
+
+                    <div class="col-lg-3 col-md-6">
+
+                        <!-- Footer Widget -->
+                        <div class="footer-widget footer-contact" style="color: white">
+                            <h2 class="footer-title">ارتباط با ما</h2>
+                            <div class="footer-contact-inincludesfo">
+                                <div class="footer-address">
+                                    <span><i class="fas fa-map-marker-alt"></i></span>
+                                    <p> تهران<br> تهران </p>
+                                </div>
+                                <p>
+                                    <i class="fas fa-phone-alt"></i>
+                                    09193788541
+                                </p>
+                                <p class="mb-0">
+                                    <i class="fas fa-envelope"></i>
+                                    medikteb@gmail.com
+                                </p>
+                            </div>
+                        </div>
+                        <!-- /Footer Widget -->
+
+                    </div>
 
                 </div>
             </div>
-
         </div>
+        <!-- /Footer Top -->
 
-    </div>
-    <!-- /Page Content -->
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <div class="container-fluid">
+
+                <!-- Copyright -->
+                <div class="copyright">
+                    <div class="row">
+                        <div class="col-md-5 col-lg-5">
+                            <div class="copyright-text">
+                                <p class="mb-0">تمامی حقوق این اپلیکیشن برای مدیک اپ محفوظ است.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Copyright -->
+
+            </div>
+        </div>
+        <!-- /Footer Bottom -->
+
+    </footer>
+    <!-- /Footer -->
 
 </div>
 <!-- /Main Wrapper -->
@@ -235,6 +865,8 @@
 
 <!-- Custom JS -->
 <script src="assets/admin/chart/script.js"></script>
+<!-- Select2 JS -->
+<script src="/assets/bzamani/select2.min.js"></script>
 
 </body>
 </html>

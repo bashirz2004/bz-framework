@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SelfUserRegistrationDto {
+public class UserSelfRegistrationDto {
     private String mobile;
     private String password;
     private String passwordRepeat;

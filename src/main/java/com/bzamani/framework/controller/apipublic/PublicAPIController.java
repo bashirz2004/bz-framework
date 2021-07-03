@@ -3,8 +3,11 @@ package com.bzamani.framework.controller.apipublic;
 import com.bzamani.framework.common.utility.DateUtility;
 import com.bzamani.framework.common.utility.SecurityUtility;
 import com.bzamani.framework.controller.core.BaseController;
+import com.bzamani.framework.dto.ClinicSelfRegistrationDto;
+import com.bzamani.framework.dto.DoctorSelfRegistrationDto;
 import com.bzamani.framework.dto.PostCategoryDto;
-import com.bzamani.framework.dto.SelfUserRegistrationDto;
+import com.bzamani.framework.dto.UserSelfRegistrationDto;
+import com.bzamani.framework.model.clinic.Clinic;
 import com.bzamani.framework.model.core.baseinfo.BaseInfo;
 import com.bzamani.framework.model.core.statistics.SiteVisitors;
 import com.bzamani.framework.model.core.user.User;
@@ -67,11 +70,6 @@ public class PublicAPIController extends BaseController {
         return DateUtility.todayShamsi();
     }
 
-    @GetMapping("/doctor/load/{id}")
-    public Doctor loadDoctor(@PathVariable("id") long id) {
-        return iDoctorService.loadByEntityId(id);
-    }
-
     @GetMapping("doctor/searchDoctors")
     public Map<String, Object> searchDoctors(
             @RequestParam(required = false) String firstname,
@@ -113,8 +111,28 @@ public class PublicAPIController extends BaseController {
     }
 
     @PostMapping("/user/selfRegister")
-    public User selfRegister(@RequestBody SelfUserRegistrationDto userDto) {
+    public User selfRegister(@RequestBody UserSelfRegistrationDto userDto) {
         return iUserService.selfRegister(userDto);
+    }
+
+    @PostMapping("/doctor/selfRegister")
+    public Doctor selfRegisterDoctor(@RequestBody DoctorSelfRegistrationDto dto) {
+        return iDoctorService.selfRegister(dto);
+    }
+
+    @GetMapping("/doctor/load/{id}")
+    public Doctor loadDoctor(@PathVariable("id") long id) {
+        return iDoctorService.loadByEntityId(id);
+    }
+
+    @PostMapping("/clinic/selfRegister")
+    public Clinic selfRegisterClinic(@RequestBody ClinicSelfRegistrationDto dto) {
+        return iClinicService.selfRegister(dto);
+    }
+
+    @GetMapping("/clinic/load/{id}")
+    public Clinic loadClinic(@PathVariable("id") long id) {
+        return iClinicService.loadByEntityId(id);
     }
 
     @PostMapping("/user/sendPasswordToUserEmail")
@@ -178,7 +196,7 @@ public class PublicAPIController extends BaseController {
             @RequestParam(defaultValue = "50") int size,
             @RequestParam(defaultValue = "id,desc") String[] sort) {
 
-        return iClinicService.searchClinic(organizationTitle, organizationAddress, stateId, cityId, regionId,true,showInVipList, page, size, sort);
+        return iClinicService.searchClinic(organizationTitle, organizationAddress, stateId, cityId, regionId, true, showInVipList, page, size, sort);
     }
 
 }

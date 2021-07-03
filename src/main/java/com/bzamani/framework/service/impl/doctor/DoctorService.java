@@ -1,9 +1,17 @@
 package com.bzamani.framework.service.impl.doctor;
 
 import com.bzamani.framework.common.utility.SecurityUtility;
+import com.bzamani.framework.dto.ClinicSelfRegistrationDto;
+import com.bzamani.framework.dto.DoctorSelfRegistrationDto;
+import com.bzamani.framework.model.clinic.Clinic;
+import com.bzamani.framework.model.core.baseinfo.BaseInfo;
+import com.bzamani.framework.model.core.organization.Organization;
+import com.bzamani.framework.model.core.personel.Personel;
 import com.bzamani.framework.model.core.user.User;
 import com.bzamani.framework.model.doctor.Doctor;
 import com.bzamani.framework.repository.doctor.IDoctorRepository;
+import com.bzamani.framework.service.core.organization.IOrganizationService;
+import com.bzamani.framework.service.core.personel.IPersonelService;
 import com.bzamani.framework.service.core.user.IUserService;
 import com.bzamani.framework.service.doctor.IDoctorService;
 import com.bzamani.framework.service.impl.core.GenericService;
@@ -29,6 +37,12 @@ public class DoctorService extends GenericService<Doctor, Long> implements IDoct
     @Autowired
     private IUserService iUserService;
 
+    @Autowired
+    private IOrganizationService iOrganizationService;
+
+    @Autowired
+    private IPersonelService iPersonelService;
+
     @Override
     protected JpaRepository<Doctor, Long> getGenericRepo() {
         return iDoctorRepository;
@@ -38,9 +52,16 @@ public class DoctorService extends GenericService<Doctor, Long> implements IDoct
     @Override
     @Transactional
     public Doctor saveDoctor(Doctor doctor) {
-        if (doctor.getId() != null && doctor.getId() > 0)
-            if (!loadByEntityId(doctor.getId()).getPersonel().getId().equals(doctor.getPersonel().getId()))
+        if (doctor.getId() != null && doctor.getId() > 0) {
+            Doctor oldDoctor = loadByEntityId(doctor.getId());
+            if (!oldDoctor.getPersonel().getId().equals(doctor.getPersonel().getId()))
                 throw new RuntimeException("هویت فردی يك پزشک، قابل ويرايش نيست.");
+            if (oldDoctor.isConfirmed() != doctor.isConfirmed()) {
+                Organization org = iOrganizationService.loadByEntityId(oldDoctor.getPersonel().getOrganization().getId());
+                org.setActive(doctor.isConfirmed());
+                iOrganizationService.saveOrganization(org);
+            }
+        }
 
         return save(doctor);
     }
@@ -107,5 +128,52 @@ public class DoctorService extends GenericService<Doctor, Long> implements IDoct
     public Doctor getAuthenticatedDoctor() {
         User authenticatedUser = iUserService.findUserByUsernameEquals(SecurityUtility.getAuthenticatedUser().getUsername());
         return iDoctorRepository.findByPersonel(authenticatedUser.getPersonel());
+    }
+
+    @Override
+    @Transactional
+    public Doctor selfRegister(DoctorSelfRegistrationDto dto) {
+        Organization organization = new Organization();
+        organization.setActive(false);
+        organization.setTitle("مطب دکتر " + dto.getFirstname() + " " + dto.getLastname());
+        organization.setFileCode(null);
+        organization.setAddress(dto.getAddress());
+        organization.setTelephone(dto.getPhone());
+        BaseInfo state = new BaseInfo();
+        state.setId(dto.getStateId());
+        organization.setState(state);
+        BaseInfo city = new BaseInfo();
+        city.setId(dto.getCityId());
+        organization.setCity(city);
+        BaseInfo region = new BaseInfo();
+        region.setId(dto.getRegionId());
+        organization.setRegion(region);
+        Organization parent = new Organization();
+        parent.setId(1L);
+        organization.setParent(parent);
+        iOrganizationService.save(organization);
+
+        Personel personel = new Personel();
+        personel.setOrganization(organization);
+        personel.setFileCode(dto.getFileCode());
+        personel.setLastname(dto.getLastname());
+        personel.setFirstname(dto.getFirstname());
+        personel.setAddress(dto.getAddress());
+        personel.setTelephone(dto.getPhone());
+        personel.setMale(dto.isMale());
+        personel.setMobile(dto.getMobile());
+        personel.setNationalCode("");
+        personel.setEmail("");
+        iPersonelService.checkAndSave(personel);
+
+        Doctor doctor = new Doctor();
+        doctor.setPersonel(personel);
+        doctor.setConfirmed(false);
+        doctor.setMedicalNationalNumber(dto.getMedicalNationalNumber());
+        BaseInfo speciality = new BaseInfo();
+        speciality.setId(dto.getSpecialityId());
+        doctor.setSpeciality(speciality);
+        doctor.setShowInVipList(false);
+        return save(doctor);
     }
 }

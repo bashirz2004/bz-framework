@@ -1,6 +1,6 @@
 package com.bzamani.framework.service.core.user;
 
-import com.bzamani.framework.dto.SelfUserRegistrationDto;
+import com.bzamani.framework.dto.UserSelfRegistrationDto;
 import com.bzamani.framework.model.core.user.User;
 import com.bzamani.framework.service.core.IGenericService;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +15,7 @@ public interface IUserService extends IGenericService<User, Long> {
     @Transactional
     User saveUserWithSets(User user);
 
-    User selfRegister(SelfUserRegistrationDto userDto);
+    User selfRegister(UserSelfRegistrationDto userDto);
 
     @Transactional
     void sendPasswordToUserEmail(String email);

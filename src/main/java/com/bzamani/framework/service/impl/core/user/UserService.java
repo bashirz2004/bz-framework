@@ -3,7 +3,7 @@ package com.bzamani.framework.service.impl.core.user;
 import com.bzamani.framework.common.utility.DateUtility;
 import com.bzamani.framework.common.utility.SecurityUtility;
 import com.bzamani.framework.common.utility.Utility;
-import com.bzamani.framework.dto.SelfUserRegistrationDto;
+import com.bzamani.framework.dto.UserSelfRegistrationDto;
 import com.bzamani.framework.model.core.group.Group;
 import com.bzamani.framework.model.core.organization.Organization;
 import com.bzamani.framework.model.core.personel.Personel;
@@ -97,7 +97,7 @@ public class UserService extends GenericService<User, Long> implements IUserServ
 
     @Override
     @Transactional
-    public User selfRegister(SelfUserRegistrationDto userDto) {
+    public User selfRegister(UserSelfRegistrationDto userDto) {
         checkInputData(userDto.getMobile());
 
         Personel p = new Personel();

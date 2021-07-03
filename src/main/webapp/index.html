@@ -73,6 +73,14 @@
             });
         });
 
+        function navigateToDoctorSinglePage(id) {
+            document.location = "doctorSinglePage.html?id=" + id;
+        }
+
+        function navigateToClinicSinglePage(id) {
+            document.location = "clinicSinglePage.html?id=" + id;
+        }
+
         function searchAutoComplete() {
             let searchParameter = $('#txtSearchBox').val().trim();
             $("#clinic-search-result-list > div").remove();
@@ -264,18 +272,20 @@
             </div>
             <ul class="nav col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
                 <li class="nav-item" style="display: flex;white-space: nowrap">
-                    <button type="button" class="btn btn-primary btn-rounded btn-sm" style="color: black;display: none;z-index: 3;"
+                    <button type="button" class="btn btn-primary btn-rounded btn-sm"
+                            style="color: black;display: none;z-index: 3;"
                             id="btnDashboard"
                             onclick="navigateToDashboardPage()">
                         داشبورد
                     </button>
-                    <button type="button" class="btn btn-primary btn-rounded btn-sm" style="color: black;z-index: 3" id="btnLogin"
+                    <button type="button" class="btn btn-primary btn-rounded btn-sm" style="color: black;z-index: 3"
+                            id="btnLogin"
                             onclick="navigateToLoginPage()">
                         ورود
                     </button>
                     <button type="button" class="btn btn-info btn-rounded btn-sm" style="color: black" id="btnRegister"
                             onclick="navigateToRegisterPage()">
-                        ثبت نام
+                        ثبت نام پزشک/مرکز درمانی/کاربر
                     </button>
                     <button type="button" class="btn btn-danger btn-rounded btn-sm" id="btnLogout" onclick="logout()"
                             style="display: none">
@@ -297,10 +307,11 @@
             <li data-target="#carouselExampleIndicators" data-slide-to="1" class="active"></li>
             <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
             <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="4"></li>
         </ol>
         <div class="carousel-inner">
             <div class="carousel-item">
-                <img class="d-block w-100" src="assets/img/slider/4.png" alt="توضیحات درباره خدمات"
+                <img class="d-block w-100" src="assets/img/slider/bg1.jpg" alt="توضیحات درباره خدمات"
                      onclick="clearAutoComplete()">
                 <h5></h5>
                 <p></p>
@@ -314,13 +325,19 @@
                 </div>
             </div>
             <div class="carousel-item">
-                <img class="d-block w-100" src="assets/img/slider/5.png" alt="توضیحات درباره خدمات"
+                <img class="d-block w-100" src="assets/img/slider/bg3.jpg" alt="توضیحات درباره خدمات"
                      onclick="clearAutoComplete()">
                 <h5></h5>
                 <p></p>
             </div>
             <div class="carousel-item">
-                <img class="d-block w-100" src="assets/img/slider/6.jpg" alt="توضیحات درباره خدمات"
+                <img class="d-block w-100" src="assets/img/slider/bg4.jpg" alt="توضیحات درباره خدمات"
+                     onclick="clearAutoComplete()">
+                <h5></h5>
+                <p></p>
+            </div>
+            <div class="carousel-item">
+                <img class="d-block w-100" src="assets/img/slider/bg5.jpg" alt="توضیحات درباره خدمات"
                      onclick="clearAutoComplete()">
                 <h5></h5>
                 <p></p>
@@ -371,7 +388,7 @@
         </button>
 
         <div id="clinic-search-result-list" class="col-xl-5 col-lg-5 col-md-6 col-sm-6 col-6 float-left"
-             style="display:none;background: #19181a8c;border-radius: 0 0 1rem 0">
+             style="display:none;background: #19181a8c;border-radius: 0 0 1rem 0;z-index: 2">
             <script id="clinic-search-result-template" type="text/x-jquery-tmpl">
                         <div class="result col-lg-12 col-md-12 col-sm-12 col-12 float-left">
                             <div class="col-lg-2 col-md-2 col-sm-12 col-12 float-left">
@@ -381,7 +398,7 @@
                                                  {{/if}}
                                              alt="فاقد تصویر">
                             </div>
-                            <div class="col-lg-10 col-md-10 col-sm-12 col-12 float-left">
+                            <div class="col-lg-10 col-md-10 col-sm-12 col-12 float-left" onclick="navigateToClinicSinglePage(${id})">
                                 <span class="col-lg-12 col-md-12 col-sm-12 col-12 float-left" style="font-size: 0.9rem;color:white;cursor:pointer;top:0.5rem">
                                 ${title}
                                 </span>
@@ -402,10 +419,12 @@
 
 
 
+
+
             </script>
         </div>
         <div id="doctor-search-result-list" class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-6 float-left"
-             style="display:none;width: 25%;background: #19181a8c;border-radius: 0 0 0 1rem">
+             style="display:none;width: 25%;background: #19181a8c;border-radius: 0 0 0 1rem;z-index: 2">
             <script id="doctor-search-result-template" type="text/x-jquery-tmpl">
                         <div class="result col-lg-12 col-md-12 col-sm-12 col-12 float-left">
                             <div class="col-lg-3 col-md-3 col-sm-12 col-12 float-left">
@@ -421,12 +440,14 @@
                                                  {{/if}}
                                              alt="فاقد تصویر">
                             </div>
-                            <div class="col-lg-9 col-md-9 col-sm-12 col-12 float-left">
+                            <div class="col-lg-9 col-md-9 col-sm-12 col-12 float-left" onclick="navigateToDoctorSinglePage(${id})">
                                 <span class="col-lg-12 col-md-12 col-sm-12 col-12 float-left" style="font-size: 0.9rem;color:white;cursor:pointer;top:0.5rem">
                                 دکتر     ${firstname} ${lastname}
                                 </span>
                             </div>
                         </div>
+
+
 
 
 
@@ -594,6 +615,8 @@
 
 
 
+
+
                         </script>
                     </div>
                     <a class="sub-title" href="public/searchClinics.html"
@@ -632,6 +655,8 @@
                                              <p style="font-size: 0.8rem; height:2rem">${personel.organization.address} - ${personel.organization.telephone}</p>
                                         </span>
                         </div>
+
+
 
 
 
@@ -801,6 +826,8 @@
 
 
 
+
+
                 </script>
                 <!-- /Blog Post -->
             </div>
@@ -868,6 +895,7 @@
                         <div class="footer-widget footer-menu">
                             <h2 class="footer-title">برای پزشکان</h2>
                             <ul>
+                                <li><a href="register.html">‌ثبت‌نام</a></li>
                                 <li><a href="login.html">‌ورود</a></li>
                                 <li><a href="dashboard.html">داشبورد</a></li>
                             </ul>
@@ -882,6 +910,7 @@
                         <div class="footer-widget footer-menu">
                             <h2 class="footer-title">برای کلینیک ها</h2>
                             <ul>
+                                <li><a href="register.html">‌ثبت‌نام</a></li>
                                 <li><a href="login.html">‌ورود</a></li>
                                 <li><a href="dashboard.html">داشبورد</a></li>
                             </ul>

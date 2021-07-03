@@ -1,5 +1,6 @@
 package com.bzamani.framework.service.doctor;
 
+import com.bzamani.framework.dto.DoctorSelfRegistrationDto;
 import com.bzamani.framework.model.doctor.Doctor;
 import com.bzamani.framework.service.core.IGenericService;
 
@@ -15,4 +16,6 @@ public interface IDoctorService extends IGenericService<Doctor, Long> {
     Map<String, Object> searchDoctorAuthorize(String firstname, String lastname, int page, int size, String[] sort);
 
     Doctor getAuthenticatedDoctor();
+
+    Doctor selfRegister(DoctorSelfRegistrationDto dto);
 }

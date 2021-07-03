@@ -71,164 +71,38 @@
     <style>
         .card:hover {
             border-color: silver;
-            background-color: gold;
+        }
 
+        .doctor-section:hover {
+            background-color: #a6e8a5b0;
+            cursor: pointer;
+            border-radius: 0.5rem 0.5rem 0 0;
+        }
+
+        .comment:hover {
+            background-color: #a6e8a5b0;
+            border-radius: 0.5rem;
         }
     </style>
+    <script src="/assets/bzamani/general-utility.js"></script>
 
     <script>
-        searchFilters = {
-            "stateId": -1,
-            "cityId": -1,
-            "regionId": -1,
-            "address": '',
-            "sort": "id,desc",
-            "size": 50
-        };
-
         $(function () {
-            fillSpecialityCheckboxes();
-            fillComboState();
-            searchDoctors();
-
-            $("#btnMore").click(function () {
-                searchFilters.size += 10;
-                searchDoctors();
-            });
-
-            $(".sort-btn").click(function () {
-                searchFilters.sort = $(this).attr("sort-order");
-                $(".sort-btn").removeClass("bg-primary");
-                $(this).addClass("bg-primary");
-                searchDoctors();
-            });
-
-            $("#cmbState").change(function () {
-                searchFilters.stateId = $(this).val();
-                searchDoctors();
-                fillComboCity($(this).val());
-                $("#cmbRegion").html("<select class='select' id='cmbRegion'></select>");
-            });
-
-            $("#cmbCity").change(function () {
-                searchFilters.cityId = $(this).val();
-                searchDoctors();
-                fillComboRegion($(this).val());
-            });
-
-            $("#cmbRegion").change(function () {
-                searchFilters.regionId = $(this).val();
-                searchDoctors();
-            });
-
-        });
-
-        function fillComboState() {
             $.ajax({
                 type: "GET",
-                url: "/api/public/baseinfo/getAllByHeaderId/1",
+                url: "/api/public/doctor/load/" + getUrlParameter("id"),
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
-                success: function (res) {
-                    $("#cmbState").append("<option value=-1>...</option>");
-                    $.each(res, function (index, value) {
-                        $("#cmbState").append("<option value=" + value.id + ">" + value.title + "</option>");
-                    });
-                },
-                error: function (err) {
-                    console.log("error ---- " + err);
-                }
-            });
-        }
-
-        function fillComboCity(stateId) {
-            $.ajax({
-                type: "GET",
-                url: "/api/public/baseinfo/getAllByParentId/" + stateId,
-                contentType: "application/json;charset=utf-8",
-                dataType: "json",
-                success: function (res) {
-                    $("#cmbCity").html("<select class='select' id='cmbCity'></select>");
-                    $("#cmbCity").append("<option value=-1>...</option>");
-                    $.each(res, function (index, value) {
-                        $("#cmbCity").append("<option value=" + value.id + ">" + value.title + "</option>");
-                    });
-                },
-                error: function (err) {
-                    console.log("error ---- " + err);
-                }
-            });
-        }
-
-        function fillComboRegion(cityId) {
-            $.ajax({
-                type: "GET",
-                url: "/api/public/baseinfo/getAllByParentId/" + cityId,
-                contentType: "application/json;charset=utf-8",
-                dataType: "json",
-                success: function (res) {
-                    $("#cmbRegion").html("<select class='select' id='cmbRegion'></select>");
-                    $("#cmbRegion").append("<option value=-1>...</option>");
-                    $.each(res, function (index, value) {
-                        $("#cmbRegion").append("<option value=" + value.id + ">" + value.title + "</option>");
-                    });
-                    $('#cmbRegion').select2();
-                },
-                error: function (err) {
-                    console.log("error ---- " + err);
-                }
-            });
-        }
-
-        function fillSpecialityCheckboxes() {
-            $.ajax({
-                type: "GET",
-                url: "/api/public/baseinfo/getAllByHeaderId/1000",
-                contentType: "application/json;charset=utf-8",
-                dataType: "json",
-                success: function (res) {
-                    $.each(res, function (index, value) {
-                        $("#specialitiesFilter").append(
-                            "<div style='cursor: pointer;'><input type=checkbox class=chk-speciality value=" + value.id + ">" + "&nbsp;" + value.title + "</div>"
-                        );
-                    });
-                },
-                error: function (err) {
-                    console.log("error ---- " + err);
-                }
-            });
-        }
-
-        function searchDoctors() {
-            let selected_specialities = [];
-            let selected_genders = [];
-            $('.chk-speciality').each(function () {
-                if ($(this).is(':checked'))
-                    selected_specialities.push($(this).val());
-            });
-            $('.chk-male').each(function () {
-                if ($(this).is(':checked'))
-                    selected_genders.push($(this).val());
-            });
-            searchFilters.specialities = selected_specialities.join();
-            searchFilters.genders = selected_genders.join();
-            searchFilters.address = $("#txtSearchAddress").val();
-            $.ajax({
-                type: "GET",
-                url: "/api/public/doctor/searchDoctors",
-                contentType: "application/json;charset=utf-8",
-                dataType: "json",
-                data: searchFilters,
                 success: function (res) {
                     $("#doctorList > div").remove();
-                    $("#doctorTemplate").tmpl(res.entityList).appendTo("#doctorList");
-                    $("#lblTotalRecords").html(res.totalRecords);
+                    $("#doctorTemplate").tmpl(res).appendTo("#doctorList");
                 },
                 error: function (err) {
                     console.log("error ---- " + err);
                 }
             });
-        }
+        });
+
     </script>
 
 </head>
@@ -287,76 +161,12 @@
     <!-- /Header -->
 
     <!-- Page Content -->
-    <div class="content" style="margin-top: 4rem">
+    <div class="content">
         <div class="container-fluid">
 
             <div class="row">
-                <div class="col-md-12 col-lg-4 col-xl-3 theiaStickySidebar">
-
-                    <!-- Search Filter -->
-                    <div class="search-filter" style="border-radius: 15px;box-shadow:0px 0px 10px 1px silver">
-                        <div class="card-header"
-                             style="border-radius: 15px 15px 0px 0px;box-shadow:0px 0px 10px 1px silver;display: flex;white-space: nowrap">
-                            <h4 class="card-title mb-0"> جستجوی پزشکان</h4>&nbsp;
-                        </div>
-                        <div class="card-body">
-                            <div class="filter-widget">
-                                <h4>استان</h4>
-                                <select class="select" id="cmbState">
-                                </select>
-                            </div>
-                            <div class="filter-widget">
-                                <h4>شهر</h4>
-                                <select class="select" id="cmbCity">
-                                </select>
-                            </div>
-                            <div class="filter-widget">
-                                <h4>منطقه شهرداری / نام محله</h4>
-                                <select class="select" id="cmbRegion">
-                                </select>
-                            </div>
-                            <div class="filter-widget">
-                                <h4>آدرس</h4>
-                                <input type="text" class="form-control" id="txtSearchAddress"/>
-                            </div>
-                            <div class="filter-widget">
-                                <h4>جنسیت</h4>
-                                <div style='cursor: pointer;'>
-                                    <input type=checkbox class=chk-male value="true">پزشک مرد
-                                </div>
-                                <div style='cursor: pointer;'>
-                                    <input type=checkbox class=chk-male value="false">پزشک زن
-                                </div>
-                            </div>
-                            <div class="filter-widget">
-                                <h4> تخصص پزشک </h4>
-                                <span id="specialitiesFilter"></span>
-                            </div>
-                            <div class="btn-search">
-                                <button type="button" class="btn btn-block" onclick="searchDoctors()"
-                                        style="color: black">جستجو
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /Search Filter -->
-
-                </div>
                 <!-- Doctor Widget -->
-                <div class="col-md-12 col-lg-8 col-xl-9">
-                    <div class="col-md-12 col-lg-12 col-xl-12">
-                        <div style="display: flex;white-space: nowrap;margin-bottom:1em">
-                            <div style="font-weight: bolder">مرتب سازی بر اساس:</div>
-                            <div><a class="badge-pill  mr-1  sort-btn bg-primary" sort-order="id,desc">امتیاز</a></div>
-                            <div><a class="badge-pill mr-1 sort-btn" sort-order="speciality.title,desc">تخصص</a>
-                            </div>
-                            <div><a class="badge-pill mr-1 sort-btn" sort-order="personel.address,asc">آدرس</a>
-                            </div>
-                            &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-                            <div style="font-weight: bolder">تعداد نتایج:</div>
-                            <span class="badge-pill bg-info text-white" id="lblTotalRecords"></span>
-                        </div>
-                    </div>
+                <div class="col-lg-12">
                     <div class="col-md-12 col-lg-12 col-xl-12" id="doctorList">
                         <script id="doctorTemplate" type="text/x-jquery-tmpl">
                     <div class="card" style="border-radius: 15px;box-shadow:0px 0px 10px 1px silver">
@@ -364,7 +174,7 @@
                             <div class="doctor-widget">
                                 <div class="doc-info-left">
                                     <div class="doctor-img">
-                                        <a >
+                                        <a>
                                             <img
                                              src={{if personel.male && personel.fileCode==null}}"/assets/img/man.png"{{/if}}
                                                             {{if !personel.male && personel.fileCode==null}}"/assets/img/woman.png"{{/if}}
@@ -398,21 +208,23 @@
                                                 <i class="fa fa-phone"></i> ${personel.telephone}
                                             </p>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="doc-info-right">
-                                    <div class="clini-infos">
-                                        <ul>
-                                            <li><i class="fa fa-thumbs-up"></i> 98% رضایتمندی بیماران</li>
-                                            <li><i class="fa fa-comment"></i> 17 نظر ثبت شده</li>
-                                            <li><i class="fa fa-map"></i>{{if personel.city != null }}${personel.city.title}{{/if}} - {{if personel.region != null }}${personel.region.title}{{/if}}</li>
-                                            <!--<li><i class="fa fa-money-bill-alt"></i>300 تومان - 1000 تومان<i
-                                                    class="fa fa-info-circle"
-                                                    data-toggle="tooltip" title="Lorem Ipsum"></i></li>-->
-                                        </ul>
-                                    </div>
-                                    <div class="clinic-booking">
-                                        <a class="view-pro-btn" href="/doctorSinglePage.html?id=${id}">اطلاعات بیشتر...</a>
+
+                                        <div class="clinic-details">
+                                            <p class="doc-location">
+                                                <i class="fa fa-thumbs-up"></i> 98% رضایتمندی بیماران</li>
+                                            </p>
+                                        </div>
+                                        <div class="clinic-details">
+                                            <p class="doc-location">
+                                                <i class="fa fa-comment"></i> 17 نظر ثبت شده</li>
+                                            </p>
+                                        </div>
+                                        <div class="clinic-details">
+                                            <p class="doc-location">
+                                                <i class="fa fa-map"></i>{{if personel.city != null }}${personel.city.title}{{/if}} - {{if personel.region != null }}${personel.region.title}{{/if}}
+                                            </p>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -445,12 +257,56 @@
 
 
 
+
+
+
+
+
+
+
                         </script>
                     </div>
                     <!-- /Doctor Widget -->
-                    <div class="text-center col-sm-12">
-                        <a class="btn btn-primary btn-md" href="javascript:void(0);" id="btnMore" style="color: black">بارگذاری
-                            بیشتر</a>
+                </div>
+
+                <div class="col-lg-12">
+                    <div class="col-md-12 col-lg-12 col-xl-12">
+                        <div class="card" style="border-radius: 15px;box-shadow:0px 0px 10px 1px silver">
+                            <div class="card-body">
+                                <div class="doctor-widget row">
+                                    <div class="float-left col-lg-12 p-lg-2 doctor-section">
+                                        <div class="float-left col-lg-2">
+                                            نظرات کاربران
+                                        </div>
+                                        <div class="float-left col-lg-1 offset-lg-9" id="btn-plus"
+                                             onclick="$('#doctor-section-body').toggle();$(this).toggle();$('#btn-minus').toggle();"
+                                             style="display: none">
+                                            <i class="fa fa-plus"></i>
+                                        </div>
+                                        <div class="float-left col-lg-1 offset-lg-9" id="btn-minus"
+                                             onclick="$('#doctor-section-body').toggle();$(this).toggle();$('#btn-plus').toggle();">
+                                            <i class="fa fa-minus"></i>
+                                        </div>
+                                    </div>
+                                    <div class="float-left col-lg-12 p-lg-2" id="doctor-section-body">
+                                        <div class="float-left col-lg-12 doc-speciality">
+                                            <img src="assets/img/man.png" class="col-lg-3" style="width: 10rem">
+                                            <span class="col-lg-1 text-info font-weight-bold comment">حسام زمانی:</span>
+                                            <span class="col-lg-9 comment"> بسیار با حوصله و دقیق به بیماران رسیدگی می کنند. با تشکر از سایت خوب مدیک</span>
+                                        </div>
+                                        <div class="float-left col-lg-12 doc-speciality">
+                                            <img src="assets/img/woman.png" class="col-lg-3" style="width: 10rem">
+                                            <span class="col-lg-1 text-info font-weight-bold comment">فاطمه یاوری:</span>
+                                            <span class="col-lg-9 comment">
+                                                 ایشان فردی متخصص و دلسوز برای بیماران هستند. با آرزوی سلامتی و
+                                            بهروزی شما
+                                            </span>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
