@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>مدیک</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+
+    <!-- Favicons -->
+    <link href="assets/img/favicon.png" rel="icon">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="assets/bzamani/bootstrap.css">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="assets/bzamani/style-public.css">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="assets/js/html5shiv.min.js"></script>
+    <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery -->
+    <script src="/assets/bzamani/jquery-1.10.2.min.js"></script>
+    <script src="/assets/bzamani/general-utility.js"></script>
+
+    <!-- Select2 CSS -->
+    <link rel="stylesheet" href="/assets/bzamani/select2.min.css">
+
+    <!-- sweet alert -->
+    <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/assets/bzamani/components/sweetalert/sweetAlertConfirm.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/sweetalert/sweetalert2.min.css">
+    <!-- /sweet alert -->
+
+    <!-- pace mask -->
+    <script>
+        paceOptions = {
+            elements: false,
+            document: true, // disabled
+            eventLag: false, // disabled
+            ajax: {
+                trackMethods: ['GET', 'POST', 'DELETE', 'PUT'],
+                trackWebSockets: false
+            },
+            restartOnPushState: true,
+            restartOnRequestAfter: true
+        };
+        $(function () {
+            $("body").prepend("<div class='pace-cover' style='display: none;'></div>");
+            Pace.on("start", function () {
+                $(".pace-cover").fadeIn();
+            });
+            Pace.on("done", function () {
+                $(".pace-cover").fadeOut();
+            });
+        });
+    </script>
+    <script type="text/javascript" src="/assets/bzamani/components/pace/pace.min.js"></script>
+    <link rel="stylesheet" href="/assets/bzamani/components/pace/themes/blue/pace-theme-flash.css"/>
+    <style>
+        .pace-cover {
+            position: fixed;
+            left: 0px;
+            top: 1px;
+            width: 100%;
+            height: 100%;
+            z-index: 99999;
+            background: rgba(0, 0, 0, 0.4);
+        }
+    </style>
+    <!-- /pace mask -->
+    <script>
+
+        $(function () {
+
+
+        });
+
+        function saveRequest() {
+            if (validateForm() == 'ok') {
+                $.ajax({
+                    url: "/api/public/homevisit/request",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        "mobile": $('#txtMobile').val(),
+                        "firstname": $('#txtFirstname').val(),
+                        "lastname": $('#txtLastname').val(),
+                        "requestType": $('#cmbRequestType').val()
+                    }),
+                    type: 'POST',
+                    success: function (res) {
+                        clearInputs();
+                        showMessage("ثبت موفق", "درخواست شما با موفقیت ثبت شد و به زودی با شما برای هماهنگی بیشتر، تماس خواهیم گرفت.", "success");
+                    },
+                    error: function (err) {
+                        if (err.responseText.includes("unq_username") || err.responseText.includes("username already exists"))
+                            showMessage("خطا در ثبت کاربر", " با این نام کاربری قبلا ثبت نام انجام شده است.", "error");
+                        else if (err.responseText.includes("unq_personel_nationalcode"))
+                            showMessage("خطا در ثبت کاربر", " با این کدملی قبلا ثبت نام انجام شده است.", "error");
+                        else if (err.responseText.includes("unq_personel_email"))
+                            showMessage("خطا در ثبت کاربر", " با این ایمیل قبلا ثبت نام انجام شده است.", "error");
+                        else if (err.responseText.includes("unq_personel_mobile"))
+                            showMessage("خطا در ثبت کاربر", " با این شماره موبایل قبلا ثبت نام انجام شده است.", "error");
+                        else
+                            showMessage(err.responseJSON.message, "", "error");
+                    }
+                });
+            } else showMessage(validateForm(), "", "warning");
+        }
+
+        function validateForm() {
+            if ($('#txtMobile').val() == '' || $('#txtFirstname').val() == ''
+                || $('#txtLastname').val() == ''
+                || $('#cmbRequestType').val() == ''
+            )
+                return 'لطفا همه فیلدها را پر کنید.';
+            else if ($('#txtMobile').val().length != 11
+                || $('#txtMobile').val().substring(0, 1) != '0')
+                return 'شماره موبایل باید با صفر شروع شود و 11 رقمی باشد.';
+            else return 'ok';
+        }
+
+        function clearInputs() {
+            $('#txtMobile').val('');
+            $('#txtFirstname').val('');
+            $('#txtLastname').val('');
+            $('#cmbRequestType').val(-1);
+        }
+
+
+    </script>
+
+    <style>
+        .login-header {
+            background-color: #7fffd4;
+            border-radius: 1rem;
+        }
+
+        .login-header:hover {
+            background-color: #34eaa9;
+        }
+
+        .reg-section {
+            border-radius: 1rem;
+        }
+    </style>
+
+</head>
+<body class="account-page">
+
+<!-- Main Wrapper -->
+<div class="main-wrapper">
+    <!-- Page Content -->
+    <div class="container-fluid">
+        <!-- Register Content -->
+        <div class="account-content">
+            <div class="row justify-content-center pt-4">
+                <div class="col-lg-3 login-left">
+                    <div class="pt-lg-5">
+                        <img src="assets/img/login-banner.png" class="img-fluid" alt="doctor">
+                    </div>
+                </div>
+                <div class="reg-section col-lg-6 login-right">
+                    <div class="login-header p-2">
+                        <h3>فرم درخواست هوم ویزیت </h3>
+                    </div>
+
+                    <!-- Register Form -->
+                    <div id="doctor-div">
+                        <div class="form-group form-focus">
+                            <input type="text" class="form-control floating" id="txtMobile" dir="ltr"
+                                   maxlength="11">
+                            <label class="focus-label"> شماره موبایل (مانند 09123843845) </label>
+                        </div>
+                        <div class="form-group form-focus">
+                            <input type="text" class="form-control floating" id="txtFirstname">
+                            <label class="focus-label">نام</label>
+                        </div>
+                        <div class="form-group form-focus">
+                            <input type="text" class="form-control floating" id="txtLastname">
+                            <label class="focus-label"> نام خانوادگی</label>
+                        </div>
+                        <div class="form-group form-focus">
+                            <select id="cmbRequestType" class="form-control floating" dir="rtl">
+                                <option value="-1">...</option>
+                                <option value="0">فیزیوتراپی</option>
+                                <option value="1">ارتوپدی فنی</option>
+                            </select>
+                            <label class="focus-label">نوع درخواست</label>
+                        </div>
+
+                        <button class="btn btn-primary col-lg-4 offset-lg-2  float-left " onclick="saveRequest()">
+                            ثبت درخواست
+                        </button>
+                        <button class="btn btn-danger col-lg-4 float-left" onclick="clearInputs()">
+                            پاک کردن
+                        </button>
+                    </div>
+                    <!-- /Register Form -->
+
+                </div>
+            </div>
+        </div>
+        <!-- /Register Content -->
+    </div>
+    <!-- /Page Content -->
+</div>
+<!-- /Main Wrapper -->
+
+<!-- Bootstrap Core JS -->
+<script src="assets/admin/chart/popper.min.js"></script>
+<script src="assets/bzamani/bootstrap.min.js"></script>
+
+<!-- Custom JS -->
+<script src="assets/admin/chart/script.js"></script>
+<!-- Select2 JS -->
+<script src="/assets/bzamani/select2.min.js"></script>
+
+</body>
+</html>

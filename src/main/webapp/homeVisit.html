@@ -24,7 +24,12 @@
     <![endif]-->
 
     <!-- jQuery -->
-    <script src="../assets/bzamani/jquery-1.10.2.min.js"></script>
+    <script src="assets/bzamani/jquery-1.10.2.min.js"></script>
+    <script src="assets/bzamani/general-utility.js"></script>
+
+    <!-- fancybox -->
+    <script src="assets/bzamani/components/fancybox/jquery.fancybox.js"></script>
+    <link rel="stylesheet" href="assets/bzamani/components/fancybox/jquery.fancybox.css"/>
 
     <style>
         @media (min-width: 992px) {
@@ -41,7 +46,6 @@
 
     <script>
         $(function () {
-
         });
     </script>
 
@@ -121,11 +125,11 @@
                         جهت دریافت مشاوره، هماهنگی و رزرو نوبت، ثبت درخواست نمایید تا ما با شما تماس بگیریم و یا با
                         پشتیبانی تماس بگیرید. </h4>
                     <button class="btn btn btn-primary float-left col-lg-2 col-7 offset-2 offset-lg-5"
-                            onclick="alert('در حال توسعه...')">
+                            onclick="viewFancyBox('homeVisitRequest.html', '70%', '75%');">
                         ثبت
                         درخواست
                     </button>
-                    <marquee direction="right" width="100%" height="100%" behavior="loop" >
+                    <marquee direction="right" width="100%" height="100%" behavior="loop">
                         <h3 class="float-left col-lg-12 text-center pt-lg-4">پشتیبانی و مشاوره: 91029011-021 &nbsp;
                             09129585895 &nbsp; 09122851473 &nbsp; 09351107082</h3>
                     </marquee>

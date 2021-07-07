@@ -12,12 +12,14 @@ import com.bzamani.framework.model.core.baseinfo.BaseInfo;
 import com.bzamani.framework.model.core.statistics.SiteVisitors;
 import com.bzamani.framework.model.core.user.User;
 import com.bzamani.framework.model.doctor.Doctor;
+import com.bzamani.framework.model.homevisit.HomeVisitRequest;
 import com.bzamani.framework.model.portal.Post;
 import com.bzamani.framework.service.clinic.IClinicService;
 import com.bzamani.framework.service.core.baseinfo.IBaseInfoService;
 import com.bzamani.framework.service.core.statistics.ISiteVisitorsService;
 import com.bzamani.framework.service.core.user.IUserService;
 import com.bzamani.framework.service.doctor.IDoctorService;
+import com.bzamani.framework.service.homevisit.IHomeVisitService;
 import com.bzamani.framework.service.portal.ICommentService;
 import com.bzamani.framework.service.portal.IPostService;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -51,6 +53,9 @@ public class PublicAPIController extends BaseController {
 
     @Autowired
     ISiteVisitorsService iSiteVisitorsService;
+
+    @Autowired
+    IHomeVisitService iHomeVisitService;
 
     @PostMapping("/statistics/saveSiteVisitor")
     public void save() {
@@ -197,6 +202,11 @@ public class PublicAPIController extends BaseController {
             @RequestParam(defaultValue = "id,desc") String[] sort) {
 
         return iClinicService.searchClinic(organizationTitle, organizationAddress, stateId, cityId, regionId, true, showInVipList, page, size, sort);
+    }
+
+    @PostMapping("/homevisit/request")
+    public HomeVisitRequest request(@RequestBody HomeVisitRequest homeVisitRequest) {
+        return iHomeVisitService.save(homeVisitRequest);
     }
 
 }
