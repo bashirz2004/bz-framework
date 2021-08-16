@@ -30,6 +30,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -156,12 +157,18 @@ public class ReferService extends GenericService<Refer, Long> implements IReferS
                     iReferLogService.save(new ReferLog(null, refer, currentDateShamsi, currentTime, authenticatedPersonel,
                             "ارجاع به کلینیک", oldStatus.getPersianTitle(), ReferStatus.referred.getPersianTitle()));
                     try {
-                        Utility.sendSMS(iPersonelService.loadByEntityId(refer.getPatient().getId()).getMobile(), iPersonelService.loadByEntityId(refer.getPatient().getId()).getFirstname() + " " + iPersonelService.loadByEntityId(refer.getPatient().getId()).getLastname() +
-                                " عزیز، ارجاع شما به " + iClinicService.loadByEntityId(refer.getClinic().getId()).getOrganization().getTitle() + " واقع در " +
-                                iClinicService.loadByEntityId(refer.getClinic().getId()).getOrganization().getAddress() + " - تلفن: " +
-                                iClinicService.loadByEntityId(refer.getClinic().getId()).getOrganization().getTelephone() + " با کد رهگیری " +
-                                refer.getId() + " از طریق مدیک انجام شد. ");
+                        Utility.sendSMSWithPatternAfterRefer(iPersonelService.loadByEntityId(refer.getPatient().getId()).getMobile(),
+                                iPersonelService.loadByEntityId(refer.getPatient().getId()).getFirstname(),
+                                iPersonelService.loadByEntityId(refer.getPatient().getId()).getLastname(),
+                                iClinicService.loadByEntityId(refer.getClinic().getId()).getOrganization().getTitle(),
+                                iClinicService.loadByEntityId(refer.getClinic().getId()).getOrganization().getAddress(),
+                                refer.getId().toString(),
+                                iClinicService.loadByEntityId(refer.getClinic().getId()).getOrganization().getTelephone()
+                        );
+
                     } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
                 }
